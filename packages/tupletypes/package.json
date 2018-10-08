@@ -1,10 +1,13 @@
 {
-    "name": "@jchptf/co-limit",
-    "version": "0.0.5",
+    "name": "@jchptf/tupletypes",
+    "version": "0.0.2",
     "description": "TODO",
     "main": "./dist/index.js",
     "typings": "./dist/index.d.ts",
-    "repository": "https://github.com/jheinnic/portfolio-monorepo",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/jheinnic/portfolio-monorepo"
+    },
     "author": "John Heinnickel <jheinnic@hotmail.com>",
     "license": "MIT",
     "scripts": {
@@ -13,7 +16,7 @@
         "cover": "yarn test && nyc report --reporter=lcov",
         "doc": "node_modules/.bin/typedoc --mode modules --out doc src",
         "pub": "yarn run build && yarn publish --access public",
-        "test": "rm -rf build && tsc -p test && nyc mocha build/test/*.js"
+        "test": "rm -rf build && mkdir build && tsc -p test && nyc mocha build/test/*.js"
     },
     "devDependencies": {
         "@types/mocha": "^5.2.5",
@@ -26,13 +29,10 @@
     },
     "dependencies": {
         "@jchptf/api": "^0.0.5",
-        "@thi.ng/api": "^4.2.1",
-        "co": "^4.6.0",
-        "co-priority-queue": "^1.0.3",
         "tslib": "^1.9.3"
     },
     "keywords": [
-        "ES6",
+        "es6",
         "typescript"
     ],
     "publishConfig": {
