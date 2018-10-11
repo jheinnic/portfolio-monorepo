@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/co-limit",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "description": "TODO",
     "main": "./dist/index.js",
     "typings": "./dist/index.d.ts",
@@ -25,7 +25,7 @@
         "typescript": "^3.1.1"
     },
     "dependencies": {
-        "@jchptf/api": "^0.0.6",
+        "@jchptf/api": "^0.0.7",
         "co": "^4.6.0",
         "co-priority-queue": "^1.0.3",
         "tslib": "^1.9.3"
