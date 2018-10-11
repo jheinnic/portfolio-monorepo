@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 <a name="0.0.5"></a>
+## [0.0.5](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/co-limit@0.0.5...@jchptf/co-limit@0.0.5) (2018-10-11)
+
+
+
+
+**Note:** Version bump only for package @jchptf/co-limit
+
+<a name="0.0.5"></a>
 ## [0.0.5](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/co-limit@0.0.4...@jchptf/co-limit@0.0.5) (2018-10-08)
 
 

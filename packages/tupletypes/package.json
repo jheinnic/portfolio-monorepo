@@ -9,7 +9,7 @@
         "url": "https://github.com/jheinnic/portfolio-monorepo"
     },
     "author": "John Heinnickel <jheinnic@hotmail.com>",
-    "license": "MIT",
+    "license": "Apache-2.0",
     "scripts": {
         "build": "yarn run clean && tsc --declaration",
         "clean": "rm -rf dist/*.js dist/*.d.ts build .nyc_output build coverage doc; mkdir build",
