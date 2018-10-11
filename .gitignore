@@ -1,0 +1,13 @@
+node_modules
+.nyc_output
+coverage
+build
+dev
+doc
+.DS_Store
+bundle.*
+*.html
+*.log
+*.tgz
+*.js
+*.d.ts

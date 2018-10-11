@@ -1,0 +1,11 @@
+build
+coverage
+dev
+doc
+src*
+typings*
+test
+.nyc_output
+tsconfig.json
+*.tgz
+*.html
