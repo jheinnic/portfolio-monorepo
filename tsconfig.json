@@ -6,6 +6,7 @@
         "lib": ["es6", "esnext.asynciterable", "dom"],
         "alwaysStrict": true,
         "importHelpers": true,
+        "declaration": true,
         "preserveConstEnums": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,

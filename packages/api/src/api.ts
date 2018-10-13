@@ -258,6 +258,10 @@ export interface IObjectOf<T> {
     [id: string]: T;
 }
 
+export type IBagOf<T, N extends S = S, O = any, S extends keyof O = keyof O> = {
+    [K in N]: T;
+}
+
 /**
  * Interface for types supported the release of internal resources.
  */
@@ -358,3 +362,4 @@ export interface IWatch<T> {
     notifyWatches(oldState: T, newState: T): void;
 }
 
+export type IDirector<IBuilder> = (builder: IBuilder) => void;
