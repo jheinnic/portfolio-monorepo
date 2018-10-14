@@ -79,14 +79,19 @@ export class ContainerRegistry implements IContainerRegistry
             appInstaller.install( () => {} )
          ));
       console.log('Loading dependencies');
-      this.installerContainer.getAll(DI_TYPES.ContainerModuleCallBack).forEach(
-         (callBack: interfaces.ContainerModuleCallBack) => {
-            console.log('Loading a dependency');
-            this.applicationContainer.load(
-               new ContainerModule(callBack)
-            )
-         }
-      );
+      while (this.installerContainer.isBound(DI_TYPES.ContainerModuleCallBack)) {
+         const nextBatch = this.installerContainer.getAll(DI_TYPES.ContainerModuleCallBack);
+         this.installerContainer.unbind(DI_TYPES.ContainerModuleCallBack);
+         nextBatch.forEach(
+            (callBack: interfaces.ContainerModuleCallBack) => {
+               console.log('Loading a dependency');
+               this.applicationContainer.load(
+                  new ContainerModule(callBack)
+               )
+            }
+         );
+         console.log('End of round');
+      }
       console.log('Done Loading');
    }
 }

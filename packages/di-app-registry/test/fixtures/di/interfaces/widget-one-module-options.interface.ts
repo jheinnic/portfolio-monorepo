@@ -1,10 +1,10 @@
 import {interfaces} from 'inversify';
 import BindingWhenSyntax = interfaces.BindingWhenSyntax;
 import {IDirector} from '@jchptf/api';
-import {ILibrary} from '../../interfaces/library.interface';
+import {IWidget} from '../../interfaces/widget.interface';
 
 export interface WidgetOneModuleOptions {
-   bindWhen: IDirector<BindingWhenSyntax<ILibrary>>;
-
-   initialValue: number;
+   bindWhen: IDirector<BindingWhenSyntax<IWidget>>;
+   libOneCurator?: symbol;
+   libTwoCurator?: symbol;
 }

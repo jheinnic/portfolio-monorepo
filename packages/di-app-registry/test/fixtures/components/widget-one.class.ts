@@ -1,4 +1,4 @@
-import {inject, tagged} from 'inversify';
+import {inject, injectable, tagged} from 'inversify';
 
 import {DI_COMMON_TAGS} from '../../../src/types';
 import {IWidget} from '../interfaces/widget.interface';
@@ -11,6 +11,7 @@ export const WIDGET_ONE_TAG_VALUES: IBagOf<symbol, 'libDepOne' | 'libDepTwo'> = 
    libDepTwo: Symbol.for('libDepTwo')
 };
 
+@injectable()
 export class WidgetOne implements IWidget
 {
    constructor(

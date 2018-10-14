@@ -1,16 +1,16 @@
 import {interfaces} from 'inversify';
-import BindingWhenSyntax = interfaces.BindingWhenSyntax;
-import BindingWhenOnSyntax = interfaces.BindingWhenOnSyntax;
-import BindingOnSyntax = interfaces.BindingOnSyntax;
-import ConstraintFunction = interfaces.ConstraintFunction;
-import Context = interfaces.Context;
-import Request = interfaces.Request;
 
 import {IDirector} from '@jchptf/api';
 import {
    BindingWhenOnChildSyntax, BindingWhenOnGrandChildSyntax, CompositeBindingBuilder, NoOpBindingOn,
    UnsupportedBindingWhenOnSyntax
 } from '.';
+import BindingWhenSyntax = interfaces.BindingWhenSyntax;
+import BindingWhenOnSyntax = interfaces.BindingWhenOnSyntax;
+import BindingOnSyntax = interfaces.BindingOnSyntax;
+import ConstraintFunction = interfaces.ConstraintFunction;
+import Context = interfaces.Context;
+import Request = interfaces.Request;
 
 
 export class CompositeBinding<T> implements CompositeBindingBuilder<T>
@@ -24,7 +24,7 @@ export class CompositeBinding<T> implements CompositeBindingBuilder<T>
 
    public apply(director: IDirector<CompositeBindingBuilder<T>>)
    {
-      director.apply(this);
+      director(this);
 
       this.hostBuilder.when((request: Request): boolean =>
          this.constraintList.every((constraint: ConstraintFunction): boolean =>
@@ -35,7 +35,7 @@ export class CompositeBinding<T> implements CompositeBindingBuilder<T>
    {
       const builder = new this.CompositeBindingWhenSyntax(this.constraintList, this.hostBuilder);
 
-      director.apply(builder);
+      director(builder);
 
       return this;
    }
@@ -45,7 +45,7 @@ export class CompositeBinding<T> implements CompositeBindingBuilder<T>
       const delegate = new this.CompositeBindingWhenSyntax(this.constraintList);
       const builder = new BindingWhenOnChildSyntax(delegate);
 
-      director.apply(builder);
+      director(builder);
 
       return this;
    }
@@ -57,7 +57,7 @@ export class CompositeBinding<T> implements CompositeBindingBuilder<T>
       const delegate = new this.CompositeBindingWhenSyntax(this.constraintList);
       const builder = new BindingWhenOnGrandChildSyntax(delegate, generationDistance);
 
-      director.apply(builder);
+      director(builder);
 
       return this;
    }
@@ -72,7 +72,7 @@ export class CompositeBinding<T> implements CompositeBindingBuilder<T>
          bindingOnSyntax?: BindingOnSyntax<T>)
       {
          super();
-         if (!!bindingOnSyntax) {
+         if (!! bindingOnSyntax) {
             this.bindingOnSyntax = bindingOnSyntax;
          } else {
             this.bindingOnSyntax = new NoOpBindingOn(this);

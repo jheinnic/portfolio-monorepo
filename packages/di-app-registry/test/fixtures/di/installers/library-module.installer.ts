@@ -15,11 +15,10 @@ export function libraryModuleInstaller(options: LibraryModuleOptions): interface
          bind: interfaces.Bind, _unbind: interfaces.Unbind, _isBound: interfaces.IsBound,
          _rebind: interfaces.Rebind) =>
       {
-         // callBackFn(bind, unbind, isBound, rebind);
-
          options.bindWhen(
             bind<ILibrary>(FIXTURE_TYPES.Library)
                .to(Library)
+               .inSingletonScope()
          );
          const childDirector: IDirector<BindingWhenSyntax<any>> =
             toChildDirector(options.bindWhen);

@@ -22,15 +22,12 @@ export class BindInstallerSyntax<I extends (InstallerFactory | InstallerService)
                   target: (I & InstallerFactory), thisArgument: any,
                   argumentsList: Parameters<I & InstallerFactory>) =>
                {
-                  console.log(`Starting: ${new Date().getTime()}`);
+                  // console.log(`Starting: ${new Date().getTime()}`);
                   let result: ContainerModuleCallBack =
                      target.apply(thisArgument, argumentsList);
-                  console.log(`Finished: ${new Date().getTime()}`);
+                  // console.log(`Finished: ${new Date().getTime()}`);
                   context.container.bind(DI_TYPES.ContainerModuleCallBack)
                      .toConstantValue(result);
-                  console.log('Bound', result);
-                  console.log(
-                     context.container.isBound(DI_TYPES.ContainerModuleCallBack));
                   return result;
                }
             };
@@ -55,10 +52,10 @@ export class BindInstallerSyntax<I extends (InstallerFactory | InstallerService)
                      target: AnyFunc, thisArgument: I,
                      argumentsList: Parameters<(I & InstallerService)['install']>) =>
                   {
-                     console.log(`Starting: ${new Date().getTime()}`);
+                     // console.log(`Starting: ${new Date().getTime()}`);
                      let result: ContainerModuleCallBack =
                         target.apply(thisArgument, argumentsList);
-                     console.log(`Finished: ${new Date().getTime()}`);
+                     // console.log(`Finished: ${new Date().getTime()}`);
                      context.container.bind(DI_TYPES.ContainerModuleCallBack)
                         .toConstantValue(result);
                      return result;
