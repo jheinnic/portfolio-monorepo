@@ -1,5 +1,5 @@
 import {
-   BindingInstallerSyntax, InstallerConstructor, InstallerFactory, InstallerFactoryCreator, InstallerService
+   BindingInstallerSyntax, InstallerConstructor, InstallerFactory, InstallerService
 } from './interfaces';
 import {interfaces} from 'inversify';
 import {AnyFunc} from 'simplytyped';
@@ -37,10 +37,10 @@ export class BindInstallerSyntax<I extends (InstallerFactory | InstallerService)
       );
    }
 
-   public toFactory(creator: InstallerFactoryCreator<I & InstallerFactory>): void
-   {
-      this.bindTo.toFactory(creator);
-   }
+   // public toFactory(creator: InstallerFactoryCreator<I & InstallerFactory>): void
+   // {
+   //    this.bindTo.toFactory(creator);
+   // }
 
    public toService(installer: InstallerConstructor<I & InstallerService>): void
    {

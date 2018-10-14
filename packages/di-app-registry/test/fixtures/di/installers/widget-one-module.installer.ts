@@ -1,24 +1,23 @@
 import {inject, injectable, interfaces, taggedConstraint} from 'inversify';
-
-import {InstallerApi, InstallerFactory, InstallerService} from '../../../../src/interfaces';
-import {FIXTURE_TYPES, LibraryModuleOptions, WidgetOneModuleOptions} from '..';
-import {FIXTURE_DI_TYPES} from '../types';
-import {IWidget} from '../../interfaces/widget.interface';
-import {WIDGET_ONE_TAG_VALUES, WidgetOne} from '../../components/widget-one.class';
-import {IDirector} from '@jchptf/api';
-import {ILibrary} from '../../interfaces/library.interface';
-import {DI_COMMON_TAGS} from '../../../../src/types';
-import {toCompoundDirector} from '../../../../src/support/to-compound-director.function';
 import ContainerModuleCallBack = interfaces.ContainerModuleCallBack;
 import BindingWhenSyntax = interfaces.BindingWhenSyntax;
 import BindingWhenOnSyntax = interfaces.BindingWhenOnSyntax;
+
+import {IDirector} from '@jchptf/api';
+import {InstallerApi, InstallerService} from '../../../../src/interfaces';
+import {FIXTURE_TYPES, LibraryModuleOptions, WidgetOneModuleOptions} from '..';
+import {FIXTURE_DI_TYPES} from '../types';
+import {ILibrary, IWidget} from '../../interfaces';
+import {WIDGET_ONE_TAG_VALUES, WidgetOne} from '../../components/widget-one.class';
+import {DI_COMMON_TAGS} from '../../../../src/types';
+import {toCompoundDirector} from '../../../../src/support/to-compound-director.function';
 
 @injectable()
 export class WidgetOneModuleInstaller implements InstallerService<[WidgetOneModuleOptions]>
 {
    constructor(
       @inject(
-         FIXTURE_DI_TYPES.LibraryInstaller) private readonly library: InstallerFactory<[LibraryModuleOptions]>
+         FIXTURE_DI_TYPES.LibraryInstaller) private readonly library: InstallerService<[LibraryModuleOptions]>
    ) { }
 
    install(options: WidgetOneModuleOptions): ContainerModuleCallBack
@@ -46,7 +45,7 @@ export class WidgetOneModuleInstaller implements InstallerService<[WidgetOneModu
                      );
                   }));
          } else {
-            this.library({
+            this.library.install({
                bindWhen: bindWhen => bindWhen.whenTargetTagged(
                   DI_COMMON_TAGS.VariantFor, WIDGET_ONE_TAG_VALUES.libDepOne),
                initialValue: 3
@@ -66,7 +65,7 @@ export class WidgetOneModuleInstaller implements InstallerService<[WidgetOneModu
                      );
                   }));
          } else {
-            this.library({
+            this.library.install({
                bindWhen: bindWhen => bindWhen.whenTargetTagged(
                   DI_COMMON_TAGS.VariantFor, WIDGET_ONE_TAG_VALUES.libDepTwo),
                initialValue: 3

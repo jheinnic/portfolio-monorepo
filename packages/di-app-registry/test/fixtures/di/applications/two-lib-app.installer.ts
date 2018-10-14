@@ -1,8 +1,10 @@
 import {inject, injectable, interfaces} from 'inversify';
 import BindingWhenSyntax = interfaces.BindingWhenSyntax;
-import {ApplicationInstaller, InstallerApi, InstallerFactory} from '../../../../src/interfaces';
-import {LibraryModuleOptions} from '../interfaces/library-module-options.interface';
-import {ILibrary} from '../../interfaces/library.interface';
+import {
+   ApplicationInstaller, InstallerApi, InstallerService
+} from '../../../../src/interfaces';
+import {LibraryModuleOptions} from '..';
+import {ILibrary} from '../../interfaces';
 import {APP_DI_TYPES, TwoLibsApp} from '../../apps/two-libs.app';
 import {FIXTURE_DI_TYPES, FIXTURE_TYPES} from '../types';
 
@@ -10,7 +12,7 @@ import {FIXTURE_DI_TYPES, FIXTURE_TYPES} from '../types';
 @injectable()
 export class TwoLibAppInstaller implements ApplicationInstaller {
    constructor(
-      @inject(FIXTURE_DI_TYPES.LibraryInstaller) private readonly library: InstallerFactory<[LibraryModuleOptions]>)
+      @inject(FIXTURE_DI_TYPES.LibraryInstaller) private readonly library: InstallerService<[LibraryModuleOptions]>)
    {
    }
 
@@ -19,14 +21,14 @@ export class TwoLibAppInstaller implements ApplicationInstaller {
          bind(FIXTURE_TYPES.Application).to(TwoLibsApp);
       };
 
-      this.library({
+      this.library.install({
          bindWhen: (bindWhen: BindingWhenSyntax<ILibrary>) => {
             bindWhen.whenTargetNamed(APP_DI_TYPES.libOne)
          },
          initialValue: 1
       });
 
-      this.library({
+      this.library.install({
          bindWhen: bindWhen => bindWhen.whenTargetNamed(APP_DI_TYPES.libTwo),
          initialValue: 3
       })

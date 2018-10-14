@@ -1,5 +1,5 @@
 import {interfaces} from 'inversify';
-import {InstallerFactory, InstallerService} from './installer-factory.interface';
+import {InstallerFactory, InstallerService} from './installer-service.interface';
 import ServiceIdentifier = interfaces.ServiceIdentifier;
 
 export type InstallerIdentifier<I extends (InstallerFactory | InstallerService)> =

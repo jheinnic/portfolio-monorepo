@@ -11,6 +11,9 @@ import {ConcreteFactoryService} from './concrete-factory-service.interface';
 //       (...args: infer Args) => interfaces.ContainerModuleCallBack)
 //       ? InstallerFactory<Args> : never;
 
+/**
+ * @deprecated
+ */
 export interface InstallerFactory<Args extends any[] = any[]> {
    (...args: Args): ContainerModuleCallBack;
 }
