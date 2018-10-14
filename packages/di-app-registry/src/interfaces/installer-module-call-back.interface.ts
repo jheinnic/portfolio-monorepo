@@ -3,9 +3,9 @@ import {BindingInstallerSyntax} from './installer-binding-syntax.interface';
 import {ApplicationIdentifier} from './application-identifier.interface';
 import {ApplicationBindingSyntax} from './application-binding-syntax.interface';
 import {ApplicationInstaller} from './application-installer.interface';
-import {InstallerFactory} from './installer-factory.interface';
+import {InstallerFactory, InstallerService} from './installer-factory.interface';
 
-export type BindInstaller = <I extends InstallerFactory<any[]>>(installerIdentifier: InstallerIdentifier<I>) => BindingInstallerSyntax<I>;
+export type BindInstaller = <I extends (InstallerFactory|InstallerService)>(installerIdentifier: InstallerIdentifier<I>) => BindingInstallerSyntax<I>;
 
 export type BindApplication = <A extends ApplicationInstaller>(applicationIdentifier: ApplicationIdentifier<A>) => ApplicationBindingSyntax<A>;
 

@@ -1,7 +1,7 @@
-import {ApplicationInstaller, InstallerApi, InstallerFactory} from '../../../../src/interfaces';
 import {inject, injectable, interfaces} from 'inversify';
-import {LibraryModuleOptions} from '../interfaces/library-module-options.interface';
 import BindingWhenSyntax = interfaces.BindingWhenSyntax;
+import {ApplicationInstaller, InstallerApi, InstallerFactory} from '../../../../src/interfaces';
+import {LibraryModuleOptions} from '../interfaces/library-module-options.interface';
 import {ILibrary} from '../../interfaces/library.interface';
 import {APP_DI_TYPES, TwoLibsApp} from '../../apps/two-libs.app';
 import {FIXTURE_DI_TYPES, FIXTURE_TYPES} from '../types';
@@ -19,17 +19,19 @@ export class TwoLibAppInstaller implements ApplicationInstaller {
          bind(FIXTURE_TYPES.Application).to(TwoLibsApp);
       };
 
-      callBack = this.library(callBack)({
+      this.library({
          bindWhen: (bindWhen: BindingWhenSyntax<ILibrary>) => {
             bindWhen.whenTargetNamed(APP_DI_TYPES.libOne)
          },
-         initialValue: 3
+         initialValue: 1
       });
 
-      return this.library(callBack)({
+      this.library({
          bindWhen: bindWhen => bindWhen.whenTargetNamed(APP_DI_TYPES.libTwo),
-         initialValue: 5
+         initialValue: 3
       })
+
+      return callBack;
    }
 }
 

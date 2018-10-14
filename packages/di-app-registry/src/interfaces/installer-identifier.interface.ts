@@ -1,6 +1,13 @@
 import {interfaces} from 'inversify';
+import {InstallerFactory, InstallerService} from './installer-factory.interface';
 import ServiceIdentifier = interfaces.ServiceIdentifier;
-import {InstallerFactory} from './installer-factory.interface';
 
-export type InstallerIdentifier<I extends InstallerFactory<any[]>> = ServiceIdentifier<Parameters<ReturnType<I>>>
+export type InstallerIdentifier<I extends (InstallerFactory | InstallerService)> =
+   ServiceIdentifier<
+      Parameters<
+         ReturnType<
+            (I & InstallerFactory) | (I & InstallerService)['install']>>>
+
+// I extends InstallerFactory ? ServiceIdentifier<Parameters<ReturnType<I>>> :
+//    ServiceIdentifier<Parameters<ReturnType<(I&InstallerService)['install']>>>
 

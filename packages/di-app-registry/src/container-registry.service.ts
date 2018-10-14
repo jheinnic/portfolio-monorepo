@@ -6,6 +6,7 @@ import {
 } from './interfaces';
 import {wrapBindInstaller} from './wrap-bind-installer.function';
 import {wrapBindApplication} from './wrap-bind-application.function';
+import {DI_TYPES} from './types';
 
 export class ContainerRegistry implements IContainerRegistry
 {
@@ -66,10 +67,26 @@ export class ContainerRegistry implements IContainerRegistry
       }
 
       // let appCallBack: interfaces.ContainerModuleCallBack =
-
+      if (this.applicationContainer.isBound(DI_TYPES.ContainerModuleCallBack)) {
+         this.applicationContainer.unbind(DI_TYPES.ContainerModuleCallBack);
+      }
+      if (this.installerContainer.isBound(DI_TYPES.ContainerModuleCallBack)) {
+         this.installerContainer.unbind(DI_TYPES.ContainerModuleCallBack);
+      }
+      console.log('Loading App');
       this.applicationContainer.load(
          new ContainerModule(
             appInstaller.install( () => {} )
          ));
+      console.log('Loading dependencies');
+      this.installerContainer.getAll(DI_TYPES.ContainerModuleCallBack).forEach(
+         (callBack: interfaces.ContainerModuleCallBack) => {
+            console.log('Loading a dependency');
+            this.applicationContainer.load(
+               new ContainerModule(callBack)
+            )
+         }
+      );
+      console.log('Done Loading');
    }
 }

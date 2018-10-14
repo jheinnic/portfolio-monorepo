@@ -1,5 +1,6 @@
 import {interfaces} from 'inversify';
 import ContainerModuleCallBack = interfaces.ContainerModuleCallBack;
+import {ConcreteFactoryService} from './concrete-factory-service.interface';
 
 // type InstallerFunction<Args extends any[] = []> =
 //    (moduleCallback: interfaces.ContainerModuleCallBack) =>
@@ -11,6 +12,12 @@ import ContainerModuleCallBack = interfaces.ContainerModuleCallBack;
 //       ? InstallerFactory<Args> : never;
 
 export interface InstallerFactory<Args extends any[] = any[]> {
-   (moduleCallback: ContainerModuleCallBack): (...args: Args) => ContainerModuleCallBack;
+   (...args: Args): ContainerModuleCallBack;
 }
 
+export type InstallerService<Args extends any[] = any[]> =
+   ConcreteFactoryService<'install', ContainerModuleCallBack, Args>;
+
+export type InstallerConstructor<I extends InstallerService<any[]>> = {
+   new(...args: any[]): I
+}

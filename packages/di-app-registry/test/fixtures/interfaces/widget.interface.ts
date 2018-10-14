@@ -1,3 +1,3 @@
-export interface Widget {
+export interface IWidget {
    getValue(): number;
 }
