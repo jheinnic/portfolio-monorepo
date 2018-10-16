@@ -1,6 +1,6 @@
 import {ApplicationInstaller} from '.';
 
-export interface ApplicationBindingSyntax<A extends ApplicationInstaller>
+export interface IApplicationBindingSyntax<A extends ApplicationInstaller>
 {
    to(constructor: {new(...args: any[]): A}): void;
 }

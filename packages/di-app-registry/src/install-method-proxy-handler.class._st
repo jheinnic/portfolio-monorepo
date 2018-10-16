@@ -1,0 +1,29 @@
+import {AnyFunc} from 'simplytyped';
+import {interfaces} from 'inversify';
+import ContainerModuleCallBack = interfaces.ContainerModuleCallBack;
+import {InstallerService} from './interfaces';
+import {ContainerRegistryInternal} from './interfaces/container-registry-internal.interface';
+
+
+export class InstallMethodProxyHandler<I extends InstallerService<I>> implements ProxyHandler<I['install']>
+{
+   constructor(
+      private readonly internalCb: ContainerRegistryInternal
+   ) { }
+
+   apply(target: AnyFunc, thisArgument: I, argumentsList: Parameters<I['install']>): AnyFunc
+   {
+      this.internalCb.scanForRegistryDecorators(argumentsList);
+      // console.log(`Starting: ${new Date().getTime()}`);
+      let result: ContainerModuleCallBack =
+         target.apply(thisArgument, argumentsList);
+      // console.log(`Finished: ${new Date().getTime()}`);
+      this.internalCb.installContainerModule(result);
+      // context.container.bind(DI_TYPES.ContainerModuleCallBack)
+      //    .toConstantValue(result);
+      // context.container.load(
+      //    new ContainerModule(result));
+
+      return result;
+   }
+};

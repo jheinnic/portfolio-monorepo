@@ -4,7 +4,7 @@ import BindingOnSyntax = interfaces.BindingOnSyntax;
 import ConstraintFunction = interfaces.ConstraintFunction;
 import Request = interfaces.Request;
 
-import {NoOpBindingOn} from '.';
+import {NoOpBindingOn} from './index';
 
 
 export class BindingWhenChildSyntax<T> implements BindingWhenSyntax<T> {

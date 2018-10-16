@@ -2,7 +2,7 @@ import {interfaces, namedConstraint, taggedConstraint, traverseAncerstors, typeC
 import BindingWhenSyntax = interfaces.BindingWhenSyntax;
 import ConstraintFunction = interfaces.ConstraintFunction;
 
-import {NoOpBindingOn} from '.';
+import {NoOpBindingOn} from './index';
 
 
 export class BindingWhenGrandChildSyntax<T> implements BindingWhenSyntax<T>

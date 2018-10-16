@@ -1,10 +1,10 @@
 import {interfaces} from 'inversify';
 
-import {IDirector} from '@jchptf/api';
+import {IDirectorFunction} from '@jchptf/api';
 import {
    BindingWhenOnChildSyntax, BindingWhenOnGrandChildSyntax, CompositeBindingBuilder, NoOpBindingOn,
    UnsupportedBindingWhenOnSyntax
-} from '.';
+} from './index';
 import BindingWhenSyntax = interfaces.BindingWhenSyntax;
 import BindingWhenOnSyntax = interfaces.BindingWhenOnSyntax;
 import BindingOnSyntax = interfaces.BindingOnSyntax;
@@ -22,7 +22,7 @@ export class CompositeBinding<T> implements CompositeBindingBuilder<T>
       this.constraintList = [];
    }
 
-   public apply(director: IDirector<CompositeBindingBuilder<T>>)
+   public apply(director: IDirectorFunction<CompositeBindingBuilder<T>>)
    {
       director(this);
 
@@ -31,7 +31,7 @@ export class CompositeBinding<T> implements CompositeBindingBuilder<T>
             constraint(request)));
    }
 
-   public bindHost(director: IDirector<BindingWhenSyntax<T> | BindingWhenOnSyntax<T>>): CompositeBindingBuilder<T>
+   public bindHost(director: IDirectorFunction<BindingWhenSyntax<T> | BindingWhenOnSyntax<T>>): CompositeBindingBuilder<T>
    {
       const builder = new this.CompositeBindingWhenSyntax(this.constraintList, this.hostBuilder);
 
@@ -40,7 +40,7 @@ export class CompositeBinding<T> implements CompositeBindingBuilder<T>
       return this;
    }
 
-   public bindParent(director: IDirector<BindingWhenSyntax<any> | BindingWhenOnSyntax<any>>): CompositeBindingBuilder<T>
+   public bindParent(director: IDirectorFunction<BindingWhenSyntax<any> | BindingWhenOnSyntax<any>>): CompositeBindingBuilder<T>
    {
       const delegate = new this.CompositeBindingWhenSyntax(this.constraintList);
       const builder = new BindingWhenOnChildSyntax(delegate);
@@ -52,7 +52,7 @@ export class CompositeBinding<T> implements CompositeBindingBuilder<T>
 
    public bindAncestor(
       generationDistance: number,
-      director: IDirector<BindingWhenSyntax<any> | BindingWhenOnSyntax<any>>): CompositeBindingBuilder<T>
+      director: IDirectorFunction<BindingWhenSyntax<any> | BindingWhenOnSyntax<any>>): CompositeBindingBuilder<T>
    {
       const delegate = new this.CompositeBindingWhenSyntax(this.constraintList);
       const builder = new BindingWhenOnGrandChildSyntax(delegate, generationDistance);

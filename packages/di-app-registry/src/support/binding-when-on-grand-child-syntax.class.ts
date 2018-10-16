@@ -2,7 +2,7 @@ import {interfaces} from 'inversify';
 import BindingWhenSyntax = interfaces.BindingWhenSyntax;
 import Context = interfaces.Context;
 
-import {BindingWhenGrandChildSyntax} from '.';
+import {BindingWhenGrandChildSyntax} from './index';
 
 
 export class BindingWhenOnGrandChildSyntax<T> extends BindingWhenGrandChildSyntax<T> {
