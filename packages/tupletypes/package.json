@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/tupletypes",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "TODO",
     "main": "./dist/index.js",
     "typings": "./dist/index.d.ts",
@@ -28,7 +28,7 @@
         "typescript": "^3.1.1"
     },
     "dependencies": {
-        "@jchptf/api": "^0.0.10",
+        "@jchptf/api": "^0.0.11",
         "tslib": "^1.9.3"
     },
     "keywords": [
