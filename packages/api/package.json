@@ -11,7 +11,7 @@
         "build": "yarn clean && tsc --declaration",
         "clean": "rm -rf *.js *.d.ts .nyc_output build coverage doc decorators mixins",
         "cover": "yarn test && nyc report --reporter=lcov",
-        "doc": "node_modules/.bin/typedoc --mode modules --out doc src",
+        "doc": "node_modules/.bin/typedoc --mode modules --out doc src typings",
         "pub": "yarn build && yarn publish --access public",
         "test": "rm -rf build && tsc -p test && nyc mocha build/test/*.js"
     },
