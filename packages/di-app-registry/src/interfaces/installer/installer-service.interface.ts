@@ -1,5 +1,4 @@
-import {ConcreteFactoryService} from './concrete-factory-service.interface';
-import {IContainerRegistryInstallerClient} from './container-registry-installer.interface';
+import {IContainerRegistryInstallerClient} from './container-registry-installer-client.interface';
 
 export interface InstallerService<In, Out>
 {

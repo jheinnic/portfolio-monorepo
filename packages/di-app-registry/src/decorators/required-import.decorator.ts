@@ -1,28 +1,30 @@
-import {MetadataAccessor, PropertyDecoratorFactory} from '@loopback/metadata';
 import {interfaces} from 'inversify';
-import ServiceIdentifier = interfaces.ServiceIdentifier;
-import {IDirector} from '@jchptf/api';
-import {ImportDiscriminator} from './discriminators/index';
+import {MetadataAccessor, PropertyDecoratorFactory} from '@loopback/metadata';
 
-export interface ImportConstraint<T>
+import {Discriminator} from './discriminator';
+
+export interface RequiredImport<T>
 {
-   serviceIdentifier: ServiceIdentifier<T>;
-   bindingScope?: interfaces.BindingScope
-   discriminator: ImportDiscriminator
+   serviceIdentifier: interfaces.ServiceIdentifier<T>;
+   bindingScope?: interfaces.BindingScope;
+   discriminator: Discriminator;
 }
 
-export const IMPORT_CONSTRAINT_KEY =
-   MetadataAccessor.create<ImportConstraint<any>, PropertyDecorator>(
-      'import-constraint-property-key');
+export const REQUIRED_IMPORT_KEY =
+   MetadataAccessor.create<RequiredImport<any>, PropertyDecorator>(
+      'required-import-property-key');
 
 /**
  * Decorator for a Fn<Context, T> property that marks its purpose as being
  * for the selection of a dependency provided by the installing party for use
  * by the installed container module.
- * @param spec
  */
-export function importConstraint<T>(spec: ImportConstraint<T>): PropertyDecorator
+export function requiredImport<T>(
+   serviceIdentifier: interfaces.ServiceIdentifier<T>,
+   discriminator: Discriminator,
+   bindingScope: interfaces.BindingScope = "Singleton"
+): PropertyDecorator
 {
-   return PropertyDecoratorFactory.createDecorator<ImportConstraint<T>>(
-      IMPORT_CONSTRAINT_KEY, spec);
+   return PropertyDecoratorFactory.createDecorator<RequiredImport<T>>(
+      REQUIRED_IMPORT_KEY, {serviceIdentifier, bindingScope, discriminator});
 }

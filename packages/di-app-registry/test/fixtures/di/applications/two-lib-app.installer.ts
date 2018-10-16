@@ -1,42 +1,53 @@
 import {inject, injectable, interfaces} from 'inversify';
-import BindingWhenSyntax = interfaces.BindingWhenSyntax;
 import {
-   ApplicationInstaller, InstallerApi, InstallerService
+   ApplicationInstaller, IContainerRegistryInstallerClient, IInstallerModuleBuilder
 } from '../../../../src/interfaces';
-import {LibraryModuleOptions} from '..';
+import {LibraryModuleRequest} from '..';
 import {ILibrary} from '../../interfaces';
 import {APP_DI_TYPES, TwoLibsApp} from '../../apps/two-libs.app';
 import {FIXTURE_DI_TYPES, FIXTURE_TYPES} from '../types';
+import {ConstructorFor} from 'simplytyped';
 
 
 @injectable()
-export class TwoLibAppInstaller implements ApplicationInstaller {
+export class TwoLibAppInstaller implements ApplicationInstaller
+{
    constructor(
-      @inject(FIXTURE_DI_TYPES.LibraryInstaller) private readonly library: InstallerService<[LibraryModuleOptions]>)
+      @inject(FIXTURE_DI_TYPES.LibraryRequest)
+      private readonly library: ConstructorFor<LibraryModuleRequest>)
    {
    }
 
-   install(): interfaces.ContainerModuleCallBack {
-      let callBack: interfaces.ContainerModuleCallBack = (bind: interfaces.Bind) => {
-         bind(FIXTURE_TYPES.Application).to(TwoLibsApp);
-      };
+   install(client: IContainerRegistryInstallerClient): void
+   {
+      client.loadToCurrent(
+         (bind: interfaces.Bind) =>
+            bind(FIXTURE_TYPES.Application)
+               .to(TwoLibsApp));
 
-      this.library.install({
-         bindWhen: (bindWhen: BindingWhenSyntax<ILibrary>) => {
-            bindWhen.whenTargetNamed(APP_DI_TYPES.libOne)
-         },
-         initialValue: 1
-      });
+      client.installToCurrent(
+         FIXTURE_DI_TYPES.LibraryInstaller,
+         new this.library({
+            bindWhen: (bindWhen: interfaces.BindingWhenSyntax<ILibrary>) => {
+               bindWhen.whenTargetNamed(APP_DI_TYPES.libOne)
+            },
+            initialValue: 1
+         })
+      );
 
-      this.library.install({
-         bindWhen: bindWhen => bindWhen.whenTargetNamed(APP_DI_TYPES.libTwo),
-         initialValue: 3
-      })
-
-      return callBack;
+      client.installToCurrent(
+         FIXTURE_DI_TYPES.LibraryInstaller,
+         new this.library({
+            bindWhen: (bindWhen: interfaces.BindingWhenSyntax<ILibrary>) => {
+               bindWhen.whenTargetNamed(APP_DI_TYPES.libTwo)
+            },
+            initialValue: 3
+         })
+      );
    }
 }
 
-export function registerTwoLibApp(bind: InstallerApi) {
-   bind.bindApplication(FIXTURE_DI_TYPES.ApplicationInstaller).to(TwoLibAppInstaller);
+export function registerTwoLibApp(bind: IInstallerModuleBuilder)
+{
+   bind.bindApplication(FIXTURE_DI_TYPES.ApplicationInstaller, TwoLibAppInstaller);
 }

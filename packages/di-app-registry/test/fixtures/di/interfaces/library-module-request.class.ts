@@ -1,10 +1,14 @@
-import {injectable} from 'inversify';
+import {injectable, interfaces} from 'inversify';
+
+import {IDirector} from '@jchptf/api';
 import {installerRequest} from '../../../../src/decorators';
+import {ILibrary} from '../../interfaces';
 
 @injectable()
 @installerRequest()
 export class LibraryModuleRequest {
-   // bindWhen: IDirectorFunction<BindingWhenSyntax<ILibrary>>;
+
+   bindWhen: IDirector<interfaces.BindingWhenSyntax<ILibrary>>;
 
    // @requiredImport(
    //    FIXTURE_TYPES.Library,

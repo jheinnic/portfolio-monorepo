@@ -29,6 +29,10 @@
     },
     "dependencies": {
         "@jchptf/api": "^0.0.7",
+        "@loopback/metadata": "^1.0.0",
+        "@thi.ng/dcons": "^1.1.11",
+        "@thi.ng/paths": "^1.6.3",
+        "class-transformer": "^0.1.9",
         "fluent-interface-builder": "^2.0.1",
         "inversify": "^4.13.0",
         "reflect-metadata": "^0.1.12",

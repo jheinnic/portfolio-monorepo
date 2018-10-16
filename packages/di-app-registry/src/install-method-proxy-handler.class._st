@@ -5,7 +5,7 @@ import {InstallerService} from './interfaces';
 import {ContainerRegistryInternal} from './interfaces/container-registry-internal.interface';
 
 
-export class InstallMethodProxyHandler<I extends InstallerService<I>> implements ProxyHandler<I['install']>
+export class InstallMethodProxyHandler<I extends InstallerService<In, Out>> implements ProxyHandler<I['install']>
 {
    constructor(
       private readonly internalCb: ContainerRegistryInternal

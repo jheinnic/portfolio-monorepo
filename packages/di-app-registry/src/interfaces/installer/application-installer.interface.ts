@@ -1,7 +1,5 @@
-import {interfaces} from 'inversify';
-import ContainerModuleCallBack = interfaces.ContainerModuleCallBack;
-import {ContainerRegistryInternal} from './container-registry-internal.interface';
+import {IContainerRegistryInstallerClient} from './container-registry-installer-client.interface';
 
 export interface ApplicationInstaller {
-   install(client: ContainerRegistryInternal): void;
+   install(client: IContainerRegistryInstallerClient): void;
 }

@@ -1,20 +1,21 @@
 import {inject, injectable, interfaces} from 'inversify';
 import BindingWhenSyntax = interfaces.BindingWhenSyntax;
-import {ApplicationInstaller, InstallerApi, InstallerService} from '../../../../src/interfaces';
-import {ILibrary} from '../../interfaces/library.interface';
-import {APP_DI_TYPES} from '../../apps/two-libs.app';
+
+import {ApplicationInstaller, IInstallerModuleBuilder, InstallerService} from '../../../../src/interfaces';
+import {ILibrary, IWidget} from '../../interfaces';
 import {FIXTURE_DI_TYPES, FIXTURE_TYPES} from '../types';
-import {LibraryModuleOptions, WidgetOneModuleOptions} from '..';
-import {IWidget} from '../../interfaces/widget.interface';
+import {LibraryModuleRequest, WidgetOneModuleOptions} from '..';
 import {DI_COMMON_TAGS} from '../../../../src/types';
-import {WidgetSharesLibOneApp} from '../../apps/widget-shares-lib-one.app';
+import {APP_DI_TYPES, WidgetSharesLibOneApp} from '../../apps/widget-shares-lib-one.app';
+import {ConstructorFor} from 'simplytyped';
 
 
 @injectable()
 export class WidgetSharesLibOneAppInstaller implements ApplicationInstaller {
    constructor(
-      @inject(FIXTURE_DI_TYPES.LibraryInstaller) private readonly library: InstallerService<[LibraryModuleOptions]>,
-      @inject(FIXTURE_DI_TYPES.WidgetOneInstaller) private readonly widgetOne: InstallerService<[WidgetOneModuleOptions]>)
+      @inject(FIXTURE_DI_TYPES.LibraryRequest) private readonly library: ConstructorFor<LibraryModuleRequest>,
+      @inject(FIXTURE_DI_TYPES.WidgetOneRequest) private readonly widgetOne: InstallerService<[WidgetOneModuleOptions]>,
+      @inject(FIXTURE_DI_TYPES.WidgetTwoRequest) private readonly widgetTwo: InstallerService<[WidgetOneModuleOptions]>)
    {
    }
 
@@ -35,7 +36,7 @@ export class WidgetSharesLibOneAppInstaller implements ApplicationInstaller {
             bindWhen.whenTargetTagged(DI_COMMON_TAGS.CuratorOf, APP_DI_TYPES.libTwo)
          },
          initialValue: 2
-   });
+      });
 
       this.library.install({
          bindWhen: (bindWhen: BindingWhenSyntax<ILibrary>) => {
@@ -44,18 +45,20 @@ export class WidgetSharesLibOneAppInstaller implements ApplicationInstaller {
          initialValue: 3
       });
 
-      this.widgetOne.install({
+      this.widgetOne.install(new WidgetOneModuleOptions({
          bindWhen: (bindWhen: BindingWhenSyntax<IWidget>) => {
             bindWhen.whenTargetTagged(DI_COMMON_TAGS.VariantFor, FIXTURE_TYPES.Application)
          },
          libOneCurator: APP_DI_TYPES.libOne,
-         libTwoCurator: undefined
-      });
+         libTwoCurator: undefined,
+         myProp: null
+      }));
 
       return callBack;
    }
 }
 
-export function registerWidgetSharesLibOneApp(bind: InstallerApi) {
-   bind.bindApplication(FIXTURE_DI_TYPES.ApplicationInstaller).to(WidgetSharesLibOneAppInstaller);
+export function registerWidgetSharesLibOneApp(bind: IInstallerModuleBuilder) {
+   bind.bindApplication(FIXTURE_DI_TYPES.ApplicationInstaller)
+      .to(WidgetSharesLibOneAppInstaller);
 }

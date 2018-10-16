@@ -1,9 +1,9 @@
 import {inject, injectable, named} from 'inversify';
 import {IBagOf} from '@jchptf/api';
-import {ILibrary} from '../interfaces/library.interface';
-import {FIXTURE_TYPES} from '../di/types';
+import {ILibrary} from '../interfaces';
+import {FIXTURE_TYPES} from '../di';
 
-export const APP_DI_TYPES: IBagOf<symbol> = {
+export const APP_DI_TYPES: IBagOf<symbol, 'libOne'|'libTwo'> = {
    libOne: Symbol.for('libOne'),
    libTwo: Symbol.for('libTwo')
 };

@@ -1,6 +1,13 @@
 import {interfaces} from 'inversify';
+import {AnyFunc} from 'simplytyped';
 
-export type IContainerAccessStrategy<T> = (context: interfaces.Container) => T;
+import {NestedContainerIdentifier} from '..';
 
-export type IsContainerAccessStrategy<T> =
+export type IContainerAccessStrategy<T> = {
+   (context: interfaces.Container): T;
+   containerId?: NestedContainerIdentifier;
+}
+
+export type IsContainerAccessStrategy<T extends AnyFunc> =
    T extends IContainerAccessStrategy<T> ? T : never;
+

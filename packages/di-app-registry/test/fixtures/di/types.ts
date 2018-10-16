@@ -10,12 +10,16 @@ export const FIXTURE_TYPES: IBagOf<symbol, FixtureTypes> = {
    Application: Symbol.for('Application')
 };
 
-type FixtureDiTypes = 'LibraryInstaller' | 'WidgetOneInstaller' | 'WidgetTwoInstaller' | 'SDKInstaller' | 'CompleteInstaller' | 'ApplicationInstaller'
+type FixtureDiTypes = 'LibraryInstaller' | 'LibraryRequest' | 'WidgetOneInstaller' | 'WidgetTwoInstaller' |
+ 'WidgetOneRequest' | 'WidgetTwoRequest' | 'ComponentInstaller' | 'ComponentRequest' | 'ApplicationInstaller'
 export const FIXTURE_DI_TYPES: IBagOf<symbol, FixtureDiTypes> = {
    LibraryInstaller: Symbol.for('LibraryInstaller'),
+   LibraryRequest: Symbol.for('LibraryRequest'),
    WidgetOneInstaller: Symbol.for('WidgetOneInstaller'),
    WidgetTwoInstaller: Symbol.for('WidgetTwoInstaller'),
-   SDKInstaller: Symbol.for('SDKInstaller'),
-   CompleteInstaller: Symbol.for('CompleteInstaller'),
+   WidgetOneRequest: Symbol.for('WidgetOneRequest'),
+   WidgetTwoRequest: Symbol.for('WidgetTwoRequest'),
+   ComponentInstaller: Symbol.for('ComponentInstaller'),
+   ComponentRequest: Symbol.for('ComponentRequest'),
    ApplicationInstaller: Symbol.for('ApplicationInstaller')
 };
