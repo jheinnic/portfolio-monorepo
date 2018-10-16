@@ -1,0 +1,18 @@
+#!/bin/sh
+
+if [ $# == 1 ]; then
+    modules="packages/$1"
+else
+    modules="packages/*"
+fi
+
+for m in $modules; do
+    name=$(echo $m | cut -d '/' -f 2)
+    echo "sanitizing: $name"
+    find $m/doc -name "*.html" -exec sed -i '' "s/\/\([a-zA-Z_0-9/-]\+\)\/node_modules\///g" '{}' \;
+    find $m/doc -name "*.html" -exec echo '{}' \;
+    echo "syncing..."
+    aws s3 sync $m/doc s3://docs.jchptf/monorepo/$name --profile jchdoc-s3 --acl public-read
+done
+
+aws s3 cp dev/docs.html s3://docs.jchptf/index.html --profile jchdoc-s3 --acl public-read
