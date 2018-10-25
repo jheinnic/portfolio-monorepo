@@ -46,9 +46,7 @@ export class ConfigLoader implements IConfigLoader {
       if (!! propMap) {
          for (let nextEntry in propMap) {
             const configKey = `${actualRoot}.${propMap[nextEntry].configKey}`;
-            if (isKeyOf(resolvedConfig, nextEntry)) {
-               resolvedConfig[nextEntry] = this.config.get(configKey);
-            }
+            resolvedConfig[nextEntry] = this.config.get(configKey);
          }
       }
 
