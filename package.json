@@ -5,11 +5,9 @@
     ],
     "devDependencies": {
         "benchmark": "^2.1.4",
-        "lerna": "^2.11.0",
+        "lerna": "^3.4.3",
         "mocha": "^5.2.0",
         "nyc": "^12.0.2",
-        "parcel-bundler": "^1.10.1",
-        "terser": "^3.9.3",
         "tslint": "^5.11.0",
         "typescript": "^3.1.1"
     },
@@ -20,7 +18,8 @@
         "depgraph": "scripts/depgraph && git add assets/deps.png && git commit -m 'docs: update dep graph' && git push",
         "doc": "lerna run doc",
         "examples": "ex=\"examples/*\"; for e in $ex; do (cd $e && yarn build); done",
-        "pub": "lerna publish && yarn doc && scripts/upload-docs",
+        "pub": "lerna publish --registry http://localhost:4873 && lerna run pub && yarn doc && scripts/upload-docs",
         "test": "yarn build && lerna run test"
-    }
+    },
+    "name": "monorepo"
 }

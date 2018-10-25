@@ -1,5 +1,5 @@
 import {co} from 'co';
-import {limiter} from '../src';
+import {limiter} from '../src/services/concurrent-work-factory.service';
 
 const limit = limiter(3);
 

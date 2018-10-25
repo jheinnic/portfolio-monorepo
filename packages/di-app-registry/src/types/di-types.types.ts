@@ -1,6 +1,6 @@
 import {IBagOf} from '@jchptf/api';
 
-type DITypes = 'NestedContainer' | 'InstallationActivityFactory' | 'InstallServiceAdapter' | 'ContainerRegistryInternal'; // |
+type DITypes = 'NestedContainer' | 'InstallationActivityFactory' | 'InstallServiceAdapter' | 'ContainerRegistryInternal' | 'ContainerAccessFactory'; // |
 // 'ContainerModuleCallBack'|
 // 'ModuleRegistry' |
 // 'ContainerModule' |
@@ -14,5 +14,6 @@ export const DI_TYPES: IBagOf<symbol, DITypes> = {
    InstallationActivityFactory: Symbol.for('InstallationActivityFactory'),
    InstallServiceAdapter: Symbol.for('InstallServiceAdapter'),
    ContainerRegistryInternal: Symbol.for('ContainerRegistryInternal'),
+   ContainerAccessFactory: Symbol.for('ContainerAccessFactory'),
    NestedContainer: Symbol.for('NestedContainer')
 };

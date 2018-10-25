@@ -1,21 +1,20 @@
-import {co, CoRoutineGenerator, WrappableCoRoutineGenerator, WrappedCoRoutineGenerator} from 'co';
-import {inject, injectable} from 'inversify';
-import {IConcurrentTaskPoolFactory, IQueueFactory, Limiter} from '../interfaces';
-import {CO_TYPES} from '../di';
+import {injectable} from 'inversify';
 import {Queue} from 'co-priority-queue';
+import {co, CoRoutineGenerator, WrappableCoRoutineGenerator, WrappedCoRoutineGenerator} from 'co';
+
+import {IConcurrentWorkFactory, Limiter} from '../interfaces';
 
 @injectable()
-export class ConcurrentTaskPoolFactory implements IConcurrentTaskPoolFactory
+export class ConcurrentWorkFactory implements IConcurrentWorkFactory
 {
-   constructor(
-      @inject(CO_TYPES.QueueFactory) private readonly queueFactory: IQueueFactory
-   )
-   { }
+   createPriorityQueue<M>(): Queue<M> {
+      return new Queue<M>();
+   }
 
-   getTaskLimiter(concurrency: number, defaultPriority: number = 10): Limiter
+   createLimiter(concurrency: number, defaultPriority: number = 10): Limiter
    {
       const queue: Queue<CoRoutineGenerator> =
-         this.queueFactory.createQueue<CoRoutineGenerator>();
+         this.createPriorityQueue<CoRoutineGenerator>();
 
       // Create consumers
       for (let ii = 0; ii < concurrency; ii++) {
@@ -55,7 +54,7 @@ export class ConcurrentTaskPoolFactory implements IConcurrentTaskPoolFactory
    // P>, R = any, P extends any[] = any[]>( coWrappable: F, concurrency: number):
    // WrappedCoRoutineGenerator<F, R, P> { return this.getTaskLimiter(concurrency, 10)(coWrappable); }
 
-   public getLimitedTask<
+   public createLimitedTask<
       F extends WrappableCoRoutineGenerator<R, P> = WrappableCoRoutineGenerator<R, P>,
       R extends any = any,
       P extends any[] = any[]>(coWrappable: F, concurrency: number): WrappedCoRoutineGenerator<F, R, P>
@@ -72,7 +71,7 @@ export class ConcurrentTaskPoolFactory implements IConcurrentTaskPoolFactory
       const fixedPriority: number = 10;
 
       const queue: Queue<QueueMsg> =
-         this.queueFactory.createQueue<QueueMsg>();
+         this.createPriorityQueue<QueueMsg>();
       const wrappedCo: WrappedCoRoutineGenerator<F, R, P> =
          co.wrap<F, R, P>(coWrappable);
 
@@ -106,3 +105,26 @@ export class ConcurrentTaskPoolFactory implements IConcurrentTaskPoolFactory
       }
    };
 }
+
+
+
+// export function createQueueFactory<T = any>(_context: interfaces.Context): ConcreteFactory<Queue<T>, [PropertyKey?]> {
+//    return (key?: PropertyKey): Queue<T> => {
+//       let retVal: Queue<T>;
+//
+//       if (!!key) {
+//          if (_context.container.isBoundNamed(CO_TYPES.Queue, key)) {
+//             retVal = _context.container.getNamed(CO_TYPES.Queue, key);
+//          } else {
+//             retVal = new Queue<T>();
+//             _context.container.bind(CO_TYPES.Queue).toConstantValue(retVal).whenTargetNamed(key);
+//          }
+//       } else {
+//          retVal = new Queue<T>();
+//       }
+//
+//       return retVal;
+//    }
+// }
+//
+// export const queueFactoryCreator: interfaces.FactoryCreator<Queue<any>> = createQueueFactory;

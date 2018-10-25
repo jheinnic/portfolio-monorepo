@@ -1,6 +1,6 @@
-import {IEnable, mixins} from '../src';
+import {IEnable, iEnable} from '../src';
 
-@mixins.IEnable()
+@iEnable()
 export class ToggleThing implements IEnable<any> {
    constructor(public readonly flags: number[]) { }
 

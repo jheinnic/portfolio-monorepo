@@ -12,6 +12,8 @@
  */
 import {Keys} from 'simplytyped';
 
+export type MixableConstructor<T extends any = object> = new (...args: any[]) => T;
+
 export function mixin<I extends Object, S extends Object = {}>(behaviour: I, sharedBehaviour?: S)
 {
     const instanceKeys = Reflect.ownKeys(behaviour);

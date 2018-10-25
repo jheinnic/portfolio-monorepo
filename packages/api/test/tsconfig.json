@@ -5,6 +5,15 @@
     },
     "include": [
         "./**/*.ts",
-        "../src/**/*.ts"
+        "../src/**/*.ts",
+        "../typings/**/*.d.ts"
+    ],
+    "exclude": [
+        "../dist",
+        "../build",
+        "../node_modules",
+        "../../*/dist",
+        "../../*/build",
+        "../../*/node_modules"
     ]
 }

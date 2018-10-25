@@ -1,46 +1,48 @@
 import {interfaces} from 'inversify';
 import {IDirector} from '@jchptf/api';
-import {NestedContainerIdentifier} from '../index';
-import {InstallerServiceIdentifier} from '../index';
-import {IContainerAccessStrategy} from './container-access-strategy.interface';
+import {NestedContainerIdentifier, InstallerServiceIdentifier, IContainerAccessStrategy} from '..';
+import {ClassType} from 'class-transformer-validator';
 
 export interface IContainerRegistryInstallerClient {
+   // TODO: Only expose this on the installer client for a top-most Application.
+   getConfig<T extends object>(configClass: ClassType<T>, rootPath?: string): T;
+
    createChild(
       id: NestedContainerIdentifier,
       allowExists?: boolean): IContainerRegistryInstallerClient;
 
-   fromChildContext(
+   fromChild(
       id: NestedContainerIdentifier,
       director: IDirector<IContainerRegistryInstallerClient>,
       allowCreate?: boolean): IContainerRegistryInstallerClient;
 
-   loadToCurrent(callback: interfaces.ContainerModuleCallBack): IContainerRegistryInstallerClient;
+   load(callback: interfaces.ContainerModuleCallBack): IContainerRegistryInstallerClient;
 
-   loadToChild(
+   loadFromChild(
       id: NestedContainerIdentifier,
       callback: interfaces.ContainerModuleCallBack,
       allowCreate?: boolean): IContainerRegistryInstallerClient;
 
-   installToCurrent<Import, Export>(
+   install<Import, Export>(
       installerId: InstallerServiceIdentifier<Import, Export>,
       requestMessage: Import): Export;
 
-   installToChild<Import, Export>(
+   installFromChild<Import, Export>(
       childId: NestedContainerIdentifier,
       installerId: InstallerServiceIdentifier<Import, Export>,
       requestMessage: Import,
       allowCreate?: boolean): Export;
 
-   adaptForCurrent<T>(
+   adaptFromChild<T>(
       childId: NestedContainerIdentifier,
       childAccess: IContainerAccessStrategy<T>,
       trustUntagged?: boolean
    ): IContainerAccessStrategy<T>;
 
-   adaptForChild<T>(
-      childId: NestedContainerIdentifier,
-      grandChildId: NestedContainerIdentifier,
-      grandChildAccess: IContainerAccessStrategy<T>,
-      trustUntagged?: boolean
-   ): IContainerAccessStrategy<T>;
+   // adaptForChild<T>(
+   //    childId: NestedContainerIdentifier,
+   //    grandChildId: NestedContainerIdentifier,
+   //    grandChildAccess: IContainerAccessStrategy<T>,
+   //    trustUntagged?: boolean
+   // ): IContainerAccessStrategy<T>;
 }

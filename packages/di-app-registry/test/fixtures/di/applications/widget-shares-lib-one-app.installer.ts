@@ -4,7 +4,7 @@ import BindingWhenSyntax = interfaces.BindingWhenSyntax;
 import {ApplicationInstaller, IInstallerModuleBuilder, InstallerService} from '../../../../src/interfaces';
 import {ILibrary, IWidget} from '../../interfaces';
 import {FIXTURE_DI_TYPES, FIXTURE_TYPES} from '../types';
-import {LibraryModuleRequest, WidgetOneModuleOptions} from '..';
+import {LibraryModuleRequest, WidgetOneModuleRequest} from '..';
 import {DI_COMMON_TAGS} from '../../../../src/types';
 import {APP_DI_TYPES, WidgetSharesLibOneApp} from '../../apps/widget-shares-lib-one.app';
 import {ConstructorFor} from 'simplytyped';
@@ -14,8 +14,8 @@ import {ConstructorFor} from 'simplytyped';
 export class WidgetSharesLibOneAppInstaller implements ApplicationInstaller {
    constructor(
       @inject(FIXTURE_DI_TYPES.LibraryRequest) private readonly library: ConstructorFor<LibraryModuleRequest>,
-      @inject(FIXTURE_DI_TYPES.WidgetOneRequest) private readonly widgetOne: InstallerService<[WidgetOneModuleOptions]>,
-      @inject(FIXTURE_DI_TYPES.WidgetTwoRequest) private readonly widgetTwo: InstallerService<[WidgetOneModuleOptions]>)
+      @inject(FIXTURE_DI_TYPES.WidgetOneRequest) private readonly widgetOne: InstallerService<[WidgetOneModuleRequest]>,
+      @inject(FIXTURE_DI_TYPES.WidgetTwoRequest) private readonly widgetTwo: InstallerService<[WidgetOneModuleRequest]>)
    {
    }
 
@@ -45,7 +45,7 @@ export class WidgetSharesLibOneAppInstaller implements ApplicationInstaller {
          initialValue: 3
       });
 
-      this.widgetOne.install(new WidgetOneModuleOptions({
+      this.widgetOne.install(new WidgetOneModuleRequest({
          bindWhen: (bindWhen: BindingWhenSyntax<IWidget>) => {
             bindWhen.whenTargetTagged(DI_COMMON_TAGS.VariantFor, FIXTURE_TYPES.Application)
          },

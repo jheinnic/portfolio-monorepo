@@ -15,11 +15,10 @@ import {installerRequest, requiredImport} from '../../../../src/decorators';
 
 @installerRequest()
 @injectable()
-export class WidgetOneModuleOptions {
+export class WidgetOneModuleRequest {
    // public bindWhen: IDirectorFunction<BindingWhenSyntax<IWidget>>;
-   // public libOneCurator?: symbol;
 
-   constructor( partial: Partial<WidgetOneModuleOptions> ) {
+   constructor( partial: Partial<WidgetOneModuleRequest> ) {
       Object.assign(this, partial);
    }
 

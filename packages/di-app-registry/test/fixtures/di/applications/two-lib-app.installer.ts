@@ -20,12 +20,12 @@ export class TwoLibAppInstaller implements ApplicationInstaller
 
    install(client: IContainerRegistryInstallerClient): void
    {
-      client.loadToCurrent(
+      client.load(
          (bind: interfaces.Bind) =>
             bind(FIXTURE_TYPES.Application)
                .to(TwoLibsApp));
 
-      client.installToCurrent(
+      client.install(
          FIXTURE_DI_TYPES.LibraryInstaller,
          new this.library({
             bindWhen: (bindWhen: interfaces.BindingWhenSyntax<ILibrary>) => {
@@ -35,7 +35,7 @@ export class TwoLibAppInstaller implements ApplicationInstaller
          })
       );
 
-      client.installToCurrent(
+      client.install(
          FIXTURE_DI_TYPES.LibraryInstaller,
          new this.library({
             bindWhen: (bindWhen: interfaces.BindingWhenSyntax<ILibrary>) => {

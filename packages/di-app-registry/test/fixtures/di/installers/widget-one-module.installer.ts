@@ -6,22 +6,22 @@ import BindingWhenOnSyntax = interfaces.BindingWhenOnSyntax;
 import {IDirector} from '@jchptf/api';
 import {IInstallerModuleBuilder, InstallerService} from '../../../../src/interfaces';
 import {DI_COMMON_TAGS} from '../../../../src/types';
-import {toCompoundDirector} from '../../../../src/support/to-compound-director.function';
+import {toCompositeDirector} from '../../../../src/support/to-composite-director.function';
 
 import {WIDGET_ONE_TAG_VALUES, WidgetOne} from '../../components/widget-one.class';
-import {FIXTURE_TYPES, LibraryModuleRequest, WidgetOneModuleOptions} from '..';
+import {FIXTURE_TYPES, LibraryModuleRequest, WidgetOneModuleRequest} from '..';
 import {ILibrary, IWidget} from '../../interfaces';
 import {FIXTURE_DI_TYPES} from '../types';
 
 @injectable()
-export class WidgetOneModuleInstaller implements InstallerService<[WidgetOneModuleOptions]>
+export class WidgetOneModuleInstaller implements InstallerService<[WidgetOneModuleRequest]>
 {
    constructor(
       @inject(
          FIXTURE_DI_TYPES.LibraryInstaller) private readonly library: InstallerService<[LibraryModuleRequest]>
    ) { }
 
-   install(options: WidgetOneModuleOptions): ContainerModuleCallBack
+   install(options: WidgetOneModuleRequest): ContainerModuleCallBack
    {
       return (bind: interfaces.Bind, _unbind: interfaces.Unbind, _isBound: interfaces.IsBound,
          _rebind: interfaces.Rebind) =>
@@ -33,7 +33,7 @@ export class WidgetOneModuleInstaller implements InstallerService<[WidgetOneModu
 
          if (!!options.libOneCurator) {
             const compoundDirector: IDirector<BindingWhenSyntax<any>> =
-               toCompoundDirector(options.bindWhen, (builder: BindingWhenOnSyntax<ILibrary>) => {
+               toCompositeDirector(options.bindWhen, (builder: BindingWhenOnSyntax<ILibrary>) => {
                   builder.when((request: interfaces.Request) =>
                      taggedConstraint(DI_COMMON_TAGS.VariantFor)(WIDGET_ONE_TAG_VALUES.libDepOne)(request)
                   );
@@ -55,7 +55,7 @@ export class WidgetOneModuleInstaller implements InstallerService<[WidgetOneModu
 
          if (!!options.libTwoCurator) {
             const compoundDirector: IDirector<BindingWhenSyntax<any>> =
-               toCompoundDirector(options.bindWhen, (builder: BindingWhenOnSyntax<ILibrary>) => {
+               toCompositeDirector(options.bindWhen, (builder: BindingWhenOnSyntax<ILibrary>) => {
                   builder.whenTargetTagged(DI_COMMON_TAGS.VariantFor, WIDGET_ONE_TAG_VALUES.libDepTwo)
                });
             compoundDirector(
@@ -78,8 +78,8 @@ export class WidgetOneModuleInstaller implements InstallerService<[WidgetOneModu
 
 export function registerWidgetOneModule(bind: IInstallerModuleBuilder)
 {
-   bind.bindInstaller<WidgetOneModuleOptions, void>(
-      FIXTURE_DI_TYPES.WidgetOneRequest, WidgetOneModuleOptions,
+   bind.bindInstaller<WidgetOneModuleRequest, void>(
+      FIXTURE_DI_TYPES.WidgetOneRequest, WidgetOneModuleRequest,
    FIXTURE_DI_TYPES.WidgetOneInstaller, WidgetOneModuleInstaller
    );
 }

@@ -12,7 +12,7 @@ interface IEnableImpl<T> extends api.IEnable<T> {
  * interface, `enable()` and `disable()` will automatically emit the
  * respective events.
  */
-export function IEnable<T extends any>()
+export function iEnable<T extends any>()
 {
    return mixin<IEnableImpl<T>>({
       _enabled: true,

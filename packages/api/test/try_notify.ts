@@ -1,6 +1,6 @@
-import {INotify, Event, Listener, mixins} from '../src';
+import {INotify, Event, Listener, iNotify} from '../src';
 
-@mixins.INotify
+@iNotify
 export class ToggleThing implements INotify
 {
    constructor(public readonly flags: number[]) {

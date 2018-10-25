@@ -5,7 +5,7 @@ import BindingWhenOnSyntax = interfaces.BindingWhenOnSyntax;
 
 import {IDirectorFunction} from '@jchptf/api';
 import {IInstallerModuleBuilder, InstallerService} from '../../../../src/interfaces';
-import {FIXTURE_TYPES, LibraryModuleRequest, WidgetOneModuleOptions} from '..';
+import {FIXTURE_TYPES, LibraryModuleRequest, WidgetOneModuleRequest} from '..';
 import {FIXTURE_DI_TYPES} from '../types';
 import {ILibrary, IWidget} from '../../interfaces';
 import {WIDGET_ONE_TAG_VALUES, WidgetOne} from '../../components/widget-one.class';
@@ -13,14 +13,14 @@ import {DI_COMMON_TAGS} from '../../../../src/types';
 import {toCompoundDirector} from '../../../../src/abort/support/to-compound-director.function';
 
 @injectable()
-export class WidgetOneModuleInstaller implements InstallerService<[WidgetOneModuleOptions]>
+export class WidgetOneModuleInstaller implements InstallerService<[WidgetOneModuleRequest]>
 {
    constructor(
       @inject(
          FIXTURE_DI_TYPES.LibraryInstaller) private readonly library: InstallerService<[LibraryModuleRequest]>
    ) { }
 
-   install(options: WidgetOneModuleOptions): ContainerModuleCallBack
+   install(options: WidgetOneModuleRequest): ContainerModuleCallBack
    {
       return (bind: interfaces.Bind, _unbind: interfaces.Unbind, _isBound: interfaces.IsBound,
          _rebind: interfaces.Rebind) =>

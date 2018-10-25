@@ -2,21 +2,26 @@ import {inject, injectable, interfaces} from 'inversify';
 
 import {IDirector} from '@jchptf/api';
 import {DI_TYPES} from './types';
-import {ContainerRegistryInternal} from './interfaces/container-registry-internal.interface';
+import {IContainerRegistryInternal} from './interfaces/container-registry-internal.interface';
 import {
    IContainerAccessStrategy, IContainerRegistryInstallerClient, InstallerServiceIdentifier,
    NestedContainerIdentifier
 } from './interfaces';
 import {IllegalArgumentError, IllegalStateError} from '@thi.ng/errors';
+import {ClassType} from 'class-transformer-validator';
 
 @injectable()
 export class ContainerRegistryInstallerClient implements IContainerRegistryInstallerClient
 {
    constructor(
       @inject(
-         DI_TYPES.ContainerRegistryInternal) private readonly registryInternal: ContainerRegistryInternal
+         DI_TYPES.ContainerRegistryInternal) private readonly registryInternal: IContainerRegistryInternal
    )
    { }
+
+   public getConfig<T extends object>(configClass: ClassType<T>, rootPath?: string): T {
+      return this.registryInternal.getConfig(configClass, rootPath);
+   }
 
    public createChild(
       childId: NestedContainerIdentifier,
@@ -38,7 +43,7 @@ export class ContainerRegistryInstallerClient implements IContainerRegistryInsta
       return this;
    }
 
-   public fromChildContext(
+   public fromChild(
       childId: NestedContainerIdentifier,
       director: IDirector<IContainerRegistryInstallerClient>): IContainerRegistryInstallerClient
    {
@@ -52,7 +57,7 @@ export class ContainerRegistryInstallerClient implements IContainerRegistryInsta
       return this;
    }
 
-   public loadToCurrent(
+   public load(
       callback: interfaces.ContainerModuleCallBack): IContainerRegistryInstallerClient
    {
       if (! callback) {
@@ -64,7 +69,7 @@ export class ContainerRegistryInstallerClient implements IContainerRegistryInsta
       return this;
    }
 
-   public loadToChild(
+   public loadFromChild(
       childId: NestedContainerIdentifier,
       callback: interfaces.ContainerModuleCallBack,
       allowCreate: boolean = false): IContainerRegistryInstallerClient
@@ -85,7 +90,7 @@ export class ContainerRegistryInstallerClient implements IContainerRegistryInsta
       return this;
    }
 
-   public installToCurrent<Import, Export>(
+   public install<Import, Export>(
       installerId: InstallerServiceIdentifier<Import, Export>, requestBody: Import): Export
    {
       if (!installerId || !requestBody) {
@@ -101,7 +106,7 @@ export class ContainerRegistryInstallerClient implements IContainerRegistryInsta
          .scanExports(retVal);
    }
 
-   public installToChild<Import, Export>(
+   public installFromChild<Import, Export>(
       childId: NestedContainerIdentifier,
       installerId: InstallerServiceIdentifier<Import, Export>,
       requestBody: Import,
@@ -128,7 +133,7 @@ export class ContainerRegistryInstallerClient implements IContainerRegistryInsta
          .scanExports(retVal);
    }
 
-   public adaptForCurrent<T>(
+   public adaptFromChild<T>(
       childId: NestedContainerIdentifier,
       accessStrategy: IContainerAccessStrategy<T>,
       trustUntagged: boolean = false): IContainerAccessStrategy<T>
@@ -187,7 +192,7 @@ export class ContainerRegistryInstallerClient implements IContainerRegistryInsta
                `Cannot adapt access strategy.  ${childId.toString()} has no grandchild container.`);
          }
 
-         return this.adaptForCurrent(grandChildId, grandChildAccessStrategy, trustUntagged);
+         return this.adaptFromChild(grandChildId, grandChildAccessStrategy, trustUntagged);
       } finally {
          this.registryInternal.exitNestedContainer(childId);
       }

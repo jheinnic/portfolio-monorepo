@@ -1,8 +1,4 @@
-import * as decorators from "./decorators";
-import * as mixins from "./mixins";
-export {
-    decorators,
-    mixins,
-}
-
-export * from "./api";
+export * from './api';
+export * from './decorators';
+export * from './mixins';
+export * from './mixin';

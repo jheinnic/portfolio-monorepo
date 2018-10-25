@@ -1,7 +1,8 @@
 import {interfaces} from 'inversify';
 import {InstallerServiceIdentifier, NestedContainerIdentifier} from '..';
+import {ClassType} from 'class-transformer-validator';
 
-export interface ContainerRegistryInternal {
+export interface IContainerRegistryInternal {
    createNestedContainer(containerKey: NestedContainerIdentifier): void;
 
    hasNestedContainer(containerKey: NestedContainerIdentifier): boolean;
@@ -17,6 +18,8 @@ export interface ContainerRegistryInternal {
       requestMsg: Import): Export;
 
    scanExports<Export>(responseMsg: Export): Export;
+
+   getConfig<T extends object>(configClass: ClassType<T>, rootPath?: string): T;
 
    // scanForDecorators(argList: any|any[]): void;
 

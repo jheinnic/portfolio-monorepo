@@ -9,13 +9,16 @@ import {
    InstallerModuleCallBack, InstallerService, InstallerServiceIdentifier, NestedContainerIdentifier
 } from './interfaces';
 import {DI_COMMON_TAGS, DI_TYPES} from './types';
-import {ContainerRegistryInternal} from './interfaces/container-registry-internal.interface';
+import {IContainerRegistryInternal} from './interfaces/container-registry-internal.interface';
 import {InstallerModuleBuilder} from './installer-module-builder.class';
 import {InstallerAnnotationProcessor} from './installer-annotation-processor.class';
 import {ContainerRegistryInstallerClient} from './container-registry-installer-client.class';
-import {nestedContainerExportMiddleware} from './nested-container-export-middleware.function';
+import {CONFIG_TYPES, configLoaderModule} from '@jchptf/config';
+import {ClassType} from 'class-transformer-validator';
+import {IConfigLoader} from '@jchptf/config/dist/interfaces';
+// import {nestedContainerExportMiddleware} from './nested-container-export-middleware.function';
 
-export class ContainerRegistry implements IContainerRegistry, ContainerRegistryInternal
+export class ContainerRegistry implements IContainerRegistry, IContainerRegistryInternal
 {
    private static readonly INSTANCE: ContainerRegistry = new ContainerRegistry();
 
@@ -43,9 +46,9 @@ export class ContainerRegistry implements IContainerRegistry, ContainerRegistryI
       this.currentAppContainer = this.applicationContainer;
       this.parentContainerStack = new DCons<Container>();
 
-      this.applicationContainer.applyMiddleware(
-         nestedContainerExportMiddleware
-      );
+      // this.applicationContainer.applyMiddleware(
+      //    nestedContainerExportMiddleware
+      // );
 
       this.installerAnnotationProcessor = new InstallerAnnotationProcessor();
       this.installerClient = new ContainerRegistryInstallerClient(this);
@@ -106,6 +109,18 @@ export class ContainerRegistry implements IContainerRegistry, ContainerRegistryI
       // console.log('End of round');
       // }
       // console.log('Done Loading');
+   }
+
+   public getConfig<T extends object>(configClass: ClassType<T>, rootPath?: string): T {
+      // Defer installation until first request to allow all config class imports to have
+      // taken place.
+      if (! this.installerContainer.isBound(CONFIG_TYPES.ConfigLoader)) {
+         this.installerContainer.load(
+            new ContainerModule(configLoaderModule));
+      }
+
+      const configLoader: IConfigLoader = this.installerContainer.get(CONFIG_TYPES.ConfigLoader);
+      return configLoader.getConfig(configClass, rootPath);
    }
 
    public createNestedContainer(containerKey: NestedContainerIdentifier): void

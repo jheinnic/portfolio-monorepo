@@ -15,7 +15,7 @@ export class LibraryModuleInstaller implements InstallerService<LibraryModuleReq
 {
    install(client: IContainerRegistryInstallerClient, options: LibraryModuleRequest): void
    {
-      client.loadToCurrent(
+      client.load(
          (bind: interfaces.Bind, _unbind: interfaces.Unbind, _isBound: interfaces.IsBound,
             _rebind: interfaces.Rebind) =>
          {

@@ -1,7 +1,6 @@
-import {mixins} from '../src';
 import * as api from '../src';
 
-@mixins.IWatch<WatchedThing>()
+@api.iWatch<WatchedThing>()
 export class WatchedThing implements api.IWatch<WatchedThing> {
    constructor(public readonly flags: number[]) { }
 

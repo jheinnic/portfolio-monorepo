@@ -5,7 +5,7 @@ interface WatchImpl<T extends api.IWatch<T>> extends api.IWatch<T> {
     _watches: api.IObjectOf<api.Watch<T>>
 }
 
-export function IWatch<T extends api.IWatch<any>>(): any
+export function iWatch<T extends api.IWatch<any>>(): any
 {
    return mixin<WatchImpl<T>>({
       _watches: {},

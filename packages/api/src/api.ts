@@ -108,9 +108,17 @@ export interface IObjectOf<T> {
     [id: string]: T;
 }
 
-export type IBagOf<T, N extends S = S, O = any, S extends keyof O = keyof O> = {
-    [K in N]: T;
+export type IBagOf<T, P extends keyof any> = {
+    [K in P]: T;
 }
+
+export type IMapTo<T, S extends any, P extends keyof S = keyof S> = {
+   [K in P]: T;
+}
+
+export type Wild<P extends keyof any = keyof any> = IMapTo<any, any, P>;
+
+export type SymbolEnum<P extends keyof any = keyof any> = IMapTo<symbol, any, P>;
 
 /**
  * Interface for types supported the release of internal resources.
@@ -123,7 +131,7 @@ export interface IRelease {
  * Interface for types offering observers of internal value changes.
  * Also see `@IWatch` decorator mixin.
  *
- * @see mixins/IWatch
+ * @see mixins/iWatch
  */
 export interface IWatch<T> {
     addWatch(id: string, fn: Watch<T>): boolean;

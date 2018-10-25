@@ -15,6 +15,4 @@ export interface IInstallerModuleBuilder
    bindApplication<A extends ApplicationInstaller>(
       applicationIdentifier: ApplicationIdentifier<A>,
       constructor: ConstructorFor<A>): void;
-
-
 }

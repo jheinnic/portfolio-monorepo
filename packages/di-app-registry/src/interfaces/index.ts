@@ -13,6 +13,7 @@ export * from './module/installer-module-call-back.interface';
 
 export * from './utility/concrete-factory-service.interface';
 export * from './utility/concrete-factory.interface';
+export * from './utility/container-access-factory.interface';
 
 export * from './container-registry.interface';
 // container-registry-internal intentionally not listed here.  It is an internal
