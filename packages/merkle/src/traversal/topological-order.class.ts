@@ -1,10 +1,7 @@
 import {inject} from 'inversify';
 
-import {LayerFor, MerkleDigestLocator, MerkleTreeDescription} from '../locator';
-import {IMerkleCalculator} from '../interface';
-import {MERKLE_TYPES} from '../di';
-
-import '../../reflection';
+import '@jchptf/reflection';
+import {LayerFor, MerkleDigestLocator, MerkleTreeDescription, IMerkleCalculator, MERKLE_TYPES} from '..';
 import {TopoOrderOptions} from './topo-order-options.class';
 
 export abstract class TopologicalOrder<Node extends MerkleDigestLocator = MerkleDigestLocator>
@@ -13,8 +10,7 @@ export abstract class TopologicalOrder<Node extends MerkleDigestLocator = Merkle
       @inject(MERKLE_TYPES.MerkleCalculator) protected readonly calculator: IMerkleCalculator,
       @inject(MERKLE_TYPES.MerkleTreeDescription) protected readonly treeDescription: MerkleTreeDescription,
       private readonly traversalOptions: TopoOrderOptions
-   )
-   { }
+   ) { }
 
    protected abstract get terminalDepth(): number;
    protected abstract get subtreeReach(): number;

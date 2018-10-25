@@ -5,7 +5,7 @@ import {IMerkleCalculator} from '../interface';
 import {MERKLE_TYPES} from '../di';
 import {TopoOrderOptions, TopologicalOrder} from '.';
 
-import '../../reflection';
+import '@jchptf/reflection';
 
 export class BlockTopologicalOrder extends TopologicalOrder<BlockMappedDigestLocator>
 {

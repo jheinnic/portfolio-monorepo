@@ -5,7 +5,7 @@ import {IMerkleCalculator} from '../interface';
 import {MERKLE_TYPES} from '../di';
 import {TopologicalOrder, TopoOrderOptions} from '.';
 
-import '../../reflection';
+import '@jchptf/reflection';
 
 export class MerkleTopologicalOrder extends TopologicalOrder<MerkleDigestLocator>
 {
