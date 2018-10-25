@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/api",
-    "version": "0.0.17",
+    "version": "0.0.18",
     "description": "Common, generic types & interfaces for jchptf projects",
     "main": "./dist/index.js",
     "typings": "./dist/index.d.ts",
