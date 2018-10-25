@@ -2,7 +2,6 @@ import {IConfig} from 'config';
 import {injectable} from 'inversify';
 import {ClassType, transformAndValidateSync} from 'class-transformer-validator';
 import {MetadataInspector, MetadataMap} from '@loopback/metadata';
-import {isKeyOf} from 'simplytyped';
 
 import '@jchptf/reflection';
 import {Wild} from '@jchptf/api';
@@ -46,9 +45,7 @@ export class ConfigLoader implements IConfigLoader {
       if (!! propMap) {
          for (let nextEntry in propMap) {
             const configKey = `${actualRoot}.${propMap[nextEntry].configKey}`;
-            if (isKeyOf(resolvedConfig, nextEntry)) {
-               resolvedConfig[nextEntry] = this.config.get(configKey);
-            }
+            resolvedConfig[nextEntry] = this.config.get(configKey);
          }
       }
 
