@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.10](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/tupletypes@0.0.9...@jchptf/tupletypes@0.0.10) (2018-10-25)
+
+**Note:** Version bump only for package @jchptf/tupletypes
+
+
+
+
+
 <a name="0.0.9"></a>
 ## [0.0.9](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/tupletypes@0.0.8...@jchptf/tupletypes@0.0.9) (2018-10-16)
 

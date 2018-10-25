@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/di-app-registry",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "TODO",
     "main": "./dist/index.js",
     "typings": "./dist/index.d.ts",
@@ -34,7 +34,7 @@
     },
     "dependencies": {
         "@jchptf/api": "^0.0.18",
-        "@jchptf/config": "^0.0.1",
+        "@jchptf/config": "^0.0.2",
         "@loopback/metadata": "^1.0.0",
         "@thi.ng/dcons": "^1.1.11",
         "@thi.ng/paths": "^1.6.3",
