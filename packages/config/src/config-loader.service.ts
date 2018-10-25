@@ -1,17 +1,16 @@
-import '../reflection/index';
-
 import {IConfig} from 'config';
 import {injectable} from 'inversify';
 import {ClassType, transformAndValidateSync} from 'class-transformer-validator';
 import {MetadataInspector, MetadataMap} from '@loopback/metadata';
+import {isKeyOf} from 'simplytyped';
 
+import '@jchptf/reflection';
 import {Wild} from '@jchptf/api';
 import {IConfigLoader} from './interfaces';
 import {CONFIG_CLASS_MARKER_KEY, ConfigClassMarker} from './decorators/config-class-marker.interface';
 import {
    CONFIG_PROPERTY_MARKER_KEY, ConfigPropertyMarker
 } from './decorators/config-property-marker.interface';
-import {isKeyOf} from 'simplytyped';
 
 
 @injectable()
