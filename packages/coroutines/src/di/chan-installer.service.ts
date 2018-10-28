@@ -1,5 +1,5 @@
 import {injectable, interfaces} from 'inversify';
-import {chan, Chan} from 'chan';
+import chan from 'chan';
 
 import {CO_TYPES} from './types';
 import {InstallChanRequest} from './install-chan-request.class';
@@ -16,7 +16,7 @@ export class ChanInstaller implements InstallerService<InstallChanRequest<any>, 
             client.load(
                (bind: interfaces.Bind) => {
                   request.bindWhen(
-                     bind<Chan<T>>(CO_TYPES.Chan)
+                     bind<Chan.Chan<T>>(CO_TYPES.Chan)
                         .toDynamicValue((_context: interfaces.Context) => {
                            return chan(request.bufSize);
                         })
@@ -32,7 +32,7 @@ export class ChanInstaller implements InstallerService<InstallChanRequest<any>, 
             client.load(
                (bind: interfaces.Bind) => {
                   request.bindWhen(
-                     bind<Chan<T>>(CO_TYPES.Chan)
+                     bind<Chan.Chan<T>>(CO_TYPES.Chan)
                         .toDynamicValue((_context: interfaces.Context) => {
                            return chan(request.bufSize);
                         })
@@ -48,7 +48,7 @@ export class ChanInstaller implements InstallerService<InstallChanRequest<any>, 
             client.load(
                (bind: interfaces.Bind) => {
                   request.bindWhen(
-                     bind<Chan<T>>(CO_TYPES.Chan)
+                     bind<Chan.Chan<T>>(CO_TYPES.Chan)
                         .toDynamicValue((_context: interfaces.Context) => {
                            return chan(request.bufSize);
                         })

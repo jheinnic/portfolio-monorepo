@@ -68,4 +68,6 @@ export interface IConcurrentWorkFactory {
       <F extends WrappableCoRoutineGenerator<R, P> = WrappableCoRoutineGenerator<R, P>,
          R = any, P extends any[] = any[]>(concurrency: number, defaultPriority?: number):
       (coWrappable: F, priority: number) => WrappedCoRoutineGenerator<F, R, P>
+
+   createSourceLoader<T>(iterator: IterableIterator<T>, concurrency: number, backlog: number): Chan.Chan<T>
 }

@@ -134,6 +134,40 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
          );
       }
    };
+
+   createSourceLoader<T>(iterator: IterableIterator<T>, concurrency: number, backlog: number): Chan.Chan<T> {
+      const retChan: Chan.Chan<T> = chan<T>(backlog);
+      let globalDone: boolean = false;
+
+      function * queueFromIterator() {
+         if (globalDone) {
+            return;
+         }
+
+         let localIterResult = iterator.next();
+         if (localIterResult.done) {
+            globalDone = true;
+         }
+         while (! globalDone) {
+            yield retChan(localIterResult.value);
+            localIterResult = iterator.next();
+            if (localIterResult.done) {
+               globalDone = true;
+            }
+         }
+      }
+
+      for( let ii = 0; ii < concurrency; ii++ ) {
+         const workerId = ii;
+         co(queueFromIterator).then(function() {
+            console.log(`Concurrent worker #${workerId} signalled complete`);
+         }).catch(function(err: any) {
+            console.error(`Concurrent worker #${workerId} exited abnormally: ${err}`);
+         });
+      }
+
+      return retChan;
+   }
 }
 
 

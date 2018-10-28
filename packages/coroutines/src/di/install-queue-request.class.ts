@@ -2,7 +2,7 @@ import {interfaces} from 'inversify';
 
 import {IDirector} from '@jchptf/api';
 import {installerRequest} from '@jchptf/di-app-registry';
-import {Queue} from 'co-priority-queue';
+import Queue from 'co-priority-queue';
 
 @installerRequest()
 export class InstallQueueRequest<T extends any>

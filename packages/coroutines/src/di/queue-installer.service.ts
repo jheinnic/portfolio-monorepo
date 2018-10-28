@@ -1,5 +1,5 @@
 import {injectable, interfaces} from 'inversify';
-import {Queue} from 'co-priority-queue';
+import Queue from 'co-priority-queue';
 
 import {CO_TYPES} from './types';
 import {InstallQueueRequest} from './install-queue-request.class';
