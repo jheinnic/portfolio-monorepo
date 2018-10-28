@@ -33,7 +33,6 @@ import * as dar from "@jchptf/di-app-registry";
 ```
 
 ## Authors
-
 - John Heinnickel
 
 ## License
