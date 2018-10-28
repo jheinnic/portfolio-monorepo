@@ -1,5 +1,5 @@
 import {WrappableCoRoutineGenerator, WrappedCoRoutineGenerator} from 'co';
-import {Queue} from 'co-priority-queue';
+import Queue from 'co-priority-queue';
 
 export interface IConcurrentWorkFactory {
    /**
@@ -16,6 +16,8 @@ export interface IConcurrentWorkFactory {
     * @see co.wrap
     */
    createPriorityQueue<T extends any = any>(): Queue<T>;
+
+   createChan<T extends any = any>(): Chan.Chan<T>
 
    /**
     * Given a wrappable co-routine generator that accepts some number of arguments,

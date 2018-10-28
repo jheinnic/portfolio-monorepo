@@ -1,6 +1,6 @@
 import {MerkleDigestLocator} from '../locator';
 
-export interface NamedPath<T extends MerkleDigestLocator> {
+export interface MappedPathNames<T extends MerkleDigestLocator> {
    name: string;
    pathTo: T;
 }

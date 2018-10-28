@@ -1,14 +1,21 @@
 import {injectable} from 'inversify';
-import {Queue} from 'co-priority-queue';
 import {co, CoRoutineGenerator, WrappableCoRoutineGenerator, WrappedCoRoutineGenerator} from 'co';
+import Queue from 'co-priority-queue';
 
 import {IConcurrentWorkFactory, Limiter} from '../interfaces';
+import chan = require('chan');
 
 @injectable()
 export class ConcurrentWorkFactory implements IConcurrentWorkFactory
 {
-   createPriorityQueue<M>(): Queue<M> {
+   createPriorityQueue<M>(): Queue<M>
+   {
       return new Queue<M>();
+   }
+
+   createChan<M>(): Chan.Chan<M>
+   {
+      return chan<M>();
    }
 
    createLimiter(concurrency: number, defaultPriority: number = 10): Limiter
@@ -23,15 +30,16 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
                const yieldable: CoRoutineGenerator = yield queue.next();
                yield co(yieldable);
             }
-         })
-            .catch(function (err) {
-               console.error(err.stack);
-            });
+         }).catch(function (err) {
+            console.error(err.stack);
+         });
       }
 
       return function limit<F extends WrappableCoRoutineGenerator<R, P> = WrappableCoRoutineGenerator<R, P>,
-         R extends any = any, P extends any[] = any[]>(
-         generator: F, priority: number = defaultPriority): WrappedCoRoutineGenerator<F, R, P> {
+         R extends any = any,
+         P extends any[] = any[]>(
+         generator: F, priority: number = defaultPriority): WrappedCoRoutineGenerator<F, R, P>
+      {
          const wrapped: WrappedCoRoutineGenerator<F, R, P> = co.wrap<F, R, P>(generator);
 
          return function (...args: P): Promise<R> {
@@ -50,12 +58,33 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       };
    }
 
+   // public createAltLimiter(concurrency: number, defaultPriority: number = 10): Limiter
+   // {
+   //       const queue = new Queue();
+   //
+   //       // Create consumers
+   //       for (var i = 0; i < concurrency; i++) {
+   //          co(function *() {
+   //             while (true) {
+   //                const yieldable = yield queue.next();
+   //                yield co(yieldable);
+   //             }
+   //          }).catch(function(err) {
+   //             console.error(err.stack);
+   //          });
+   //       }
+   //
+   //    return function limit<F extends WrappableCoRoutineGenerator<R, P> = WrappableCoRoutineGenerator<R,
+   // P>, R extends any = any, P extends any[] = any[]>( generator: F, priority: number = defaultPriority):
+   // WrappedCoRoutineGenerator<F, R, P> { const wrapped: WrappedCoRoutineGenerator<F, R, P> = co.wrap<F,
+   // R, P>(generator); return function(cb) { const wrapped = co.wrap(generator); queue.push(function* () {
+   // try { cb(undefined, yield wrapped()); } catch(err) { cb(err); }  return; }, priority); }; }; }; }
+
    // public altGetLimitedTask<F extends WrappableCoRoutineGenerator<R, P> = WrappableCoRoutineGenerator<R,
    // P>, R = any, P extends any[] = any[]>( coWrappable: F, concurrency: number):
    // WrappedCoRoutineGenerator<F, R, P> { return this.getTaskLimiter(concurrency, 10)(coWrappable); }
 
-   public createLimitedTask<
-      F extends WrappableCoRoutineGenerator<R, P> = WrappableCoRoutineGenerator<R, P>,
+   public createLimitedTask<F extends WrappableCoRoutineGenerator<R, P> = WrappableCoRoutineGenerator<R, P>,
       R extends any = any,
       P extends any[] = any[]>(coWrappable: F, concurrency: number): WrappedCoRoutineGenerator<F, R, P>
    {
@@ -87,9 +116,10 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
                   msg.reject(err);
                }
             }
-         }).catch(function (err) {
-            console.error(err.stack);
-         });
+         })
+            .catch(function (err) {
+               console.error(err.stack);
+            });
       }
 
       return function (...args: P): Promise<R> {
@@ -107,24 +137,10 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
 }
 
 
-
-// export function createQueueFactory<T = any>(_context: interfaces.Context): ConcreteFactory<Queue<T>, [PropertyKey?]> {
-//    return (key?: PropertyKey): Queue<T> => {
-//       let retVal: Queue<T>;
-//
-//       if (!!key) {
-//          if (_context.container.isBoundNamed(CO_TYPES.Queue, key)) {
-//             retVal = _context.container.getNamed(CO_TYPES.Queue, key);
-//          } else {
-//             retVal = new Queue<T>();
-//             _context.container.bind(CO_TYPES.Queue).toConstantValue(retVal).whenTargetNamed(key);
-//          }
-//       } else {
-//          retVal = new Queue<T>();
-//       }
-//
-//       return retVal;
-//    }
-// }
-//
-// export const queueFactoryCreator: interfaces.FactoryCreator<Queue<any>> = createQueueFactory;
+// export function createQueueFactory<T = any>(_context: interfaces.Context): ConcreteFactory<Queue<T>,
+// [PropertyKey?]> { return (key?: PropertyKey): Queue<T> => { let retVal: Queue<T>;  if (!!key) { if
+// (_context.container.isBoundNamed(CO_TYPES.Queue, key)) { retVal =
+// _context.container.getNamed(CO_TYPES.Queue, key); } else { retVal = new Queue<T>();
+// _context.container.bind(CO_TYPES.Queue).toConstantValue(retVal).whenTargetNamed(key); } } else { retVal
+// = new Queue<T>(); }  return retVal; } }  export const queueFactoryCreator:
+// interfaces.FactoryCreator<Queue<any>> = createQueueFactory;

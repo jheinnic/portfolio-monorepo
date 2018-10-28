@@ -21,6 +21,9 @@ export interface IContainerRegistryInternal {
 
    getConfig<T extends object>(configClass: ClassType<T>, rootPath?: string): T;
 
+   registerConfig<T extends object>(
+      configClass: ClassType<T>, serviceIdentifier: interfaces.ServiceIdentifier<T>): void;
+
    // scanForDecorators(argList: any|any[]): void;
 
    // scanForImportDecorators(argList: any|any[]): void;

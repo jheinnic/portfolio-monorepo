@@ -5,7 +5,7 @@ import {MetadataInspector, MetadataMap} from '@loopback/metadata';
 
 import '@jchptf/reflection';
 import {Wild} from '@jchptf/api';
-import {IConfigLoader} from './interfaces';
+import {IConfigLoader} from '../../config/src/interfaces/index';
 import {CONFIG_CLASS_MARKER_KEY, ConfigClassMarker} from './decorators/config-class-marker.interface';
 import {
    CONFIG_PROPERTY_MARKER_KEY, ConfigPropertyMarker
