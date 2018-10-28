@@ -13,10 +13,9 @@ import {IContainerRegistryInternal} from './interfaces/container-registry-intern
 import {InstallerModuleBuilder} from './installer-module-builder.class';
 import {InstallerAnnotationProcessor} from './installer-annotation-processor.class';
 import {ContainerRegistryInstallerClient} from './container-registry-installer-client.class';
-import {CONFIG_TYPES, configLoaderModule} from '@jchptf/config';
 import {ClassType} from 'class-transformer-validator';
-import {IConfigLoader} from '@jchptf/config/dist/interfaces';
-import {ConfigLoader} from '@jchptf/config/dist/src/config-loader.service';
+import {IConfigLoader} from './interfaces/config-loader.interface';
+import {ConfigLoader} from './config-loader.service';
 // import {nestedContainerExportMiddleware} from './nested-container-export-middleware.function';
 
 export class ContainerRegistry implements IContainerRegistry, IContainerRegistryInternal
@@ -115,13 +114,13 @@ export class ContainerRegistry implements IContainerRegistry, IContainerRegistry
    public getConfig<T extends object>(configClass: ClassType<T>, rootPath?: string): T {
       // Defer installation until first request to allow all config class imports to have
       // taken place.
-      if (! this.installerContainer.isBound(CONFIG_TYPES.ConfigLoader)) {
-         this.installerContainer.bind(CONFIG_TYPES.ConfigLoader)
+      if (! this.installerContainer.isBound(DI_TYPES.ConfigLoader)) {
+         this.installerContainer.bind(DI_TYPES.ConfigLoader)
             .to(ConfigLoader)
             .inSingletonScope();
       }
 
-      const configLoader: IConfigLoader = this.installerContainer.get(CONFIG_TYPES.ConfigLoader);
+      const configLoader: IConfigLoader = this.installerContainer.get(DI_TYPES.ConfigLoader);
       return configLoader.getConfig(configClass, rootPath);
    }
 
@@ -230,7 +229,9 @@ export class ContainerRegistry implements IContainerRegistry, IContainerRegistry
    {
       this.installerContainer.bind<T>(serviceIdentifier)
          .toDynamicValue((context: interfaces.Context) => {
-            context.container.get(CONFIG_TYPES.ConfigLoader)
+            const loader: IConfigLoader = context.container.get(DI_TYPES.ConfigLoader);
+
+            return loader.getConfig(configClass);
          })
 
 
