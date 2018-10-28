@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/coroutines",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "TODO",
     "main": "./dist/index.js",
     "typings": "./dist/index.d.ts",
@@ -33,7 +33,7 @@
         "typescript": "^3.1.1"
     },
     "dependencies": {
-        "@jchptf/di-app-registry": "^0.0.12",
+        "@jchptf/di-app-registry": "^0.0.13",
         "chan": "^0.6.1",
         "chanel": "^2.2.0",
         "co": "^4.6.0",
