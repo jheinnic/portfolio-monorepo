@@ -1,0 +1,46 @@
+{
+    "name": "@jchptf/randomize-node-crypto",
+    "version": "0.0.1",
+    "description": "TODO",
+    "main": "./dist/index.js",
+    "typings": "./dist/index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/jheinnic/portfolio-monorepo"
+    },
+    "author": "John Heinnickel <jheinnic@hotmail.com>",
+    "license": "MIT",
+    "scripts": {
+        "build": "yarn run clean && tsc --declaration",
+        "clean": "rm -rf dist/*.js dist/*.d.ts build .nyc_output build coverage doc; mkdir build",
+        "cover": "yarn test && nyc report --reporter=lcov",
+        "doc": "node_modules/.bin/typedoc --mode modules --out doc src typings",
+        "pub": "yarn run build && yarn publish --access public",
+        "test": "rm -rf build && mkdir build && tsc -p test && nyc mocha build/test/*.js"
+    },
+    "devDependencies": {
+        "@types/chai": "^4.1.6",
+        "@types/mocha": "^5.2.5",
+        "@types/node": "^10.11.4",
+        "@types/sinon": "^5.0.5",
+        "chai": "^4.2.0",
+        "mocha": "^5.2.0",
+        "nyc": "^12.0.2",
+        "simplytyped": "^1.5.2",
+        "sinon": "^7.0.0",
+        "ts-sinon": "^1.0.12",
+        "typedoc": "^0.13.0",
+        "typescript": "^3.1.1"
+    },
+    "dependencies": {
+        "@jchptf/api": "^0.0.14",
+        "tslib": "^1.9.3"
+    },
+    "keywords": [
+        "es6",
+        "typescript"
+    ],
+    "publishConfig": {
+        "access": "public"
+    }
+}
