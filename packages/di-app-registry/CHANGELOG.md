@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.15](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/di-app-registry@0.0.14...@jchptf/di-app-registry@0.0.15) (2018-10-29)
+
+**Note:** Version bump only for package @jchptf/di-app-registry
+
+
+
+
+
 ## [0.0.14](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/di-app-registry@0.0.13...@jchptf/di-app-registry@0.0.14) (2018-10-28)
 
 **Note:** Version bump only for package @jchptf/di-app-registry
