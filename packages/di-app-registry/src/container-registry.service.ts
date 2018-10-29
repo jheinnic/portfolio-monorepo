@@ -227,6 +227,12 @@ export class ContainerRegistry implements IContainerRegistry, IContainerRegistry
    public registerConfig<T extends object>(
       configClass: ClassType<T>, serviceIdentifier: interfaces.ServiceIdentifier<T>): void
    {
+      if (! this.installerContainer.isBound(DI_TYPES.ConfigLoader)) {
+         this.installerContainer.bind(DI_TYPES.ConfigLoader)
+            .to(ConfigLoader)
+            .inSingletonScope();
+      }
+
       this.installerContainer.bind<T>(serviceIdentifier)
          .toDynamicValue((context: interfaces.Context) => {
             const loader: IConfigLoader = context.container.get(DI_TYPES.ConfigLoader);
