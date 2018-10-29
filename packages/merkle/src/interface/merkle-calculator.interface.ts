@@ -87,6 +87,8 @@ export interface IMerkleCalculator
 
    findDigestByLayerAndIndex(layer: MerkleLayerLocator, digestIndex: number): MerkleDigestLocator;
 
+   findLeafDigestByIndex(digestIndex: number): MerkleDigestLocator;
+
    findParentDigest(mapToParent: MerkleDigestLocator): MerkleDigestLocator | undefined;
 
    findSiblingDigest(mapToSibling: MerkleDigestLocator): MerkleDigestLocator | undefined;

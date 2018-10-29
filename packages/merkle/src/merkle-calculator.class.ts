@@ -467,15 +467,6 @@ export class MerkleCalculator implements IMerkleCalculator
       }
    }
 
-   // public* getBlockMappedPathFromRoot(fromDigest: MerkleDigestLocator):
-   // IterableIterator<BlockMappedDigestLocator> { let finalBlock =
-   // this.findNearestBlockMappedRoot(fromDigest); let currentBlock = this.findNearestBlockMappedRoot(
-   // this.findDigestByPosition(0) );  while (currentBlock.blockLevel !== finalBlock.blockLevel) { yield
-   // currentBlock;  for (let nextChild of this.getChildBlockMappedRoots(currentBlock)) { const
-   // nextRightmostDescendant = this.findFurthestDescendant(nextChild, false); const nextRightmostBlock =
-   // this.findNearestBlockMappedRoot(nextRightmostDescendant); if (finalBlock.blockOffset <=
-   // nextRightmostBlock.blockOffset) { currentBlock = nextChild; break; } } } }
-
    public* getBlockMappedPathFromRoot(toDigest: MerkleDigestLocator): IterableIterator<BlockMappedDigestLocator>
    {
       let path = [...this.getBlockMappedPathToRoot(toDigest)];
@@ -648,6 +639,12 @@ export class MerkleCalculator implements IMerkleCalculator
       }
 
       return this.locatorFactory.findBlockMappedLayerByLevel(levelIndex);
+   }
+
+   public findLeafDigestByIndex(digestIndex: number): MerkleDigestLocator
+   {
+      return this.findDigestByLayerAndIndex(
+         this.findLeafLayer(), digestIndex);
    }
 
    public findSiblingDigest(mapToSibling: MerkleDigestLocator): MerkleDigestLocator | undefined
