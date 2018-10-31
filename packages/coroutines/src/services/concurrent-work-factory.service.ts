@@ -1,9 +1,8 @@
 import {injectable} from 'inversify';
 import {co, CoRoutineGenerator, WrappableCoRoutineGenerator, WrappedCoRoutineGenerator} from 'co';
+import chan from 'chan';
 import Queue from 'co-priority-queue';
-
 import {IConcurrentWorkFactory, Limiter} from '../interfaces';
-import chan = require('chan');
 
 @injectable()
 export class ConcurrentWorkFactory implements IConcurrentWorkFactory

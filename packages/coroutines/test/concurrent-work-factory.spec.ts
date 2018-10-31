@@ -5,13 +5,23 @@ import '@jchptf/reflection';
 import {ConcurrentWorkFactory} from '../src/services';
 import {expect} from 'chai';
 import sinon = require('sinon');
+import Queue from 'co-priority-queue';
 
 describe('ConcurrentWorkFactory', () => {
    let factory: ConcurrentWorkFactory;
 
    beforeEach(() => {
       factory = new ConcurrentWorkFactory();
-   })
+   });
+
+   describe('createPriorityQueue', () => {
+      it('Returns a queue', () => {
+         const output = factory.createPriorityQueue();
+         console.log(output.constructor);
+         console.log(output.constructor.name);
+         expect(output).is.instanceOf(Queue);
+      })
+   });
 
    describe('createSourceLoader', () => {
       let iterSource: number[];
@@ -51,9 +61,8 @@ describe('ConcurrentWorkFactory', () => {
 
       it('Makes concurrency concurrent attempts to provide a value.', () => {
          retChan = factory.createSourceLoader(iterIter, 3, 1);
+         /* 1, should be in the queue, and 2, 3, and 4 should be held in limbo, making 5 the next iteration value.*/
          setTimeout(() => {
-            // 1, should be in the queue, and 2, 3, and 4 should be held in limbo,
-            // making 5 the next iteration value.
             let nextIter = iterIter.next();
             expect(nextIter.value)
                .to
