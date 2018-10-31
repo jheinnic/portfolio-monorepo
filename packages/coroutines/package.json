@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/coroutines",
-    "version": "0.0.13",
+    "version": "0.0.14",
     "description": "TODO",
     "main": "./dist/index.js",
     "typings": "./dist/index.d.ts",
