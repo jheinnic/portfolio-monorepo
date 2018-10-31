@@ -1,5 +1,6 @@
 import {WrappableCoRoutineGenerator, WrappedCoRoutineGenerator} from 'co';
 import Queue from 'co-priority-queue';
+import {SinkLike} from './sink-like.type';
 
 export interface IConcurrentWorkFactory {
    /**
@@ -69,5 +70,13 @@ export interface IConcurrentWorkFactory {
          R = any, P extends any[] = any[]>(concurrency: number, defaultPriority?: number):
       (coWrappable: F, priority: number) => WrappedCoRoutineGenerator<F, R, P>
 
-   createSourceLoader<T>(iterator: IterableIterator<T>, concurrency: number, backlog: number): Chan.Chan<T>
+   createSourceLoader<T, M = T>(
+      iterator: IterableIterator<T>, concurrency: number, backlog: number,
+      transform?: WrappableCoRoutineGenerator<M, [T]>): Chan.Chan<M>
+
+   createStageHandler<T, M>(
+      source: Chan.Chan<T>,
+      transform: WrappableCoRoutineGenerator<M, [T]>,
+      concurrency: number,
+      sink: SinkLike<M>): void
 }

@@ -3,6 +3,7 @@ import {co, CoRoutineGenerator, WrappableCoRoutineGenerator, WrappedCoRoutineGen
 import chan from 'chan';
 import Queue from 'co-priority-queue';
 import {IConcurrentWorkFactory, Limiter} from '../interfaces';
+import {asGenerator, SinkLike} from '../interfaces/sink-like.type';
 
 @injectable()
 export class ConcurrentWorkFactory implements IConcurrentWorkFactory
@@ -29,9 +30,10 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
                const yieldable: CoRoutineGenerator = yield queue.next();
                yield co(yieldable);
             }
-         }).catch(function (err) {
-            console.error(err.stack);
-         });
+         })
+            .catch(function (err) {
+               console.error(err.stack);
+            });
       }
 
       return function limit<F extends WrappableCoRoutineGenerator<R, P> = WrappableCoRoutineGenerator<R, P>,
@@ -134,38 +136,91 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       }
    };
 
-   createSourceLoader<T>(iterator: IterableIterator<T>, concurrency: number, backlog: number): Chan.Chan<T> {
-      const retChan: Chan.Chan<T> = chan<T>(backlog);
+   createSourceLoader<T, M = T>(
+      iterator: IterableIterator<T>, concurrency: number, backlog: number,
+      transform?: WrappableCoRoutineGenerator<M, [T]>): Chan.Chan<M>
+   {
+      const retChan: Chan.Chan<M> = chan<M>(backlog);
+      let applyTransform: WrappedCoRoutineGenerator<(args: T) => IterableIterator<any>, M, [T]>;
       let globalDone: boolean = false;
 
-      function * queueFromIterator() {
+      if (!!transform) {
+         applyTransform = co.wrap<typeof transform, M, [T]>(transform);
+      } else {
+         applyTransform = co.wrap(function* (value: T): IterableIterator<any> {
+            return value as unknown as M;
+         });
+      }
+      let sendToChan = co.wrap(
+         function* (value: T): IterableIterator<any> {
+            const transformedValue: M = yield applyTransform(value);
+            yield retChan(transformedValue);
+         }
+      );
+
+      function* queueFromIterator()
+      {
          if (globalDone) {
             return;
          }
 
-         let localIterResult = iterator.next();
-         if (localIterResult.done) {
-            globalDone = true;
-         }
-         while (! globalDone) {
-            yield retChan(localIterResult.value);
-            localIterResult = iterator.next();
+         do {
+            let localIterResult = iterator.next();
             if (localIterResult.done) {
                globalDone = true;
             }
-         }
+            // yield retChan(localIterResult.value);
+            yield localIterResult.value;
+         } while (!globalDone);
       }
 
-      for( let ii = 0; ii < concurrency; ii++ ) {
+      for (let ii = 0; ii < concurrency; ii++) {
          const workerId = ii;
-         co(queueFromIterator).then(function() {
-            console.log(`Concurrent worker #${workerId} signalled complete`);
-         }).catch(function(err: any) {
-            console.error(`Concurrent worker #${workerId} exited abnormally: ${err}`);
-         });
+         co(function* (): IterableIterator<any> {
+            for (let value of queueFromIterator()) {
+               yield sendToChan(value);
+            }
+         })
+            .then(function () {
+               console.log(`Concurrent worker #${workerId} signalled complete`);
+            })
+            .catch(function (err: any) {
+               console.error(`Concurrent worker #${workerId} exited abnormally: ${err}`);
+            });
       }
 
       return retChan;
+   }
+
+   createStageHandler<T, M = T>(
+      source: Chan.Chan<T>, transform: WrappableCoRoutineGenerator<M, [T]>, concurrency: number,
+      sink: SinkLike<M>): void
+   {
+      let applyTransform: WrappedCoRoutineGenerator<typeof transform, M, [T]> =
+         co.wrap<typeof transform, M, [T]>(transform);
+      let toSink = asGenerator<M>(sink);
+      let sendToChan = co.wrap(
+         function* (value: T): IterableIterator<any> {
+            const transformedValue: M = yield applyTransform(value);
+            yield toSink(transformedValue);
+         }
+      );
+
+      for (let ii = 0; ii < concurrency; ii++) {
+         const workerId = ii;
+         co(function* (): IterableIterator<any> {
+            while (true) {
+               const input = yield source;
+               yield sendToChan(input);
+            }
+         })
+            .then(function () {
+               console.log(`Concurrent worker #${workerId} signalled complete`);
+            })
+            .catch(function (err: any) {
+               console.error(`Concurrent worker #${workerId} exited abnormally: ${err}`);
+            });
+      }
    }
 }
 
