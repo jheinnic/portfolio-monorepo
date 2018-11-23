@@ -1,5 +1,5 @@
 import {interfaces} from 'inversify';
-import {AnyFunc} from 'simplytyped';
+import {AnyFunc, False, True} from 'simplytyped';
 
 import {NestedContainerIdentifier} from '..';
 
@@ -9,5 +9,9 @@ export type IContainerAccessStrategy<T> = {
 }
 
 export type IsContainerAccessStrategy<T extends AnyFunc> =
-   T extends IContainerAccessStrategy<T> ? T : never;
+   T extends IContainerAccessStrategy<T> ? True : False;
+
+export function isContainerAccessStrategy<T>(func: AnyFunc): func is IContainerAccessStrategy<T> {
+   return func.hasOwnProperty('containerId');
+}
 

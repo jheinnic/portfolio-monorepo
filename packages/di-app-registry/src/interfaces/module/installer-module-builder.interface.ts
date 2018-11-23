@@ -3,16 +3,19 @@ import {
    ApplicationIdentifier, ApplicationInstaller, InstallerRequestIdentifier, InstallerService,
    InstallerServiceIdentifier
 } from '..';
+import {interfaces} from 'inversify';
+import ServiceIdentifier = interfaces.ServiceIdentifier;
+import * as M from 'minimatch';
 
 export interface IInstallerModuleBuilder
 {
-   bindInstaller<I extends object, O extends object | void>(
-      installRequestIdentifier: InstallerRequestIdentifier<I>,
-      requestConstructor: ConstructorFor<I>,
-      installServiceIdentifier: InstallerServiceIdentifier<I, O>,
-      svcConstructor: ConstructorFor<InstallerService<I, O>>): void;
+  bindInstaller<M extends InstallerService>(
+      // installRequestIdentifier: InstallerRequestIdentifier<I>,
+      // requestConstructor: ConstructorFor<I>,
+      installerIdentifier: ServiceIdentifier<M>,
+      svcConstructor: ConstructorFor<M>): void;
 
    bindApplication<A extends ApplicationInstaller>(
-      applicationIdentifier: ApplicationIdentifier<A>,
+      applicationIdentifier: ServiceIdentifier<A>,
       constructor: ConstructorFor<A>): void;
 }

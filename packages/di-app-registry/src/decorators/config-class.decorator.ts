@@ -7,7 +7,8 @@ import {ContainerRegistry} from '../container-registry.service';
 import {ConstructorFunction} from 'simplytyped';
 
 export function configClass(defaultRoot?: string, diType?: interfaces.ServiceIdentifier<any>) {
-   const delegate = ClassDecoratorFactory.createDecorator(CONFIG_CLASS_MARKER_KEY, {defaultRoot, diType});
+   const delegate = ClassDecoratorFactory.createDecorator(
+      CONFIG_CLASS_MARKER_KEY, {defaultRoot, diType});
    if (!diType) {
       return delegate;
    }

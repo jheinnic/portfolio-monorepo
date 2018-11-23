@@ -5,7 +5,7 @@ import {DCons} from '@thi.ng/dcons';
 import {illegalArgs, illegalState} from '@thi.ng/errors';
 
 import {
-   ApplicationIdentifier, ApplicationInstaller, IContainerRegistry, IContainerRegistryInstallerClient,
+   ApplicationIdentifier, ApplicationInstaller, IContainerRegistry, InstallerRegistryClient,
    InstallerModuleCallBack, InstallerService, InstallerServiceIdentifier, NestedContainerIdentifier
 } from './interfaces';
 import {DI_COMMON_TAGS, DI_TYPES} from './types';
@@ -16,6 +16,8 @@ import {ContainerRegistryInstallerClient} from './container-registry-installer-c
 import {ClassType} from 'class-transformer-validator';
 import {IConfigLoader} from './interfaces/config-loader.interface';
 import {ConfigLoader} from './config-loader.service';
+import {InjectDecorators} from './interfaces/inject-decorators.type';
+import getDecorators from 'inversify-inject-decorators';
 // import {nestedContainerExportMiddleware} from './nested-container-export-middleware.function';
 
 export class ContainerRegistry implements IContainerRegistry, IContainerRegistryInternal
@@ -33,7 +35,9 @@ export class ContainerRegistry implements IContainerRegistry, IContainerRegistry
    // TODO: Use an interface--support unit testing!
    private readonly installerAnnotationProcessor: InstallerAnnotationProcessor;
 
-   private readonly installerClient: IContainerRegistryInstallerClient;
+   private readonly installerClient: InstallerRegistryClient;
+
+   private readonly lazyInjection: InjectDecorators;
 
    private constructor()
    {
@@ -45,6 +49,7 @@ export class ContainerRegistry implements IContainerRegistry, IContainerRegistry
       this.applicationContainer = new Container();
       this.currentAppContainer = this.applicationContainer;
       this.parentContainerStack = new DCons<Container>();
+      this.lazyInjection = getDecorators(this.applicationContainer);
 
       // this.applicationContainer.applyMiddleware(
       //    nestedContainerExportMiddleware
@@ -241,5 +246,10 @@ export class ContainerRegistry implements IContainerRegistry, IContainerRegistry
          })
 
 
+   }
+
+   public getLazyInjection(): InjectDecorators
+   {
+      return this.lazyInjection;
    }
 }

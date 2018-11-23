@@ -1,6 +1,6 @@
 import {injectable} from 'inversify';
 
-import {installerRequest, requiredImport} from '../../../../src/decorators';
+import {installerRequest, installDependency} from '../../../../src/decorators';
 import {IContainerAccessStrategy} from '../../../../src/interfaces/installer/container-access-strategy.interface';
 import {DI_COMMON_TAGS} from '../../../../src/types';
 import {APP_DI_TYPES} from '../../apps/widget-shares-lib-one.app';
@@ -20,21 +20,21 @@ export class WidgetTwoModuleOptions {
       Object.assign(this, partial);
    }
 
-   @requiredImport(
+   @installDependency(
       FIXTURE_TYPES.Library,
       { type: 'tagged', key: DI_COMMON_TAGS.VariantFor, value: APP_DI_TYPES.libOne },
       'Singleton'
    )
    public libOne: IContainerAccessStrategy<ILibrary>;
 
-   @requiredImport(
+   @installDependency(
       FIXTURE_TYPES.Library,
       { type: 'tagged', key: DI_COMMON_TAGS.VariantFor, value: APP_DI_TYPES.libTwo },
       'Singleton'
    )
    public libTwo: IContainerAccessStrategy<ILibrary>;
 
-   @requiredImport(
+   @installDependency(
       FIXTURE_TYPES.Library,
       { type: 'tagged', key: DI_COMMON_TAGS.VariantFor, value: APP_DI_TYPES.libThree },
       'Singleton'

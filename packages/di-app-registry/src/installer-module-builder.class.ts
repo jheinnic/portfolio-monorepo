@@ -5,6 +5,7 @@ import {
    ApplicationIdentifier, ApplicationInstaller, IInstallerModuleBuilder, InstallerRequestIdentifier,
    InstallerService, InstallerServiceIdentifier
 } from './interfaces';
+import ServiceIdentifier = interfaces.ServiceIdentifier;
 
 export class InstallerModuleBuilder implements IInstallerModuleBuilder
 {
@@ -18,14 +19,10 @@ export class InstallerModuleBuilder implements IInstallerModuleBuilder
          .to(applicationInstaller);
    }
 
-   public bindInstaller<I extends Object, O extends Object | void, M extends InstallerService<I, O>>(
-      installRequestIdentifier: InstallerRequestIdentifier<I>,
-      requestConstructor: ConstructorFor<I>,
-      installServiceIdentifier: InstallerServiceIdentifier<I, O>,
+   public bindInstaller<M extends InstallerService>(
+      installServiceIdentifier: ServiceIdentifier<M>,
       serviceConstructor: ConstructorFor<M>): void
    {
-      this.bind(installRequestIdentifier)
-         .toConstructor(requestConstructor);
       this.bind(installServiceIdentifier)
          .to(serviceConstructor)
          .inSingletonScope();

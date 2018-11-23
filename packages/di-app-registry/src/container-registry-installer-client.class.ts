@@ -4,14 +4,14 @@ import {IDirector} from '@jchptf/api';
 import {DI_TYPES} from './types';
 import {IContainerRegistryInternal} from './interfaces/container-registry-internal.interface';
 import {
-   IContainerAccessStrategy, IContainerRegistryInstallerClient, InstallerServiceIdentifier,
+   IContainerAccessStrategy, InstallerRegistryClient, InstallerServiceIdentifier,
    NestedContainerIdentifier
 } from './interfaces';
 import {IllegalArgumentError, IllegalStateError} from '@thi.ng/errors';
 import {ClassType} from 'class-transformer-validator';
 
 @injectable()
-export class ContainerRegistryInstallerClient implements IContainerRegistryInstallerClient
+export class ContainerRegistryInstallerClient implements InstallerRegistryClient
 {
    constructor(
       @inject(
@@ -26,7 +26,7 @@ export class ContainerRegistryInstallerClient implements IContainerRegistryInsta
    public createChild(
       childId: NestedContainerIdentifier,
       allowExists: boolean = false
-   ): IContainerRegistryInstallerClient
+   ): InstallerRegistryClient
    {
       if (!childId) {
          throw new IllegalArgumentError('childId is a mandatory argument');
@@ -45,7 +45,7 @@ export class ContainerRegistryInstallerClient implements IContainerRegistryInsta
 
    public fromChild(
       childId: NestedContainerIdentifier,
-      director: IDirector<IContainerRegistryInstallerClient>): IContainerRegistryInstallerClient
+      director: IDirector<InstallerRegistryClient>): InstallerRegistryClient
    {
       this.registryInternal.enterNestedContainer(childId);
       try {
@@ -58,7 +58,7 @@ export class ContainerRegistryInstallerClient implements IContainerRegistryInsta
    }
 
    public load(
-      callback: interfaces.ContainerModuleCallBack): IContainerRegistryInstallerClient
+      callback: interfaces.ContainerModuleCallBack): InstallerRegistryClient
    {
       if (! callback) {
          throw new IllegalArgumentError('callback must be defined');
@@ -72,7 +72,7 @@ export class ContainerRegistryInstallerClient implements IContainerRegistryInsta
    public loadFromChild(
       childId: NestedContainerIdentifier,
       callback: interfaces.ContainerModuleCallBack,
-      allowCreate: boolean = false): IContainerRegistryInstallerClient
+      allowCreate: boolean = false): InstallerRegistryClient
    {
       if (!childId || !callback) {
          throw new IllegalArgumentError('childId and callback are both mandatory arguments');

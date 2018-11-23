@@ -3,35 +3,37 @@ import {IDirector} from '@jchptf/api';
 import {NestedContainerIdentifier, InstallerServiceIdentifier, IContainerAccessStrategy} from '..';
 import {ClassType} from 'class-transformer-validator';
 
-export interface InstallerModuleClient {
+export interface InstallerRegistryClient {
    // TODO: Only expose this on the installer client for a top-most Application.
    getConfig<T extends object>(configClass: ClassType<T>, rootPath?: string): T;
 
-   createChild(
-      id: NestedContainerIdentifier,
-      allowExists?: boolean): InstallerModuleClient;
+   // createChild(
+   //    id: NestedContainerIdentifier,
+   //    allowExists?: boolean): InstallerRegistryClient;
+
+   createChild( ): NestedContainerIdentifier;
 
    fromChild(
       id: NestedContainerIdentifier,
-      director: IDirector<InstallerModuleClient>,
-      allowCreate?: boolean): InstallerModuleClient;
+      director: IDirector<InstallerRegistryClient> /*,
+      allowCreate?: boolean*/): InstallerRegistryClient;
 
-   load(callback: interfaces.ContainerModuleCallBack): InstallerModuleClient;
+   load(callback: interfaces.ContainerModuleCallBack): InstallerRegistryClient;
 
-   loadFromChild(
-      id: NestedContainerIdentifier,
-      callback: interfaces.ContainerModuleCallBack,
-      allowCreate?: boolean): InstallerModuleClient;
+   // loadFromChild(
+   //    id: NestedContainerIdentifier,
+   //    callback: interfaces.ContainerModuleCallBack,
+   //    allowCreate?: boolean): InstallerRegistryClient;
 
-   install<Import, Export>(
-      installerId: InstallerServiceIdentifier<Import, Export>,
-      requestMessage: Import): Export;
+   // install<Import, Export>(
+   //    installerId: InstallerServiceIdentifier<Import, Export>,
+   //    requestMessage: Import): Export;
 
-   installFromChild<Import, Export>(
-      childId: NestedContainerIdentifier,
-      installerId: InstallerServiceIdentifier<Import, Export>,
-      requestMessage: Import,
-      allowCreate?: boolean): Export;
+   // installFromChild<Import, Export>(
+   //    childId: NestedContainerIdentifier,
+   //    installerId: InstallerServiceIdentifier<Import, Export>,
+   //    requestMessage: Import,
+   //    allowCreate?: boolean): Export;
 
    adaptFromChild<T>(
       childId: NestedContainerIdentifier,

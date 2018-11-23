@@ -5,7 +5,7 @@ import {IContainerAccessStrategy} from '../../../../src/interfaces/installer/con
 import {DI_COMMON_TAGS} from '../../../../src/types';
 import {APP_DI_TYPES} from '../../apps/widget-shares-lib-one.app';
 import {FIXTURE_TYPES} from '../types';
-import {installerRequest, requiredImport} from '../../../../src/decorators';
+import {installerRequest, installDependency} from '../../../../src/decorators';
 
 // export interface WidgetOneModuleOptions {
 //    bindWhen: IDirector<BindingWhenSyntax<IWidget>>;
@@ -22,14 +22,14 @@ export class WidgetOneModuleRequest {
       Object.assign(this, partial);
    }
 
-   @requiredImport(
+   @installDependency(
       FIXTURE_TYPES.Library,
       { type: 'tagged', key: DI_COMMON_TAGS.VariantFor, value: APP_DI_TYPES.libOne },
       'Singleton'
    )
    public libOneCurator: IContainerAccessStrategy<ILibrary>;
 
-   @requiredImport(
+   @installDependency(
       FIXTURE_TYPES.Library,
       { type: 'tagged', key: DI_COMMON_TAGS.VariantFor, value: APP_DI_TYPES.libTwo },
       'Singleton'

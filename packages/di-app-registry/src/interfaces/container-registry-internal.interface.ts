@@ -1,8 +1,11 @@
 import {interfaces} from 'inversify';
 import {InstallerServiceIdentifier, NestedContainerIdentifier} from '..';
 import {ClassType} from 'class-transformer-validator';
+import {InjectDecorators} from './inject-decorators.type';
 
 export interface IContainerRegistryInternal {
+   getInternalLazyDecorators(): InjectDecorators;
+
    createNestedContainer(containerKey: NestedContainerIdentifier): void;
 
    hasNestedContainer(containerKey: NestedContainerIdentifier): boolean;

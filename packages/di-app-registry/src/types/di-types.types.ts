@@ -1,12 +1,12 @@
-import {IBagOf} from '@jchptf/api';
+import {SymbolEnum} from '@jchptf/api';
 
-type DITypes = 'ConfigLoader' | 'NestedContainer' | 'InstallationActivityFactory' | 'InstallServiceAdapter' | 'ContainerRegistryInternal' | 'ContainerAccessFactory'; // |
+type DITypes = 'ConfigLoader' | 'NestedContainer' | 'InstallerRegistryClient' | 'InstallationActivityFactory' | 'InstallServiceAdapter' | 'ContainerRegistryInternal' | 'ContainerAccessFactory'; // |
 // 'ContainerModuleCallBack'|
 // 'ModuleRegistry' |
 // 'ContainerModule' |
 // 'Application';
 
-export const DI_TYPES: IBagOf<symbol, DITypes> = {
+export const DI_TYPES: SymbolEnum<DITypes> = {
    // ContainerModuleCallBack: Symbol.for('ContainerModuleCallBack'),
    // ModuleRegistry: Symbol.for('ModuleRegistry'),
    // ContainerModule: Symbol.for('ContainerModule'),
@@ -16,5 +16,6 @@ export const DI_TYPES: IBagOf<symbol, DITypes> = {
    InstallServiceAdapter: Symbol.for('InstallServiceAdapter'),
    ContainerRegistryInternal: Symbol.for('ContainerRegistryInternal'),
    ContainerAccessFactory: Symbol.for('ContainerAccessFactory'),
+   InstallerRegistryClient: Symbol.for('InstallerRegistryClient'),
    NestedContainer: Symbol.for('NestedContainer')
 };

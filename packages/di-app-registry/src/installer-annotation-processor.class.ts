@@ -4,7 +4,7 @@ import {MetadataInspector} from '@loopback/metadata';
 import {getter} from '@thi.ng/paths';
 
 import {
-   INSTALLER_REQUEST_KEY, INSTALLER_RESPONSE_KEY, InstallerRequest, REQUIRED_IMPORT_KEY, RequiredImport
+   INSTALLER_REQUEST_KEY, INSTALLER_RESPONSE_KEY, InstallerRequest, INSTALL_DEPENDENCY_KEY, InstallDependency
 } from './decorators';
 
 @injectable()
@@ -28,8 +28,8 @@ export class InstallerAnnotationProcessor
       const matches = Object.keys(inputMessage)
          .map(
             (propKey: string) => {
-               const meta = MetadataInspector.getPropertyMetadata<RequiredImport<any>>(
-                  REQUIRED_IMPORT_KEY, inputMessage.constructor.prototype, propKey,
+               const meta = MetadataInspector.getPropertyMetadata<InstallDependency<any>>(
+                  INSTALL_DEPENDENCY_KEY, inputMessage.constructor.prototype, propKey,
                   {ownMetadataOnly: true});
 
                if ((

@@ -2,7 +2,7 @@ import {injectable, interfaces} from 'inversify';
 
 import {IDirector} from '@jchptf/api';
 import {toChildDirector} from '../../../../src/support/to-child-director.function';
-import {IInstallerModuleBuilder, InstallerService, IContainerRegistryInstallerClient} from '../../../../src/interfaces';
+import {IInstallerModuleBuilder, InstallerService, InstallerRegistryClient} from '../../../../src/interfaces';
 
 import {FIXTURE_DI_TYPES, FIXTURE_TYPES} from '../types';
 import {LibraryModuleRequest} from '../interfaces';
@@ -13,7 +13,7 @@ import {ILibrary} from '../../interfaces';
 @injectable()
 export class LibraryModuleInstaller implements InstallerService<LibraryModuleRequest, void>
 {
-   install(client: IContainerRegistryInstallerClient, options: LibraryModuleRequest): void
+   install(client: InstallerRegistryClient, options: LibraryModuleRequest): void
    {
       client.load(
          (bind: interfaces.Bind, _unbind: interfaces.Unbind, _isBound: interfaces.IsBound,

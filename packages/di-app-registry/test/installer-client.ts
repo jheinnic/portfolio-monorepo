@@ -13,7 +13,7 @@ const expect: ExpectStatic = chai.expect;
 describe('di-app-registry', () => {
    const sandbox: sinon.SinonSandbox = sinon.createSandbox();
 
-   let client: dar.IContainerRegistryInstallerClient;
+   let client: dar.InstallerRegistryClient;
    let registry: SpiedUponInstance<IContainerRegistryInternal>;
 
    const childId: dar.NestedContainerIdentifier =

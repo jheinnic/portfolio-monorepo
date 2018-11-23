@@ -1,6 +1,6 @@
 import {inject, injectable, interfaces} from 'inversify';
 import {
-   ApplicationInstaller, IContainerRegistryInstallerClient, IInstallerModuleBuilder
+   ApplicationInstaller, InstallerRegistryClient, IInstallerModuleBuilder
 } from '../../../../src/interfaces';
 import {LibraryModuleRequest} from '..';
 import {ILibrary} from '../../interfaces';
@@ -18,7 +18,7 @@ export class TwoLibAppInstaller implements ApplicationInstaller
    {
    }
 
-   install(client: IContainerRegistryInstallerClient): void
+   install(client: InstallerRegistryClient): void
    {
       client.load(
          (bind: interfaces.Bind) =>
