@@ -611,6 +611,15 @@
     lodash "^4.17.5"
     reflect-metadata "^0.1.10"
 
+"@loopback/metadata@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@loopback/metadata/-/metadata-1.0.1.tgz#ea2e7a6e87596c26f03ff017fa2bcf86aa456b8c"
+  integrity sha512-HS2Zbjyv05fl8Zxs3iLZFpAcBc62+wkQO+COqs3QqqjVIZJSfCSaZl4zsMm3YxG57ZxCpYGC3eDRM0xmFTq99w==
+  dependencies:
+    debug "^4.0.1"
+    lodash "^4.17.5"
+    reflect-metadata "^0.1.10"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -802,6 +811,11 @@
 "@types/strip-json-comments@0.0.30":
   version "0.0.30"
   resolved "https://registry.yarnpkg.com/@types/strip-json-comments/-/strip-json-comments-0.0.30.tgz#9aa30c04db212a9a0649d6ae6fd50accc40748a1"
+
+"@types/transducers-js@^0.4.4":
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/@types/transducers-js/-/transducers-js-0.4.4.tgz#50161496335e05810ac442c9f0a08788e4e82cec"
+  integrity sha512-/ulMxNKluA0OzMpEvxT28nAhGXLt3S69Ryd5zd4zMi4AoSZjILdeIJify+NiH+UdscAPHmgeH8k9ERx8Ouz3DQ==
 
 JSONStream@^1.0.4, JSONStream@^1.3.4:
   version "1.3.5"
@@ -2398,6 +2412,16 @@ invariant@^2.2.0:
   dependencies:
     loose-envify "^1.0.0"
 
+inversify-binding-decorators@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/inversify-binding-decorators/-/inversify-binding-decorators-4.0.0.tgz#c4d1ac50d7d6531f465ee7894e92031f7471c865"
+  integrity sha512-r8au/oH3vS7ttHj0RivAznwElySeRohLfg8lvOSzbrX6abf/8ik8ptk49XbzdShgrnalvl7CM6MjcskfM7MMqQ==
+
+inversify-inject-decorators@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/inversify-inject-decorators/-/inversify-inject-decorators-3.1.0.tgz#d9941080bad77cec8a65ee29d905e4d5d73e1e95"
+  integrity sha512-/seBlVp5bXrLQS3DpKEmlgeZL6C7Tf/QITd+IMQrbBBGuCbxb7k3hRAWu9XSreNpFzLgSboz3sClLSEmGwHphw==
+
 inversify@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/inversify/-/inversify-5.0.1.tgz#500d709b1434896ce5a0d58915c4a4210e34fb6e"
@@ -2684,6 +2708,13 @@ istanbul-reports@^1.4.1:
   resolved "https://registry.yarnpkg.com/istanbul-reports/-/istanbul-reports-1.5.1.tgz#97e4dbf3b515e8c484caea15d6524eebd3ff4e1a"
   dependencies:
     handlebars "^4.0.3"
+
+ix@^2.3.5:
+  version "2.3.5"
+  resolved "https://registry.yarnpkg.com/ix/-/ix-2.3.5.tgz#8f1f221d420e248833009601ca49d4fae3d794c9"
+  integrity sha512-mdW2LtQiy+gPtggKa393EdSaI46RARsAa5zjlLgNKMlE57vC6dc6g6nehROI1Gj/HhsTvpb3WALSwg0EWhhz0Q==
+  dependencies:
+    tslib "^1.8.0"
 
 js-tokens@^3.0.0, js-tokens@^3.0.2:
   version "3.0.2"
@@ -2973,6 +3004,11 @@ md5-hex@^1.2.0:
 md5-o-matic@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/md5-o-matic/-/md5-o-matic-0.1.1.tgz#822bccd65e117c514fab176b25945d54100a03c3"
+
+medium@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/medium/-/medium-1.0.2.tgz#47bff95ef17913cc0e4a434862171944bbf46818"
+  integrity sha512-QgPG/wAKErFC19cAlQPE72xyJ+nFGbmBabubWCUbf9UXRF8MPVJO9BLU8x0rR+YTsxspSsnOY6lMvYyHd7f7XQ==
 
 mem@^1.1.0:
   version "1.1.0"
@@ -4513,6 +4549,11 @@ tr46@^1.0.1:
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-1.0.1.tgz#a8b13fd6bfd2489519674ccde55ba3693b706d09"
   dependencies:
     punycode "^2.1.0"
+
+transducers-js@^0.4.174:
+  version "0.4.174"
+  resolved "https://registry.yarnpkg.com/transducers-js/-/transducers-js-0.4.174.tgz#d5862c10eff4be3d3322abf6bb742e30f1bb6fc4"
+  integrity sha1-1YYsEO/0vj0zIqv2u3QuMPG7b8Q=
 
 trim-newlines@^1.0.0:
   version "1.0.0"

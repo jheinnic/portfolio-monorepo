@@ -64,8 +64,12 @@ cat << EOF > $MODULE/package.json
         "ts-sinon": "^1.0.12",
         "typedoc": "^0.13.0",
         "typescript": "^3.1.3"
-   },
+    },
+    "engines": {
+        "node": ">=8.9.0"
+    },
     "dependencies": {
+        "@jchptf/api": "^0.0.21",
         "simplytyped": "^1.5.2",
         "tslib": "^1.9.3"
     },
