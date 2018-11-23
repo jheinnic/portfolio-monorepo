@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/config",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "description": "TODO",
     "main": "./dist/index.js",
     "typings": "./dist/index.d.ts",
@@ -37,7 +37,7 @@
         "node": ">=8.9.0"
     },
     "dependencies": {
-        "@jchptf/api": "^0.0.22",
+        "@jchptf/api": "^0.0.23",
         "class-transformer": "^0.1.10",
         "class-transformer-validator": "^0.6.0",
         "class-validator": "^0.9.1",
