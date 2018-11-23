@@ -1,7 +1,7 @@
-import {INotify, Event, Listener, iNotify} from '../src';
+import {Event, INotify, iNotify, Listener} from '../../src';
 
-@iNotify
-export class ToggleThing implements INotify
+@iNotify()
+export class Notifier implements INotify
 {
    constructor(public readonly flags: number[]) {
    }
@@ -22,19 +22,3 @@ export class ToggleThing implements INotify
    }
 
 }
-
-
-export const foo: ToggleThing = new ToggleThing([1, 4, 4]);
-export const e: Event = {
-   id: 'e'
-};
-
-function listen(e: Event) {
-   console.log(e);
-}
-
-console.log(foo.addListener('e', listen));
-foo.notify(e);
-console.log(foo.removeListener('e', listen));
-foo.notify(e);
-console.log(foo.removeListener('e', listen));

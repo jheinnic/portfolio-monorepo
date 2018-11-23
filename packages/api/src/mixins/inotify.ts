@@ -17,6 +17,8 @@ export function iNotifyDispatch(listeners: any[][], e: api.Event) {
 interface INotifyImpl extends api.INotify {
     _listeners: api.IObjectOf<[api.Listener, any][]>,
     __listener(listeners: any[][], f: api.Listener, scope: any): number
+
+   notify(event: api.Event): void;
 }
 
 /**
@@ -24,53 +26,62 @@ interface INotifyImpl extends api.INotify {
  * a lazily instantiated `_listeners` property object, storing
  * registered listeners.
  */
-export const iNotify = mixin<INotifyImpl>({
-    _listeners: {},
+export const iNotify = function() {
+   return mixin<INotifyImpl>({
+      _listeners: {},
 
-    addListener(id: Exclude<PropertyKey, symbol>, fn: api.Listener, scope?: any) {
-        let l = (this._listeners = this._listeners || {})[id];
-        if (!l) {
+      addListener(id: Exclude<PropertyKey, symbol>, fn: api.Listener, scope?: any)
+      {
+         let l = (
+            this._listeners = this._listeners || {}
+         )[id];
+         if (!l) {
             l = this._listeners[id] = [];
-        }
-        if (this.__listener(l, fn, scope) === -1) {
+         }
+         if (this.__listener(l, fn, scope) === -1) {
             l.push([fn, scope]);
             return true;
-        }
-        return false;
-    },
+         }
+         return false;
+      },
 
-    removeListener(id: Exclude<PropertyKey, symbol>, fn: api.Listener, scope?: any) {
-        if (!this._listeners) return false;
-        const l: any[][] = this._listeners[id];
-        if (l) {
+      removeListener(id: Exclude<PropertyKey, symbol>, fn: api.Listener, scope?: any)
+      {
+         if (!this._listeners) return false;
+         const l: any[][] = this._listeners[id];
+         if (l) {
             const idx = this.__listener(l, fn, scope);
             if (idx !== -1) {
-                l.splice(idx, 1);
-                return true;
+               l.splice(idx, 1);
+               return true;
             }
-        }
-        return false;
-    },
+         }
+         return false;
+      },
 
-    notify(e: api.Event) {
-        if (!this._listeners) return;
-        e.target === undefined && (e.target = this);
-        iNotifyDispatch(this._listeners[e.id], e);
-        iNotifyDispatch(this._listeners[api.EVENT_ALL], e);
-    },
+      notify(e: api.Event)
+      {
+         if (!this._listeners) return;
+         e.target === undefined && (
+            e.target = this
+         );
+         iNotifyDispatch(this._listeners[e.id], e);
+         iNotifyDispatch(this._listeners[api.EVENT_ALL], e);
+      },
 
-    __listener(listeners: any[][], f: api.Listener, scope: any) {
-        let i = listeners.length;
-        while (--i >= 0) {
+      __listener(listeners: any[][], f: api.Listener, scope: any)
+      {
+         let i = listeners.length;
+         while (--i >= 0) {
             const l = listeners[i];
             if (l[0] === f && l[1] === scope) {
-                break;
+               break;
             }
-        }
-        return i;
-    }
-
-});
+         }
+         return i;
+      }
+   });
+};
 
 /**
  * Optional base class that can be used to avoid providing boilerplate dummy implementations

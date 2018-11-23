@@ -1,9 +1,10 @@
-import * as api from "../api";
-import { mixin } from "../mixin";
+import * as api from '../api';
+import {mixin} from '../mixin';
 
-interface IEnableImpl<T> extends api.IEnable<T> {
-    _enabled: boolean;
-    notify?: any;
+interface IEnableImpl extends api.IEnable
+{
+   _enabled: boolean;
+   notify?: any;
 }
 
 /**
@@ -12,12 +13,11 @@ interface IEnableImpl<T> extends api.IEnable<T> {
  * interface, `enable()` and `disable()` will automatically emit the
  * respective events.
  */
-export function iEnable<T extends any>()
-{
-   return mixin<IEnableImpl<T>>({
+export const iEnable = function() {
+   return mixin<IEnableImpl>({
       _enabled: true,
 
-      isEnabled()
+      isEnabled(): boolean
       {
          return this._enabled;
       },
@@ -26,6 +26,7 @@ export function iEnable<T extends any>()
       {
          this._enabled = true;
          if (this.notify) {
+            console.log('This.notify exists');
             this.notify(<api.Event>{
                id: api.EVENT_ENABLE,
                target: this
@@ -37,6 +38,7 @@ export function iEnable<T extends any>()
       {
          this._enabled = false;
          if (this.notify) {
+            console.log('This.notify exists');
             this.notify(<api.Event>{
                id: api.EVENT_DISABLE,
                target: this
@@ -44,10 +46,10 @@ export function iEnable<T extends any>()
          }
       },
 
-      toggle(this: IEnableImpl<T>)
+      toggle(this: IEnableImpl)
       {
          this._enabled ? this.disable() : this.enable();
          return this._enabled;
       }
    });
-}
+};

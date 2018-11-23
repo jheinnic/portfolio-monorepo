@@ -17,21 +17,3 @@ export function installerRequest(): ClassDecorator
 {
    return ClassDecoratorFactory.createDecorator<InstallerRequest>(INSTALLER_REQUEST_KEY, {});
 }
-
-/*
-   const retVal = (target: {new(...args: any[]): any }): {new(...args: any[]): any } => {
-      return class InstallRequest extends target
-      {
-         constructor(proto: any)
-         {
-            super();
-            Object.assign(this, proto);
-         };
-      };
-   }
-   annotator(retVal);
-
-   return retVal;
-}
-*/
-

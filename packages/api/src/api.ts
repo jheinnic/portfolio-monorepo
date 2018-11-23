@@ -58,20 +58,19 @@ export interface ICopy<T> {
  * `@mixins/IEnable` decorator mixin
  *
  * @see mixins/IEnable
- * @param T type for enable/disable option arg
  */
-export interface IEnable<T> {
+export interface IEnable {
     isEnabled(): boolean;
+
     /**
      * Disables this entity.
-     * @param opts optional implementation specific arg
      */
-    disable(opts?: T): void;
+    disable(): void;
+
     /**
      * Enables this entity.
-     * @param opts optional implementation specific arg
      */
-    enable(opts?: T): void;
+    enable(): void;
 
     toggle?(): boolean;
 }

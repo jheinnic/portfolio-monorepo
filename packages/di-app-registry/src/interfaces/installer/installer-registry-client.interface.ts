@@ -3,25 +3,25 @@ import {IDirector} from '@jchptf/api';
 import {NestedContainerIdentifier, InstallerServiceIdentifier, IContainerAccessStrategy} from '..';
 import {ClassType} from 'class-transformer-validator';
 
-export interface IContainerRegistryInstallerClient {
+export interface InstallerModuleClient {
    // TODO: Only expose this on the installer client for a top-most Application.
    getConfig<T extends object>(configClass: ClassType<T>, rootPath?: string): T;
 
    createChild(
       id: NestedContainerIdentifier,
-      allowExists?: boolean): IContainerRegistryInstallerClient;
+      allowExists?: boolean): InstallerModuleClient;
 
    fromChild(
       id: NestedContainerIdentifier,
-      director: IDirector<IContainerRegistryInstallerClient>,
-      allowCreate?: boolean): IContainerRegistryInstallerClient;
+      director: IDirector<InstallerModuleClient>,
+      allowCreate?: boolean): InstallerModuleClient;
 
-   load(callback: interfaces.ContainerModuleCallBack): IContainerRegistryInstallerClient;
+   load(callback: interfaces.ContainerModuleCallBack): InstallerModuleClient;
 
    loadFromChild(
       id: NestedContainerIdentifier,
       callback: interfaces.ContainerModuleCallBack,
-      allowCreate?: boolean): IContainerRegistryInstallerClient;
+      allowCreate?: boolean): InstallerModuleClient;
 
    install<Import, Export>(
       installerId: InstallerServiceIdentifier<Import, Export>,

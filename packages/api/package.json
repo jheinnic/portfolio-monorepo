@@ -33,7 +33,8 @@
         "node": ">=8.9.0"
     },
     "dependencies": {
-        "@loopback/metadata": "^1.0.0",
+        "@jchptf/reflection": "^0.0.2",
+        "@loopback/metadata": "^1.0.1",
         "@thi.ng/errors": "^0.1.3",
         "inversify": "^5.0.1",
         "tslib": "^1.9.3",

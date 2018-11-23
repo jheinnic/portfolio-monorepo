@@ -7,8 +7,9 @@ import { illegalArgs } from "@thi.ng/errors";
  * is not a function.
  *
  * @param msg deprecation message
+ * @param log Method to use for logging functionality.
  */
-export function deprecated(msg?: string, log = console.log): MethodDecorator {
+export function deprecated(msg?: string, log = console.warn): MethodDecorator {
     return function (target: any, prop: string | symbol, descriptor: PropertyDescriptor) {
         const signature = `${target.constructor.name}#${prop.toString()}`;
         const fn = descriptor.value;
