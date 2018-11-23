@@ -63,6 +63,37 @@ export interface MixinBehavior<B extends Object, P extends Keys<B> = never> {
    conflicts: IMapTo<MixinConflictHandler<B[P]>, B, P>
 }
 
+function defineMixinProperty<I extends Object, IP extends Keys<I>>(
+   targetObj: any, key: Keys<I>, mixinDef: MixinBehavior<I, IP>): void
+{
+   Object.defineProperty(targetObj, key, {
+      value: mixinDef.behavior[key],
+      writable: Object.getOwnPropertyDescriptor(mixinDef.behavior, key)!.writable,
+      configurable: true,
+      enumerable: mixinDef.behavior.propertyIsEnumerable(key)
+   });
+};
+
+function redefineMixinProperty<I extends Object, IP extends Keys<I>>(
+   handlerKeys: Set<Keys<I>>, key: Keys<I>, mixinDef: MixinBehavior<I, IP>,
+   existing: PropertyDescriptor, targetObj: any): void
+{
+   if (handlerKeys.has(key)) {
+      const handlerKey = key as IP;
+      const handlerDescriptor = mixinDef.conflicts[handlerKey](
+         key, existing, mixinDef.behavior[handlerKey]);
+      if (!!handlerDescriptor) {
+         handlerDescriptor.configurable = true;
+         Object.defineProperty(targetObj, key, handlerDescriptor);
+      }
+      else {
+         console.warn(`not patching: ${key.toString()}`);
+      }
+   } else {
+      defineMixinProperty(targetObj, key, mixinDef);
+   }
+};
+
 function doMixinPlus<I extends Object, IP extends Keys<I> = never>( targetObj: any, baseObj: any, mixinDef: MixinBehavior<I, IP> ): void {
    const instanceKeys: Keys<I>[] = Reflect.ownKeys(mixinDef.behavior) as Keys<I>[];
    const handlerKeys: Set<Keys<I>> =
@@ -73,51 +104,15 @@ function doMixinPlus<I extends Object, IP extends Keys<I> = never>( targetObj: a
       const existing = Object.getOwnPropertyDescriptor(baseObj, key);
       const existingProto = Object.getOwnPropertyDescriptor(baseObj.__proto__, key);
       if (!existing && !existingProto) {
-         Object.defineProperty(targetObj.__proto__, key, {
-            value: mixinDef.behavior[key],
-            writable: Object.getOwnPropertyDescriptor(mixinDef.behavior, key)!.writable,
-            configurable: true,
-            enumerable: mixinDef.behavior.propertyIsEnumerable(key)
-         });
+         if (mixinDef.behavior[key] instanceof Function) {
+            defineMixinProperty(targetObj.__proto__, key, mixinDef);
+         } else {
+            defineMixinProperty(targetObj, key, mixinDef);
+         }
       } else if(existing && existing.configurable) {
-         if (handlerKeys.has(key)) {
-            const handlerKey = key as IP;
-            const handlerDescriptor = mixinDef.conflicts[handlerKey](key, existing, mixinDef.behavior[handlerKey]);
-            if (!!handlerDescriptor) {
-               handlerDescriptor.configurable = true;
-               Object.defineProperty(targetObj, key, handlerDescriptor);
-            }
-            else {
-               console.warn(`not patching: ${key.toString()}`);
-            }
-         } else {
-            Object.defineProperty(targetObj, key, {
-               value: mixinDef.behavior[key],
-               writable: Object.getOwnPropertyDescriptor(mixinDef.behavior, key)!.writable,
-               configurable: true,
-               enumerable: mixinDef.behavior.propertyIsEnumerable(key)
-            });
-         }
+         redefineMixinProperty(handlerKeys, key, mixinDef, existing, targetObj);
       } else if(existingProto && existingProto.configurable) {
-         if (handlerKeys.has(key)) {
-            const handlerKey = key as IP;
-            const handlerDescriptor = mixinDef.conflicts[handlerKey](
-               key, existingProto, mixinDef.behavior[handlerKey]);
-            if (!!handlerDescriptor) {
-               handlerDescriptor.configurable = true;
-               Object.defineProperty(targetObj.__proto__, key, handlerDescriptor);
-            }
-            else {
-               console.warn(`not patching: ${key.toString()}`);
-            }
-         } else {
-            Object.defineProperty(targetObj.__proto__, key, {
-               value: mixinDef.behavior[key],
-               writable: Object.getOwnPropertyDescriptor(mixinDef.behavior, key)!.writable,
-               configurable: true,
-               enumerable: mixinDef.behavior.propertyIsEnumerable(key)
-            });
-         }
+         redefineMixinProperty(handlerKeys, key, mixinDef, existingProto, targetObj.__proto__);
       } else {
          console.warn(`not patching: ${key.toString()}`);
       }
@@ -129,7 +124,7 @@ export function mixinPlus<I extends Object, IP extends Keys<I> = never, S extend
 {
     const typeTag = Symbol("isa");
 
-    function _mixin <C extends MixableConstructor>(Target: C) {
+    function _mixin<C extends MixableConstructor>(Target: C) {
        const MixinTarget = class MixinTarget extends Target { };
 
        doMixinPlus(MixinTarget.prototype, Target.prototype, instBehavior);
@@ -139,9 +134,11 @@ export function mixinPlus<I extends Object, IP extends Keys<I> = never, S extend
           doMixinPlus(MixinTarget.prototype.constructor, Target.prototype.constructor, staticBehavior);
        }
 
-       Object.defineProperty(MixinTarget.prototype.constructor, Symbol.hasInstance, { value: (x: any) =>
-       !!x[typeTag] });
-       // return Target as C & I;
+       Object.defineProperty(
+          MixinTarget.prototype.constructor,
+          Symbol.hasInstance,
+          { value: (x: any) => !!x[typeTag] }
+       );
        return MixinTarget.prototype.constructor;
     }
 
@@ -162,7 +159,8 @@ export function makeChainingHandler<T extends AnyFunc = AnyFunc>(reducer: (baseV
       }
 
       return {
-         writable: false,
+         configurable: true,
+         writable: desc.writable,
          enumerable: desc.enumerable,
          value: extendedFunction
       }

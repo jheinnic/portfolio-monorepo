@@ -1,7 +1,7 @@
 import {IEnable, iEnable, INotify, iNotify, Event, Listener} from '../../src';
 
-@iEnable()
-@iNotify()
+@iEnable
+@iNotify
 export class ToggleTalker implements IEnable, INotify {
    constructor(public readonly flags: number[]) { }
 

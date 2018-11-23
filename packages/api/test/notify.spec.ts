@@ -7,7 +7,7 @@ describe('iNotify', () => {
 
    it('works', () => {
 
-      @iNotify()
+      @iNotify
       class Foo implements INotify
       {
          addListener(_: string, __: (e: Event) => void, ___?: any): boolean

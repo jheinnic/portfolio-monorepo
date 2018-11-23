@@ -1,6 +1,6 @@
 import {Event, INotify, iNotify, Listener} from '../../src';
 
-@iNotify()
+@iNotify
 export class Notifier implements INotify
 {
    constructor(public readonly flags: number[]) {

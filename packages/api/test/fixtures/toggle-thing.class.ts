@@ -1,6 +1,6 @@
 import {IEnable, iEnable} from '../../src';
 
-@iEnable()
+@iEnable
 export class ToggleThing implements IEnable {
    constructor(public readonly flags: number[]) { }
 
