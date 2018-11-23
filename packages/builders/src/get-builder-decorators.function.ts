@@ -4,7 +4,7 @@ import {
 import {Builder, Ctor, IBuilder, Instance} from 'fluent-interface-builder';
 
 import {IDirector, MixableConstructor, Wild} from '@jchptf/api';
-import {isKeyOf, StringKeys} from 'simplytyped';
+import {isKeyOf} from 'simplytyped';
 import {BindToBuilder} from './bind-to-builder.interface';
 import {FluentBuilder} from './fluent-builder.interface';
 import {BuilderDecorators} from './builder-decorators.interface';
@@ -70,12 +70,13 @@ function fluentlyBuildable<S extends FluentBuilder>(key: MetadataKey<BindToBuild
       if (!! allParamMeta) {
          const builder: IBuilder<Wild, InternalBuilder> =
             new Builder<Wild, InternalBuilder>();
-         for (let nextProp of allParamMeta.map(p => p.name)) {
+         let nextProp: keyof S;
+         for (nextProp of allParamMeta.map(p => p.name)) {
             // We cannot enforce compile time type checks as we define this, but we define the interface
             // based on decorators that link to members of an interface that the generated class will
             // implement, and TypeScript can enforce that use interface at compile time.
             if (typeof nextProp === 'string') {
-               builder.cascade(nextProp, (...args: Parameters<S[StringKeys<S>]>) => (context: Wild) => {
+               builder.cascade(nextProp, (...args: any[]) => (context: Wild) => {
                   context[nextProp] = args;
                });
             }
@@ -141,9 +142,10 @@ function fluentlyBuildable<S extends FluentBuilder>(key: MetadataKey<BindToBuild
                   // console.log(propName, factoryMethodData);
                   return !!factoryMethodData;
                });
-         if (!!clonePropName) {
+         if (!!clonePropName && (clonePropName !== 'clone')) {
             FluentTarget.prototype[clonePropName] = FluentTarget.prototype.clone;
             // console.log('Found and overrode ' + clonePropName + ' with ' + FluentTarget.prototype.clone);
+            delete FluentTarget.prototype.clone;
          }
 
          const createPropName: string | undefined =
@@ -158,13 +160,12 @@ function fluentlyBuildable<S extends FluentBuilder>(key: MetadataKey<BindToBuild
                });
          if (!!createPropName && (createPropName !== 'create')) {
             // (FluentTarget as any)[createPropName] = FluentTarget.prototype.constructor.create;
-            if (isKeyOf(FluentTarget, createPropName)) {
-               FluentTarget[createPropName] = FluentTarget.prototype.constructor.create;
-            }
+            // if (isKeyOf(FluentTarget, createPropName)) {
+            //    FluentTarget[createPropName] = FluentTarget.prototype.constructor.create;
+            // }
             FluentTarget.prototype.constructor[createPropName] = FluentTarget.prototype.constructor.create;
-            delete FluentTarget.prototype.constructor.create;
-
             // console.log('Found and overrode ' + createPropName);
+            delete FluentTarget.prototype.constructor.create;
          }
 
          return FluentTarget;
