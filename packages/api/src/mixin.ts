@@ -99,15 +99,23 @@ export function mixinPlus<I extends Object, IP extends Keys<I> = never, S extend
 {
     const typeTag = Symbol("isa");
 
-    function _mixin(clazz: any) {
-       doMixinPlus(clazz.prototype, instBehavior);
-       Object.defineProperty(clazz.prototype, typeTag, { value: true });
+    function _mixin <C extends MixableConstructor>(Target: C) {
+       const MixinTarget = class MixinTarget extends Target
+       {
+
+       };
+
+       doMixinPlus(MixinTarget.prototype, instBehavior);
+       Object.defineProperty(MixinTarget.prototype, typeTag, { value: true });
 
        if (!! staticBehavior) {
-          doMixinPlus(clazz, staticBehavior);
+          doMixinPlus(MixinTarget.prototype.constructor, staticBehavior);
        }
 
-       return clazz;
+       Object.defineProperty(MixinTarget.prototype.constructor, Symbol.hasInstance, { value: (x: any) =>
+       !!x[typeTag] });
+       // return Target as C & I;
+       return MixinTarget.prototype.constructor;
     }
 
     Object.defineProperty(_mixin, Symbol.hasInstance, { value: (x: any) => !!x[typeTag] });
