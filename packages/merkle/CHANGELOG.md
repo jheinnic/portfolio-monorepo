@@ -3,14 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.0.8](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/merkle@0.0.8...@jchptf/merkle@0.0.8) (2018-11-23)
-
-**Note:** Version bump only for package @jchptf/merkle
-
-
-
-
-
 ## [0.0.7](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/merkle@0.0.6...@jchptf/merkle@0.0.7) (2018-11-23)
 
 **Note:** Version bump only for package @jchptf/merkle
