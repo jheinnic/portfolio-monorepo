@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/merkle",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "TODO",
     "main": "./dist/index.js",
     "typings": "./dist/index.d.ts",
@@ -38,8 +38,8 @@
         "node": ">=8.9.0"
     },
     "dependencies": {
-        "@jchptf/api": "^0.0.22",
-        "@jchptf/builders": "^0.0.5",
+        "@jchptf/api": "^0.0.23",
+        "@jchptf/builders": "^0.0.6",
         "@jchptf/reflection": "^0.0.3",
         "binary-search": "^1.3.4",
         "inversify": "^5.0.1",
