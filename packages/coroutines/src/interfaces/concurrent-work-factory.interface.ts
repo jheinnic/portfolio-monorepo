@@ -1,6 +1,13 @@
 import {WrappableCoRoutineGenerator, WrappedCoRoutineGenerator} from 'co';
+import {Transducer} from 'transducers-js';
+import {SubscriptionLike} from 'rxjs';
+import {AsyncSink} from 'ix';
+import {Chan} from 'medium';
 import Queue from 'co-priority-queue';
+
+import {ChanBufferType} from './chan-buffer-type.enum';
 import {SinkLike} from './sink-like.type';
+import {AsyncTx} from './async-tx.type';
 
 export interface IConcurrentWorkFactory {
    /**
@@ -17,8 +24,6 @@ export interface IConcurrentWorkFactory {
     * @see co.wrap
     */
    createPriorityQueue<T extends any = any>(): Queue<T>;
-
-   createChan<T extends any = any>(): Chan.Chan<T>
 
    /**
     * Given a wrappable co-routine generator that accepts some number of arguments,
@@ -70,13 +75,39 @@ export interface IConcurrentWorkFactory {
          R = any, P extends any[] = any[]>(concurrency: number, defaultPriority?: number):
       (coWrappable: F, priority: number) => WrappedCoRoutineGenerator<F, R, P>
 
-   createSourceLoader<T, M = T>(
-      iterator: IterableIterator<T>, concurrency: number, backlog: number,
-      transform?: WrappableCoRoutineGenerator<M, [T]>): Chan.Chan<M>
+   createChan<T = any>(bufSize?: number, bufType?: ChanBufferType): Chan<T, T>
 
-   createStageHandler<T, M>(
-      source: Chan.Chan<T>,
-      transform: WrappableCoRoutineGenerator<M, [T]>,
+   createTxChan<T = any, M = T>(
+      tx: Transducer<T, M>, bufSize?: number, bufType?: ChanBufferType): Chan<T, M>
+
+   transformToSink<I, O>(
+      source: Chan<any, I>,
+      transform: AsyncTx<I, O>|AsyncTx<I, Iterable<O>>,
       concurrency: number,
-      sink: SinkLike<M>): void
+      sink: SinkLike<O>): void
+
+   transformToChan<I, O>(
+      source: Chan<any, I>,
+      transform: AsyncTx<I, O>|AsyncTx<I, Iterable<O>>,
+      concurrency: number,
+      chan: Chan<O, any>): void
+
+   loadToChan<T>(
+      source: Iterable<T>|AsyncIterable<T>, concurrency: number, chan: Chan<T, any>, delay?: number): SubscriptionLike;
+
+   loadToSink<T>(
+      source: Iterable<T>|AsyncIterable<T>, concurrency: number, sink: AsyncSink<T>, delay?: number): SubscriptionLike;
+
+   // cycle<T>(source: Iterable<T>, sink: SinkLike<T>, delay?: number): SubscriptionLike;
+
+   unwind<T>(master: AsyncSink<Iterable<T>>, sink: AsyncSink<T>, delay?: number): SubscriptionLike
+
+   // service<I, O>(source: Chan<any, I>, xducer: Transducer<I, O>, sink: Chan<O, any>, concurrency?: number): void;
+
+   // serviceMany<I, O>(source: Chan<any, I>, xducer: Transducer<I, O[]>, sink: Chan<O, any>, concurrency?: number): void;
+
+   service<I, O>(source: Chan<any, I>, sink: Chan<I, O>, concurrency?: number): void;
+
+   serviceMany<I, O>(source: Chan<any, I[]>, sink: Chan<I, O>, concurrency?: number): void;
 }
+

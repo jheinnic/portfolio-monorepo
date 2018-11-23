@@ -1,19 +1,21 @@
+/*
+import {AsyncSink} from '@reactivex/ix-ts';
 import {Subject} from 'rxjs';
-import Queue from 'co-priority-queue';
 import {IDirector} from '@jchptf/api';
+import {Chan, put} from 'medium';
 
-export type SinkLike<T> = Chan.Chan<T> | Subject<T> | Queue<T> | IDirector<T>
+export type SinkLike<T> = Chan<T, any> | Subject<T> | AsyncSink<T> | IDirector<T>
 
-export function isChan<T>(sink: SinkLike<T>): sink is Chan.Chan<T> {
-   return sink.hasOwnProperty('close');
+export function isChan<T>(sink: SinkLike<T>): sink is Chan<T, any> {
+   return sink.hasOwnProperty('xduce') && sink.hasOwnProperty('isClosed');
 }
 
 export function isSubject<T>(sink: SinkLike<T>): sink is Subject<T> {
    return sink.hasOwnProperty('observers');
 }
 
-export function isQueue<T>(sink: SinkLike<T>): sink is Queue<T> {
-   return sink.hasOwnProperty('fns');
+export function isQueue<T>(sink: SinkLike<T>): sink is AsyncSink<T> {
+   return sink instanceof AsyncSink;
 }
 
 export function isDirector<T>(sink: SinkLike<T>): sink is IDirector<T> {
@@ -22,9 +24,9 @@ export function isDirector<T>(sink: SinkLike<T>): sink is IDirector<T> {
 
 export function * callSink<T>(sink: SinkLike<T>, arg: T): IterableIterator<any> {
    if (isChan(sink)) {
-      yield sink(arg);
+      yield put(sink, arg);
    } else if(isQueue(sink)) {
-      yield sink.push(arg, 0);
+      yield sink.write(arg);
    } else if(isSubject(sink)) {
       yield;
       sink.next(arg);
@@ -40,11 +42,11 @@ export function asGenerator<T>(sink: SinkLike<T>): (arg: T) => IterableIterator<
 
    if (isChan(sink)) {
       retVal = function* (arg: T) {
-         yield sink(arg);
+         yield put(sink, arg);
       };
    } else if (isQueue(sink)) {
       retVal = function* (arg: T) {
-         yield sink.push(arg, 0);
+         yield sink.write(arg);
       };
    } else if (isSubject(sink)) {
       retVal = function* (arg: T) {
@@ -56,6 +58,59 @@ export function asGenerator<T>(sink: SinkLike<T>): (arg: T) => IterableIterator<
          yield;
          sink(arg);
       }
+   }
+
+   return retVal;
+}
+*/
+
+import {AsyncSink} from 'ix';
+import {Subject} from 'rxjs';
+import {IDirector} from '@jchptf/api';
+
+export type SinkLike<T> = Subject<T> | AsyncSink<T> | IDirector<T>
+
+// export function isChan<T>(sink: SinkLike<T>): sink is Chan<T> {
+//    return sink.hasOwnProperty('close');
+// }
+
+export function isSubject<T>(sink: SinkLike<T>): sink is Subject<T> {
+   return sink instanceof Subject;
+}
+
+export function isQueue<T>(sink: SinkLike<T>): sink is AsyncSink<T> {
+   return sink instanceof AsyncSink;
+}
+
+export function isDirector<T>(sink: SinkLike<T>): sink is IDirector<T> {
+   return sink instanceof Function;
+}
+
+export function callSink<T>(sink: SinkLike<T>, arg: T): void
+{
+   if(isQueue(sink)) {
+      sink.write(arg);
+   } else if(isSubject(sink)) {
+      sink.next(arg);
+   } else {
+      sink(arg);
+   }
+}
+
+export function asFunction<T>(sink: SinkLike<T>): IDirector<T>
+{
+   let retVal: (arg: T) => void;
+
+   if (isQueue(sink)) {
+      retVal = function (arg: T): void {
+         sink.write(arg);
+      };
+   } else if (isSubject(sink)) {
+      retVal = function (arg: T): void {
+         sink.next(arg);
+      }
+   } else {
+      retVal = sink;
    }
 
    return retVal;

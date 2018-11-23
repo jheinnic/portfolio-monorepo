@@ -1,9 +1,18 @@
 import {injectable} from 'inversify';
+import {identity, Transducer} from 'transducers-js';
 import {co, CoRoutineGenerator, WrappableCoRoutineGenerator, WrappedCoRoutineGenerator} from 'co';
-import chan from 'chan';
+import {buffers, Chan, chan, close, go, put, repeat, repeatTake, sleep} from 'medium';
+import {AsyncSink} from 'ix';
+import {SubscriptionLike} from 'rxjs';
+import {illegalArgs} from '@thi.ng/errors';
 import Queue from 'co-priority-queue';
-import {IConcurrentWorkFactory, Limiter} from '../interfaces';
-import {asGenerator, SinkLike} from '../interfaces/sink-like.type';
+
+import {asFunction, IConcurrentWorkFactory, Limiter, SinkLike, AsyncTx, ChanBufferType} from '../interfaces';
+
+function isIterable<T>(sinkValue: any): sinkValue is Iterable<T>
+{
+   return sinkValue.hasOwnProperty(Symbol.iterator) || sinkValue.__proto__.hasOwnProperty(Symbol.iterator);
+}
 
 @injectable()
 export class ConcurrentWorkFactory implements IConcurrentWorkFactory
@@ -13,9 +22,47 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       return new Queue<M>();
    }
 
-   createChan<M>(): Chan.Chan<M>
+   createChan<T = any>(bufSize?: number, bufType?: ChanBufferType): Chan<T, T>
    {
-      return chan<M>();
+      return this.createTxChan<T, T>(identity, bufSize, bufType);
+   }
+
+   createTxChan<T = any, M = T>(
+      tx: Transducer<T, M>, bufSize: number = 0, bufType?: ChanBufferType): Chan<T, M>
+   {
+      if (bufSize < 0) {
+         illegalArgs(`bufSize, ${bufSize}, may not be negative`);
+      } else if ((!bufSize) && (!!bufType))
+      {
+         illegalArgs(`bufType, ${bufType}, must be undefined when bufSize is zero`);
+      }
+
+      if (bufSize > 0) {
+         if (!bufType) {
+            bufType = ChanBufferType.fixed;
+         }
+
+         switch (bufType) {
+            case ChanBufferType.fixed:
+            {
+               return chan(buffers.fixed(bufSize), tx);
+            }
+            case ChanBufferType.dropping:
+            {
+               return chan(buffers.dropping(bufSize), tx);
+            }
+            case ChanBufferType.sliding:
+            {
+               return chan(buffers.sliding(bufSize), tx);
+            }
+            default:
+            {
+               illegalArgs(`Unknown buffer type: ${bufType}`);
+            }
+         }
+      }
+
+      return chan(undefined, tx);
    }
 
    createLimiter(concurrency: number, defaultPriority: number = 10): Limiter
@@ -136,6 +183,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       }
    };
 
+   /*
    createSourceLoader<T, M = T>(
       iterator: IterableIterator<T>, concurrency: number, backlog: number,
       transform?: WrappableCoRoutineGenerator<M, [T]>): Chan.Chan<M>
@@ -191,18 +239,92 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
 
       return retChan;
    }
+   */
 
+   transformToSink<T, M = T>(
+      source: Chan<any, T>, transform: (input: T) => Promise<M>,
+      concurrency: number, sink: SinkLike<M>): void
+   {
+      let toSink = asFunction<M>(sink);
+
+      for (let ii = 0; ii < concurrency; ii++) {
+         const workerId = ii;
+         repeatTake(
+            source,
+            async function(value: T, tx: AsyncTx<T, M> | AsyncTx<T, Iterable<M>>): Promise<false | AsyncTx<T, M> | AsyncTx<T, Iterable<M>>> {
+               const transformed = await tx(value);
+               if (isIterable(transformed)) {
+                  for (const sinkValue of transformed) {
+                     toSink(sinkValue);
+                  }
+               } else {
+                  toSink(transformed);
+               }
+
+               return tx;
+            },
+            transform
+         )
+            .then(
+               function () {
+                  console.log(`Concurrent worker #${workerId} signalled complete`);
+               }
+            )
+            .catch(
+               function (err: any) {
+                  console.error(`Concurrent worker #${workerId} exited abnormally: ${err}`);
+               }
+            );
+      }
+   }
+
+   transformToChan<T, M = T>(
+      source: Chan<any, T>, transform: AsyncTx<T, M> | AsyncTx<T, Iterable<M>>,
+      concurrency: number, chan: Chan<M, any>): void
+   {
+      for (let ii = 0; ii < concurrency; ii++) {
+         const workerId = ii;
+         repeatTake(
+            source,
+            async function(value: T, tx: AsyncTx<T, M> | AsyncTx<T, Iterable<M>>): Promise<false | AsyncTx<T, M> | AsyncTx<T, Iterable<M>>> {
+               const transformed = await tx(value);
+               if (isIterable(transformed)) {
+                  for (const sinkValue of transformed) {
+                    await put(chan, sinkValue);
+                  }
+               } else {
+                  await put(chan, transformed);
+               }
+
+               return tx;
+            },
+            transform
+         )
+            .then(
+               function () {
+                  console.log(`Concurrent worker #${workerId} signalled complete`);
+               }
+            )
+            .catch(
+               function (err: any) {
+                  console.error(`Concurrent worker #${workerId} exited abnormally: ${err}`);
+               }
+            );
+      }
+   }
+
+   /*
    createStageHandler<T, M = T>(
-      source: Chan.Chan<T>, transform: WrappableCoRoutineGenerator<M, [T]>, concurrency: number,
-      sink: SinkLike<M>): void
+      source: Chan<any, T>, transform: WrappableCoRoutineGenerator<M, [T]>,
+      concurrency: number, sink: SinkLike<M>): void
    {
       let applyTransform: WrappedCoRoutineGenerator<typeof transform, M, [T]> =
          co.wrap<typeof transform, M, [T]>(transform);
-      let toSink = asGenerator<M>(sink);
-      let sendToChan = co.wrap(
+      let toSink = asFunction<M>(sink);
+      let sendToSink = co.wrap(
          function* (value: T): IterableIterator<any> {
             const transformedValue: M = yield applyTransform(value);
-            yield toSink(transformedValue);
+            toSink(transformedValue);
          }
       );
 
@@ -211,7 +333,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
          co(function* (): IterableIterator<any> {
             while (true) {
                const input = yield source;
-               yield sendToChan(input);
+               yield sendToSink(input);
             }
          })
             .then(function () {
@@ -220,6 +342,230 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
             .catch(function (err: any) {
                console.error(`Concurrent worker #${workerId} exited abnormally: ${err}`);
             });
+      }
+   }
+   */
+
+   loadToChan<T>(
+      iterable: Iterable<T>|AsyncIterable<T>, concurrency: number, chan: Chan<T, any>, delay: number = 0): SubscriptionLike
+   {
+      let globalDone: boolean = false;
+      const iterator = (isIterable(iterable)) ? iterable[Symbol.iterator]() : iterable[Symbol.asyncIterator]();
+
+      async function queueFromIterator(localIterResult: IteratorResult<T>|Promise<IteratorResult<T>>): Promise<IteratorResult<T> | false>
+      {
+         let thisResult: IteratorResult<T> = await localIterResult;
+         let nextResult: IteratorResult<T> | false = false;
+
+         if (thisResult.done) {
+            globalDone = true;
+         } else {
+            await put(chan, thisResult.value);
+            const nextAsyncResult = iterator.next();
+            await sleep(delay);
+            nextResult = await nextAsyncResult;
+         }
+
+         return nextResult;
+      }
+
+      for (let ii = 0; ii < concurrency; ii++) {
+         const workerId = ii;
+         if (!globalDone) {
+            repeat(queueFromIterator, iterator.next())
+               .then(function () {
+                  console.log(`Concurrent worker #${workerId} signalled complete`);
+               })
+               .catch(function (err: any) {
+                  console.error(`Concurrent worker #${workerId} exited abnormally: ${err}`);
+               });
+         } else {
+            console.log(`Concurrent worker #${workerId} signalled complete`);
+         }
+      }
+
+      return {
+         unsubscribe: (): void => {
+            globalDone = true;
+         },
+
+         get closed(): boolean { return globalDone; }
+      };
+   }
+
+   loadToSink<T>(
+      iterable: Iterable<T>|AsyncIterable<T>, concurrency: number, sink: AsyncSink<T>, delay: number = 0): SubscriptionLike
+   {
+      let globalDone: boolean = false;
+      const iterator = (isIterable(iterable)) ? iterable[Symbol.iterator]() : iterable[Symbol.asyncIterator]();
+
+      async function queueFromIterator(localIterResult: IteratorResult<T>|Promise<IteratorResult<T>>): Promise<IteratorResult<T> | false>
+      {
+         let thisResult: IteratorResult<T> = await localIterResult;
+         let nextResult: IteratorResult<T> | false = false;
+
+         if (thisResult.done) {
+            globalDone = true;
+         } else {
+            sink.write(thisResult.value);
+            const nextAsyncResult = iterator.next();
+            await sleep(delay);
+            nextResult = await nextAsyncResult;
+         }
+
+         return nextResult;
+      }
+
+      for (let ii = 0; ii < concurrency; ii++) {
+         const workerId = ii;
+         if (!globalDone) {
+            repeat(queueFromIterator, iterator.next())
+               .then(function () {
+                  console.log(`Concurrent worker #${workerId} signalled complete`);
+               })
+               .catch(function (err: any) {
+                  console.error(`Concurrent worker #${workerId} exited abnormally: ${err}`);
+               });
+         } else {
+            console.log(`Concurrent worker #${workerId} signalled complete`);
+         }
+      }
+
+      return {
+         unsubscribe: (): void => {
+            globalDone = true;
+         },
+
+         get closed(): boolean { return globalDone; }
+      };
+   }
+
+
+   /*
+   public run<T>(source: Iterable<T>|AsyncIterable<T>, sink: AsyncSink<T>, delay: number = 0): SubscriptionLike
+   {
+      const sourceIter = (isIterable(source)) ? source[Symbol.iterator]() : source[Symbol.asyncIterator]();
+      // const toSink = asFunction(sink);
+
+      return this.scheduler.schedule<Iterator<T>>(
+         function (this: SchedulerAction<Iterator<T>>, state?: Iterator<T>): void {
+            const iterResult = state!.next();
+            if (! iterResult.done) {
+               sink.write(iterResult.value);
+               this.schedule(state, delay);
+            } else {
+               sink.end();
+            }
+         }, delay, sourceIter
+      )
+   }
+   */
+
+   // public cycle<T>(source: Iterable<T>, sink: AsyncSink<T>, delay: number = 0): SubscriptionLike
+   // {
+   //    const sourceIter: Iterator<T> = source[Symbol.iterator]();
+   //
+   //    return this.scheduler.schedule<Iterator<T>>(
+   //       function (this: SchedulerAction<Iterator<T>>, state?: Iterator<T>): void {
+   //          const iterResult = state!.next();
+   //          if (! iterResult.done) {
+   //             sink.write(iterResult.value);
+   //
+   //             this.schedule(state, delay);
+   //          } else {
+   //             this.schedule(source[Symbol.iterator](), delay)
+   //          }
+   //       }, delay, sourceIter
+   //    )
+   // }
+
+   // private static readonly CLOSED: symbol = Symbol.for('closed');
+
+   public unwind<T>(master: AsyncSink<Iterable<T>>, sink: AsyncSink<T>, delay: number = 0): SubscriptionLike
+   {
+      const sources: Chan<Iterator<T>> = chan<Iterator<T>>();
+      const items: Chan<T> = chan<T>();
+      let closed: boolean = false;
+      const retVal = {
+         unsubscribe: () => {
+            close(sources);
+            close(items);
+            closed = true;
+         },
+
+         get closed(): boolean { return closed; }
+      };
+
+      go(async function() {
+         for await (let nextIterable of master) {
+            if (closed) {
+               console.log('Master iterables source still open on unsubscribe');
+               return;
+            }
+            await put(sources, nextIterable[Symbol.iterator]());
+         }
+         console.log('Master iterables source closed');
+         retVal.unsubscribe();
+      }).then(function() {
+         console.log('Done reading from master iterables');
+      }).catch(function(err: any) {
+         console.error(err);
+         retVal.unsubscribe();
+      });
+
+      repeatTake(sources, async (nextIterator: Iterator<T>) => {
+         let nextIterResult: IteratorResult<T> = nextIterator.next();
+         if (! nextIterResult.done) {
+            await put(items, nextIterResult.value);
+            await put(sources, nextIterator);
+         }
+      }).then(console.log)
+         .catch(console.error);
+
+      repeatTake(items, async (value: T) => {
+         sink.write(value);
+         await sleep(delay);
+      }).then(console.log)
+         .catch(console.error);
+
+      // const retVal: Subscription = this.scheduler.schedule<Chan<T>>(
+      //    function (this: SchedulerAction<Chan<T>>, state?: Chan<T>): void {
+      //       take(state!).then(
+      //          (value: T|CLOSED) => {
+      //             if (value !== CLOSED) {
+      //                sink.write(value as T);
+      //                this.schedule(state, delay);
+      //             }
+      //          }
+      //       ).catch(console.error.bind(console));
+      //    }, delay, items
+      // );
+      //
+      // retVal.add((): void => {
+      //    close(sources);
+      //    close(items)
+      // });
+
+      return retVal;
+   }
+
+   public service<I, O>(source: Chan<any, I>, sink: Chan<I, O>, concurrency: number = 1): void
+   {
+      for (let ii = 0; ii < concurrency; ii++) {
+         repeatTake(source, async (value: I) => {
+            await put(sink, value);
+         });
+      }
+   }
+
+   public serviceMany<I, O>(source: Chan<any, I[]>, sink: Chan<I, O>, concurrency: number = 1): void
+   {
+      for (let ii = 0; ii < concurrency; ii++) {
+         repeatTake(source, async (value: I[]) => {
+            for (let innerValue of value) {
+               await put(sink, innerValue);
+            }
+         });
       }
    }
 }
