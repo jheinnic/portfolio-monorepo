@@ -1,0 +1,20 @@
+import {interfaces} from 'inversify';
+
+import {BindingWhenChildSyntax} from './index';
+
+export class BindingWhenOnChildSyntax<Parent, Child>
+   extends BindingWhenChildSyntax<Parent, Child>
+   implements interfaces.BindingWhenOnSyntax<Parent>
+{
+   constructor( childBuilder: interfaces.BindingWhenOnSyntax<Child> ) {
+      super(childBuilder);
+   }
+
+   public onActivation(
+      _fn: (context: interfaces.Context, injectable: Parent) => Parent): interfaces.BindingWhenSyntax<Parent>
+   {
+      (this.childBuilder as interfaces.BindingWhenOnSyntax<Parent>).onActivation(_fn);
+
+      return this;
+   }
+}

@@ -1,0 +1,19 @@
+import {IApplicationLauncher} from './application-launcher.interface';
+import {InstallerRegistryClient} from './installer-registry-client.interface';
+import {IContainerRegistryInternal} from '../container-registry-internal.interface';
+import {ContainerRegistry} from '../..';
+import {DI_TYPES} from '../../di';
+
+const registry = ContainerRegistry.getInstance() as
+   unknown as IContainerRegistryInternal;
+const { lazyInject } = registry.getInternalLazyDecorators();
+
+export abstract class ApplicationLauncher implements IApplicationLauncher
+{
+   @lazyInject(DI_TYPES.InstallerRegistryClient)
+   protected readonly client?: InstallerRegistryClient;
+
+   public abstract initialize(): void;
+
+   public abstract launch(): void;
+}

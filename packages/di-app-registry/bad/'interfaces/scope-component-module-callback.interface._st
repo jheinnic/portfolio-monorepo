@@ -1,0 +1,10 @@
+import {interfaces} from 'inversify';
+
+export interface ScopedComponentModuleCallback
+{
+   bind: interfaces.Bind,
+   rebind: interfaces.Bind,
+   unbind: interfaces.Unbind,
+   isBound: interfaces.IsBound,
+
+}

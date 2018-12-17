@@ -1,0 +1,4 @@
+import {IComponentContractBuilder} from './component-contract-builder.interface';
+import {IDirector} from '@jchptf/api';
+
+export type ComponentBinder = IDirector<IComponentContractBuilder>
