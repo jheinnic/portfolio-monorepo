@@ -3,7 +3,7 @@ import {ConstructorFor} from 'simplytyped';
 
 import {
    ApplicationIdentifier, ApplicationLauncher, IInstallerModuleBuilder, InstallerService
-} from './interfaces';
+} from '../src/interfaces/index';
 import ServiceIdentifier = interfaces.ServiceIdentifier;
 
 export class InstallerModuleBuilder implements IInstallerModuleBuilder

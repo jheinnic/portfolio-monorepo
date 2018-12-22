@@ -1,5 +1,5 @@
 import {interfaces} from 'inversify';
-import {IContainerAccessStrategy} from '../index';
+import {IContainerAccessStrategy} from '../../src/interfaces/index';
 
 export interface IContainerAccessFactory {
    bound<T>(id: interfaces.ServiceIdentifier<T>): IContainerAccessStrategy<T>;

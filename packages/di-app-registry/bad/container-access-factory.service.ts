@@ -1,4 +1,4 @@
-import {IContainerAccessFactory, IContainerAccessStrategy} from '../interfaces/index';
+import {IContainerAccessFactory, IContainerAccessStrategy} from '../src/interfaces/index';
 import {interfaces} from 'inversify';
 
 export class ContainerAccessFactory implements IContainerAccessFactory {

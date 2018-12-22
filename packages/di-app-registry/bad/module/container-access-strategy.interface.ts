@@ -1,7 +1,7 @@
 import {interfaces} from 'inversify';
 import {AnyFunc, False, True} from 'simplytyped';
 
-import {NestedContainerIdentifier} from '../index';
+import {NestedContainerIdentifier} from '../../src/interfaces/index';
 
 export type IContainerAccessStrategy<T> = {
    (context: interfaces.Container): T;

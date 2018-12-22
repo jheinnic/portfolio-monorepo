@@ -1,12 +1,12 @@
 import {inject, injectable, interfaces} from 'inversify';
 
 import {IDirector} from '@jchptf/api';
-import {DI_TYPES} from '../di/index';
-import {IContainerRegistryInternal} from '../interfaces/container-registry-internal.interface';
+import {DI_TYPES} from '../src/di/index';
+import {IContainerRegistryInternal} from './interfaces/container-registry-internal.interface';
 import {
    IContainerAccessStrategy, InstallerRegistryClient, InstallerServiceIdentifier,
    NestedContainerIdentifier
-} from '../interfaces/index';
+} from '../src/interfaces/index';
 import {IllegalArgumentError, IllegalStateError} from '@thi.ng/errors';
 import {ClassType} from 'class-transformer-validator';
 

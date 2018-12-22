@@ -1,4 +1,4 @@
-import {ImportsFor} from '../imports-for.type';
+import {ImportsFor} from '../interfaces/imports-for.type';
 import {interfaces} from 'inversify';
 import {Keys} from 'simplytyped';
 

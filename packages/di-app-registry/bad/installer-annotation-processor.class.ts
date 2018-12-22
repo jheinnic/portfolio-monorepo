@@ -3,7 +3,7 @@ import {isKeyOf} from 'simplytyped';
 import {MetadataInspector} from '@loopback/metadata';
 import {getter} from '@thi.ng/paths';
 
-import {INSTALL_DEPENDENCY_KEY, InstallDependency} from './decorators';
+import {INSTALL_DEPENDENCY_KEY, InstallDependency} from '../src/decorators/index';
 
 @injectable()
 export class InstallerAnnotationProcessor

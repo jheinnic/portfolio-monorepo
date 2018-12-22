@@ -1,6 +1,6 @@
-import {ContainerRegistry, IContainerAccessFactory, InstallerRegistryClient} from '../../index';
-import {IContainerRegistryInternal} from '../container-registry-internal.interface';
-import {DI_TYPES} from '../../di/index';
+import {ContainerRegistry, IContainerAccessFactory, InstallerRegistryClient} from '../../src/index';
+import {IContainerRegistryInternal} from '../interfaces/container-registry-internal.interface';
+import {DI_TYPES} from '../../src/di/index';
 import {IBagOf, IMapTo, IObjectOf} from '@jchptf/api';
 import {interfaces} from 'inversify';
 import ServiceIdentifier = interfaces.ServiceIdentifier;

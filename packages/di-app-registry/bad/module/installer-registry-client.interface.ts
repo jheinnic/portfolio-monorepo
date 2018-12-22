@@ -1,6 +1,6 @@
 import {interfaces} from 'inversify';
 import {IDirector} from '@jchptf/api';
-import {NestedContainerIdentifier, IContainerAccessStrategy} from '../index';
+import {NestedContainerIdentifier, IContainerAccessStrategy} from '../../src/interfaces/index';
 import {ClassType} from 'class-transformer-validator';
 
 export interface InstallerRegistryClient {
