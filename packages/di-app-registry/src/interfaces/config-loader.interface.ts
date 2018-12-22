@@ -1,5 +1,5 @@
-import {ClassType} from 'class-transformer-validator';
+import {ConstructorFor} from 'simplytyped';
 
 export interface IConfigLoader {
-   getConfig<T extends object>(configClass: ClassType<T>, rootPath?: string): T
+   getConfig<T extends object>(configClass: ConstructorFor<T>, rootPath?: string): T
 }

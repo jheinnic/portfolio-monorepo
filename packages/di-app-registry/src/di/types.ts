@@ -1,6 +1,6 @@
 import {SymbolEnum} from '@jchptf/api';
 
-type DITypes = 'ConfigLoader' | 'NestedContainer' | 'InstallerRegistryClient' |  'InstallServiceAdapter' | 'ContainerRegistryInternal' | 'ContainerAccessFactory'; // |
+type DITypes = 'ConfigLoader' | 'NestedContainer' | 'InstallerRegistryClient' |  'ResourceBundle' | 'ExecutableExtension' | 'ContainerRegistryInternal' | 'ContainerAccessFactory'; // |
 // 'ContainerModuleCallBack'|
 // 'ModuleRegistry' |
 // 'ContainerModule' |
@@ -13,7 +13,8 @@ export const DI_TYPES: SymbolEnum<DITypes> = {
    // Application: Symbol.for('Application'),
    ConfigLoader: Symbol.for('ConfigLoader'),
    // InstallationActivityFactory: Symbol.for('InstallationActivityFactory'),
-   InstallServiceAdapter: Symbol.for('InstallServiceAdapter'),
+   ResourceBundle: Symbol.for('ResourceBundle'),
+   ExecutableExtension: Symbol('ExecutableExtension'),
    ContainerRegistryInternal: Symbol.for('ContainerRegistryInternal'),
    ContainerAccessFactory: Symbol.for('ContainerAccessFactory'),
    InstallerRegistryClient: Symbol.for('InstallerRegistryClient'),

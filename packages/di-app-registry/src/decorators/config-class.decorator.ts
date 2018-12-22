@@ -1,9 +1,9 @@
 import {ClassDecoratorFactory} from '@loopback/metadata';
 import {interfaces} from 'inversify';
 
-import {IContainerRegistryInternal} from '../interfaces/container-registry-internal.interface';
+import {IContainerRegistryInternal} from '../../bad/interfaces/container-registry-internal.interface';
 import {CONFIG_CLASS_MARKER_KEY} from './config-class-marker.interface';
-import {ContainerRegistry} from '../container-registry.service';
+import {ContainerRegistry} from '../services/container-registry.service';
 import {ConstructorFunction} from 'simplytyped';
 
 export function configClass(defaultRoot?: string, diType?: interfaces.ServiceIdentifier<any>) {

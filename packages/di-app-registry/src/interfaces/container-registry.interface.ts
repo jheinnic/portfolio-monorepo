@@ -1,15 +1,17 @@
 import {interfaces} from 'inversify';
-import ServiceIdentifier = interfaces.ServiceIdentifier;
+import {IDirector} from '@jchptf/api';
+import {Component, IComponentContractBuilder} from './component';
+import {CompositeComponent} from './composite';
 
-import {ApplicationInstaller, ApplicationIdentifier, InstallerModuleCallBack} from '.';
-import {InjectDecorators} from './inject-decorators.type';
+export interface IContainerRegistry
+{
+   bindInScope(scopeKey: string | symbol, container: interfaces.Container): void;
 
-export interface IContainerRegistry {
-   getLazyInjection(): InjectDecorators;
+   registerCompositeComponent(
+      key: interfaces.ServiceIdentifier<Component<any>>,
+      compositeComponent: CompositeComponent): void;
 
-   registerInstallers( ...installerCallbacks: [InstallerModuleCallBack]): void;
-
-   installApplication<A extends ApplicationInstaller>( applicationIdentifier: ApplicationIdentifier<A> ): void;
-
-   get<T>(injectLabel: ServiceIdentifier<T>): T;
+   registerComponentByContract(
+      key: interfaces.ServiceIdentifier<Component<any>>,
+      contractDirector: IDirector<IComponentContractBuilder>): void;
 }

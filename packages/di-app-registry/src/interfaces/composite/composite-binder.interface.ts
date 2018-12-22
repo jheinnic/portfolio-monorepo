@@ -1,22 +1,18 @@
 import {interfaces} from 'inversify';
-import {Component} from '../component/component.interface';
 
-export interface CompositeBinder // <OCfg, RCfg, C extends Component<OCfg, RCfg>>
+export interface CompositeBinder
 {
-   // addConfiguration(option: Partial<OCfg>, required: RCfg): InstallComponentBuilder<OCfg, RCfg, C>;
-   registerScope
+   bindImport<T>(
+      componentImport: interfaces.ServiceIdentifier<T>,
+      importFromKey: interfaces.ServiceIdentifier<T>): CompositeBinder
 
-   bindImport<T>(importKey: interfaces.ServiceIdentifier<T>): CompositeBinder
-
-   addExport <T>(label: string, exportKey: interfaces.ServiceIdentifier<T>): CompositeBinder
-
-   addPlugin<T, P extends any[] = any[]>(
-      label: string,
-      factoryCreator: interfaces.FactoryCreator<(plugin: P) => T>,
-      pluginKey: interfaces.ServiceIdentifier<T>): CompositeBinder
+   addExport<T>(
+      componentExport: interfaces.ServiceIdentifier<T>,
+      exportToKey: interfaces.ServiceIdentifier<T>): CompositeBinder
 
    addExtensionPoint<E>(
-      label: string, extPointKey: interfaces.ServiceIdentifier<E>): CompositeBinder
+      componentExtension: interfaces.ServiceIdentifier<E>,
+      extendWithKey: interfaces.ServiceIdentifier<E>): CompositeBinder
 }
 
 

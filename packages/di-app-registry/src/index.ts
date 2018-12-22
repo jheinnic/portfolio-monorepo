@@ -1,4 +1,4 @@
-export * from './types';
+export * from './di';
 export * from './decorators';
 export * from './interfaces';
-export * from './container-registry.service';
+export * from './services/container-registry.service';
