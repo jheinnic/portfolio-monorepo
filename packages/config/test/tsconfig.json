@@ -1,0 +1,32 @@
+{
+    "extends": "../../../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../build",
+        "skipLibCheck": true,
+	"rootDirs": [
+	    "../src",
+	    "../typings",
+	    "../test"
+	]
+    },
+    "include": [
+        "./**/*.ts",
+        "../src/**/*.ts",
+        "../typings/**/*.d.ts"
+    ],
+    "exclude": [
+        "../dist",
+        "../build",
+        "../node_modules",
+        "../../dist",
+        "../../build",
+        "../../node_modules",
+        "../../packages/*/dist",
+        "../../packages/*/build",
+        "../../packages/*/node_modules",
+        "../../../packages/*/dist",
+        "../../../packages/*/build",
+        "../../../packages/*/node_modules",
+        "../../../node_modules"
+    ]
+}
