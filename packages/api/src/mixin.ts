@@ -10,7 +10,7 @@
  * @param sharedBehaviour
  * @returns decorator function
  */
-import {AnyFunc, Keys} from 'simplytyped';
+import {AnyFunc, Keys, Required} from 'simplytyped';
 import '@jchptf/reflection';
 import {IMapTo} from './api';
 
@@ -20,7 +20,7 @@ export function mixin<I extends Object, S extends Object = {}>(behaviour: I, sha
 {
    const instanceKeys = Reflect.ownKeys(behaviour);
    const sharedKeys = (!!sharedBehaviour) ? Reflect.ownKeys(sharedBehaviour) : [];
-   const typeTag = Symbol("isa");
+   const typeTag = Symbol('isa');
 
    function _mixin(clazz: any) {
       for (let key of instanceKeys as Keys<I>[]) {
@@ -59,22 +59,24 @@ export function mixin<I extends Object, S extends Object = {}>(behaviour: I, sha
 export type MixinConflictHandler<T extends any> = (key: PropertyKey, desc: PropertyDescriptor, mixin: T) => PropertyDescriptor | undefined
 
 export interface MixinBehavior<B extends Object, P extends Keys<B> = never> {
-   behavior: B;
+   behavior: Required<B, P>;
    conflicts: IMapTo<MixinConflictHandler<B[P]>, B, P>
 }
 
-function defineMixinProperty<I extends Object, IP extends Keys<I>>(
+function defineMixinProperty<I extends any, IP extends Keys<I>>(
    targetObj: any, key: Keys<I>, mixinDef: MixinBehavior<I, IP>): void
 {
+   type BKey = keyof typeof mixinDef.behavior;
+
    Object.defineProperty(targetObj, key, {
-      value: mixinDef.behavior[key],
+      value: mixinDef.behavior[key as BKey],
       writable: Object.getOwnPropertyDescriptor(mixinDef.behavior, key)!.writable,
       configurable: true,
-      enumerable: mixinDef.behavior.propertyIsEnumerable(key)
+      enumerable: mixinDef.behavior.propertyIsEnumerable(key as BKey)
    });
 };
 
-function redefineMixinProperty<I extends Object, IP extends Keys<I>>(
+function redefineMixinProperty<I extends any, IP extends Keys<I>>(
    handlerKeys: Set<Keys<I>>, key: Keys<I>, mixinDef: MixinBehavior<I, IP>,
    existing: PropertyDescriptor, targetObj: any): void
 {
@@ -95,10 +97,12 @@ function redefineMixinProperty<I extends Object, IP extends Keys<I>>(
 };
 
 function doMixinPlus<I extends Object, IP extends Keys<I> = never>( targetObj: any, baseObj: any, mixinDef: MixinBehavior<I, IP> ): void {
-   const instanceKeys: Keys<I>[] = Reflect.ownKeys(mixinDef.behavior) as Keys<I>[];
-   const handlerKeys: Set<Keys<I>> =
-      new Set<Keys<I>>(
-         Reflect.ownKeys(mixinDef.conflicts) as Keys<I>[]);
+   type BKey = keyof typeof mixinDef.behavior;
+
+   const instanceKeys = Reflect.ownKeys(mixinDef.behavior) as BKey[];
+   const handlerKeys: Set<IP> =
+      new Set<IP>(
+         Reflect.ownKeys(mixinDef.conflicts) as IP[]);
 
    for (let key of instanceKeys) {
       const existing = Object.getOwnPropertyDescriptor(baseObj, key);
@@ -122,7 +126,7 @@ function doMixinPlus<I extends Object, IP extends Keys<I> = never>( targetObj: a
 
 export function mixinPlus<I extends Object, IP extends Keys<I> = never, S extends Object = {}, SP extends Keys<S> = never>(instBehavior: MixinBehavior<I, IP>, staticBehavior?: MixinBehavior<S, SP>)
 {
-    const typeTag = Symbol("isa");
+    const typeTag = Symbol('isa');
 
     function _mixin<C extends MixableConstructor>(Target: C) {
        const MixinTarget = class MixinTarget extends Target { };
@@ -146,12 +150,12 @@ export function mixinPlus<I extends Object, IP extends Keys<I> = never, S extend
     return _mixin;
 }
 
-export function makeChainingHandler<T extends AnyFunc = AnyFunc>(reducer: (baseValue: ReturnType<T>, mixinValue: ReturnType<T>) => ReturnType<T>) {
-   function chainingHandler(_key: PropertyKey, desc: PropertyDescriptor, mixinFunction: T): PropertyDescriptor
+export function makeReducingHandler<T extends AnyFunc = AnyFunc>(reducer: (baseValue: ReturnType<T>, mixinValue: ReturnType<T>) => ReturnType<T>) {
+   function reducingHandler(_key: PropertyKey, desc: PropertyDescriptor, mixinFunction: T): PropertyDescriptor
    {
       const baseFunction: T = desc.value as T;
 
-      function extendedFunction(this: any, ...args: any[]): ReturnType<T> {
+      function reducingFunction(this: any, ...args: any[]): ReturnType<T> {
          const baseValue = baseFunction.apply(this, args);
          const mixinValue = mixinFunction.apply(this, args);
 
@@ -162,9 +166,9 @@ export function makeChainingHandler<T extends AnyFunc = AnyFunc>(reducer: (baseV
          configurable: true,
          writable: desc.writable,
          enumerable: desc.enumerable,
-         value: extendedFunction
+         value: reducingFunction
       }
    }
 
-   return chainingHandler;
+   return reducingHandler;
 }

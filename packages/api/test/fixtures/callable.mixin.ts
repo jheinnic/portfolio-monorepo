@@ -1,4 +1,4 @@
-import {makeChainingHandler, mixinPlus} from '../../src';
+import {makeReducingHandler, mixinPlus} from '../../src';
 import {call, reply, CallFeature} from './call-feature.interface';
 
 interface CallImpl extends CallFeature {
@@ -16,6 +16,6 @@ export const callable = mixinPlus<CallImpl>({
       }
    },
    conflicts: {
-      init: makeChainingHandler((_base: void, _mixin: void): void => {})
+      init: makeReducingHandler((_base: void, _mixin: void): void => {})
    }
 });

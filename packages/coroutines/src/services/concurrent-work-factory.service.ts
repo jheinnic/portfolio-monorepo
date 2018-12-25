@@ -65,6 +65,10 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       return chan(undefined, tx);
    }
 
+   createAsyncSink<T>() {
+      return new AsyncSink<T>();
+   }
+
    createLimiter(concurrency: number, defaultPriority: number = 10): Limiter
    {
       const queue: Queue<CoRoutineGenerator> =

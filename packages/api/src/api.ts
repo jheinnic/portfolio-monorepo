@@ -1,3 +1,5 @@
+import {Nominal, StringKeys} from 'simplytyped';
+
 export const EVENT_ALL = "*";
 export const EVENT_ENABLE = "enable";
 export const EVENT_DISABLE = "disable";
@@ -105,6 +107,10 @@ export interface IID<T> {
  */
 export interface IObjectOf<T> {
     [id: string]: T;
+}
+
+export type INominalBag<T extends Nominal<string, any>, P extends T> = {
+    [K in P]: K
 }
 
 export type IBagOf<T, P extends keyof any> = {

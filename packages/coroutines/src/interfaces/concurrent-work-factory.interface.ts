@@ -80,6 +80,8 @@ export interface IConcurrentWorkFactory {
    createTxChan<T = any, M = T>(
       tx: Transducer<T, M>, bufSize?: number, bufType?: ChanBufferType): Chan<T, M>
 
+   createAsyncSink<T = any>(): AsyncSink<T>
+
    transformToSink<I, O>(
       source: Chan<any, I>,
       transform: AsyncTx<I, O>|AsyncTx<I, Iterable<O>>,

@@ -1,4 +1,4 @@
-import {makeChainingHandler, mixinPlus} from '../../src';
+import {makeReducingHandler, mixinPlus} from '../../src';
 import {counter, CounterFeature} from './counter-feature.interface';
 
 interface CounterImpl extends CounterFeature {
@@ -14,6 +14,6 @@ export const counting = mixinPlus<CounterImpl>({
       }
    },
    conflicts: {
-      init: makeChainingHandler((_base: void, _mixin: void): void => {})
+      init: makeReducingHandler((_base: void, _mixin: void): void => {})
    }
 });
