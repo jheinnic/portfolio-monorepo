@@ -1,6 +1,6 @@
 import {inject, injectable, tagged} from 'inversify';
 
-import {DI_COMMON_TAGS} from '../../../src/types';
+import {DI_COMMON_TAGS} from '../../../src/di';
 import {IWidget} from '../interfaces/widget.interface';
 import {ILibrary} from '../interfaces/library.interface';
 import {FIXTURE_TYPES} from '../di/types';

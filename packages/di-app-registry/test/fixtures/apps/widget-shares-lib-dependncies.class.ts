@@ -1,5 +1,5 @@
 import {inject, injectable, tagged} from 'inversify';
-import {DI_COMMON_TAGS} from '../../../src/types';
+import {DI_COMMON_TAGS} from '../../../src/di';
 import {FIXTURE_TYPES} from '../di/types';
 import {ILibrary} from '../interfaces/library.interface';
 import {APP_DI_TYPES} from './widget-shares-lib-one.app';

@@ -1,8 +1,8 @@
 import {interfaces} from 'inversify';
-import {ConstructorFor} from 'simplytyped';
 
 import {Component} from '../component/component.interface';
 import {IDirector} from '@jchptf/api';
+import {CompositeBinder} from './composite-binder.interface';
 
 export interface ICompositionRootClient
 {

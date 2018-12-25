@@ -1,10 +1,9 @@
 import {MetadataAccessor} from '@loopback/metadata';
-import {interfaces} from 'inversify';
-import ServiceIdentifier = interfaces.ServiceIdentifier;
+import {IntentQualifier} from '../../../config/src/interfaces/injection-token.type';
 
 export interface ConfigClassMarker {
    readonly defaultRoot?: string;
-   readonly diType?: ServiceIdentifier<any>
+   readonly intentQualifier?: IntentQualifier
 }
 
 export const CONFIG_CLASS_MARKER_KEY =

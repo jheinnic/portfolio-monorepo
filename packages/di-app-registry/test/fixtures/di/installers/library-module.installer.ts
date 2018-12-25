@@ -1,7 +1,7 @@
 import {injectable, interfaces} from 'inversify';
 
 import {IDirector} from '@jchptf/api';
-import {toChildDirector} from '../../../../src/support/to-child-director.function';
+import {toChildDirector} from '../../../../bad/support/to-child-director.function';
 import {IInstallerModuleBuilder, InstallerService, InstallerRegistryClient} from '../../../../src/interfaces';
 
 import {FIXTURE_DI_TYPES, FIXTURE_TYPES} from '../types';

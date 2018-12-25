@@ -2,7 +2,7 @@ import {inject, injectable, tagged} from 'inversify';
 
 import {IBagOf} from '@jchptf/api';
 import {ILibrary, IWidget} from '../interfaces';
-import {DI_COMMON_TAGS} from '../../../src/types';
+import {DI_COMMON_TAGS} from '../../../src/di';
 import {FIXTURE_TYPES} from '../di';
 
 type AppTypes = 'libOne' | 'libTwo' | 'libThree' | 'widgetOne';

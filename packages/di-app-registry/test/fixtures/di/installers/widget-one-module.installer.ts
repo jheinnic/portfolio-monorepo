@@ -5,8 +5,8 @@ import BindingWhenOnSyntax = interfaces.BindingWhenOnSyntax;
 
 import {IDirector} from '@jchptf/api';
 import {IInstallerModuleBuilder, InstallerService} from '../../../../src/interfaces';
-import {DI_COMMON_TAGS} from '../../../../src/types';
-import {toCompositeDirector} from '../../../../src/support/to-composite-director.function';
+import {DI_COMMON_TAGS} from '../../../../src/di';
+import {toCompositeDirector} from '../../../../bad/support/to-composite-director.function';
 
 import {WIDGET_ONE_TAG_VALUES, WidgetOne} from '../../components/widget-one.class';
 import {FIXTURE_TYPES, LibraryModuleRequest, WidgetOneModuleRequest} from '..';
@@ -14,12 +14,13 @@ import {ILibrary, IWidget} from '../../interfaces';
 import {FIXTURE_DI_TYPES} from '../types';
 
 @injectable()
-export class WidgetOneModuleInstaller implements InstallerService<[WidgetOneModuleRequest]>
+export class WidgetOneModuleInstaller extends InstallerService<WidgetOneModuleRequest>
 {
    constructor(
-      @inject(
-         FIXTURE_DI_TYPES.LibraryInstaller) private readonly library: InstallerService<[LibraryModuleRequest]>
-   ) { }
+      @inject(FIXTURE_DI_TYPES.LibraryInstaller) private readonly library: InstallerService<LibraryModuleRequest>
+   ) {
+      super();
+   }
 
    install(options: WidgetOneModuleRequest): ContainerModuleCallBack
    {
@@ -33,11 +34,12 @@ export class WidgetOneModuleInstaller implements InstallerService<[WidgetOneModu
 
          if (!!options.libOneCurator) {
             const compoundDirector: IDirector<BindingWhenSyntax<any>> =
-               toCompositeDirector(options.bindWhen, (builder: BindingWhenOnSyntax<ILibrary>) => {
+               toCompositeDirector<ILibrary>(
+                  options.bindWhen, (builder: BindingWhenOnSyntax<ILibrary>) => {
                   builder.when((request: interfaces.Request) =>
                      taggedConstraint(DI_COMMON_TAGS.VariantFor)(WIDGET_ONE_TAG_VALUES.libDepOne)(request)
                   );
-               });
+               }, true);
             compoundDirector(
                bind<ILibrary>(FIXTURE_TYPES.Library)
                   .toDynamicValue((context: interfaces.Context): ILibrary => {

@@ -10,6 +10,8 @@ import {CONFIG_CLASS_MARKER_KEY, ConfigClassMarker} from '../decorators/config-c
 import {
    CONFIG_PROPERTY_MARKER_KEY, ConfigPropertyMarker
 } from '../decorators/config-property-marker.interface';
+import {ConstructorFor} from 'simplytyped';
+import {IntentQualifier, ModuleIdentifier} from '../../../config/src/interfaces/injection-token.type';
 
 
 @injectable()
@@ -29,14 +31,18 @@ export class ConfigLoader implements IConfigLoader {
       this.mapToDefaults = new Map<ClassType<any>, any>();
    }
 
-   getConfig<T extends {}>(configClass: ClassType<T>, rootPath?: string): T
+
+   public registerConfig<T extends object>(
+      moduleId: ModuleIdentifier, configClass: ConstructorFor<T>, rootPath?: string)
    {
-      const defaultRoot: ConfigClassMarker | undefined =
+      const classConfig: ConfigClassMarker | undefined =
          MetadataInspector.getClassMetadata(CONFIG_CLASS_MARKER_KEY, configClass);
+      const intentQualifier: IntentQualifier =
+         (classConfig != null) ?
 
       const actualRoot =
          (!! rootPath) ? rootPath
-            : ((!! defaultRoot) ? defaultRoot.defaultRoot : undefined);
+            : ((!! classConfig) ? classConfig.defaultRoot : undefined);
 
       const propMap: MetadataMap<ConfigPropertyMarker> | undefined =
          MetadataInspector.getAllPropertyMetadata(
@@ -61,6 +67,14 @@ export class ConfigLoader implements IConfigLoader {
                forbidUnknownValues: true,
                skipMissingProperties: false
             }
+         });
+
+      getConfig<T extends {}>(configClass: ClassType<T>, rootPath?: string): T
+      this.installerContainer.bind<T>(serviceIdentifier)
+         .toDynamicValue((context: interfaces.Context) => {
+            const loader: IConfigLoader = context.container.get(CONFIG_TYPES.ConfigLoader);
+
+            return loader.getConfig(configClass);
          });
    }
 }

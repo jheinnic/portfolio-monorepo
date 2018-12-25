@@ -1,6 +1,6 @@
 import {inject, injectable, interfaces} from 'inversify';
 import {
-   ApplicationInstaller, InstallerRegistryClient, IInstallerModuleBuilder
+   ApplicationLauncher, InstallerRegistryClient, IInstallerModuleBuilder
 } from '../../../../src/interfaces';
 import {LibraryModuleRequest} from '..';
 import {ILibrary} from '../../interfaces';
@@ -10,7 +10,7 @@ import {ConstructorFor} from 'simplytyped';
 
 
 @injectable()
-export class TwoLibAppInstaller implements ApplicationInstaller
+export class TwoLibAppInstaller implements ApplicationLauncher
 {
    constructor(
       @inject(FIXTURE_DI_TYPES.LibraryRequest)

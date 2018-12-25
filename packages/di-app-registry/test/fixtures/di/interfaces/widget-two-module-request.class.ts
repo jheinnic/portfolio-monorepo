@@ -1,8 +1,8 @@
 import {injectable} from 'inversify';
 
 import {installerRequest, installDependency} from '../../../../src/decorators';
-import {IContainerAccessStrategy} from '../../../../src/interfaces/installer/container-access-strategy.interface';
-import {DI_COMMON_TAGS} from '../../../../src/types';
+import {IContainerAccessStrategy} from '../../../../bad/module/container-access-strategy.interface';
+import {DI_COMMON_TAGS} from '../../../../src/di';
 import {APP_DI_TYPES} from '../../apps/widget-shares-lib-one.app';
 import {FIXTURE_TYPES} from '../types';
 

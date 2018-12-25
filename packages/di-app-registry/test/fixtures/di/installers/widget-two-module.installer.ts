@@ -9,7 +9,7 @@ import {FIXTURE_TYPES, LibraryModuleRequest, WidgetOneModuleRequest} from '..';
 import {FIXTURE_DI_TYPES} from '../types';
 import {ILibrary, IWidget} from '../../interfaces';
 import {WIDGET_ONE_TAG_VALUES, WidgetOne} from '../../components/widget-one.class';
-import {DI_COMMON_TAGS} from '../../../../src/types';
+import {DI_COMMON_TAGS} from '../../../../src/di';
 import {toCompoundDirector} from '../../../../src/abort/support/to-compound-director.function';
 
 @injectable()

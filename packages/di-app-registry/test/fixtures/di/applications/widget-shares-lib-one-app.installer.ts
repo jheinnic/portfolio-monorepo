@@ -1,17 +1,17 @@
 import {inject, injectable, interfaces} from 'inversify';
 import BindingWhenSyntax = interfaces.BindingWhenSyntax;
 
-import {ApplicationInstaller, IInstallerModuleBuilder, InstallerService} from '../../../../src/interfaces';
+import {ApplicationLauncher, IInstallerModuleBuilder, InstallerService} from '../../../../src/interfaces';
 import {ILibrary, IWidget} from '../../interfaces';
 import {FIXTURE_DI_TYPES, FIXTURE_TYPES} from '../types';
 import {LibraryModuleRequest, WidgetOneModuleRequest} from '..';
-import {DI_COMMON_TAGS} from '../../../../src/types';
+import {DI_COMMON_TAGS} from '../../../../src/di';
 import {APP_DI_TYPES, WidgetSharesLibOneApp} from '../../apps/widget-shares-lib-one.app';
 import {ConstructorFor} from 'simplytyped';
 
 
 @injectable()
-export class WidgetSharesLibOneAppInstaller implements ApplicationInstaller {
+export class WidgetSharesLibOneAppInstaller implements ApplicationLauncher {
    constructor(
       @inject(FIXTURE_DI_TYPES.LibraryRequest) private readonly library: ConstructorFor<LibraryModuleRequest>,
       @inject(FIXTURE_DI_TYPES.WidgetOneRequest) private readonly widgetOne: InstallerService<[WidgetOneModuleRequest]>,

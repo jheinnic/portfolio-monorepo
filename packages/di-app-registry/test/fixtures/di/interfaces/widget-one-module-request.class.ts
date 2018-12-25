@@ -1,11 +1,13 @@
-import {injectable} from 'inversify';
+import {injectable, interfaces} from 'inversify';
 
-import {ILibrary} from '../../interfaces';
-import {IContainerAccessStrategy} from '../../../../src/interfaces/installer/container-access-strategy.interface';
-import {DI_COMMON_TAGS} from '../../../../src/types';
+import {ILibrary, IWidget} from '../../interfaces';
+import {IContainerAccessStrategy} from '../../../../bad/module/container-access-strategy.interface';
+import {DI_COMMON_TAGS} from '../../../../src/di';
 import {APP_DI_TYPES} from '../../apps/widget-shares-lib-one.app';
 import {FIXTURE_TYPES} from '../types';
-import {installerRequest, installDependency} from '../../../../src/decorators';
+import {installDependency} from '../../../../src/decorators';
+import {IDirector} from '@jchptf/api';
+import BindingWhenSyntax = interfaces.BindingWhenSyntax;
 
 // export interface WidgetOneModuleOptions {
 //    bindWhen: IDirector<BindingWhenSyntax<IWidget>>;
@@ -13,10 +15,10 @@ import {installerRequest, installDependency} from '../../../../src/decorators';
 //    libTwoCurator?: symbol;
 // }
 
-@installerRequest()
+// @installerRequest()
 @injectable()
 export class WidgetOneModuleRequest {
-   // public bindWhen: IDirectorFunction<BindingWhenSyntax<IWidget>>;
+   public bindWhen: IDirector<BindingWhenSyntax<IWidget>>;
 
    constructor( partial: Partial<WidgetOneModuleRequest> ) {
       Object.assign(this, partial);

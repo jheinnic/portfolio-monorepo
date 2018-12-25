@@ -41,8 +41,8 @@ export class Component<Scope extends Keys<any>>
       this.importsConsumed =
          importsConsumed
             ? isImmutable(importsConsumed)
-            ? importsConsumed as ImmutableSet<ServiceIdentifier<any>>
-            : ImmutableSet.of(importsConsumed)
+               ? importsConsumed as ImmutableSet<ServiceIdentifier<any>>
+               : ImmutableSet.of(importsConsumed)
             : ImmutableSet();
 
       this.exportsProvided =

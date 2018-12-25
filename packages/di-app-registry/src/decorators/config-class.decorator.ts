@@ -1,7 +1,6 @@
 import {ClassDecoratorFactory} from '@loopback/metadata';
 import {interfaces} from 'inversify';
 
-import {IContainerRegistryInternal} from '../../bad/interfaces/container-registry-internal.interface';
 import {CONFIG_CLASS_MARKER_KEY} from './config-class-marker.interface';
 import {ContainerRegistry} from '../services/container-registry.service';
 import {ConstructorFunction} from 'simplytyped';
