@@ -23,7 +23,7 @@
  */
 import {
    GlobalProviderToken, ProviderToken, IntentQualifier, ModuleIdentifier, DynamicProviderToken
-} from './interfaces/injection-token.type';
+} from './provider-tokens.interface';
 
 export function provisionDynamicProviderToken<T>(
    dynamicProviderToken: DynamicProviderToken<T>, provisionIntentQualifier: IntentQualifier

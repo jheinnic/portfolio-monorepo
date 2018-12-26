@@ -1,16 +1,15 @@
-import {inject, injectable, tagged} from 'inversify';
 import * as LRU from 'lru-cache';
 
-import '@jchptf/reflection';
+// import '@jchptf/reflection';
 import {
    BlockMappedDigestLocator, BlockMappedLayerLocator, MerkleDigestLocator,
    MerkleLayerLocator, MerkleTreeDescription
 } from './index';
-import {IMerkleLocatorFactory} from '../interface/index';
-import {MERKLE_CACHE_TYPES, MERKLE_TAG_KEYS, MERKLE_TYPES} from '../di/index';
+import {IMerkleLocatorFactory} from '../interface';
+// import {MERKLE_CACHE_TYPES, MERKLE_TAG_KEYS, MERKLE_TYPES} from '../di';
 
 
-@injectable()
+// @injectable()
 export class MerkleLocatorFactory implements IMerkleLocatorFactory
 {
    private readonly layerCache: MerkleLayerLocator[];
@@ -18,21 +17,12 @@ export class MerkleLocatorFactory implements IMerkleLocatorFactory
    private readonly levelCache: BlockMappedLayerLocator[];
 
    constructor(
-      @inject(MERKLE_TYPES.MerkleTreeDescription)
+      // @inject(MERKLE_TYPES.MerkleTreeDescription)
       private readonly treeDescription: MerkleTreeDescription,
-      @inject(MERKLE_TYPES.LRUCache)
-      @tagged(MERKLE_TAG_KEYS.LRUCacheType, MERKLE_CACHE_TYPES.Digest)
+      // @inject(MERKLE_TYPES.LRUCache)
+      // @tagged(MERKLE_TAG_KEYS.LRUCacheType, MERKLE_CACHE_TYPES.Digest)
       private readonly digestCache: LRU.Cache<number, MerkleDigestLocator>)
    {
-      // const blockMappedLayers: Set<number> = new Set<number>();
-      // blockMappedLayers.add(0);
-      //
-      // let nextBlockMappedLayer = treeDescription.rootSubtreeDepth;
-      // while (nextBlockMappedLayer < treeDescription.treeDepth) {
-      //    blockMappedLayers.add(nextBlockMappedLayer);
-      //    nextBlockMappedLayer += treeDescription.subtreeDepth;
-      // }
-
       this.layerCache = new Array<MerkleLayerLocator>(treeDescription.treeDepth);
       this.levelCache = new Array<BlockMappedLayerLocator>(treeDescription.tierCount);
 

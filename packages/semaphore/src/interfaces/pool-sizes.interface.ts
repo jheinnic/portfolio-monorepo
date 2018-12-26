@@ -1,4 +1,4 @@
-interface PoolSizes
+export interface PoolSizes
 {
    readonly totalCount: number;
    readonly ready: number;

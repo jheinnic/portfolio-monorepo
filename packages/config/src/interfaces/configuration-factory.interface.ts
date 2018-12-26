@@ -1,8 +1,8 @@
 import {ConstructorFor} from 'simplytyped';
-import {ProviderToken} from './injection-token.type';
+import {ProviderToken} from '@jchptf/api';
 
 export interface IConfigurationFactory {
-   getProviderToken <T extends object>(cons: ConstructorFor<T>): ProviderToken<T>|undefined;
+   getProviderToken <T extends object>(cons: ConstructorFor<T>): ProviderToken<T>;
 
    hasConfigMetadata <T extends object>(cons: ConstructorFor<T>): boolean;
 

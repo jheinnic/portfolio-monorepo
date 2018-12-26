@@ -3,7 +3,7 @@ import {chanel, Chanel} from 'chanel';
 
 import {IContainerRegistryInstallerClient, InstallerService} from '@jchptf/di-app-registry';
 import {InstallChanelRequest} from './install-chanel-request.class';
-import {CO_TYPES} from './types';
+import {CO_TYPES} from '../../../../src/di/types';
 
 @injectable()
 export class ChanelInstaller implements InstallerService<InstallChanelRequest<any>, void>

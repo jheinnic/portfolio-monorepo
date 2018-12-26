@@ -1,11 +1,9 @@
-import {inject} from 'inversify';
-
 import {BlockMappedDigestLocator, BlockMappedLayerLocator, MerkleTreeDescription} from '../locator';
 import {IMerkleCalculator} from '../interface';
-import {MERKLE_TYPES} from '../di';
 import {TopoOrderOptions, TopologicalOrder} from '.';
+// import {MERKLE_TYPES} from '../di';
 
-import '@jchptf/reflection';
+// import '@jchptf/reflection';
 
 export class BlockTopologicalOrder extends TopologicalOrder<BlockMappedDigestLocator>
 {
@@ -15,8 +13,10 @@ export class BlockTopologicalOrder extends TopologicalOrder<BlockMappedDigestLoc
    protected readonly usedLeafCount: number;
 
    constructor(
-      @inject(MERKLE_TYPES.MerkleCalculator) calculator: IMerkleCalculator,
-      @inject(MERKLE_TYPES.MerkleTreeDescription) treeDescription: MerkleTreeDescription,
+      // @inject(MERKLE_TYPES.MerkleCalculator)
+      calculator: IMerkleCalculator,
+      // @inject(MERKLE_TYPES.MerkleTreeDescription)
+      treeDescription: MerkleTreeDescription,
       traversalOptions: TopoOrderOptions)
    {
       super(calculator, treeDescription, traversalOptions);

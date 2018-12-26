@@ -4,15 +4,13 @@
         "outDir": "./dist"
     },
     "include": [
-        "./src/**/*.ts", "./typings/**/*.d.ts"
+        "./src/**/*.ts",
+        "./typings/**/*.d.ts"
     ],
     "exclude": [
+        "./node_modules",
         "./dist",
         "./build",
-        "./node_modules",
-        "../*/typings",
-        "../*/dist",
-        "../*/build",
-        "../*/node_modules"
+        "./test"
     ]
 }

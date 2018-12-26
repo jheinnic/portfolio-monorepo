@@ -1,4 +1,4 @@
-import {Chan, CLOSED, go, put} from 'medium';
+import {Chan, CLOSED, go, put, take} from 'medium';
 import {map as txMap} from 'transducers-js';
 
 import '@jchptf/reflection';
@@ -100,7 +100,7 @@ export class ResourceSemaphore<T extends object> implements IResourceSemaphore<T
    // }
 
    public async borrowResource(callback: (resource: T) => void): Promise<void> {
-      const resource: T|object = await this.resourceRequests!;
+      const resource: T|CLOSED = await take(this.resourceRequests!);
       if (resource !== CLOSED) {
          await callback(resource as T);
          await put(this.recycledResources!, resource);
@@ -194,11 +194,12 @@ export class ResourceSemaphore<T extends object> implements IResourceSemaphore<T
       return false;
    }
 
-   getReturnChan(): Chan<T, IResourceAdapter<T>>|undefined {
+   getReturnChan(): Chan<T, IResourceAdapter<T>>
+   {
       return this.recycledResources
    }
 
-   getReservationChan(): Chan<IResourceAdapter<T>, T>|undefined
+   getReservationChan(): Chan<IResourceAdapter<T>, T>
    {
       return this.resourceRequests
    }

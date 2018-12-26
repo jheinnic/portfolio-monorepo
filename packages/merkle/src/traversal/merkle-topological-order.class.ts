@@ -1,11 +1,9 @@
-import {inject} from 'inversify';
-
 import {MerkleDigestLocator, MerkleLayerLocator, MerkleTreeDescription} from '../locator';
 import {IMerkleCalculator} from '../interface';
-import {MERKLE_TYPES} from '../di';
 import {TopologicalOrder, TopoOrderOptions} from '.';
+// import {MERKLE_TYPES} from '../di';
 
-import '@jchptf/reflection';
+// import '@jchptf/reflection';
 
 export class MerkleTopologicalOrder extends TopologicalOrder<MerkleDigestLocator>
 {
@@ -15,8 +13,10 @@ export class MerkleTopologicalOrder extends TopologicalOrder<MerkleDigestLocator
    protected readonly usedLeafCount: number;
 
    constructor(
-      @inject(MERKLE_TYPES.MerkleCalculator) calculator: IMerkleCalculator,
-      @inject(MERKLE_TYPES.MerkleTreeDescription) treeDescription: MerkleTreeDescription,
+      // @inject(MERKLE_TYPES.MerkleCalculator)
+      calculator: IMerkleCalculator,
+      // @inject(MERKLE_TYPES.MerkleTreeDescription)
+      treeDescription: MerkleTreeDescription,
       traversalOptions: TopoOrderOptions)
    {
       super(calculator, treeDescription, traversalOptions);

@@ -11,8 +11,8 @@
     "author": "John Heinnickel <jheinnic@hotmail.com>",
     "license": "MIT",
     "scripts": {
-        "build": "yarn run clean && tsc --declaration",
-        "clean": "rm -rf dist/*.js dist/*.d.ts build .nyc_output build coverage doc; mkdir build",
+        "build": "yarn run clean && tsc --declaration && echo `pwd`",
+        "clean": "rm -rf dist build .nyc_output coverage doc; mkdir dist; mkdir build",
         "cover": "yarn test && nyc report --reporter=lcov",
         "doc": "node_modules/.bin/typedoc --mode modules --out doc src typings",
         "pub": "yarn run build && yarn publish --access public",
@@ -35,7 +35,14 @@
         "node": ">=8.9.0"
     },
     "dependencies": {
-        "@jchptf/api": "^0.0.21",
+        "@jchptf/api": "^0.0.23",
+        "@jchptf/coroutines": "^0.0.16",
+        "@jchptf/reflection": "^0.0.3",
+        "@jchptf/unit-testing": "^0.0.3",
+        "@nestjs/common": "^5.5.0",
+        "medium": "^1.0.2",
+        "reflect-metadata": "^0.1.12",
+        "rxjs": "^6.3.3",
         "simplytyped": "^1.5.2",
         "tslib": "^1.9.3"
     },

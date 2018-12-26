@@ -1,20 +1,20 @@
-import {injectable} from 'inversify';
-import {identity, Transducer} from 'transducers-js';
 import {co, CoRoutineGenerator, WrappableCoRoutineGenerator, WrappedCoRoutineGenerator} from 'co';
 import {buffers, Chan, chan, close, go, put, repeat, repeatTake, sleep} from 'medium';
-import {AsyncSink} from 'ix';
-import {SubscriptionLike} from 'rxjs';
-import {illegalArgs} from '@thi.ng/errors';
+import {identity, Transducer} from 'transducers-js';
 import Queue from 'co-priority-queue';
+import {SubscriptionLike} from 'rxjs';
+import {AsyncSink} from 'ix';
+// import {Injectable} from '@nestjs/common';
+import {illegalArgs} from '@thi.ng/errors';
 
-import {asFunction, IConcurrentWorkFactory, Limiter, SinkLike, AsyncTx, ChanBufferType} from '../interfaces';
+import {asFunction, IConcurrentWorkFactory, Limiter, SinkLike, AsyncTx, ChanBufferType} from './interfaces';
 
 function isIterable<T>(sinkValue: any): sinkValue is Iterable<T>
 {
    return sinkValue.hasOwnProperty(Symbol.iterator) || sinkValue.__proto__.hasOwnProperty(Symbol.iterator);
 }
 
-@injectable()
+// @Injectable()
 export class ConcurrentWorkFactory implements IConcurrentWorkFactory
 {
    createPriorityQueue<M>(): Queue<M>
@@ -403,7 +403,8 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       let globalDone: boolean = false;
       const iterator = (isIterable(iterable)) ? iterable[Symbol.iterator]() : iterable[Symbol.asyncIterator]();
 
-      async function queueFromIterator(localIterResult: IteratorResult<T>|Promise<IteratorResult<T>>): Promise<IteratorResult<T> | false>
+      async function queueFromIterator(
+         localIterResult: IteratorResult<T>|Promise<IteratorResult<T>>): Promise<IteratorResult<T> | false>
       {
          let thisResult: IteratorResult<T> = await localIterResult;
          let nextResult: IteratorResult<T> | false = false;

@@ -2,9 +2,9 @@ import {
    MetadataAccessor, MetadataInspector, MetadataKey, MethodDecoratorFactory, ParameterDecoratorFactory
 } from '@loopback/metadata';
 import {Builder, Ctor, IBuilder, Instance} from 'fluent-interface-builder';
+import {isKeyOf} from 'simplytyped';
 
 import {IDirector, MixableConstructor, Wild} from '@jchptf/api';
-import {isKeyOf} from 'simplytyped';
 import {BindToBuilder} from './bind-to-builder.interface';
 import {FluentBuilder} from './fluent-builder.interface';
 import {BuilderDecorators} from './builder-decorators.interface';

@@ -6,7 +6,7 @@ import * as dotenv from 'dotenv';
 import * as path from 'path';
 
 import '@jchptf/reflection';
-import {IConfigFileReader} from './interfaces/config-file-reader.interface';
+import {IConfigFileReader} from './interfaces';
 
 
 @Injectable()

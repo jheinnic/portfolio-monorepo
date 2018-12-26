@@ -1,16 +1,16 @@
 import {DotenvConfigOptions} from 'dotenv';
 
-import {IntentQualifier, TokenDictionary} from '../interfaces/injection-token.type';
-import {getLocalProviderToken} from '../token-identifier.utilities';
-import {IConfigurationFactory} from '../interfaces/configuration-factory.interface';
-import {IConfigClassFinder} from '../interfaces/config-class-finder.interface';
-import {IConfigFileReader} from '../interfaces/config-file-reader.interface';
+import {getLocalProviderToken, TokenDictionary} from '@jchptf/api';
+import {IConfigClassFinder, IConfigFileReader, IConfigurationFactory} from '../interfaces';
 
-
-export const CONFIG_FILE_READER = "ConfigFileReader" as IntentQualifier;
-export const CONFIG_CLASS_FINDER = "ConfigClassFinder" as IntentQualifier;
-export const CONFIGURATION_FACTORY = "ConfigurationFactory" as IntentQualifier;
-export const DOTENV_CONFIG_OPTIONS = "DotenvConfigOptions" as IntentQualifier;
+export const CONFIG_FILE_READER =
+   getLocalProviderToken<IConfigFileReader>("ConfigFileReader");
+export const CONFIG_CLASS_FINDER =
+   getLocalProviderToken<IConfigClassFinder>("ConfigClassFinder");
+export const CONFIGURATION_FACTORY =
+   getLocalProviderToken<IConfigurationFactory>("ConfigurationFactory");
+export const DOTENV_CONFIG_OPTIONS =
+   getLocalProviderToken<DotenvConfigOptions>("DotenvConfigOptions");
 
 type ConfigTypeNames =
    typeof CONFIGURATION_FACTORY |
@@ -20,8 +20,8 @@ type ConfigTypeNames =
 ;
 
 export const CONFIG_TYPES: TokenDictionary<ConfigTypeNames> = {
-   ConfigurationFactory: getLocalProviderToken<IConfigurationFactory>(CONFIGURATION_FACTORY),
-   ConfigClassFinder: getLocalProviderToken<IConfigClassFinder>(CONFIG_CLASS_FINDER),
-   ConfigFileReader: getLocalProviderToken<IConfigFileReader>(CONFIG_FILE_READER),
-   DotenvConfigOptions: getLocalProviderToken<DotenvConfigOptions>(DOTENV_CONFIG_OPTIONS),
+   ConfigurationFactory: CONFIGURATION_FACTORY,
+   ConfigClassFinder: CONFIG_CLASS_FINDER,
+   ConfigFileReader: CONFIG_FILE_READER,
+   DotenvConfigOptions: DOTENV_CONFIG_OPTIONS
 };

@@ -1,12 +1,15 @@
 import {Nominal} from 'simplytyped';
-import {IBagOf} from '@jchptf/api';
+import {IBagOf} from '../api';
 
 export type ModuleIdentifier = Nominal<string, 'ModuleIdentifier'>;
 
 export type IntentQualifier = Nominal<'IntentQualifier', string>;
 
-// @ts-ignore
-type TypedToken<T extends any> = string & IntentQualifier;
+// T exists only to express compatibility with token's injected artifact, but
+// TypeScript expects the generic to be used in the type alias expansion itself,
+// so we apply a vacuous tautology here to satisfy the compiler.  Despite use of
+// a conditional expression, this type will only ever be 'string & IntentQualifier'.
+export type TypedToken<T extends any> = T extends any ? (string & IntentQualifier) : T;
 
 export type ProviderToken<T extends any> =
    Nominal<string, 'ProviderToken'> & TypedToken<T>;

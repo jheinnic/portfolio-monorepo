@@ -1,5 +1,5 @@
 import {getLocalProviderToken} from '../../../../src';
-import {TokenDictionary} from '../../../../src/interfaces/injection-token.type';
+import {TokenDictionary} from '../../../../../api/src/di/injection-token.type';
 
 export const DEPLOYMENT = getLocalProviderToken('Deployment');
 export type DEPLOYMENT = typeof DEPLOYMENT;

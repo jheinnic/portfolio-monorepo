@@ -1,14 +1,14 @@
 import {injectable, interfaces} from 'inversify';
-import Queue from 'co-priority-queue';
+import chan from 'chan';
 
-import {CO_TYPES} from './types';
-import {InstallQueueRequest} from './install-queue-request.class';
+import {CO_TYPES} from '../../../../src/di/types';
+import {InstallChanRequest} from './install-chan-request.class';
 import {IContainerRegistryInstallerClient, InstallerService} from '@jchptf/di-app-registry';
 
 @injectable()
-export class QueueInstaller implements InstallerService<InstallQueueRequest<any>, void>
+export class ChanInstaller implements InstallerService<InstallChanRequest<any>, void>
 {
-   install<T extends any>(client: IContainerRegistryInstallerClient, request: InstallQueueRequest<T>)
+   install<T>(client: IContainerRegistryInstallerClient, request: InstallChanRequest<T>)
    {
       switch(request.scope) {
          case "Singleton":
@@ -16,8 +16,10 @@ export class QueueInstaller implements InstallerService<InstallQueueRequest<any>
             client.load(
                (bind: interfaces.Bind) => {
                   request.bindWhen(
-                     bind<Queue<T>>(CO_TYPES.Queue)
-                        .to(Queue)
+                     bind<Chan.Chan<T>>(CO_TYPES.Chan)
+                        .toDynamicValue((_context: interfaces.Context) => {
+                           return chan(request.bufSize);
+                        })
                         .inSingletonScope()
                   )
                }
@@ -30,10 +32,12 @@ export class QueueInstaller implements InstallerService<InstallQueueRequest<any>
             client.load(
                (bind: interfaces.Bind) => {
                   request.bindWhen(
-                     bind<Queue<T>>(CO_TYPES.Queue)
-                        .to(Queue)
+                     bind<Chan.Chan<T>>(CO_TYPES.Chan)
+                        .toDynamicValue((_context: interfaces.Context) => {
+                           return chan(request.bufSize);
+                        })
                         .inTransientScope()
-                  )
+                  );
                }
             );
 
@@ -44,8 +48,10 @@ export class QueueInstaller implements InstallerService<InstallQueueRequest<any>
             client.load(
                (bind: interfaces.Bind) => {
                   request.bindWhen(
-                     bind<Queue<T>>(CO_TYPES.Queue)
-                        .to(Queue)
+                     bind<Chan.Chan<T>>(CO_TYPES.Chan)
+                        .toDynamicValue((_context: interfaces.Context) => {
+                           return chan(request.bufSize);
+                        })
                         .inRequestScope()
                   )
                }

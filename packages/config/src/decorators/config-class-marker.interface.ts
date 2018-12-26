@@ -1,11 +1,11 @@
 import {MetadataAccessor} from '@loopback/metadata';
-import {ProviderToken} from '../interfaces/injection-token.type';
+import {ProviderToken} from '@jchptf/api';
 
-export interface ConfigClassMarker {
+export interface ConfigClassMarker<T extends object> {
    readonly defaultRoot?: string;
-   readonly providerToken?: ProviderToken<any>
+   readonly providerToken?: ProviderToken<T>
 }
 
 export const CONFIG_CLASS_MARKER_KEY =
-   MetadataAccessor.create<ConfigClassMarker, ClassDecorator>(
+   MetadataAccessor.create<ConfigClassMarker<any>, ClassDecorator>(
       'config-class-marker-key');

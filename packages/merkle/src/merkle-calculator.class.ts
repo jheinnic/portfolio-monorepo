@@ -1,9 +1,8 @@
-import {inject, injectable} from 'inversify';
 import Optional from 'typescript-optional';
 import bs from 'binary-search';
 import * as util from 'util';
 
-import '@jchptf/reflection';
+// import '@jchptf/reflection';
 import {IDirector} from '@jchptf/api';
 
 import {
@@ -18,7 +17,7 @@ import {
    BlockTopologicalOrder, BreadthFirstOrder, DepthFirstOrder, ITopoOrderBuilder, MerkleTopologicalOrder,
    TopoOrderOptions
 } from './traversal';
-import {MERKLE_TYPES} from './di';
+// import {MERKLE_TYPES} from './di';
 
 /**
  * The MerkleCalculator provides a suite of methods that are useful when iterating over or traversing
@@ -116,17 +115,15 @@ import {MERKLE_TYPES} from './di';
  *    root node.
  * -- Index provides a Partial Order o
  */
-@injectable()
+// @injectable()
 export class MerkleCalculator implements IMerkleCalculator
 {
    public constructor(
-      @inject(MERKLE_TYPES.MerkleTreeDescription)
+      // @inject(MERKLE_TYPES.MerkleTreeDescription)
       public readonly treeDescription: MerkleTreeDescription,
-      @inject(MERKLE_TYPES.MerkleLocatorFactory)
+      // @inject(MERKLE_TYPES.MerkleLocatorFactory)
       private readonly locatorFactory: IMerkleLocatorFactory
-   )
-   {
-   }
+   ) { }
 
    public get subtreeDepth(): number
    {

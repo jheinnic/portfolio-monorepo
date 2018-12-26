@@ -1,21 +1,20 @@
-import {inject, injectable, tagged} from 'inversify';
 import * as LRU from 'lru-cache';
 import * as path from 'path';
 
 import {
    IDfsOrderBuilder, ICanonicalPathNaming, IMerkleCalculator, NamedPath
 } from './interface/index';
-import {BlockMappedDigestLocator, MerkleDigestLocator, MerkleNodeType} from './locator/index';
-import {DepthFirstVisitMode} from './traversal/index';
-import {MERKLE_CACHE_TYPES, MERKLE_TAG_KEYS, MERKLE_TYPES} from './di/index';
+import {BlockMappedDigestLocator, MerkleDigestLocator, MerkleNodeType} from './locator';
+import {DepthFirstVisitMode} from './traversal';
+// import {MERKLE_CACHE_TYPES, MERKLE_TAG_KEYS, MERKLE_TYPES} from './di';
 
-@injectable()
+// @injectable()
 export class CanonicalPathNaming implements ICanonicalPathNaming
 {
    constructor(
-      @inject(MERKLE_TYPES.MerkleCalculator)
+      // @inject(MERKLE_TYPES.MerkleCalculator)
       private readonly calculator: IMerkleCalculator,
-      @inject(MERKLE_TYPES.LRUCache) @tagged(MERKLE_TAG_KEYS.LRUCacheType, MERKLE_CACHE_TYPES.Identity)
+      // @inject(MERKLE_TYPES.LRUCache) @tagged(MERKLE_TAG_KEYS.LRUCacheType, MERKLE_CACHE_TYPES.Identity)
       private readonly lruCache: LRU.Cache<string, string>)
    { }
 

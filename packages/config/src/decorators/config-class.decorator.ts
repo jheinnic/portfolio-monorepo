@@ -1,7 +1,7 @@
 import {ClassDecoratorFactory} from '@loopback/metadata';
+import {ProviderToken} from '@jchptf/api';
 
 import {CONFIG_CLASS_MARKER_KEY} from './config-class-marker.interface';
-import {ProviderToken} from '../interfaces/injection-token.type';
 
 export function configClass(defaultRoot?: string, providerToken?: ProviderToken<any>) {
    return ClassDecoratorFactory.createDecorator(

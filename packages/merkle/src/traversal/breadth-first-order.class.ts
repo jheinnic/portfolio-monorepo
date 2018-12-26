@@ -1,15 +1,15 @@
-import {inject} from 'inversify';
 import {BlockMappedDigestLocator, BlockMappedLayerLocator} from '../locator';
 import {IMerkleCalculator} from '../interface';
-import {MERKLE_TYPES} from '../di';
 import {BfsOrderOptions} from '.';
+// import {MERKLE_TYPES} from '../di';
 
 export class BreadthFirstOrder
 {
    private readonly layerSpan: number;
 
    constructor(
-      @inject(MERKLE_TYPES.MerkleCalculator) private readonly calculator: IMerkleCalculator,
+      // @inject(MERKLE_TYPES.MerkleCalculator)
+      private readonly calculator: IMerkleCalculator,
       private readonly orderOptions: BfsOrderOptions)
    {
       this.layerSpan =

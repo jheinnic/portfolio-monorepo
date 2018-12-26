@@ -1,15 +1,16 @@
 import {DynamicModule, Module} from '@nestjs/common';
+import {Chan} from 'medium';
+
+import {CoroutinesModule} from '@jchptf/coroutines';
 import {
    LOAD_RESOURCE_SEMAPHORE_STRATEGY_CONFIGURATION, RESOURCE_SEMAPHORE_FACTORY_SERVICE
 } from './resource-semaphore.constants';
-import {getReservationChannelToken, getResourceSemaphoreToken} from './resource-semaphore.token-factory';
-import {LoadResourcePoolStrategyConfig} from '../interfaces/load-strategy-config.interface';
+import {
+   getReservationChannelToken, getResourceReturnChannelToken, getResourceSemaphoreToken
+} from './resource-semaphore.utilities';
 import {ResourceSemaphoreFactory} from '../resource-semaphore-factory.class';
-import {IResourceSemaphoreFactory} from '../interfaces/resource-semaphore-factory.interface';
-import {ResourceSemaphore} from '../resource-semaphore.class';
-import {IResourceAdapter} from '../interfaces/resource-adapter.interface';
-import {Chan} from 'medium';
-import {CoRoutinesSupportModule} from './coroutines-support.module';
+import {IResourceSemaphore, IResourceSemaphoreFactory, LoadResourcePoolStrategyConfig} from '../interfaces';
+import {IResourceAdapter} from '../interfaces';
 
 @Module({})
 export class ResourceSemaphoreModule
@@ -29,11 +30,14 @@ export class ResourceSemaphoreModule
          // inject: [ConcurrentWorkFactory]
       };
 
+      const resourceSemaphoreToken = getResourceSemaphoreToken<T>(config);
+
       const resourceSemaphoreProvider = {
-         provide: getResourceSemaphoreToken<T>(config),
+         provide: resourceSemaphoreToken,
          useFactory: async (
             semaphoreFactory: IResourceSemaphoreFactory,
-            config: LoadResourcePoolStrategyConfig<T>) => {
+            config: LoadResourcePoolStrategyConfig<T>): Promise<IResourceSemaphore<T>> =>
+         {
             return await semaphoreFactory.createSemaphore(config);
          },
          inject: [
@@ -44,23 +48,25 @@ export class ResourceSemaphoreModule
 
       const semaphoreReservationsProvider = {
          provide: getReservationChannelToken(config),
-         useFactory:  async (sem: ResourceSemaphore<any>): Promise<Chan<IResourceAdapter<any>, any>> => {
+         useFactory: <T extends object>(sem: IResourceSemaphore<T>): Chan<IResourceAdapter<T>, T> =>
+         {
             return sem.getReservationChan();
          },
-         inject: [ getResourceSemaphoreToken<T>(config) ]
+         inject: [resourceSemaphoreToken]
       };
 
       const semaphoreReturnsProvider = {
-         provide: getReservationChannelToken(config),
-         useFactory:  async (sem: ResourceSemaphore<any>): Promise<Chan<IResourceAdapter<any>, any>> => {
-            return sem.getReservationChan();
+         provide: getResourceReturnChannelToken(config),
+         useFactory: <T extends object>(sem: IResourceSemaphore<T>): Chan<T, IResourceAdapter<T>> =>
+         {
+            return sem.getReturnChan();
          },
-         inject: [ getResourceSemaphoreToken<T>(config) ]
+         inject: [resourceSemaphoreToken]
       }
 
       return {
          module: ResourceSemaphoreModule,
-         imports: [CoRoutinesSupportModule],
+         imports: [CoroutinesModule],
          providers: [
             resourceSemaphoreFactoryProvider,
             resourceSemaphoreProvider,

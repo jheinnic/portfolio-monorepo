@@ -1,14 +1,14 @@
-import {inject} from 'inversify';
-
-import '@jchptf/reflection';
-import {LayerFor, MerkleDigestLocator, MerkleTreeDescription, IMerkleCalculator, MERKLE_TYPES} from '..';
+// import '@jchptf/reflection';
+import {LayerFor, MerkleDigestLocator, MerkleTreeDescription, IMerkleCalculator} from '..';
 import {TopoOrderOptions} from './topo-order-options.class';
 
 export abstract class TopologicalOrder<Node extends MerkleDigestLocator = MerkleDigestLocator>
 {
    constructor(
-      @inject(MERKLE_TYPES.MerkleCalculator) protected readonly calculator: IMerkleCalculator,
-      @inject(MERKLE_TYPES.MerkleTreeDescription) protected readonly treeDescription: MerkleTreeDescription,
+      // @inject(MERKLE_TYPES.MerkleCalculator)
+      protected readonly calculator: IMerkleCalculator,
+      // @inject(MERKLE_TYPES.MerkleTreeDescription)
+      protected readonly treeDescription: MerkleTreeDescription,
       private readonly traversalOptions: TopoOrderOptions
    ) { }
 

@@ -1,17 +1,18 @@
-import {inject} from 'inversify';
 import {BlockMappedDigestLocator, MerkleTreeDescription} from '../locator/index';
 
 import {DepthFirstVisitMode, IMerkleCalculator} from '../index';
-import {MERKLE_TYPES} from '../di/index';
 import {DfsOrderOptions} from '../interface/index';
+// import {MERKLE_TYPES} from '../di/index';
 
 export class DepthFirstOrder
 {
    private readonly maxLevel: number;
 
    constructor(
-      @inject(MERKLE_TYPES.MerkleCalculator) private readonly calculator: IMerkleCalculator,
-      @inject(MERKLE_TYPES.MerkleTreeDescription) treeDescription: MerkleTreeDescription,
+      // @inject(MERKLE_TYPES.MerkleCalculator)
+      private readonly calculator: IMerkleCalculator,
+      // @inject(MERKLE_TYPES.MerkleTreeDescription)
+      treeDescription: MerkleTreeDescription,
       private readonly orderOptions: DfsOrderOptions)
    {
       this.maxLevel = (!! orderOptions.endWith)

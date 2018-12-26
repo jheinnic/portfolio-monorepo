@@ -1,3 +1,3 @@
 export * from './di';
 export * from './interfaces';
-export * from './services';
+export * from './concurrent-work-factory.service';

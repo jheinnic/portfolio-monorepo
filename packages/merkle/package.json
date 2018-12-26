@@ -11,8 +11,8 @@
     "author": "John Heinnickel <jheinnic@hotmail.com>",
     "license": "MIT",
     "scripts": {
-        "build": "yarn run clean && tsc --declaration",
-        "clean": "rm -rf dist/*.js dist/*.d.ts build .nyc_output build coverage doc; mkdir build",
+        "build": "yarn run clean && tsc --declaration && echo `pwd`",
+        "clean": "rm -rf dist build .nyc_output coverage doc; mkdir dist; mkdir build",
         "cover": "yarn test && nyc report --reporter=lcov",
         "doc": "node_modules/.bin/typedoc --mode modules --out doc src typings",
         "pub": "yarn build && lerna publish --registry http://localhost:4873",
@@ -42,7 +42,6 @@
         "@jchptf/builders": "^0.0.6",
         "@jchptf/reflection": "^0.0.3",
         "binary-search": "^1.3.4",
-        "inversify": "^5.0.1",
         "lru-cache": "^4.1.3",
         "tslib": "^1.9.3",
         "typescript-optional": "^1.8.0"

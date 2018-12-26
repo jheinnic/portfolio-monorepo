@@ -1,12 +1,11 @@
 import {DynamicModule, Module, Provider} from '@nestjs/common';
 import {DotenvConfigOptions} from 'dotenv';
-import {ConfigFileReaderService} from '../config-file-reader.service';
-import {IConfigFileReader} from '../interfaces/config-file-reader.interface';
-import {ConfigurationFactoryService} from '../configuration-factory.service';
-import {IConfigClassFinder} from '../interfaces/config-class-finder.interface';
-import {ConfigClassFinderService} from '../config-class-finder.service';
-import {IConfigurationFactory} from '../interfaces/configuration-factory.interface';
 import {toArray} from 'rxjs/operators';
+
+import {IConfigFileReader, IConfigClassFinder, IConfigurationFactory} from '../interfaces';
+import {ConfigFileReaderService} from '../config-file-reader.service';
+import {ConfigurationFactoryService} from '../configuration-factory.service';
+import {ConfigClassFinderService} from '../config-class-finder.service';
 
 @Module({
    imports: [

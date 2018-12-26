@@ -1,6 +1,6 @@
 import {LoadResourcePoolStrategyConfig} from '../interfaces/load-strategy-config.interface';
 
-let findInputName = function (options: LoadResourcePoolStrategyConfig<T> | string) {
+function findInputName<T extends object>(options: LoadResourcePoolStrategyConfig<T> | string) {
    let name: string;
    if ('string' === typeof options) {
       name = options;
@@ -23,7 +23,7 @@ export function getReservationChannelToken(options: LoadResourcePoolStrategyConf
    return Symbol.for(symbolName);
 }
 
-export function getResourceReturnSinkToken(options: LoadResourcePoolStrategyConfig<any>): symbol
+export function getResourceReturnChannelToken(options: LoadResourcePoolStrategyConfig<any>): symbol
 {
    let name = findInputName(options);
    const symbolName = `info.jchein.infrastructure.pool.ReturnSink<${name}>`;
