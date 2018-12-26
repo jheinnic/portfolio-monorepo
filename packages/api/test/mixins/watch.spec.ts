@@ -1,4 +1,4 @@
-import * as api from '../src';
+import * as api from '../../src';
 
 @api.iWatch<WatchedThing>()
 export class WatchedThing implements api.IWatch<WatchedThing> {

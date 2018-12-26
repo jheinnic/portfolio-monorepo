@@ -1,7 +1,7 @@
 import * as assert from 'assert';
-import {Notifier} from './fixtures';
+import {Notifier} from '../fixtures';
 
-import {Event, EVENT_ALL, INotify, iNotify} from '../src';
+import {Event, EVENT_ALL, INotify, iNotify} from '../../src';
 
 describe('iNotify', () => {
 

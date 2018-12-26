@@ -1,8 +1,8 @@
 import {expect} from 'chai';
 import sinon from 'sinon';
-import {ToggleThing, ToggleTalker} from './fixtures';
+import {ToggleThing, ToggleTalker} from '../fixtures';
 
-import * as api from '../src/api';
+import * as api from '../../src/api';
 
 
 describe('iEnable', () => {
