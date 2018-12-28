@@ -1,6 +1,6 @@
 import {Global, Module} from '@nestjs/common';
 import {CO_TYPES} from './coroutines-di.constants';
-import {ConcurrentWorkFactory} from '..';
+import {ConcurrentWorkFactory} from '../concurrent-work-factory.service';
 
 const coroutineProviders = [
    {
@@ -11,7 +11,7 @@ const coroutineProviders = [
 
 @Global()
 @Module({
-   providers: coroutineProviders,
-   exports: coroutineProviders
+   providers: [...coroutineProviders],
+   exports: [...coroutineProviders]
 })
 export class CoroutinesModule { }

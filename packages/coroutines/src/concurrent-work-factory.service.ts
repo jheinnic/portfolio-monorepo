@@ -1,22 +1,25 @@
+import {Injectable} from '@nestjs/common';
 import {co, CoRoutineGenerator, WrappableCoRoutineGenerator, WrappedCoRoutineGenerator} from 'co';
 import {buffers, Chan, chan, close, go, put, repeat, repeatTake, sleep} from 'medium';
 import {identity, Transducer} from 'transducers-js';
 import Queue from 'co-priority-queue';
 import {SubscriptionLike} from 'rxjs';
 import {AsyncSink} from 'ix';
-// import {Injectable} from '@nestjs/common';
 import {illegalArgs} from '@thi.ng/errors';
 
-import {asFunction, IConcurrentWorkFactory, Limiter, SinkLike, AsyncTx, ChanBufferType} from './interfaces';
+import {asFunction, Limiter, SinkLike, AsyncTx, ChanBufferType} from './interfaces';
+import {IConcurrentWorkFactory} from './interfaces/concurrent-work-factory.interface';
 
 function isIterable<T>(sinkValue: any): sinkValue is Iterable<T>
 {
    return sinkValue.hasOwnProperty(Symbol.iterator) || sinkValue.__proto__.hasOwnProperty(Symbol.iterator);
 }
 
-// @Injectable()
+@Injectable()
 export class ConcurrentWorkFactory implements IConcurrentWorkFactory
 {
+   constructor() { }
+
    createPriorityQueue<M>(): Queue<M>
    {
       return new Queue<M>();
@@ -365,8 +368,11 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
             globalDone = true;
          } else {
             await put(chan, thisResult.value);
+
+            if (delay > 0) {
+               await sleep(delay);
+            }
             const nextAsyncResult = iterator.next();
-            await sleep(delay);
             nextResult = await nextAsyncResult;
          }
 

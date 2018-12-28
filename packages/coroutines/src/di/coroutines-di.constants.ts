@@ -1,5 +1,5 @@
 import {getLocalProviderToken/*, TokenDictionary*/} from '@jchptf/api';
-import {IConcurrentWorkFactory} from '../interfaces';
+import {IConcurrentWorkFactory} from '../interfaces/concurrent-work-factory.interface';
 
 export const CONCURRENT_WORK_FACTORY =
    getLocalProviderToken<IConcurrentWorkFactory>("ConcurrentWorkFactory");
