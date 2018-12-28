@@ -14,7 +14,7 @@
         "build": "yarn run clean && tsc --declaration && echo `pwd`",
         "clean": "rm -rf dist build .nyc_output coverage doc; mkdir dist; mkdir build",
         "cover": "yarn test && nyc report --reporter=lcov",
-        "doc": "node_modules/.bin/typedoc --mode modules --out doc src typings",
+        "doc": "node_modules/.bin/typedoc --mode file --module commonjs --target es6 --tsconfig tsconfig.json --externalPattern node_modules --excludeExternals --excludePrivate --out doc --gitRevision feature_bootstrap src typings",
         "pub": "yarn run build && yarn publish --access public",
         "test": "rm -rf build && mkdir build && tsc -p test && nyc mocha build/test/*.js"
     },
