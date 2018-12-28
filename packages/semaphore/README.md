@@ -29,7 +29,8 @@ yarn add @jchptf/semaphore
 ## Usage examples
 
 ```typescript
-import * as s from "@jchptf/semaphore";
+import {Module} from '@nestjs/common';
+import {ResourceSemaphoreModule} from "@jchptf/semaphore";
 ```
 
 ## Authors

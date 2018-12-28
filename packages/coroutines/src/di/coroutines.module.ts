@@ -1,5 +1,5 @@
 import {Global, Module} from '@nestjs/common';
-import {CO_TYPES} from './coroutines-di.constants';
+import {CO_TYPES} from './coroutines.constants';
 import {ConcurrentWorkFactory} from '../concurrent-work-factory.service';
 
 const coroutineProviders = [

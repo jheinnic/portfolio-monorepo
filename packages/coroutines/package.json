@@ -29,7 +29,6 @@
         "lolex": "^3.0.0",
         "mocha": "^5.2.0",
         "nyc": "^12.0.2",
-        "simplytyped": "^1.5.2",
         "sinon": "^7.0.0",
         "sinon-chai": "^3.3.0",
         "ts-sinon": "^1.0.12",

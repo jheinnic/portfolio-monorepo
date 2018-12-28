@@ -1,4 +1,4 @@
-import {LoadResourcePoolStrategyConfig} from '../interfaces/load-strategy-config.interface';
+import {LoadResourcePoolStrategyConfig} from '../interfaces';
 
 function findInputName<T extends object>(options: LoadResourcePoolStrategyConfig<T> | string) {
    let name: string;
@@ -8,7 +8,7 @@ function findInputName<T extends object>(options: LoadResourcePoolStrategyConfig
       name = options.name;
    }
    return name;
-};
+}
 
 export function getResourceSemaphoreToken<T extends object>(options: LoadResourcePoolStrategyConfig<T>|string): string {
    let name = findInputName(options);

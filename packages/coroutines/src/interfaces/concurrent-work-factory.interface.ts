@@ -47,8 +47,9 @@ export interface IConcurrentWorkFactory {
     * @see co.wrap
     */
    createLimitedTask
-      <F extends WrappableCoRoutineGenerator<R, P> = WrappableCoRoutineGenerator<R, P>,
-      R = any, P extends any[] = any[]>(coWrappable: F, concurrency: number): WrappedCoRoutineGenerator<F, R, P>
+      <R = any, P extends any[] = any[]>(
+         coWrappable: WrappableCoRoutineGenerator<R, P> , concurrency: number
+   ): WrappedCoRoutineGenerator<R, P>
 
    /**
     * Given a target concurrency factor, return a function that accepts wrappable
@@ -70,10 +71,11 @@ export interface IConcurrentWorkFactory {
     * @see co
     * @see co.wrap
     */
-   createLimiter
-      <F extends WrappableCoRoutineGenerator<R, P> = WrappableCoRoutineGenerator<R, P>,
-         R = any, P extends any[] = any[]>(concurrency: number, defaultPriority?: number):
-      (coWrappable: F, priority: number) => WrappedCoRoutineGenerator<F, R, P>
+   createLimiter<R = any, P extends any[] = any[]>(
+      concurrency: number, defaultPriority?: number
+   ): (
+      coWrappable: WrappableCoRoutineGenerator<R, P>, priority: number
+   ) => WrappedCoRoutineGenerator<R, P>
 
    createChan<T = any>(bufSize?: number, bufType?: ChanBufferType): Chan<T, T>
 

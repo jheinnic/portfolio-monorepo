@@ -1,16 +1,13 @@
+import {Inject, Injectable} from '@nestjs/common';
 import {map, toArray} from 'rxjs/operators';
 import {range} from 'rxjs';
 
-import '@jchptf/reflection';
 import {CO_TYPES, IConcurrentWorkFactory} from '@jchptf/coroutines';
-
-import {
-   LoadResourcePoolStrategy, LoadResourcePoolStrategyConfig
-} from './interfaces/load-strategy-config.interface';
-import {IResourceSemaphore} from './interfaces/resource-semaphore.interface';
-import {Inject, Injectable} from '@nestjs/common';
 import {ResourceSemaphore} from './resource-semaphore.class';
-import {IResourceSemaphoreFactory} from './interfaces/resource-semaphore-factory.interface';
+import {
+   LoadResourcePoolStrategy, LoadResourcePoolStrategyConfig,
+   IResourceSemaphore, IResourceSemaphoreFactory
+} from './interfaces';
 
 
 @Injectable()

@@ -7,8 +7,7 @@ import {SubscriptionLike} from 'rxjs';
 import {AsyncSink} from 'ix';
 import {illegalArgs} from '@thi.ng/errors';
 
-import {asFunction, Limiter, SinkLike, AsyncTx, ChanBufferType} from './interfaces';
-import {IConcurrentWorkFactory} from './interfaces/concurrent-work-factory.interface';
+import {asFunction, IConcurrentWorkFactory, Limiter, SinkLike, AsyncTx, ChanBufferType} from './interfaces';
 
 function isIterable<T>(sinkValue: any): sinkValue is Iterable<T>
 {
@@ -85,17 +84,15 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
                yield co(yieldable);
             }
          })
-            .catch(function (err) {
+            .catch(function (err: any) {
                console.error(err.stack);
             });
       }
 
-      return function limit<F extends WrappableCoRoutineGenerator<R, P> = WrappableCoRoutineGenerator<R, P>,
-         R extends any = any,
-         P extends any[] = any[]>(
-         generator: F, priority: number = defaultPriority): WrappedCoRoutineGenerator<F, R, P>
+      return function limit<R extends any = any, P extends any[] = any[]>(
+         generator: WrappableCoRoutineGenerator<R, P>, priority: number = defaultPriority): WrappedCoRoutineGenerator<R, P>
       {
-         const wrapped: WrappedCoRoutineGenerator<F, R, P> = co.wrap<F, R, P>(generator);
+         const wrapped: WrappedCoRoutineGenerator<R, P> = co.wrap<R, P>(generator);
 
          return function (...args: P): Promise<R> {
             return new Promise<R>(
@@ -139,9 +136,9 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
    // P>, R = any, P extends any[] = any[]>( coWrappable: F, concurrency: number):
    // WrappedCoRoutineGenerator<F, R, P> { return this.getTaskLimiter(concurrency, 10)(coWrappable); }
 
-   public createLimitedTask<F extends WrappableCoRoutineGenerator<R, P> = WrappableCoRoutineGenerator<R, P>,
-      R extends any = any,
-      P extends any[] = any[]>(coWrappable: F, concurrency: number): WrappedCoRoutineGenerator<F, R, P>
+   public createLimitedTask<R extends any = any, P extends any[] = any[]>(
+      coWrappable: WrappableCoRoutineGenerator<R, P>, concurrency: number
+   ): WrappedCoRoutineGenerator<R, P>
    {
       type QueueMsg = {
          args: P;
@@ -156,8 +153,8 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
 
       const queue: Queue<QueueMsg> =
          this.createPriorityQueue<QueueMsg>();
-      const wrappedCo: WrappedCoRoutineGenerator<F, R, P> =
-         co.wrap<F, R, P>(coWrappable);
+      const wrappedCo: WrappedCoRoutineGenerator<R, P> =
+         co.wrap<R, P>(coWrappable);
 
       // Create consumers
       for (let ii = 0; ii < concurrency; ii++) {
@@ -171,10 +168,9 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
                   msg.reject(err);
                }
             }
-         })
-            .catch(function (err) {
-               console.error(err.stack);
-            });
+         }).catch(function (err: any) {
+            console.error(err.stack);
+         });
       }
 
       return function (...args: P): Promise<R> {

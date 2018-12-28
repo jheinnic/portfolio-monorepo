@@ -1,2 +1,2 @@
-export * from './coroutines-di.constants';
+export * from './coroutines.constants';
 export * from './coroutines.module';
