@@ -22,62 +22,71 @@
  * @param base
  */
 import {
-   GlobalProviderToken, ProviderToken, IntentQualifier, ModuleIdentifier, DynamicProviderToken
+   DynamicProviderToken, ImpliedType, IntentQualifier, ModuleIdentifier, ProviderToken
 } from './provider-tokens.interface';
+import {illegalArgs} from '@thi.ng/errors';
 
-export function provisionDynamicProviderToken<T>(
-   dynamicProviderToken: DynamicProviderToken<T>, provisionIntentQualifier: IntentQualifier
-): ProviderToken<T>
+export function provisionDynamicProviderToken<Name extends string, Source extends DynamicProviderToken<any, string>>(
+   provisionIntentQualifier: Name
+): ProviderToken<ImpliedType<Source>, Name>
 {
    // if (factoryModuleName.indexOf(':') >= 0) {
-   //    throw new Error(': is reserved as a separator and may not appear in a factory module\'s domain name');
-   // }
-   // if (factoryIntentName.indexOf(':') >= 0) {
-   //    throw new Error(': is reserved as a separator and may not appear in factory intent name');
-   // }
-   // if (provisionModuleName.indexOf(':') >= 0) {
-   //    throw new Error(': is reserved as a separator and may not appear in provision module\'s domain name');
-   // }
-   // if (provisionQualifierName.indexOf(':') >= 0) {
-   //    throw new Error(': is reserved as a separator and may not appear in provision qualifier name');
-   // }
+   //    throw new Error(': is reserved as a separator and may not appear in a factory module\'s domain
+   // name'); } if (factoryIntentName.indexOf(':') >= 0) { throw new Error(': is reserved as a separator
+   // and may not appear in factory intent name'); } if (provisionModuleName.indexOf(':') >= 0) { throw new
+   // Error(': is reserved as a separator and may not appear in provision module\'s domain name'); } if
+   // (provisionQualifierName.indexOf(':') >= 0) { throw new Error(': is reserved as a separator and may
+   // not appear in provision qualifier name'); }
 
-   return `${dynamicProviderToken}::${provisionIntentQualifier}` as ProviderToken<T>;
+   return `${provisionIntentQualifier}` as ProviderToken<ImpliedType<Source>, Name>;
 }
 
-export function getLocalProviderToken<T>(artifactName: string): ProviderToken<T>
+export function getProviderToken<Type, Name extends string>(artifactName: Name): ProviderToken<Type, Name>
 {
+   // TODO: Assert a stronger positive condition rather than a weak negative condition...
    if (artifactName.indexOf(':') >= 0) {
-      throw new Error();
+      throw illegalArgs(`Provider token names may not include ":" characters.`);
    }
 
-   return `${artifactName}` as ProviderToken<T>;
+   return `${artifactName}` as ProviderToken<Type, Name>;
 }
 
-export function getGlobalProviderToken<T>(
-   moduleName: ModuleIdentifier, intentQualifier: IntentQualifier): GlobalProviderToken<T>
+export function getGlobalProviderToken<Type, Name extends string>(
+   moduleName: ModuleIdentifier, providerFQName: Name): ProviderToken<Type, Name>
 {
-   return `${moduleName}::${intentQualifier}` as GlobalProviderToken<T>;
+   if (! providerFQName.startsWith(`${moduleName}::`)) {
+      throw illegalArgs(`Global provider names require a module name prefix by convention.  Expected "${providerFQName}" to begin with "${moduleName}::"`);
+   }
+   return getProviderToken<Type, Name>(providerFQName);
 }
 
-export function getDynamicProviderToken<T>(
-   moduleName: ModuleIdentifier, intentQualifier: IntentQualifier): DynamicProviderToken<T>
+export function getDynamicProviderToken<Type, Name extends string>(artifactName: Name): DynamicProviderToken<Type, Name>
 {
-   return `${moduleName}::${intentQualifier}` as GlobalProviderToken<T>;
+   // TODO: Assert a stronger positive condition rather than a weak negative condition...
+   if (artifactName.indexOf(':') >= 0) {
+      throw illegalArgs(`Dynamic Provider token names may not include ":" characters.`);
+   }
+
+   return `${artifactName}` as DynamicProviderToken<Type, Name>;
 }
 
-export function getModuleIdentifier(moduleName: string): ModuleIdentifier {
+export function getModuleIdentifier(moduleName: string): ModuleIdentifier
+{
    if (moduleName.indexOf(':') >= 0) {
-      throw new Error();
+      throw illegalArgs(`Module identifiers may not include ":" characters.`);
    }
 
    return moduleName as ModuleIdentifier;
 }
 
-export function getIntentQualifier(intentQualifier: string): IntentQualifier {
-   if (intentQualifier.indexOf(':') >= 0) {
-      throw new Error();
+export function getIntentQualifier<Intent extends string>(name: string, intent: Intent): IntentQualifier<Intent>
+{
+   if (intent.indexOf(':') >= 0) {
+      throw illegalArgs(`Intent types may not include ":" characters.`);
+   }
+   if (name.indexOf(':') >= 0) {
+      throw illegalArgs(`Intent qualifiers may not include ":" characters.`);
    }
 
-   return intentQualifier as IntentQualifier;
+   return name as IntentQualifier<Intent>;
 }

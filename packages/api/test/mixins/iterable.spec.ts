@@ -1,7 +1,7 @@
 import {expect} from 'chai';
+import {unsupported} from '@thi.ng/errors';
 import {HasIterableProp} from '../fixtures';
 import {iterableOn} from '../../src/mixins';
-import {unsupported} from '@thi.ng/errors';
 
 
 describe('iterableOn', () => {
@@ -16,7 +16,8 @@ describe('iterableOn', () => {
    }
 
    @iterableOn('getIterable')
-   class MixedType extends HasIterableProp {
+   class MixedType extends HasIterableProp
+   {
       [Symbol.iterator](): IterableIterator<string>
       {
          throw unsupported("This class did mix the iterableOf behavior in");
@@ -44,25 +45,34 @@ describe('iterableOn', () => {
             for (let item of control) {
                console.log(item, stringIter, 'Before');
             }
-            console.log( [... control]);
-            return [... control];
+            console.log([...control]);
+            return [...control];
          })
             .to
             .throw();
       });
 
       it('Iterates correctly through property de-reference', () => {
-         expect([... control.getIterable]).to.deep.equal(expectedOrder);
+         expect([...control.getIterable])
+            .to
+            .deep
+            .equal(expectedOrder);
       })
    });
 
    describe('with mixin', () => {
       it('Iterates correctly through instance', () => {
-         expect([... mixed]).to.deep.equal(expectedOrder);
+         expect([...mixed])
+            .to
+            .deep
+            .equal(expectedOrder);
       });
 
       it('Iterates correctly through property de-reference', () => {
-         expect([... mixed.getIterable]).to.deep.equal(expectedOrder);
+         expect([...mixed.getIterable])
+            .to
+            .deep
+            .equal(expectedOrder);
       })
    });
 
@@ -70,42 +80,60 @@ describe('iterableOn', () => {
       it('Does not iterate through instance', () => {
          iterableOn("getIterable")(ControlType);
          expect(() => {
-            return console.log( [... controlAfter] );
-         }).to.throw();
+            return console.log([...controlAfter]);
+         })
+            .to
+            .throw();
       });
 
       it('Iterates correctly through property de-reference', () => {
          iterableOn("getIterable")(ControlType);
-         expect([... controlAfter.getIterable]).to.deep.equal(expectedOrder);
+         expect([...controlAfter.getIterable])
+            .to
+            .deep
+            .equal(expectedOrder);
       });
 
       it('Iterates correctly for instances after late decoration', () => {
          iterableOn("getIterable")(ControlType);
          const mixinAfter = new ControlType();
-         expect([... mixinAfter]).to.deep.equal(expectedOrder);
+         expect([...mixinAfter])
+            .to
+            .deep
+            .equal(expectedOrder);
       });
 
       it('Does not iterate through instances before late decoration', () => {
          expect(() => {
-            return console.log( [... controlAfter] );
-         }).to.throw();
-
-         iterableOn("getIterable")(ControlType);
-
-         expect(() => {
-            return console.log( [... controlAfter] );
-         }).to.throw();
-
-         const mixinAfter = new ControlType();
-         expect([... mixinAfter]).to.deep.equal(expectedOrder);
-
-         expect(() => {
-            return console.log( [... controlAfter] );
+            return console.log([...controlAfter]);
          })
             .to
             .throw();
 
-         expect([... mixinAfter]).to.deep.equal(expectedOrder);
-   });
+         iterableOn("getIterable")(ControlType);
 
+         expect(() => {
+            return console.log([...controlAfter]);
+         })
+            .to
+            .throw();
+
+         const mixinAfter = new ControlType();
+         expect([...mixinAfter])
+            .to
+            .deep
+            .equal(expectedOrder);
+
+         expect(() => {
+            return console.log([...controlAfter]);
+         })
+            .to
+            .throw();
+
+         expect([...mixinAfter])
+            .to
+            .deep
+            .equal(expectedOrder);
+      });
+   });
 });
