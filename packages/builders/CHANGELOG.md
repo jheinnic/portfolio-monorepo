@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.9](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/builders@0.0.8...@jchptf/builders@0.0.9) (2018-12-30)
+
+**Note:** Version bump only for package @jchptf/builders
+
+
+
+
+
 ## [0.0.8](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/builders@0.0.7...@jchptf/builders@0.0.8) (2018-12-28)
 
 **Note:** Version bump only for package @jchptf/builders

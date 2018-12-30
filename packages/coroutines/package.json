@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/coroutines",
-    "version": "0.0.18",
+    "version": "0.0.19",
     "description": "TODO",
     "main": "./dist/index.js",
     "typings": "./dist/index.d.ts",
@@ -41,8 +41,8 @@
         "node": ">=10.13.0"
     },
     "dependencies": {
-        "@jchptf/api": "^0.0.25",
-        "@jchptf/reflection": "^0.0.5",
+        "@jchptf/api": "^0.0.26",
+        "@jchptf/reflection": "^0.0.6",
         "@nestjs/common": "^5.5.0",
         "@nestjs/core": "^5.5.0",
         "@thi.ng/errors": "^0.1.12",
