@@ -1,7 +1,6 @@
 import {IsUrl, Matches, MinLength} from 'class-validator';
 
 import {configClass, configProp} from '../../../../src/decorators';
-import '@jchptf/reflection';
 
 @configClass("eth.lotto.deployment.vaultAccess")
 export class VaultAccess {

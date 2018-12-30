@@ -33,7 +33,7 @@ class NominalTag<Role extends string, Type> {
  * as runtime JavaScript, no manifestation of any Role strings will remain--only the {@bold instance string}
  * will survive to compiled output.
  */
-type Nominal<Name extends string, Role extends string, Type> = Name & NominalTag<Role, Type>;
+export type Nominal<Name extends string, Role extends string, Type> = Name & NominalTag<Role, Type>;
 
 export type ImpliedName<N extends Nominal<string, string, any>> = N extends Nominal<infer Name, string, any> ? Name : string;
 
@@ -42,22 +42,29 @@ export type ImpliedRole<N extends Nominal<string, string, any>> = N extends Nomi
 export type ImpliedType<N extends Nominal<string, string, any>> = N extends Nominal<string, string, infer Type> ? Type : any;
 
 
-export type IntentQualifier<Intent extends string> = Nominal<string, 'Intent' & Intent, any>
+export type IntentQualifier<Intent extends string, Type extends any = any> = Nominal<string, 'Intent' & Intent, Type>
 
 export type ModuleIdentifier = IntentQualifier<'ModuleIdentifier'>
 
-export type ProviderName = IntentQualifier<'ProviderName'>
+export type TypeIdentifier<T> = IntentQualifier<'TypeIdentifier', T>
 
-export type ProviderToken1<T extends any, Name extends string, Domain extends string = 'Global'> =
-   Nominal<Name, 'ProviderToken' & Domain, T> & ProviderName
+// export type ProviderToken1<T extends any, Name extends string, Domain extends string = 'Global'> =
+//    Nominal<Name, 'ProviderToken' & Domain, T> & ProviderName
 
-export type ProviderToken<Type, Name extends string = string> = Nominal<Name, 'ProviderToken', Type> & ProviderName
+export type BaseProviderToken<Type, Modifier extends string = 'ProviderToken'> = Nominal<string, 'ProviderToken' & Modifier, Type>
 
 // export type GlobalProviderToken<T extends any, Name extends string = string> =
 //    Nominal<string, 'GlobalProviderToken'> & ProviderToken<T, Name>;
 
-export type DynamicProviderToken<T extends any, Name extends string> =
-   Nominal<Name, 'DynamicProviderToken', T>
+export type LocalProviderToken<T> = BaseProviderToken<T, 'Local'>;
+
+export type DynamicProviderToken<T> = BaseProviderToken<T, 'Local' & 'Dynamic'>;
+
+export type GlobalProviderToken<T> = BaseProviderToken<T, 'Global'>;
+
+export type ProviderToken<T> = LocalProviderToken<T> | DynamicProviderToken<T> | GlobalProviderToken<T>
+
+export type DynamicProviderBinding = IntentQualifier<'DynamicProviderBinding'>
 
 // export type TokenDictionary2<P extends ProviderToken<any, string> = ProviderToken<any, string>, D extends IBagOf<any, P> = IBagOf<any, P>> = {
 //    [K in P]: TokenType<K>;
@@ -70,4 +77,8 @@ export type DynamicProviderToken<T extends any, Name extends string> =
 //       : ProviderToken<Global[K], K>
 // }
 
-export type TokenDictionary<Local extends object> = { [K in StringKeys<Local>]: ProviderToken<Local[K], K> }
+// export type TokenDictionary<Local extends object> = { [K in StringKeys<Local>]: ProviderToken<Local[K]> | DynamicProviderToken<Local[K]> }
+
+export type TokenDictionary<Local extends object> = {
+   [K in StringKeys<Local>]: ProviderToken<Local[K]>
+}

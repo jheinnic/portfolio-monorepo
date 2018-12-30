@@ -1,6 +1,5 @@
 import {IsIn, ValidateIf} from 'class-validator';
 import {Type} from 'class-transformer';
-import '@jchptf/reflection';
 
 import {configClass, configProp} from '../../../../src/decorators';
 import {DevFakeOptions} from './dev-fake-options.config';

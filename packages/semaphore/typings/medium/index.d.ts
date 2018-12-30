@@ -1,4 +1,3 @@
-
 declare module 'medium'
 {
   import 'medium';

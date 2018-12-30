@@ -1,33 +1,60 @@
-import {LoadResourcePoolStrategyConfig} from '../interfaces';
+import {Chan} from 'medium';
 
-function findInputName<T extends object>(options: LoadResourcePoolStrategyConfig<T> | string) {
-   let name: string;
+import {DynamicProviderToken, getDynamicProviderToken, ModuleIdentifier} from '@jchptf/api';
+import {
+   LOAD_RESOURCE_STRATEGY_CONFIGURATION_TYPE, RESERVATIONS_CHANNEL_TYPE, RESOURCE_RETURN_CHANNEL_TYPE,
+   RESOURCE_SEMAPHORE_DYNAMIC_PROVIDER_BINDING, RESOURCE_SEMAPHORE_SERVICE_TYPE
+} from './resource-semaphore.constants';
+import {IResourceAdapter, LoadResourcePoolStrategyConfig} from '../interfaces';
+
+function findInputTagName<T extends object>(options: LoadResourcePoolStrategyConfig<T> | string)
+{
+   let tagName: string;
    if ('string' === typeof options) {
-      name = options;
+      tagName = options;
    } else {
-      name = options.name;
+      tagName = options.name;
    }
-   return name;
+
+   return tagName;
 }
 
-export function getResourceSemaphoreToken<T extends object>(options: LoadResourcePoolStrategyConfig<T>|string): string {
-   let name = findInputName(options);
-   const symbolName = `info.jchein.infrastructure.pool.ResourceSemaphore<${name}>`;
-   return symbolName;
-}
-
-export function getReservationChannelToken(options: LoadResourcePoolStrategyConfig<any>): symbol
+export function getResourceSemaphoreToken<T extends object>(
+   moduleId: ModuleIdentifier, options: LoadResourcePoolStrategyConfig<T> | string): string
 {
-   let name = findInputName(options);
-   const symbolName = `info.jchein.infrastructure.pool.ReservationChannel<${name}>`;
-   return Symbol.for(symbolName);
+   let tagName = findInputTagName(options);
+   return getDynamicProviderToken(
+      moduleId, RESOURCE_SEMAPHORE_DYNAMIC_PROVIDER_BINDING, RESOURCE_SEMAPHORE_SERVICE_TYPE, tagName)
 }
 
-export function getResourceReturnChannelToken(options: LoadResourcePoolStrategyConfig<any>): symbol
+export function getReservationChannelToken<T extends object>(
+   moduleId: ModuleIdentifier,
+   options: LoadResourcePoolStrategyConfig<T>): DynamicProviderToken<Chan<IResourceAdapter<T>, T>>
 {
-   let name = findInputName(options);
-   const symbolName = `info.jchein.infrastructure.pool.ReturnSink<${name}>`;
-   return Symbol.for(symbolName);
+   let tagName: string = findInputTagName(options);
+   // const symbolName = `info.jchein.infrastructure.pool.ReservationChannel<${name}>`;
+   return getDynamicProviderToken(
+      moduleId, RESOURCE_SEMAPHORE_DYNAMIC_PROVIDER_BINDING, RESERVATIONS_CHANNEL_TYPE, tagName)
+}
+
+export function getResourceReturnChannelToken<T extends object>(
+   moduleId: ModuleIdentifier,
+   options: LoadResourcePoolStrategyConfig<T>): DynamicProviderToken<Chan<T, IResourceAdapter<T>>>
+{
+   let tagName = findInputTagName(options);
+   // const symbolName = `info.jchein.infrastructure.pool.ReturnSink<${name}>`;
+   return getDynamicProviderToken(
+      moduleId, RESOURCE_SEMAPHORE_DYNAMIC_PROVIDER_BINDING, RESOURCE_RETURN_CHANNEL_TYPE, tagName)
+}
+
+export function getResourceSemaphoreOptionsToken<T extends object>(
+   moduleId: ModuleIdentifier,
+   options: LoadResourcePoolStrategyConfig<T>): DynamicProviderToken<LoadResourcePoolStrategyConfig<T>>
+{
+   let tagName = findInputTagName(options);
+   return getDynamicProviderToken(
+      moduleId, RESOURCE_SEMAPHORE_DYNAMIC_PROVIDER_BINDING, LOAD_RESOURCE_STRATEGY_CONFIGURATION_TYPE,
+      tagName);
 }
 
 // export function getResourcePoolToken

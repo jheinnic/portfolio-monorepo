@@ -7,11 +7,7 @@ import {ConfigFileReaderService} from '../config-file-reader.service';
 import {ConfigurationFactoryService} from '../configuration-factory.service';
 import {ConfigClassFinderService} from '../config-class-finder.service';
 
-@Module({
-   imports: [
-
-   ]
-})
+@Module({ })
 export class ConfigModule {
    protected static defaultGlob: string = 'config/**/!(*.d).{ts,js}';
 
@@ -19,7 +15,6 @@ export class ConfigModule {
    {
       let configFileReader: IConfigFileReader =
          new ConfigFileReaderService(dotenvOptions ? dotenvOptions : {});
-      // @ts-ignore
       let configFactory: IConfigurationFactory =
          new ConfigurationFactoryService(configFileReader);
       let configClassFinder: IConfigClassFinder =

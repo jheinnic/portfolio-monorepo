@@ -1,27 +1,39 @@
 import {DotenvConfigOptions} from 'dotenv';
 
-import {getLocalProviderToken, TokenDictionary} from '@jchptf/api';
+import {
+   getDynamicProviderBinding, getGlobalProviderToken, getModuleIdentifier, getNamedTypeIntent
+} from '@jchptf/api';
 import {IConfigClassFinder, IConfigFileReader, IConfigurationFactory} from '../interfaces';
 
+export const CONFIG_MODULE_ID = getModuleIdentifier('@jchptf/config');
+
+const CFR = getNamedTypeIntent<IConfigFileReader>("IConfigFileReader");
+const CCF = getNamedTypeIntent<IConfigClassFinder>("IConfigClassFinder");
+const CF = getNamedTypeIntent<IConfigurationFactory>("IConfigurationFactory");
+const DCO = getNamedTypeIntent<DotenvConfigOptions>("DotenvConfigOptions");
+
 export const CONFIG_FILE_READER =
-   getLocalProviderToken<IConfigFileReader>("ConfigFileReader");
+   getGlobalProviderToken<IConfigFileReader>(CFR);
 export const CONFIG_CLASS_FINDER =
-   getLocalProviderToken<IConfigClassFinder>("ConfigClassFinder");
+   getGlobalProviderToken<IConfigClassFinder>(CCF);
 export const CONFIGURATION_FACTORY =
-   getLocalProviderToken<IConfigurationFactory>("ConfigurationFactory");
+   getGlobalProviderToken<IConfigurationFactory>(CF);
 export const DOTENV_CONFIG_OPTIONS =
-   getLocalProviderToken<DotenvConfigOptions>("DotenvConfigOptions");
+   getGlobalProviderToken<DotenvConfigOptions>(DCO);
 
-type ConfigTypeNames =
-   typeof CONFIGURATION_FACTORY |
-   typeof CONFIG_CLASS_FINDER |
-   typeof CONFIG_FILE_READER |
-   typeof DOTENV_CONFIG_OPTIONS
-;
+export const CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING =
+   getDynamicProviderBinding(CONFIG_MODULE_ID);
 
-export const CONFIG_TYPES: TokenDictionary<ConfigTypeNames> = {
-   ConfigurationFactory: CONFIGURATION_FACTORY,
-   ConfigClassFinder: CONFIG_CLASS_FINDER,
-   ConfigFileReader: CONFIG_FILE_READER,
-   DotenvConfigOptions: DOTENV_CONFIG_OPTIONS
-};
+// interface ConfigTypeNames {
+//    configFileReader: IConfigFileReader;
+//    configClassFinder: IConfigClassFinder;
+//    configurationFactory: IConfigurationFactory;
+//    dotenvConfigOptions: DotenvConfigOptions;
+// }
+//
+// export const CONFIG_TYPES: TokenDictionary<ConfigTypeNames> = {
+//    configurationFactory: CONFIGURATION_FACTORY,
+//    configClassFinder: CONFIG_CLASS_FINDER,
+//    configFileReader: CONFIG_FILE_READER,
+//    dotenvConfigOptions: DOTENV_CONFIG_OPTIONS
+// };

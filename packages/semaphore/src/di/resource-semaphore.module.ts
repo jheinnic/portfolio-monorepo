@@ -1,36 +1,35 @@
 import {DynamicModule, Module} from '@nestjs/common';
 import {Chan} from 'medium';
 
+import {ModuleIdentifier} from '@jchptf/api';
 import {CoroutinesModule} from '@jchptf/coroutines';
+import {RESOURCE_SEMAPHORE_FACTORY_SERVICE_PROVIDER} from './resource-semaphore.constants';
 import {
-   LOAD_RESOURCE_SEMAPHORE_STRATEGY_CONFIGURATION, RESOURCE_SEMAPHORE_FACTORY_SERVICE
-} from './resource-semaphore.constants';
-import {
-   getReservationChannelToken, getResourceReturnChannelToken, getResourceSemaphoreToken
+   getReservationChannelToken, getResourceReturnChannelToken, getResourceSemaphoreOptionsToken,
+   getResourceSemaphoreToken
 } from './resource-semaphore.utilities';
 import {ResourceSemaphoreFactory} from '../resource-semaphore-factory.class';
-import {IResourceSemaphore, IResourceSemaphoreFactory, LoadResourcePoolStrategyConfig} from '../interfaces';
-import {IResourceAdapter} from '../interfaces';
+import {IResourceAdapter, IResourceSemaphore, IResourceSemaphoreFactory, LoadResourcePoolStrategyConfig} from '../interfaces';
 
 @Module({})
 export class ResourceSemaphoreModule
 {
-   public static forRoot<T extends object>(config: LoadResourcePoolStrategyConfig<T>): DynamicModule
+   public static forRoot<T extends object>(moduleId: ModuleIdentifier, config: LoadResourcePoolStrategyConfig<T>): DynamicModule
    {
+      const configToken = getResourceSemaphoreOptionsToken(moduleId, config);
+
       const resourceSemaphoreConfiguration = {
-         provide: LOAD_RESOURCE_SEMAPHORE_STRATEGY_CONFIGURATION,
+         provide: configToken,
          useValue: config,
       };
 
+      // TODO: Migrate to a global import
       const resourceSemaphoreFactoryProvider = {
-         provide: RESOURCE_SEMAPHORE_FACTORY_SERVICE,
+         provide: RESOURCE_SEMAPHORE_FACTORY_SERVICE_PROVIDER,
          useClass: ResourceSemaphoreFactory
-         // useFactory: async (concurrentWorkFactory: IConcurrentWorkFactory) =>
-         //    new ResourceSemaphoreFactory(concurrentWorkFactory)
-         // inject: [ConcurrentWorkFactory]
       };
 
-      const resourceSemaphoreToken = getResourceSemaphoreToken<T>(config);
+      const resourceSemaphoreToken = getResourceSemaphoreToken<T>(moduleId, config);
 
       const resourceSemaphoreProvider = {
          provide: resourceSemaphoreToken,
@@ -40,14 +39,11 @@ export class ResourceSemaphoreModule
          {
             return await semaphoreFactory.createSemaphore(config);
          },
-         inject: [
-            RESOURCE_SEMAPHORE_FACTORY_SERVICE,
-            LOAD_RESOURCE_SEMAPHORE_STRATEGY_CONFIGURATION
-         ]
+         inject: [ RESOURCE_SEMAPHORE_FACTORY_SERVICE_PROVIDER, configToken ]
       };
 
       const semaphoreReservationsProvider = {
-         provide: getReservationChannelToken(config),
+         provide: getReservationChannelToken(moduleId, config),
          useFactory: <T extends object>(sem: IResourceSemaphore<T>): Chan<IResourceAdapter<T>, T> =>
          {
             return sem.getReservationChan();
@@ -56,7 +52,7 @@ export class ResourceSemaphoreModule
       };
 
       const semaphoreReturnsProvider = {
-         provide: getResourceReturnChannelToken(config),
+         provide: getResourceReturnChannelToken(moduleId, config),
          useFactory: <T extends object>(sem: IResourceSemaphore<T>): Chan<T, IResourceAdapter<T>> =>
          {
             return sem.getReturnChan();
@@ -83,5 +79,5 @@ export class ResourceSemaphoreModule
 // @Module({})
 // class GlobalResourcePoolModule
 // {
-//
+//     // TODO: Migrate the global semaphore factory class here!
 // }

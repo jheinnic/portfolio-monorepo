@@ -2,7 +2,6 @@ import {ValidateNested} from 'class-validator';
 import {Type} from 'class-transformer';
 
 import {BlockLayoutElement} from './block-layout-element.config';
-import '@jchptf/reflection';
 import {configClass, configProp} from '../../../../src/decorators';
 
 @configClass('eth.lotto.setupPolicy.blockLayout')

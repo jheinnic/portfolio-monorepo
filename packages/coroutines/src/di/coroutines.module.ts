@@ -1,10 +1,10 @@
 import {Global, Module} from '@nestjs/common';
-import {CO_TYPES} from './coroutines.constants';
+import {CONCURRENT_WORK_FACTORY} from './coroutines.constants';
 import {ConcurrentWorkFactory} from '../concurrent-work-factory.service';
 
 const coroutineProviders = [
    {
-      provide: CO_TYPES.ConcurrentWorkFactory,
+      provide: CONCURRENT_WORK_FACTORY,
       useClass: ConcurrentWorkFactory
    }
 ];

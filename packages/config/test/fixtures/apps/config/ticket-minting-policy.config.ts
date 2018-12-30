@@ -1,11 +1,10 @@
 import {ArrayMaxSize, ArrayMinSize, IsIn, Max, Min, ValidateNested} from 'class-validator';
 
-import '@jchptf/reflection';
 import {configClass, configProp} from '../../../../src/decorators';
 import {EntropyAlgorithmSelection} from './entropy-algorithm-selection.config';
-import {TICKET_MINTING_POLICY} from '../di/types';
+import {TICKET_MINTING_POLICY_PROVIDER} from '../di/types';
 
-@configClass('eth.lotto.ticketMintingPolicy', TICKET_MINTING_POLICY)
+@configClass('eth.lotto.ticketMintingPolicy', TICKET_MINTING_POLICY_PROVIDER)
 export class TicketMintingPolicy {
    @configProp('entropy')
    @ValidateNested()

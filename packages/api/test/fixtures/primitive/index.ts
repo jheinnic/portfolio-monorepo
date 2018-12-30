@@ -20,12 +20,18 @@ export interface ISomething {
 
 export class SomethingOne implements ISomething {
    doIt(): number { return 1; }
+
+   name(): string { return 'One'; }
 }
 export class SomethingTwo implements ISomething {
    doIt(): number { return 2; }
+
+   name(): string { return 'Two'; }
 }
 export class SomethingThree implements ISomething {
    doIt(): number { return 3; }
+
+   name(): string { return 'Three'; }
 }
 
 export type num = 0;

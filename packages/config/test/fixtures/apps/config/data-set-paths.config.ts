@@ -1,7 +1,6 @@
 import {Matches} from 'class-validator';
 
 import {configClass, configProp} from '../../../../src/decorators';
-import '@jchptf/reflection';
 
 @configClass('eth.lotto.deployment.dataSetPaths')
 export class DataSetPaths

@@ -1,7 +1,6 @@
 import {IsHexadecimal, IsOptional, MaxLength, MinLength} from 'class-validator';
 
 import {configClass, configProp} from '../../../../src/decorators';
-import '@jchptf/reflection';
 
 @configClass('eth.lotto.deployment.entropy.devFake')
 export class DevFakeOptions {

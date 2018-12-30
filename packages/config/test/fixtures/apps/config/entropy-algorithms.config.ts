@@ -7,7 +7,6 @@ import {HmacDrbgOptions} from './hmac-drbg-options.config';
 import {IsaacOptions} from './isaac-options.config';
 import {NodeCryptoOptions} from './node-crypto-options.config';
 import {RandomOrgOptions} from './random-org-options.config';
-import '@jchptf/reflection';
 
 @configClass("eth.lotto.setupPolicy.entropyDefaults")
 export class EntropyAlgorithms

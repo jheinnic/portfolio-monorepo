@@ -1,7 +1,6 @@
 import {IsIn, IsInt, IsPositive} from 'class-validator';
 
 import {configClass, configProp} from '../../../../src/decorators';
-import '@jchptf/reflection';
 
 @configClass("eth.lotto.eventSetup.shufflePolicy")
 export class ShufflePolicy {

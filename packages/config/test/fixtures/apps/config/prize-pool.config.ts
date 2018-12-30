@@ -4,7 +4,6 @@ import {Type} from 'class-transformer';
 import {configClass, configProp} from '../../../../src/decorators';
 import {PrizePoolBatching} from './prize-pool-batching.config';
 import {PrizeTier} from './prize-tier.config';
-import '@jchptf/reflection';
 
 @configClass('eth.lotto.eventSpec.prizePool') // 'eth.lotto.eventSpec')
 export class PrizePool {

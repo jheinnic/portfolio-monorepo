@@ -2,7 +2,7 @@ import {Inject, Injectable} from '@nestjs/common';
 import {map, toArray} from 'rxjs/operators';
 import {range} from 'rxjs';
 
-import {CO_TYPES, IConcurrentWorkFactory} from '@jchptf/coroutines';
+import {CONCURRENT_WORK_FACTORY, IConcurrentWorkFactory} from '@jchptf/coroutines';
 import {ResourceSemaphore} from './resource-semaphore.class';
 import {
    LoadResourcePoolStrategy, LoadResourcePoolStrategyConfig,
@@ -14,7 +14,7 @@ import {
 export class ResourceSemaphoreFactory implements IResourceSemaphoreFactory
 {
    constructor(
-      @Inject(CO_TYPES.ConcurrentWorkFactory) private readonly concurrentWorkFactory: IConcurrentWorkFactory)
+      @Inject(CONCURRENT_WORK_FACTORY) private readonly concurrentWorkFactory: IConcurrentWorkFactory)
    { }
 
    async createSemaphore<T extends object>(config: LoadResourcePoolStrategyConfig<T>):

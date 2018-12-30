@@ -1,40 +1,44 @@
-import {getLocalProviderToken} from '../../../../src';
-import {TokenDictionary} from '../../../../../api/src/di/injection-token.type';
+import {getDynamicProviderToken, getModuleIdentifier, getNamedTypeIntent} from '@jchptf/api';
+import {CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING} from '../../../../src/di';
 
-export const DEPLOYMENT = getLocalProviderToken('Deployment');
-export type DEPLOYMENT = typeof DEPLOYMENT;
+export const appModuleId = getModuleIdentifier('@jchptf/config_fixture');
 
-export const EVENT_SPECIFICATION = getLocalProviderToken('EventSpecification');
-export type EVENT_SPECIFICATION = typeof EVENT_SPECIFICATION;
+export const DEPLOYMENT_TYPE = getNamedTypeIntent('Deployment');
+export const EVENT_SPECIFICATION_TYPE = getNamedTypeIntent('EventSpecification');
+export const PRIZE_MINTING_POLICY_TYPE = getNamedTypeIntent('PrizeMintingPolicy');
+export const TICKET_MINTING_POLICY_TYPE = getNamedTypeIntent('TicketMintingPolicy');
+export const TICKET_STAGING_POLICY_TYPE = getNamedTypeIntent('TicketStagingPolicy');
+export const PLAY_ASSETS_TYPE = getNamedTypeIntent('PlayAssets');
 
-export const PRIZE_MINTING_POLICY = getLocalProviderToken('PrizeMintingPolicy');
-export type PRIZE_MINTING_POLICY = typeof PRIZE_MINTING_POLICY;
+export const DEPLOYMENT_PROVIDER =
+   getDynamicProviderToken(appModuleId, CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING, DEPLOYMENT_TYPE);
+export const EVENT_SPECIFICATION_PROVIDER =
+   getDynamicProviderToken(appModuleId, CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING, EVENT_SPECIFICATION_TYPE);
+export const PRIZE_MINTING_POLICY_PROVIDER =
+   getDynamicProviderToken(appModuleId, CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING, PRIZE_MINTING_POLICY_TYPE);
+export const TICKET_MINTING_POLICY_PROVIDER =
+   getDynamicProviderToken(appModuleId, CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING, TICKET_MINTING_POLICY_TYPE);
+export const TICKET_STAGING_POLICY_PROVIDER =
+   getDynamicProviderToken(appModuleId, CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING, TICKET_STAGING_POLICY_TYPE);
+export const PLAY_ASSETS_PROVIDER =
+   getDynamicProviderToken(appModuleId, CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING, PLAY_ASSETS_TYPE);
 
-export const TICKET_MINTING_POLICY = getLocalProviderToken('TicketMintingPolicy');
-export type TICKET_MINTING_POLICY = typeof TICKET_MINTING_POLICY;
-
-export const TICKET_STAGING_POLICY = getLocalProviderToken('TicketStagingPolicy');
-export type TICKET_STAGING_POLICY = typeof TICKET_STAGING_POLICY;
-
-export const PLAY_ASSETS = getLocalProviderToken('PlayAssets');
-export type PLAY_ASSETS = typeof PLAY_ASSETS;
-
-export type AppConfigTypes =
-   DEPLOYMENT |
-   EVENT_SPECIFICATION |
-   PRIZE_MINTING_POLICY |
-   TICKET_MINTING_POLICY |
-   TICKET_STAGING_POLICY |
-   PLAY_ASSETS;
-
-export const APP_CONFIG_TYPES: TokenDictionary<AppConfigTypes> = {
-   DEPLOYMENT: 'Deployment',
-   EVENT_SPECIFICATION: 'EventSpecification',
-   PRIZE_MINTING_POLICY: 'PrizeMintingPolicy',
-   TICKET_MINTING_POLICY: 'TicketMintingPolicy',
-   TICKET_STAGING_POLICY: 'TicketStagingPolicy',
-   PLAY_ASSETS: 'PlayAssets'
-};
+// export type AppConfigTypes =
+//    DEPLOYMENT |
+//    EVENT_SPECIFICATION |
+//    PRIZE_MINTING_POLICY |
+//    TICKET_MINTING_POLICY |
+//    TICKET_STAGING_POLICY |
+//    PLAY_ASSETS;
+//
+// export const APP_CONFIG_TYPES: TokenDictionary<AppConfigTypes> = {
+//    DEPLOYMENT: 'Deployment',
+//    EVENT_SPECIFICATION: 'EventSpecification',
+//    PRIZE_MINTING_POLICY: 'PrizeMintingPolicy',
+//    TICKET_MINTING_POLICY: 'TicketMintingPolicy',
+//    TICKET_STAGING_POLICY: 'TicketStagingPolicy',
+//    PLAY_ASSETS: 'PlayAssets'
+// };
 
 // type ApplicationServiceTypes = 'MerkleTaskScanner' | 'PathMapCache';
 

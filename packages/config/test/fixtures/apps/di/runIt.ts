@@ -3,7 +3,7 @@ import {NestFactory} from '@nestjs/core';
 
 import {RootApplicationModule} from './root-application.module';
 import {Deployment} from '../config';
-import {DEPLOYMENT} from './types';
+import {DEPLOYMENT_PROVIDER} from './types';
 
 async function bootstrap()
 {
@@ -11,7 +11,7 @@ async function bootstrap()
    // const resourceSemaphore = app.get(getResourceSemaphoreToken("FourSquare"));
    // console.log(resourceSemaphore.name);
 
-   const deployment: Deployment = app.get(DEPLOYMENT);
+   const deployment: Deployment = app.get(DEPLOYMENT_PROVIDER);
    console.log(deployment);
 
    // logic...

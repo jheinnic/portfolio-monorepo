@@ -1,6 +1,7 @@
-import {Bool, True} from 'simplytyped';
+import {True} from 'simplytyped';
 
-export function assert<T extends True>(expect: Chai.ExpectStatic): <T extends True>( ) => void {
-   return ( ) => { expect(true).to.be.true; };
+export function assert<T extends True>(expect: Chai.ExpectStatic): void {
+   const isTrue: T = '1' as T;
+   expect(isTrue).to.be.equal('1');
 }
 

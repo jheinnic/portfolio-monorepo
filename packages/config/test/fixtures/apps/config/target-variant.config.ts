@@ -1,7 +1,6 @@
 import {MaxLength, Min, MinLength} from 'class-validator';
 
 import {configClass, configProp} from '../../../../src/decorators';
-import '@jchptf/reflection';
 
 @configClass()
 export class TargetVariant

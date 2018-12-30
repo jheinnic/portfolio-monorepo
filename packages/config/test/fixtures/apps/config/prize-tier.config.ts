@@ -1,7 +1,6 @@
 import {Allow, IsPositive, Max, Min} from 'class-validator';
 
 import {configClass, configProp} from '../../../../src/decorators';
-import '@jchptf/reflection';
 
 @configClass("eth.lotto.eventSpec.prizePool.prizeTiers")
 export class PrizeTier {

@@ -3,10 +3,9 @@ import {Type} from 'class-transformer';
 
 import {configClass, configProp} from '../../../../src/decorators';
 import {PrizePool} from './prize-pool.config';
-import '@jchptf/reflection';
-import {EVENT_SPECIFICATION} from '../di/types';
+import {EVENT_SPECIFICATION_PROVIDER} from '../di/types';
 
-@configClass("eth.lotto.eventSpec", EVENT_SPECIFICATION) // "eth.lotto.eventSpec")
+@configClass("eth.lotto.eventSpec", EVENT_SPECIFICATION_PROVIDER) // "eth.lotto.eventSpec")
 export class EventSpecification {
    @configProp("sponsorId")
    @IsPositive()

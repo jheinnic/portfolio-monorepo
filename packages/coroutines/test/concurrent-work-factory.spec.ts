@@ -10,7 +10,7 @@ import {Clock} from 'lolex';
 import {SinonSandbox, SinonStub} from 'sinon';
 
 import '@jchptf/reflection';
-import {ConcurrentWorkFactory} from '../src';
+import {ConcurrentWorkFactory} from '../src/concurrent-work-factory.service';
 
 chai.use(sinonChai);
 const expect = chai.expect;
