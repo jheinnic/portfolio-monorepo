@@ -1,14 +1,11 @@
 import {Chan, CLOSED, go, put, take} from 'medium';
 import {map as txMap} from 'transducers-js';
 
-import '@jchptf/reflection';
-import {iWatch, Watch} from '@jchptf/api';
+import {IWatch, iWatch, Watch} from '@jchptf/api';
 import {ChanBufferType, IConcurrentWorkFactory} from '@jchptf/coroutines';
 import {GET_LEASE_MANAGER} from './resource-semaphore.constants';
-import {IResourceAdapter} from './interfaces/resource-adapter.interface';
-import {IResourceSemaphore} from './interfaces/resource-semaphore.interface';
 import {ResourceAdapter} from './resource-adapter.class';
-import {IManagedResource} from './interfaces/managed-resource.interface';
+import {IResourceAdapter, IResourceSemaphore, IManagedResource} from './interfaces';
 
 interface PoolSizes
 {
@@ -19,7 +16,7 @@ interface PoolSizes
 }
 
 
-@iWatch()
+@iWatch<IWatch<PoolSizes>>()
 export class ResourceSemaphore<T extends object> implements IResourceSemaphore<T>
 {
    private channelOpen: boolean = true;

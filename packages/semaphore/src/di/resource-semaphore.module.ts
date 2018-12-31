@@ -1,7 +1,7 @@
 import {DynamicModule, Module} from '@nestjs/common';
 import {Chan} from 'medium';
 
-import {ModuleIdentifier} from '@jchptf/api';
+import {IAdapter, ModuleIdentifier} from '@jchptf/api';
 import {CoroutinesModule} from '@jchptf/coroutines';
 import {RESOURCE_SEMAPHORE_FACTORY_SERVICE_PROVIDER} from './resource-semaphore.constants';
 import {
@@ -44,21 +44,27 @@ export class ResourceSemaphoreModule
 
       const semaphoreReservationsProvider = {
          provide: getReservationChannelToken(moduleId, config),
-         useFactory: <T extends object>(sem: IResourceSemaphore<T>): Chan<IResourceAdapter<T>, T> =>
+         useFactory: <T extends object>(sem: IResourceSemaphore<T>): IAdapter<Chan<IResourceAdapter<T>, T>> =>
          {
-            return sem.getReservationChan();
+            const unwrapValue = sem.getReservationChan();
+            return {
+               unwrap() { return unwrapValue; }
+            };
          },
          inject: [resourceSemaphoreToken]
       };
 
       const semaphoreReturnsProvider = {
          provide: getResourceReturnChannelToken(moduleId, config),
-         useFactory: <T extends object>(sem: IResourceSemaphore<T>): Chan<T, IResourceAdapter<T>> =>
+         useFactory: <T extends object>(sem: IResourceSemaphore<T>): IAdapter<Chan<T, IResourceAdapter<T>>> =>
          {
-            return sem.getReturnChan();
+            const unwrapValue = sem.getReturnChan();
+            return {
+               unwrap() { return unwrapValue; }
+            };
          },
          inject: [resourceSemaphoreToken]
-      }
+      };
 
       return {
          module: ResourceSemaphoreModule,
@@ -70,7 +76,7 @@ export class ResourceSemaphoreModule
             semaphoreReservationsProvider,
             semaphoreReturnsProvider
          ],
-         exports: [resourceSemaphoreProvider],
+         exports: [resourceSemaphoreProvider, semaphoreReservationsProvider, semaphoreReturnsProvider],
       };
    }
 }
