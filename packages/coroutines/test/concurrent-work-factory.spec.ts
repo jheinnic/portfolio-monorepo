@@ -11,18 +11,35 @@ import {SinonSandbox, SinonStub} from 'sinon';
 
 import '@jchptf/reflection';
 import {ConcurrentWorkFactory} from '../src/concurrent-work-factory.service';
+import {LoadToChan} from './fixtures/load-to-chan.constants';
+import {LoadToChanScriptDirector} from './utilities/load-to-chan-script-director.class';
 
 chai.use(sinonChai);
 const expect = chai.expect;
+
 
 describe('ConcurrentWorkFactory', () => {
    let factory: ConcurrentWorkFactory;
    let sandbox: SinonSandbox;
    let clock: Clock;
 
+   let scriptDirector: LoadToChanScriptDirector;
+
+   // This test case will periodically need to yield flow control back to the event loop
+   // in order to allow the timers in ConcurrentWorkFactory that it is asserting
+   // conditions on to have opportunity to fire.  We cannot manipulate Lolex's virtual
+   // tick count while surrendering flow control, so we must enable Lolex's
+   // "shouldAdvanceTime" option to allow the clock to move in something very close to
+   // "real time" while the test case is asleep.
+   //
+   // Lolex.tick() is still used to roll the virtual clock forward to skip over
+   // non-trivial spans of time without the actual passage of time.  The strategy
+
+
    beforeEach(() => {
       sandbox = sinon.createSandbox();
       factory = new ConcurrentWorkFactory();
+
       clock = lolex.install({shouldAdvanceTime: true, advanceTimeDelta: 8});
    });
 
@@ -50,7 +67,6 @@ describe('ConcurrentWorkFactory', () => {
       beforeEach(() => {
          iterSource = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
          realIterator = iterSource[Symbol.iterator]();
-         retChan = factory.createChan();
 
          // The spyOn() mock adaptation can only find and replace string properties, so we have to deal
          // with spying on Symbol.iterator uniquely...  :(
@@ -60,6 +76,7 @@ describe('ConcurrentWorkFactory', () => {
          // Configure spy/stub behavior that is uniform here.
          iterSourceIteratorStub.onFirstCall().returns(realIterator);
          iterSource[Symbol.iterator] = iterSourceIteratorStub;
+
       });
 
       afterEach(() => {
@@ -69,7 +86,12 @@ describe('ConcurrentWorkFactory', () => {
       });
 
       it('Populates concurrency reads then blocks once foreach record read', async () => {
-         factory.loadToChan(iterSource, 3, retChan, 0);
+         retChan = factory.createChan();
+         factory.loadToChan(
+            iterSource,
+            LoadToChan.loadConcurrency,
+            retChan,
+            LoadToChan.withoutDelayMs);
 
          // Let the clock roll forward until anything currently scheduled has resolved.
 
@@ -106,10 +128,14 @@ describe('ConcurrentWorkFactory', () => {
       });
 
       it('Waits for a specified delay before reading next value if so configured.', async () => {
-         expect(spiedUponIteratorNext).to.have.callCount(0);
+         retChan = factory.createChan();
+         scriptDirector = new LoadToChanScriptDirector(
+            expect, clock, LoadToChan.realTimeDelta, spiedUponIteratorNext, retChan);
+         factory.loadToChan(
+            iterSource, LoadToChan.loadConcurrency,
+            retChan, LoadToChan.withDelayMs );
 
-         factory.loadToChan(iterSource, 3, retChan, 50);
-         // realIterator = iterSourceIteratorStub.returnValues[0];
+         scriptDirector.runScript(LoadToChan.noBufferWithDelayScript);
 
          // 1, 2, and 3 should be in the queue, and 4 should be the next value
          // waiting to be read.

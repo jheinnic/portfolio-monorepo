@@ -15,8 +15,8 @@
         "clean": "rm -rf dist build .nyc_output coverage doc; mkdir dist; mkdir build",
         "cover": "yarn test && nyc report --reporter=lcov",
         "doc": "node_modules/.bin/typedoc --mode file --module commonjs --target es6 --tsconfig tsconfig.json --externalPattern node_modules --excludeExternals --excludePrivate --out doc --gitRevision feature_bootstrap src typings",
-        "pub": "yarn build && lerna publish --registry http://localhost:4873",
-        "test": "rm -rf build && mkdir build && tsc -p test && nyc mocha build/test/*.js"
+        "pub": "yarn run build && lerna publish --registry http://localhost:4873",
+        "test": "rm -rf build && mkdir build && tsc -p test && nyc mocha `find build/test -type f -name '*.js'`"
     },
     "devDependencies": {
         "@nestjs/testing": "^5.5.0",
@@ -43,9 +43,11 @@
     "dependencies": {
         "@jchptf/api": "^0.0.26",
         "@jchptf/reflection": "^0.0.6",
+        "@jchptf/txtypes": "^0.0.1",
         "@nestjs/common": "^5.5.0",
         "@nestjs/core": "^5.5.0",
         "@thi.ng/errors": "^0.1.12",
+        "@tyriar/fibonacci-heap": "^2.0.9",
         "chan": "^0.6.1",
         "chanel": "^2.2.0",
         "co": "^4.6.0",
