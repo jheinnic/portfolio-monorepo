@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/txtypes",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "TODO",
     "main": "./dist/index.js",
     "typings": "./dist/index.d.ts",
@@ -41,7 +41,7 @@
         "node": ">=10.13.0"
     },
     "dependencies": {
-        "@jchptf/tupletypes": "^0.0.13",
+        "@jchptf/tupletypes": "^0.0.14",
         "@thi.ng/errors": "^0.1.12",
         "simplytyped": "^1.6.0",
         "tslib": "^1.9.3"
