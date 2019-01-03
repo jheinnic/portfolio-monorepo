@@ -96,11 +96,14 @@ export class ResourceSemaphore<T extends object> implements IResourceSemaphore<T
    //
    // }
 
-   public async borrowResource(callback: (resource: T) => void): Promise<void> {
+   public async borrowResource<R>(
+      callback: (param: T) => R | Promise<R>
+   ): Promise<R> {
       const resource: T|CLOSED = await take(this.resourceRequests!);
       if (resource !== CLOSED) {
-         await callback(resource as T);
+         const retVal: R | Promise<R> = callback(resource as T);
          await put(this.recycledResources!, resource);
+         return await retVal;
       } else {
          throw new Error('Resource channel closed before API call could be made');
       }

@@ -1,0 +1,1 @@
+export type AsyncRepeat = () => Promise<void|false>;

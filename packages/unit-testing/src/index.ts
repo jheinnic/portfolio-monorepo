@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import {AnyFunc, CombineObjects, objectKeys} from 'simplytyped';
 
-import {FunctionProperties, ValueProperties} from '@jchptf/tupletypes';
+import {FunctionProperties, ValueProperties} from '@jchptf/objecttypes';
 
 type SinonSpyApi = CombineObjects<ValueProperties<sinon.SinonSpy>, FunctionProperties<sinon.SinonSpy>>
 

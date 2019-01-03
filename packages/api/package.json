@@ -40,8 +40,8 @@
         "node": ">=8.9.0"
     },
     "dependencies": {
+        "@jchptf/objecttypes": "^0.0.1",
         "@jchptf/reflection": "^0.0.6",
-        "@jchptf/tupletypes": "^0.0.13",
         "@loopback/metadata": "^1.0.1",
         "@thi.ng/errors": "^0.1.12",
         "reflect-metadata": "^0.1.12",

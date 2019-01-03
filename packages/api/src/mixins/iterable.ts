@@ -1,5 +1,5 @@
 import { mixin } from "../mixin";
-import {StrictKeysThatAre} from '@jchptf/tupletypes';
+import {StrictKeysThatAre} from '@jchptf/objecttypes';
 
 export function iterableOn<
    T extends Record<any, Iterable<P>> & Iterable<P>,
