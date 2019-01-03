@@ -8,13 +8,13 @@ import {Wild, ProviderToken} from '@jchptf/api';
 import {CONFIG_PROPERTY_MARKER_KEY, ConfigPropertyMarker} from './decorators/config-property-marker.interface';
 import {CONFIG_CLASS_MARKER_KEY, ConfigClassMarker} from './decorators/config-class-marker.interface';
 import {IConfigFileReader, IConfigurationFactory} from './interfaces';
-import {CONFIG_FILE_READER} from './di';
+import {CONFIG_FILE_READER_PROVIDER} from './di';
 
 @Injectable()
 export class ConfigurationFactoryService implements IConfigurationFactory {
    private mapToDefaults: Immutable.Map<ConstructorFor<any>, any>;
 
-   constructor(@Inject(CONFIG_FILE_READER) private readonly configReader: IConfigFileReader) {
+   constructor(@Inject(CONFIG_FILE_READER_PROVIDER) private readonly configReader: IConfigFileReader) {
       this.mapToDefaults = Immutable.Map.of();
    }
 

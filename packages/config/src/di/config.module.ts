@@ -6,6 +6,9 @@ import {IConfigFileReader, IConfigClassFinder, IConfigurationFactory} from '../i
 import {ConfigFileReaderService} from '../config-file-reader.service';
 import {ConfigurationFactoryService} from '../configuration-factory.service';
 import {ConfigClassFinderService} from '../config-class-finder.service';
+import {
+   CONFIG_CLASS_FINDER_PROVIDER, CONFIG_FILE_READER_PROVIDER, CONFIGURATION_FACTORY_PROVIDER
+} from './config.constants';
 
 @Module({ })
 export class ConfigModule {
@@ -32,8 +35,25 @@ export class ConfigModule {
       return {
          module: ConfigModule,
          imports: [ ],
-         providers: configProviders,
-         exports: configProviders
+         providers: [
+            {
+               provide: CONFIG_FILE_READER_PROVIDER,
+               useValue: configFileReader
+            }, {
+               provide: CONFIG_CLASS_FINDER_PROVIDER,
+               useValue: configClassFinder
+            }, {
+               provide: CONFIGURATION_FACTORY_PROVIDER,
+               useValue: configFactory
+            },
+            ...configProviders
+         ],
+         exports: [
+            CONFIG_FILE_READER_PROVIDER,
+            CONFIG_CLASS_FINDER_PROVIDER,
+            CONFIGURATION_FACTORY_PROVIDER,
+            ... configProviders
+         ]
       };
    }
 }

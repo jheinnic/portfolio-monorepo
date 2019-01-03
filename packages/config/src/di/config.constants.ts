@@ -12,11 +12,11 @@ const CCF = getNamedTypeIntent<IConfigClassFinder>("IConfigClassFinder");
 const CF = getNamedTypeIntent<IConfigurationFactory>("IConfigurationFactory");
 const DCO = getNamedTypeIntent<DotenvConfigOptions>("DotenvConfigOptions");
 
-export const CONFIG_FILE_READER =
+export const CONFIG_FILE_READER_PROVIDER =
    getGlobalProviderToken<IConfigFileReader>(CFR);
-export const CONFIG_CLASS_FINDER =
+export const CONFIG_CLASS_FINDER_PROVIDER =
    getGlobalProviderToken<IConfigClassFinder>(CCF);
-export const CONFIGURATION_FACTORY =
+export const CONFIGURATION_FACTORY_PROVIDER =
    getGlobalProviderToken<IConfigurationFactory>(CF);
 export const DOTENV_CONFIG_OPTIONS =
    getGlobalProviderToken<DotenvConfigOptions>(DCO);

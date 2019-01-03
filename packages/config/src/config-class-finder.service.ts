@@ -7,7 +7,7 @@ import {bindNodeCallback, from, Observable} from 'rxjs';
 import {Inject, Injectable, Provider} from '@nestjs/common';
 
 import {IConfigurationFactory, IConfigClassFinder} from './interfaces';
-import {CONFIGURATION_FACTORY} from './di';
+import {CONFIGURATION_FACTORY_PROVIDER} from './di';
 
 @Injectable()
 export class ConfigClassFinderService implements IConfigClassFinder
@@ -15,7 +15,7 @@ export class ConfigClassFinderService implements IConfigClassFinder
    private readonly resolvedSearchRoot: string;
 
    constructor(
-      @Inject(CONFIGURATION_FACTORY) private readonly configFactory: IConfigurationFactory,
+      @Inject(CONFIGURATION_FACTORY_PROVIDER) private readonly configFactory: IConfigurationFactory,
       private readonly loadConfigGlob: string, searchRootDir?: string)
    {
       this.resolvedSearchRoot =
