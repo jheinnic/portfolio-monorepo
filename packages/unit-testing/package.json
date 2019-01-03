@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/unit-testing",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "description": "TODO",
     "main": "./dist/index.js",
     "typings": "./dist/index.d.ts",
@@ -31,7 +31,7 @@
         "node": ">=8.9.0"
     },
     "dependencies": {
-        "@jchptf/objecttypes": "^0.0.2",
+        "@jchptf/objecttypes": "^0.0.3",
         "tslib": "^1.9.3"
     },
     "keywords": [
