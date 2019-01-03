@@ -4,7 +4,7 @@ declare module 'medium'
   import {Transducer} from 'transducers-js';
   import {AnyFunc} from 'simplytyped';
 
-  export interface Chan<S = any, T = S> extends Promise<T|object> {}
+  export interface Chan<S = any, T = S> extends Promise<T|symbol> {}
 
   export interface ChanBuffer {}
 
@@ -70,7 +70,7 @@ declare module 'medium'
    * Always resolves with a double of [ theResolvedValue, theSourceChannel ].
    *
    * All non-winning actions will be canceled so that their data does not go missing.
-   export function any(...ports) -> Promise -> [theResolvedValue, theSourceChannelOrPromise]
+  export function any(...ports) -> Promise -> [theResolvedValue, theSourceChannelOrPromise]
    */
   export function any<S1 = any>(...port: Alt<S1>[]): AnyAlt<S1>
   export function any<S1 = any, S2 = any>(port1: Alt<S1>, port2: Alt<S2>): AnyAlt<S1|S2>
@@ -87,12 +87,12 @@ declare module 'medium'
   export function repeat<T = any>(func: (val: T) => Promise<T|false>, seed: T): Promise<void>;
   export function repeat(func: () => Promise<void|false>): Promise<void>;
 
-  /**
-   * This is just like repeat above, except that before it repeats, it waits for a successful take on the given channel.
-   * Then it passes this taken value in as the first argument, with any local state being passed as the second argument.
-   *
-   * See the ping/pong example above to see this in action.
-   */
+   /**
+    * This is just like repeat above, except that before it repeats, it waits for a successful take on the given channel.
+    * Then it passes this taken value in as the first argument, with any local state being passed as the second argument.
+    *
+    * See the ping/pong example above to see this in action.
+    */
   export function repeatTake<T = any, S = any>(ch: Chan<any, T>, fn: (cVal: T, iVal: S) => Promise<S|false>, seed: S): Promise<void>;
   export function repeatTake<T = any>(ch: Chan<any, T>, fn: (cVal: T) => Promise<void|false>): Promise<void>;
 
