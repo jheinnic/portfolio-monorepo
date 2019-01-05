@@ -5,16 +5,13 @@ import {DotenvConfigOptions} from 'dotenv';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
-import '@jchptf/reflection';
-import {IConfigFileReader} from './interfaces';
+import {IConfigFileReader} from './interfaces/config-file-reader.interface';
 
 
 @Injectable()
 export class ConfigFileReaderService implements IConfigFileReader
 {
    private config?: IConfig;
-
-   // private readonly mapToDefaults: Map<ClassType<any>, any>;
 
    constructor(private readonly dotenvOptions?: DotenvConfigOptions | false) {}
 
@@ -64,5 +61,10 @@ export class ConfigFileReaderService implements IConfigFileReader
       }
 
       return defaultValue;
+   }
+
+   public get<T extends any = any>(configKey: string, defaultValue?: T): T
+   {
+      return this.readConfigKey(configKey, defaultValue);
    }
 }

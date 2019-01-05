@@ -1,29 +1,29 @@
-import {DynamicModule, Module, Provider} from '@nestjs/common';
-import {DotenvConfigOptions} from 'dotenv';
+import {DynamicModule, Global, Module, Provider} from '@nestjs/common';
 import {toArray} from 'rxjs/operators';
 
-import {IConfigFileReader, IConfigClassFinder, IConfigurationFactory} from '../interfaces';
-import {ConfigFileReaderService} from '../config-file-reader.service';
-import {ConfigurationFactoryService} from '../config-provider-factory.service';
+import {IConfigClassFinder} from '../interfaces/config-class-finder.interface';
+import {IConfigProviderFactory} from '../interfaces';
+import {ConfigProviderFactoryService} from '../config-provider-factory.service';
 import {ConfigClassFinderService} from '../config-class-finder.service';
 import {
    CONFIG_CLASS_FINDER_PROVIDER, CONFIG_FILE_READER_PROVIDER, CONFIGURATION_FACTORY_PROVIDER
 } from './config.constants';
+import {ConfigLoader} from '../config-loader.service';
 
+@Global()
 @Module({ })
 export class ConfigModule {
    protected static defaultGlob: string = 'config/**/!(*.d).{ts,js}';
 
-   static async forRoot(loadConfigGlob: string, dotenvOptions?: DotenvConfigOptions, resolveGlobRoot?: string ): Promise<DynamicModule>
+   static async forRoot(loadConfigGlob: string, resolveGlobRoot?: string ): Promise<DynamicModule>
    {
-      let configFileReader: IConfigFileReader =
-         new ConfigFileReaderService(dotenvOptions ? dotenvOptions : {});
-      let configFactory: IConfigurationFactory =
-         new ConfigurationFactoryService(configFileReader);
+      let configFactory: IConfigProviderFactory =
+         new ConfigProviderFactoryService(
+            ConfigLoader.getFileReader()
+         );
       let configClassFinder: IConfigClassFinder =
          new ConfigClassFinderService(configFactory, loadConfigGlob, resolveGlobRoot);
 
-      configFileReader.bootstrap();
       const configProviders: Provider[] =
          await configClassFinder.loadConfigAsync()
             .pipe(
@@ -37,12 +37,12 @@ export class ConfigModule {
          imports: [ ],
          providers: [
             {
-               provide: CONFIG_FILE_READER_PROVIDER,
-               useValue: configFileReader
-            }, {
-               provide: CONFIG_CLASS_FINDER_PROVIDER,
-               useValue: configClassFinder
-            }, {
+            //    provide: CONFIG_FILE_READER_PROVIDER,
+            //    useValue: configFileReader
+            // }, {
+            //    provide: CONFIG_CLASS_FINDER_PROVIDER,
+            //    useValue: configClassFinder
+            // }, {
                provide: CONFIGURATION_FACTORY_PROVIDER,
                useValue: configFactory
             },
