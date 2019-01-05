@@ -42,6 +42,7 @@
     },
     "dependencies": {
         "@jchptf/tupletypes": "^0.0.15",
+        "@jchptf/type-testing": "^0.0.1",
         "@thi.ng/errors": "^0.1.12",
         "simplytyped": "^1.6.0",
         "tslib": "^1.9.3"

@@ -42,6 +42,7 @@
     "dependencies": {
         "@jchptf/objecttypes": "^0.0.3",
         "@jchptf/reflection": "^0.0.7",
+        "@jchptf/type-testing": "^0.0.1",
         "@loopback/metadata": "^1.0.1",
         "@thi.ng/errors": "^0.1.12",
         "reflect-metadata": "^0.1.12",

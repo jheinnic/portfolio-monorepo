@@ -36,6 +36,7 @@
         "node": ">=8.9.0"
     },
     "dependencies": {
+        "@jchptf/type-testing": "^0.0.1",
         "tslib": "^1.9.3"
     },
     "keywords": [
