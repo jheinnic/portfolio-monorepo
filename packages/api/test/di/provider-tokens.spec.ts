@@ -5,7 +5,7 @@ import {
    getGlobalProviderToken, getLocalProviderToken, getModuleIdentifier, getNamedSubtypeIntent,
    getNamedTypeIntent, TokenDictionary
 } from '../../src/di';
-import {assert, deny, IsImpliedType} from '../helpers';
+import {assert, deny, IsImpliedType} from '@jchptf/type-testing';
 import {
    AnotherSubclass, Class, ISomething, OneSubclass, SomethingOne, SomethingThree, SomethingTwo
 } from '../fixtures/primitive';
