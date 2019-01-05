@@ -1,4 +1,3 @@
-import {Keys} from 'simplytyped';
 import {IfStrictlyExtends} from './inheritance';
 import {KeysThatAre, KeysThatAreNot} from './keys';
 

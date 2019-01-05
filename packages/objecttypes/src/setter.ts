@@ -7,4 +7,4 @@ export interface Setter<P extends any[] = any[]> extends Function {
 export type SetterParamTypes<S extends Setter> =
    S extends (...args: infer P) => void ? P : never;
 
-export type IfSetter<T extends Function, P = T, N = never> = IfStrictlyExtends<Setter, T, P, N>
+export type IfSetter<T, P = T, N = never> = IfStrictlyExtends<Setter, T, P, N>

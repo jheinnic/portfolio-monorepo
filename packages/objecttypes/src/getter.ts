@@ -6,4 +6,4 @@ export interface Getter<T = any> extends Function {
 
 export type GetterReturnType<G extends Getter> = ReturnType<G>;
 
-export type IfGetter<T extends Function, P = T, N = never> = IfStrictlyExtends<Getter, T, P, N>
+export type IfGetter<T, P = T, N = never> = IfStrictlyExtends<Getter, T, P, N>

@@ -82,6 +82,34 @@
     lodash "^4.17.5"
     to-fast-properties "^2.0.0"
 
+"@jchptf/api@^0.0.26":
+  version "0.0.26"
+  resolved "http://localhost:4873/@jchptf%2fapi/-/api-0.0.26.tgz#38761ffeb232cd47ab060f706cc469a5f944e061"
+  integrity sha512-m1H11JBl6oQp88P2Xco5EyhYNyUsKw5tu4+UOQJLMV0dNhzzQz4OAnvaiQzimx20isOjleGBs9Y0Lq/8L0UQ6g==
+  dependencies:
+    "@jchptf/reflection" "^0.0.6"
+    "@jchptf/tupletypes" "^0.0.13"
+    "@loopback/metadata" "^1.0.1"
+    "@thi.ng/errors" "^0.1.12"
+    reflect-metadata "^0.1.12"
+    tslib "^1.9.3"
+
+"@jchptf/reflection@^0.0.6":
+  version "0.0.6"
+  resolved "http://localhost:4873/@jchptf%2freflection/-/reflection-0.0.6.tgz#3d67d840e63b55234f8d8f6c2b5a3dcebea11d8d"
+  integrity sha512-Fvsa1Z3iM8tKpTCdSjZ3UVtcC+tqRIH2JVyOD6WOVJ097UZDJ8uwMIppORkQFlnraL1QaFUDhC61K2uL+f45Uw==
+  dependencies:
+    reflect-metadata "^0.1.12"
+    simplytyped "^1.5.2"
+    tslib "^1.9.3"
+
+"@jchptf/tupletypes@^0.0.13":
+  version "0.0.13"
+  resolved "http://localhost:4873/@jchptf%2ftupletypes/-/tupletypes-0.0.13.tgz#260d5905887d1b40e679b639b6f574360e7a8bde"
+  integrity sha512-QWlfC5CsixXF1etqVhkvCHJ6SrNQJ541wly8QweetOE61tUrTNq2WFs7oEssPgMpFn85t60ozZp5cLL4r5Wbug==
+  dependencies:
+    tslib "^1.9.3"
+
 "@lerna/add@^3.7.2":
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/@lerna/add/-/add-3.7.2.tgz#209c8d00e08baeae9c97e9b2e667ad92a39d3907"

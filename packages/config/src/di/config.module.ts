@@ -4,7 +4,7 @@ import {toArray} from 'rxjs/operators';
 
 import {IConfigFileReader, IConfigClassFinder, IConfigurationFactory} from '../interfaces';
 import {ConfigFileReaderService} from '../config-file-reader.service';
-import {ConfigurationFactoryService} from '../configuration-factory.service';
+import {ConfigurationFactoryService} from '../config-provider-factory.service';
 import {ConfigClassFinderService} from '../config-class-finder.service';
 import {
    CONFIG_CLASS_FINDER_PROVIDER, CONFIG_FILE_READER_PROVIDER, CONFIGURATION_FACTORY_PROVIDER
