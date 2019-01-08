@@ -1,7 +1,7 @@
-import {Feature} from './feature.interface';
+import { IFeature } from './feature.interface';
 
-export const counter = Symbol.for("counter");
+export const counter = Symbol("counter");
 
-export interface CounterFeature extends Feature {
+export interface ICounterFeature extends IFeature {
    [counter]: number;
 }

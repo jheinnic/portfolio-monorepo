@@ -1,5 +1,5 @@
-import * as api from '../../../api/src/api';
-import {mixin} from '../mixin';
+import * as api from '../api';
+import {mixin} from '@jchptf/mixins';
 
 interface WatchImpl<T extends api.IWatch<T>> extends api.IWatch<T> {
     _watches: api.IObjectOf<api.Watch<T>>

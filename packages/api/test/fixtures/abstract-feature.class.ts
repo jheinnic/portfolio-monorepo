@@ -3,7 +3,7 @@ export class AbstractFeature {
       this.init();
    }
 
-   protected init(): void {
+   init(): void {
       console.log('This is Abstract');
    }
 }

@@ -1,7 +1,7 @@
 {
-    "name": "@jchptf/api",
-    "version": "0.0.28",
-    "description": "Common, generic types & interfaces for jchptf projects",
+    "name": "@jchptf/mixins",
+    "version": "0.0.1",
+    "description": "TODO",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "typings": "./dist/index.d.ts",
@@ -20,34 +20,28 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/jheinnic/portfolio-monorepo",
-        "homepage": "https://github.com/jheinnic/portfolio-monorepo/tree/master/packages/api"
+        "homepage": "https://github.com/jheinnic/portfolio-monorepo/tree/master/packages/mixins"
     },
-    "author": "John Heinnickel <jheinnic@hotmail.com>",
-    "license": "Apache-2.0",
+    "author": "John Heinnickel <jheinnic+npm@hotmail.com>",
+    "license": "MIT",
     "keywords": [
-        "compare",
-        "equality",
-        "ES6",
-        "generic",
-        "interfaces",
-        "mixins",
-        "type declarations",
+        "es6",
         "typescript"
     ],
     "engines": {
-        "node": ">=8.9.0"
+        "node": ">=10.13.0"
     },
     "publishConfig": {
         "access": "public",
         "registry": "http://localhost:4873"
     },
     "scripts": {
-        "build": "yarn run clean && tsc --declaration && echo `pwd`",
+        "build": "yarn run clean && tsc --declaration",
         "clean": "rm -rf dist build .nyc_output coverage doc; mkdir dist; mkdir build",
         "cover": "yarn test && nyc report --reporter=lcov",
-        "doc": "node_modules/.bin/typedoc --mode file --module commonjs --target es6 --tsconfig tsconfig.json --externalPattern node_modules --excludeExternals --excludePrivate --out doc --gitRevision feature_bootstrap src typings",
-        "pub": "yarn build && lerna publish --registry http://localhost:4873",
-        "test": "rm -rf build && tsc -p test && nyc mocha build/test/*.js"
+        "doc": "node_modules/.bin/typedoc --mode file --module commonjs --target es6 --tsconfig tsconfig.json --externalPattern node_modules --excludeExternals --excludePrivate --out doc --givRevision feature_bootstrap src typings",
+        "pub": "yarn run build && lerna publish --registry http://localhost:4873",
+        "test": "rm -rf build && mkdir build && tsc -p test && nyc mocha `find build/test -type f -name '*.js'`"
     },
     "devDependencies": {
         "@types/chai": "^4.1.7",
@@ -56,23 +50,21 @@
         "@types/sinon": "^7.0.2",
         "@types/sinon-chai": "^3.2.2",
         "chai": "^4.2.0",
+        "lerna": "^3.8.0",
         "mocha": "^5.2.0",
         "mocha-typescript": "^1.1.17",
         "nyc": "^12.0.2",
-        "sinon": "^7.0.0",
+        "sinon": "^7.2.2",
         "sinon-chai": "^3.3.0",
         "ts-sinon": "^1.0.12",
+        "tslint": "^5.11.0",
         "typedoc": "^0.13.0",
         "typescript": "^3.1.4"
     },
     "dependencies": {
-        "@jchptf/mixins": "^0.0.1",
         "@jchptf/objecttypes": "^0.0.3",
         "@jchptf/reflection": "^0.0.7",
-        "@loopback/metadata": "^1.0.1",
         "@thi.ng/errors": "^0.1.12",
-        "conditional-type-checks": "^0.5.0",
-        "reflect-metadata": "^0.1.12",
         "simplytyped": "^1.6.0",
         "tslib": "^1.9.3"
     }

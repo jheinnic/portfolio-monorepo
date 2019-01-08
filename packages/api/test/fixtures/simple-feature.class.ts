@@ -1,7 +1,7 @@
 import {AbstractFeature} from './index';
 
 export class SimpleFeature extends AbstractFeature {
-   protected init() {
+   init() {
       super.init();
       console.log('This is simple');
    }

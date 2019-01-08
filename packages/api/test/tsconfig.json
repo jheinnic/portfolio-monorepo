@@ -1,16 +1,18 @@
 {
     "extends": "../../../tsconfig.json",
     "compilerOptions": {
-        "outDir": "../build"
-    },
-    "include": [
-        "./**/*.ts",
-        "../src/**/*.ts",
-        "../typings/**/*.d.ts"
-    ],
-    "exclude": [
-        "../dist",
-        "../build",
-        "../node_modules"
-    ]
+        "outDir": "../build",
+        "baseUrl": ".",
+        "paths": { "@jchptf/api": ["../dist"] }
+    }
+//    "include": [
+//        "./**/*.ts",
+//        "../src/**/*.ts",
+//        "../typings/**/*.d.ts"
+//    ],
+//    "exclude": [
+//        "../dist",
+//        "../build",
+//        "../node_modules"
+//    ]
 }

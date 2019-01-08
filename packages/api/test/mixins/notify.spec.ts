@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import {Notifier} from '../fixtures';
 
-import {Event, EVENT_ALL, INotify, iNotify} from '../../src';
+import {IEvent, EVENT_ALL, INotify, iNotify} from '../../src';
 
 describe('iNotify', () => {
 
@@ -10,17 +10,17 @@ describe('iNotify', () => {
       @iNotify
       class Foo implements INotify
       {
-         addListener(_: string, __: (e: Event) => void, ___?: any): boolean
+         addListener(_: string, __: (e: IEvent) => void, ___?: any): boolean
          {
             throw new Error();
          }
 
-         removeListener(_: string, __: (e: Event) => void, ___?: any): boolean
+         removeListener(_: string, __: (e: IEvent) => void, ___?: any): boolean
          {
             throw new Error();
          }
 
-         notify(_: Event)
+         notify(_: IEvent)
          {
             throw new Error();
          }
@@ -64,14 +64,14 @@ describe('iNotify', () => {
    });
 
    let foo: Notifier;
-   let e: Event;
+   let e: IEvent;
 
    beforeEach(() => {
       foo = new Notifier([1, 4, 4]);
       e = {id: 'e'};
    });
 
-   function listen(e: Event)
+   function listen(e: IEvent)
    {
       console.log(e);
    }

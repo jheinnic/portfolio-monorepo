@@ -5,11 +5,11 @@ export const EVENT_DISABLE = "disable";
 /**
  * Event listener.
  */
-export type Listener = (e: Event) => void;
+export type Listener = (e: IEvent) => void;
 
 /**
  * Lookup path for nested data structures.
-export type Path = PropertyKey | PropertyKey[];
+ * export type Path = PropertyKey | PropertyKey[];
  */
 
 /**
@@ -75,7 +75,7 @@ export interface IEnable {
     toggle?(): boolean;
 }
 
-export interface Event extends IID<Exclude<PropertyKey, symbol>> {
+export interface IEvent extends IID<Exclude<PropertyKey, symbol>> {
     target?: any;
     canceled?: boolean;
     value?: any;
@@ -90,7 +90,7 @@ export interface Event extends IID<Exclude<PropertyKey, symbol>> {
 export interface INotify {
     addListener(id: string, fn: Listener, scope?: any): boolean;
     removeListener(id: string, fn: Listener, scope?: any): boolean;
-    notify(event: Event): void;
+    notify(event: IEvent): void;
 }
 
 /**
@@ -109,11 +109,11 @@ export interface IObjectOf<T> {
 
 export type IBagOf<T, P extends keyof any> = {
     [K in P]: T;
-}
+};
 
-export type IMapTo<T, S extends any, P extends keyof S = keyof S> = {
+export type IMapTo<T, S extends object, P extends keyof S = keyof S> = {
    [K in P]: T;
-}
+};
 
 export type Wild<P extends keyof any = keyof any> = IMapTo<any, any, P>;
 
@@ -142,5 +142,4 @@ export type IDirector<IBuilder> = (builder: IBuilder) => void;
 
 export type IDirectorObj<IBuilder, K extends keyof any = 'apply'> = {
     [Key in K]: IDirector<IBuilder>;
-}
-
+};

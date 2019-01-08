@@ -1,4 +1,4 @@
-import {IEnable, iEnable, INotify, iNotify, Event, Listener} from '../../src';
+import {IEnable, iEnable, INotify, iNotify, IEvent, Listener} from '../../src';
 
 @iEnable
 @iNotify
@@ -18,7 +18,7 @@ export class ToggleTalker implements IEnable, INotify {
       return false;
    }
 
-   public notify(_event: Event): void { }
+   public notify(_event: IEvent): void { }
 
    public removeListener(_id: string, _fn: Listener, _scope?: any): boolean
    {

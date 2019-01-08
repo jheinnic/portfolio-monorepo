@@ -1,3 +1,3 @@
-export interface Feature {
-
+export interface IFeature {
+   init(): void;
 }

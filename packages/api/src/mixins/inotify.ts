@@ -1,5 +1,5 @@
-import * as api from "../../../api/src/api";
-import { mixin } from "../mixin";
+import * as api from "../api";
+import { mixin } from "@jchptf/mixins";
 
 export function iNotifyDispatch(listeners: any[][], e: api.IEvent) {
     if (!listeners) return;

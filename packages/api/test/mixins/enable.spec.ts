@@ -51,7 +51,7 @@ describe('iEnable', () => {
          notifySut.addListener(api.EVENT_ENABLE, listenerSpy);
          notifySut.enable();
          expect(
-            listenerSpy.calledOnceWith(<api.Event>{
+            listenerSpy.calledOnceWith(<api.IEvent>{
                id: api.EVENT_ENABLE,
                target: notifySut
             })
@@ -63,7 +63,7 @@ describe('iEnable', () => {
          notifySut.addListener(api.EVENT_DISABLE, listenerSpy);
          notifySut.disable();
          expect(
-            listenerSpy.calledOnceWith(<api.Event>{
+            listenerSpy.calledOnceWith(<api.IEvent>{
                id: api.EVENT_DISABLE,
                target: notifySut
             })
@@ -75,7 +75,7 @@ describe('iEnable', () => {
          notifySut.addListener(api.EVENT_DISABLE, listenerSpy);
          notifySut.toggle();
          expect(
-            listenerSpy.calledOnceWith(<api.Event>{
+            listenerSpy.calledOnceWith(<api.IEvent>{
                id: api.EVENT_DISABLE,
                target: notifySut
             })
@@ -87,14 +87,14 @@ describe('iEnable', () => {
          notifySut.addListener(api.EVENT_ALL, listenerSpy);
          notifySut.toggle();
          expect(
-            listenerSpy.calledOnceWith(<api.Event>{
+            listenerSpy.calledOnceWith(<api.IEvent>{
                id: api.EVENT_DISABLE,
                target: notifySut
             })
          ).to.be.true;
          notifySut.toggle();
          expect(
-            listenerSpy.calledWith(<api.Event>{
+            listenerSpy.calledWith(<api.IEvent>{
                id: api.EVENT_ENABLE,
                target: notifySut
             })
