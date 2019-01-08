@@ -6,6 +6,8 @@
         "lib": ["es6", "esnext.asynciterable", "es2017.object", "dom"],
         "strict": true,
         "alwaysStrict": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
         "importHelpers": true,
         "preserveConstEnums": true,
         "experimentalDecorators": true,

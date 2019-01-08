@@ -3,7 +3,20 @@
     "version": "0.0.3",
     "description": "TODO",
     "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "typings": "./dist/index.d.ts",
+    "typesVersions": {
+        ">=3.2": {
+            "dist/utility": [
+                "dist/ts3.1/*"
+            ]
+        },
+        ">=3.1": {
+            "dist/utility": [
+                "dist/ts3.1/*"
+            ]
+        }
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/jheinnic/portfolio-monorepo",
@@ -11,6 +24,17 @@
     },
     "author": "John Heinnickel <jheinnic+npm@hotmail.com>",
     "license": "MIT",
+    "keywords": [
+        "es6",
+        "typescript"
+    ],
+    "engines": {
+        "node": ">=10.13.0"
+    },
+    "publishConfig": {
+        "access": "public",
+        "registry": "http://localhost:4873"
+    },
     "scripts": {
         "build": "yarn run clean && tsc --declaration",
         "clean": "rm -rf dist build .nyc_output coverage doc; mkdir dist; mkdir build",
@@ -37,21 +61,10 @@
         "typedoc": "^0.13.0",
         "typescript": "^3.1.4"
     },
-    "engines": {
-        "node": ">=10.13.0"
-    },
     "dependencies": {
         "@jchptf/tupletypes": "^0.0.15",
-        "@jchptf/type-testing": "^0.0.1",
         "@thi.ng/errors": "^0.1.12",
         "simplytyped": "^1.6.0",
         "tslib": "^1.9.3"
-    },
-    "keywords": [
-        "es6",
-        "typescript"
-    ],
-    "publishConfig": {
-        "access": "public"
     }
 }

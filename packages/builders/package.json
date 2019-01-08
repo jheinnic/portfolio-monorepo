@@ -3,13 +3,38 @@
     "version": "0.0.11",
     "description": "TODO",
     "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "typings": "./dist/index.d.ts",
+    "typesVersions": {
+        ">=3.2": {
+            "dist/utility": [
+                "dist/ts3.1/*"
+            ]
+        },
+        ">=3.1": {
+            "dist/utility": [
+                "dist/ts3.1/*"
+            ]
+        }
+    },
     "repository": {
         "type": "git",
-        "url": "https://github.com/jheinnic/portfolio-monorepo"
+        "url": "https://github.com/jheinnic/portfolio-monorepo",
+        "homepage": "https://github.com/jheinnic/portfolio-monorepo/tree/master/packages/builders"
     },
     "author": "John Heinnickel <jheinnic@hotmail.com>",
     "license": "MIT",
+    "keywords": [
+        "es6",
+        "typescript"
+    ],
+    "engines": {
+        "node": ">=8.9.0"
+    },
+    "publishConfig": {
+        "access": "public",
+        "registry": "http://localhost:4873"
+    },
     "scripts": {
         "build": "yarn run clean && tsc --declaration && echo `pwd`",
         "clean": "rm -rf dist build .nyc_output coverage doc; mkdir dist; mkdir build",
@@ -31,20 +56,11 @@
         "typedoc": "^0.13.0",
         "typescript": "^3.1.3"
     },
-    "engines": {
-        "node": ">=8.9.0"
-    },
     "dependencies": {
         "@jchptf/api": "^0.0.28",
+        "@jchptf/mixins": "^0.0.1",
         "fluent-interface-builder": "^2.0.1",
-        "simplytyped": "^1.5.2",
+        "simplytyped": "^1.6.0",
         "tslib": "^1.9.3"
-    },
-    "keywords": [
-        "es6",
-        "typescript"
-    ],
-    "publishConfig": {
-        "access": "public"
     }
 }
