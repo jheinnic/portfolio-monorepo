@@ -1,13 +1,13 @@
 {
     "compilerOptions": {
-        "outDir": "../../build",
+        "outDir": "../build",
 
         /* dtslint does not seem to comprehend the 'extends' key... */
         "module": "commonjs",
         "lib": ["es6", "esnext.asynciterable", "es2017.object", "dom"],
         "target": "es6",
         "strict": true,
-        "noEmit": true,
+        "noEmit": false,
         "alwaysStrict": true,
         "strictNullChecks": true,
         "strictFunctionTypes": true,
