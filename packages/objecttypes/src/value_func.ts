@@ -1,5 +1,7 @@
-import {IfStrictlyExtends, IfStrictlyNotExtends} from './inheritance';
+import { IsExactType } from 'conditional-type-checks';
 
-export type IfValueType<T, P = T, N = never> = IfStrictlyNotExtends<T, Function, P, N>
-export type IfFunctionType<T, P = T, N = never> = IfStrictlyExtends<T, Function, P, N>
+export type IfFunctionType<T, Positive = T, Negative = never> =
+   IsExactType<T, (...args: any[]) => any> extends true ? Positive : Negative;
 
+export type IfValueType<T, Positive = T, Negative = never> =
+   IfFunctionType<T, Negative, Positive>;

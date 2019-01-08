@@ -1,8 +1,8 @@
 // Shape-based Property Classifiers and Filters
-import {BlankObject} from './utility';
-import {IfGetter} from './getter';
-import {IfSetter} from './setter';
-import {IfFunctionType, IfValueType} from './value_func';
+import { BlankObject } from './blank';
+import { IfGetter } from './getter';
+import { IfSetter } from './setter';
+import { IfFunctionType, IfValueType } from './value_func';
 
 export type ValuePropertyNames<T> = {
    [K in keyof T]: IfValueType<T[K], K>;
@@ -43,5 +43,3 @@ export type OptionsBagPropertyNames<T> =
    ValuePropertyNames<T> | GetterPropertyNames<T> | SetterPropertyNames<T>;
 export type OptionsBag<T> =
    OptionsBagPropertyNames<T> extends never ? BlankObject : Pick<T, OptionsBagPropertyNames<T>>;
-
-

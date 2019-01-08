@@ -1,4 +1,4 @@
-import * as api from '../api';
+import * as api from '../../../api/src/api';
 import {mixin} from '../mixin';
 
 interface WatchImpl<T extends api.IWatch<T>> extends api.IWatch<T> {

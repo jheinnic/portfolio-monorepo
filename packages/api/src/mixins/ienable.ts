@@ -1,4 +1,4 @@
-import * as api from '../api';
+import * as api from '../../../api/src/api';
 import {mixin} from '../mixin';
 
 interface IEnableImpl extends api.IEnable
@@ -26,7 +26,7 @@ export const iEnable = //function() {
       {
          this._enabled = true;
          if (this.notify) {
-            this.notify(<api.Event>{
+            this.notify(<api.IEvent>{
                id: api.EVENT_ENABLE,
                target: this
             });
@@ -37,7 +37,7 @@ export const iEnable = //function() {
       {
          this._enabled = false;
          if (this.notify) {
-            this.notify(<api.Event>{
+            this.notify(<api.IEvent>{
                id: api.EVENT_DISABLE,
                target: this
             });

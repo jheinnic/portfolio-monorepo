@@ -1,7 +1,7 @@
-import * as api from "../api";
+import * as api from "../../../api/src/api";
 import { mixin } from "../mixin";
 
-export function iNotifyDispatch(listeners: any[][], e: api.Event) {
+export function iNotifyDispatch(listeners: any[][], e: api.IEvent) {
     if (!listeners) return;
     const n = listeners.length;
     let i = 0, l;
@@ -18,7 +18,7 @@ interface INotifyImpl extends api.INotify {
     _listeners: api.IObjectOf<[api.Listener, any][]>,
     __listener(listeners: any[][], f: api.Listener, scope: any): number
 
-   notify(event: api.Event): void;
+   notify(event: api.IEvent): void;
 }
 
 /**
@@ -59,7 +59,7 @@ export const iNotify =
          return false;
       },
 
-      notify(e: api.Event)
+      notify(e: api.IEvent)
       {
          if (!this._listeners) return;
          e.target === undefined && (
@@ -119,7 +119,7 @@ export class UnmixedNotify implements api.INotify
       return false;
    }
 
-   notify(e: api.Event)
+   notify(e: api.IEvent)
    {
       if (!this._listeners) return;
       e.target === undefined && (

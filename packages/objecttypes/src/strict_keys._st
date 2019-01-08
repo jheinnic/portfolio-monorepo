@@ -1,5 +1,6 @@
-import {IfStrictlyExtends} from './inheritance';
-import {KeysThatAre, KeysThatAreNot} from './keys';
+// import { IfStrictlyExtends } from './inheritance';
+import { KeysThatAre, KeysThatAreNot } from './keys';
+import { IfExtends } from './inheritance';
 
 // Attempts to exclude wildcard matches on any, which will by definition match
 // both KeysThatAre<T, C> and KeysThatAreNot<T, C>, regardless of what C is.
@@ -26,10 +27,9 @@ export type OnlyStrictKeysThatAreNot<T, C> =
 //    T extends OnlyStrictKeysThatAreNot<T, C> ? T : never;
 
 export type IfOnlyStrictKeysThatAre<T, C, P = T, N = never> =
-   IfStrictlyExtends<T, OnlyStrictKeysThatAre<T, C>, P, N>
-   // OnlyStrictKeysThatAre<T, C> extends T ? T : never;
+   IfExtends<T, OnlyStrictKeysThatAre<T, C>, P, N>;
+// OnlyStrictKeysThatAre<T, C> extends T ? T : never;
 
 export type IfOnlyStrictKeysThatAreNot<T, C, P = T, N = never> =
-   IfStrictlyExtends<T, OnlyStrictKeysThatAreNot<T, C>, P, N>
-   // OnlyStrictKeysThatAreNot<T, C> extends T ? T : never;
-
+   IfExtends<T, OnlyStrictKeysThatAreNot<T, C>, P, N>;
+// OnlyStrictKeysThatAreNot<T, C> extends T ? T : never;

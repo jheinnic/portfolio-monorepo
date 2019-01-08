@@ -1,0 +1,17 @@
+export type SetAnd<T, U> = Extract<T, U> | Extract<U, T>;
+
+export type SetOr<T, U> = T | U;
+
+export type SetXor<T, U> = Exclude<T, U> | Exclude<U, T>;
+
+export type SetNand<T, U> = Exclude<any, SetAnd<T, U>>;
+
+export type SetNor<T, U> = Exclude<any, SetOr<T, U>>;
+
+export type SetNXor<T, U> = Exclude<any, SetXor<T, U>>;
+
+export type SetImplies<T, U> = SetOr<Exclude<any, T>, U>;
+
+export type SetConvImplies<T, U> = SetImplies<U, T>;
+
+export type SetDiff<T, U> = Exclude<T, U>;

@@ -1,9 +1,11 @@
-import {IfStrictlyExtends} from './inheritance';
+import { IsExactType } from 'conditional-type-checks';
 
-export interface Getter<T = any> extends Function {
+export interface IGetter<T = any> extends Function
+{
    (): T;
 }
 
-export type GetterReturnType<G extends Getter> = ReturnType<G>;
+export type GetterReturnType<G extends IGetter> = ReturnType<G>;
 
-export type IfGetter<T, P = T, N = never> = IfStrictlyExtends<Getter, T, P, N>
+// export type IfGetter<T, P = T, N = never> = IfStrictlyExtends<IGetter, T, P, N>;
+export type IfGetter<T, P = T, N = never> = IsExactType<IGetter, T> extends true ? P : N;

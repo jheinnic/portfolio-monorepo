@@ -1,0 +1,6 @@
+/**
+ * Extract from T those types that are assignable to U.
+ *
+ * Unlike the related core library alias, Extract, SmartExtract will reduce the
+export type SmartExtract<T, U>
+ */

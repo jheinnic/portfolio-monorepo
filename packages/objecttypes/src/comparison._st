@@ -1,0 +1,40 @@
+import { And, If, Not, Or } from './boolean';
+import { Extends, IsAny, IsNever } from './classification';
+
+/**
+ * Explicit check for any since IsExactly<any, any> does not behave as it should when either of the any
+ * types comes through a Generic type variable.
+ *
+ * For example, given:
+ * type SampleOne<T> = IsExactly<T, any>;
+ * type SampleTwo = IsExactly<any, any>;
+ *
+ * SampleOne<any> is false, but SampleTwo is true.
+ *
+ * export type IsAnyType<T> = any extends T ? true : false;
+ */
+
+type AntiExclusion<T, U> = Or<IsAny<U>, IsNever<T>>;
+type ProExclusion<T, U> = Or<IsAny<T>, IsNever<U>>;
+/**
+ * True iff type T has no values that are also of type U, otherwise false.
+ */
+// export type Excludes<T, U> = IsNeverType<SetAnd<U, T>>;
+// export type Excludes<T, U> = IsExactly<SetNand<U, T>, SetOr<U, T>>;
+export type Excludes<T, U> = If<AntiExclusion<T, U>, If<ProExclusion<T, U>, never, false>, If<ProExclusion<T, U>, true, Not<Or<Extends<U, T>, Extends<T, U>>>>>;
+
+/**
+ * True iff type T has at least one value of type U, otherwise false.
+ */
+export type HasAny<T, U> = Not<Excludes<T, U>>;
+
+/**
+ * True iff T includes every value of type U, otherwise false.
+ */
+// export type HasAll<T, U> = IsNeverType<Exclude<U, Extract<T, U>>>;
+export type HasType<T, U> = Not<If<IsAny<U>, IsAny<T>, If<IsNever<U>, Not<IsNever<T>>, IsExactly<Extract<U, T>, U>>>>;
+
+let foo: string;
+const bar: any = 5;
+foo = bar;
+console.log(foo, bar);
