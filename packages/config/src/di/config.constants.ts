@@ -1,16 +1,18 @@
-import {DotenvConfigOptions} from 'dotenv';
+import { DotenvConfigOptions } from 'dotenv';
 
 import {
    getDynamicProviderBinding, getGlobalProviderToken, getModuleIdentifier, getNamedTypeIntent
 } from '@jchptf/api';
-import {IConfigClassFinder, IConfigFileReader, IConfigProviderFactory} from '../interfaces';
+import { IConfigProviderFactory } from '../interfaces';
+import { IConfigFileReader } from '../interfaces/config-file-reader.interface';
+import { IConfigClassFinder } from '../interfaces/config-class-finder.interface';
 
 export const CONFIG_MODULE_ID = getModuleIdentifier('@jchptf/config');
 
-const CFR = getNamedTypeIntent<IConfigFileReader>("IConfigFileReader");
-const CCF = getNamedTypeIntent<IConfigClassFinder>("IConfigClassFinder");
-const CF = getNamedTypeIntent<IConfigProviderFactory>("IConfigurationFactory");
-const DCO = getNamedTypeIntent<DotenvConfigOptions>("DotenvConfigOptions");
+const CFR = getNamedTypeIntent<IConfigFileReader>('IConfigFileReader');
+const CCF = getNamedTypeIntent<IConfigClassFinder>('IConfigClassFinder');
+const CF = getNamedTypeIntent<IConfigProviderFactory>('IConfigurationFactory');
+const DCO = getNamedTypeIntent<DotenvConfigOptions>('DotenvConfigOptions');
 
 export const CONFIG_FILE_READER_PROVIDER =
    getGlobalProviderToken<IConfigFileReader>(CFR);

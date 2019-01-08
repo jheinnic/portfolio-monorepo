@@ -1,13 +1,14 @@
 import {
    MetadataAccessor, MetadataInspector, MetadataKey, MethodDecoratorFactory, ParameterDecoratorFactory
 } from '@loopback/metadata';
-import {Builder, Ctor, IBuilder, Instance} from 'fluent-interface-builder';
-import {isKeyOf} from 'simplytyped';
+import { Builder, Ctor, IBuilder, Instance } from 'fluent-interface-builder';
+import { isKeyOf } from 'simplytyped';
 
-import {IDirector, MixableConstructor, Wild} from '@jchptf/api';
-import {BindToBuilder} from './bind-to-builder.interface';
-import {FluentBuilder} from './fluent-builder.interface';
-import {BuilderDecorators} from './builder-decorators.interface';
+import { IDirector, Wild } from '@jchptf/api';
+import { BindToBuilder } from './bind-to-builder.interface';
+import { FluentBuilder } from './fluent-builder.interface';
+import { BuilderDecorators } from './builder-decorators.interface';
+import { MixableConstructor } from '@jchptf/mixins';
 
 
 export function getBuilderDecorators<S>(keyName: string): BuilderDecorators<S>
@@ -24,13 +25,14 @@ export function getBuilderDecorators<S>(keyName: string): BuilderDecorators<S>
    };
 }
 
-interface FactoryMethodMarker { }
+interface FactoryMethodMarker {}
 
 const FACTORY_METHOD_KEY =
    MetadataAccessor.create<FactoryMethodMarker, MethodDecorator>(
       'factory-method-marker-key');
 
-function factoryMethod(): MethodDecorator {
+function factoryMethod(): MethodDecorator
+{
    return MethodDecoratorFactory.createDecorator<FactoryMethodMarker>(FACTORY_METHOD_KEY, {});
 }
 
@@ -67,7 +69,7 @@ function fluentlyBuildable<S extends FluentBuilder>(key: MetadataKey<BindToBuild
 
       const allParamMeta: BindToBuilder<S>[] | undefined =
          MetadataInspector.getAllParameterMetadata<BindToBuilder<S>>(key, Target, '');
-      if (!! allParamMeta) {
+      if (!!allParamMeta) {
          const builder: IBuilder<Wild, InternalBuilder> =
             new Builder<Wild, InternalBuilder>();
          let nextProp: keyof S;
@@ -142,7 +144,10 @@ function fluentlyBuildable<S extends FluentBuilder>(key: MetadataKey<BindToBuild
                   // console.log(propName, factoryMethodData);
                   return !!factoryMethodData;
                });
-         if (!!clonePropName && (clonePropName !== 'clone')) {
+         if (!!clonePropName && (
+            clonePropName !== 'clone'
+         ))
+         {
             FluentTarget.prototype[clonePropName] = FluentTarget.prototype.clone;
             // console.log('Found and overrode ' + clonePropName + ' with ' + FluentTarget.prototype.clone);
             delete FluentTarget.prototype.clone;
@@ -158,7 +163,10 @@ function fluentlyBuildable<S extends FluentBuilder>(key: MetadataKey<BindToBuild
                   // console.log(propName, factoryMethodData);
                   return !!factoryMethodData;
                });
-         if (!!createPropName && (createPropName !== 'create')) {
+         if (!!createPropName && (
+            createPropName !== 'create'
+         ))
+         {
             // (FluentTarget as any)[createPropName] = FluentTarget.prototype.constructor.create;
             // if (isKeyOf(FluentTarget, createPropName)) {
             //    FluentTarget[createPropName] = FluentTarget.prototype.constructor.create;
