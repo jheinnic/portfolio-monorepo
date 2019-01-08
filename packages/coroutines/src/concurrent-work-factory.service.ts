@@ -452,9 +452,13 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
          for await (nextIterPair of sources) {
             let nextIterResult: IteratorResult<T> = nextIterPair.iterator.next();
             if (! nextIterResult.done) {
+               const last = new Date().getTime();
                await put(sink, nextIterResult.value);
                sources.write(nextIterPair);
-               await sleep(delay);
+               const lapsed = new Date().getTime() - last;
+               if (lapsed < delay) {
+                  await sleep(delay - lapsed);
+               }
             } else if (!! done) {
                await put(done, nextIterPair.iterable);
             }
