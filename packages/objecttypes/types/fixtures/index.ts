@@ -13,3 +13,4 @@ export * from './state-code.enum';
 export * from './zones.type';
 export * from './values-thing.interface';
 export * from './experiments';
+export * from './hi-mid-base.class';
