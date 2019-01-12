@@ -1,12 +1,13 @@
-import { HasType, IsExactType, NotHasType } from 'conditional-type-checks';
+// import { HasType, IsExactType, NotHasType } from "conditional-type-checks";
 import {
    Awesome, FinalFour, Foo, IOne, More, Others, SimpleManyPlaceholders, SimplePlaceholder, Some, Super
 } from './fixtures';
 import {
-   Excludes, Extends, HasAll, HasAny, If, IsExactly, IsNeverType, KeysAcceptedBy, KeysAccepting,
-   KeysExcluding, KeysExtendedBy, KeysExtending, KeysIntersecting, KeysThatAre, KeysThatAreNot, Not
+   Extends, If, Intersects, IsAny, IsExactly, IsNever, KeysExcluding, KeysExtendedBy, KeysExtending,
+   KeysIntersecting, KeysNotExtendedBy, KeysNotExtending, KeysNotStronglyExtendedBy,
+   KeysNotStronglyExtending, KeysStronglyExtendedBy, KeysStronglyExtending, KeysThatAre, KeysThatAreNot,
+   Not, HasAll, HasAny
 } from '@jchptf/objecttypes';
-import { Keys } from 'simplytyped';
 
 // $ExpectType never
 export type Test001 = Extract<Foo, string>;
@@ -21,16 +22,16 @@ export type Test003 = never extends Test001 ? true : false;
 export type Test004 = Test001 extends never ? true : false;
 
 // $ExpectType true
-export type Test005 = never extends Test002 ? true : false;  // ** false
+export type Test005 = never extends Test002 ? true : false;
 
 // $ExpectType false
-export type Test006 = Test002 extends never ? true : false;  // ** true
+export type Test006 = Test002 extends never ? true : false;
 
-// $ExpectType "b" | "d"
-export type Test007 = Extract<Awesome, Super>; // ** Others
+// $ExpectType Others
+export type Test007 = Extract<Awesome, Super>;
 
 // $ExpectType true
-export type Test008 = IsExactType<Others, Extract<Awesome, Super>>;
+export type Test008 = IsExactly<Others, Extract<Awesome, Super>>;
 
 // $ExpectType false
 export type Test009 = More extends Some ? true : false;
@@ -45,7 +46,7 @@ export type Test011 = Awesome extends Super ? true : false;
 export type Test012 = Super extends Awesome ? true : false;
 
 // $ExpectType true
-export type Test013 = IsExactType<'b' | 'd', Extract<Awesome, Super>>;
+export type Test013 = IsExactly<'b' | 'd', Extract<Awesome, Super>>;
 
 // $ExpectType "c"
 export type Test014 = Exclude<More, Awesome | Super>;
@@ -58,7 +59,7 @@ export type Test016 = SimpleManyPlaceholders extends any ? true : false;
 
 // This example demonstrates that any is a union of every possible type.
 // Some conceivable types are a restriction of SimpleManyPlaceholders, and
-// others are not, therefore the expected type is 'A' | number, not just one
+// others are not, therefore the expected type is "A" | number, not just one
 // value or the other.
 // $ExpectType number | "A"
 export type Test017 = any extends SimpleManyPlaceholders ? number : 'A';
@@ -70,19 +71,19 @@ export type Test018 = SimpleManyPlaceholders extends never ? true : false;
 export type Test019 = never extends SimpleManyPlaceholders ? true : false;
 
 // $ExpectType true
-export type Test020 = HasType<SimpleManyPlaceholders, any>;  // ** false
+export type Test020 = Extends<SimpleManyPlaceholders, any>;
 
 // $ExpectType false
-export type Test021 = HasType<SimpleManyPlaceholders, never>; // ** true
-
-// $ExpectType boolean
-export type Test022 = HasType<any, SimpleManyPlaceholders>; // ** true
-
-// $ExpectType false
-export type Test023 = HasType<never, SimpleManyPlaceholders>;
+export type Test021 = Extends<SimpleManyPlaceholders, never>;
 
 // $ExpectType true
-export type Test024 = HasType<SimpleManyPlaceholders, SimplePlaceholder>;
+export type Test022 = Extends<any, SimpleManyPlaceholders>;
+
+// $ExpectType true
+export type Test023 = Extends<never, SimpleManyPlaceholders>;
+
+// $ExpectType true
+export type Test024 = Extends<SimpleManyPlaceholders, SimplePlaceholder>;
 
 // $ExpectType "a" | "h"
 export type Test025 = KeysThatAre<IOne, string>;
@@ -90,29 +91,41 @@ export type Test025 = KeysThatAre<IOne, string>;
 // $ExpectType "b" | "d" | "e" | "c" | "f" | "g" | "i" | "j" | "k" | "l"
 export type Test026 = KeysThatAreNot<IOne, string>;
 
-// $ExpectType "b" | "d" | "a" | "c" | "f" | "h" | "i" | "j" | "k"
+// $ExpectType "d" | "a" | "c" | "f" | "h" | "j" | "k"
 export type Test027 = KeysExtending<IOne, string>;
+
+// $ExpectType "b" | "e" | "g" | "i" | "l"
+export type Test027b = KeysNotExtending<IOne, string>;
 
 // $ExpectType "b" | "d" | "a" | "h" | "i" | "k"
 export type Test028 = KeysExtendedBy<IOne, string>;
 
-// $ExpectType "e" | "g" | "l"
+// $ExpectType "e" | "c" | "f" | "g" | "j" | "l"
+export type Test028b = KeysNotExtendedBy<IOne, string>;
+
+// $ExpectType "e" | "f" | "g" | "l"
 export type Test029 = KeysExcluding<IOne, string>;
 
 // $ExpectType "b" | "d" | "a" | "c" | "h" | "i" | "j" | "k"
 export type Test030 = KeysIntersecting<IOne, string>;
 
-// // $ExpectType "b" | "d" | "i" | "k"
-// export type Test030 = KeysPartiallyAcceptedBy<IOne, string>;
-//
-// // $ExpectType "c" | "j"
-// export type Test031 = KeysPartiallyAccepting<IOne, string>;
+// $ExpectType "a" | "c" | "f" | "h" | "j"
+export type Test031a = KeysStronglyExtending<IOne, string>;
+
+// $ExpectType "b" | "d" | "e" | "g" | "i" | "k" | "l"
+export type Test031b = KeysNotStronglyExtending<IOne, string>;
+
+// $ExpectType "b" | "d" | "a" | "h" | "i" | "k"
+export type Test031c = KeysStronglyExtendedBy<IOne, string>;
+
+// $ExpectType "e" | "c" | "f" | "g" | "j" | "l"
+export type Test031d = KeysNotStronglyExtendedBy<IOne, string>;
 
 // $ExpectType true
-export type Test032 = IsExactType<Extract<SimpleManyPlaceholders, any>, SimpleManyPlaceholders>;
+export type Test032 = IsExactly<Extract<SimpleManyPlaceholders, any>, SimpleManyPlaceholders>;
 
 // $ExpectType false
-export type Test033 = HasType<SimplePlaceholder, SimpleManyPlaceholders>;
+export type Test033 = Extends<SimplePlaceholder, SimpleManyPlaceholders>;
 
 // $ExpectType never
 export type Test034 = Extract<SimplePlaceholder, SimpleManyPlaceholders>; // ** SimplePlaceholder
@@ -120,53 +133,43 @@ export type Test034 = Extract<SimplePlaceholder, SimpleManyPlaceholders>; // ** 
 // $ExpectType SimpleManyPlaceholders
 export type Test035 = Extract<SimpleManyPlaceholders, SimplePlaceholder>; // ** SimplePlaceholder
 
-// $ExpectType true
-export type Test036 = HasType<FinalFour, Others>;
+// $ExpectType false
+export type Test036 = Extends<FinalFour, Others>;
 
 // $ExpectType true
-export type Test037 = HasType<Super, Awesome>; // ** false
+export type Test036b = Extends<Others, FinalFour>;
 
-// $ExpectType Test137
-export type Test137 = {
-   [K in Keys<IOne>]: IsExactType<IOne[K], string> extends true ? K : never;
-};
+// $ExpectType false
+export type Test037 = Extends<Super, Awesome>; // ** false
 
-// $ExpectType { a: "a"; b: never; c: never; d: never; e: never; f: never; g: never; h: never; i: never; j:
-// never; k: never; l: never; }
-export const foo: Test137 = {
-   a: 'a',
-   b: null as never,
-   c: null as never,
-   d: null as never,
-   e: null as never,
-   f: null as never,
-   g: null as never,
-   h: null as never,
-   i: null as never,
-   j: null as never,
-   k: null as never,
-   l: null as never
-};
+// $ExpectType false
+export type Test037b = Extends<Awesome, Super>; // ** false
 
 // $ExpectType true
 export type Test038 = SimpleManyPlaceholders extends SimplePlaceholder ? true : false;
 
-type ReallyHasType<T, U> = Exclude<U, Extract<T, U>> extends never ? true : false;
+type ReallyExtends<T, U> = Exclude<U, Extract<T, U>> extends never ? true : false;
 
 // $ExpectType false
-export type Test039 = ReallyHasType<Super, Awesome>;
+export type Test039 = ReallyExtends<Super, Awesome>;
+
+// $ExpectType true
+export type Test039b = ReallyExtends<More, Some>;
+
+// $ExpectType false
+export type Test039c = ReallyExtends<Some, More>;
 
 // $ExpectType never
 export type Test040 = Extract<string, Others>;
 
-// $ExpectType "b" | "d"
+// $ExpectType Others
 export type Test041 = Exclude<Others, Test040>;
 
 // $ExpectType false
-export type Test042 = IsNeverType<Test041>;
+export type Test042 = IsNever<Test041>;
 
 // $ExpectType false
-export type Test043 = ReallyHasType<string, Others>;
+export type Test043 = ReallyExtends<string, Others>;
 
 // $ExpectType true
 export type Test044 = HasAll<string, Others>;
@@ -207,7 +210,7 @@ export type Test055 = Extends<Others, keyof any>;
 // $ExpectType never
 export type Test056 = Exclude<Others, string>;
 
-// $ExpectType "b" | "d"
+// $ExpectType Others
 export type Test057 = Extract<Others, string>;
 
 // $ExpectType string
@@ -216,29 +219,26 @@ export type Test058 = Exclude<string, Others>;
 // $ExpectType never
 export type Test059 = Extract<string, Others>;
 
-// $ExpectType false
-export type Test060 = HasAll<string, any>;
+// $ExpectType true
+export type Test060 = Extends<string, any>;
 
 // $ExpectType true
-export type Test061 = HasAny<string, any>;
+export type Test061 = Intersects<string, any>;
 
 // $ExpectType false
-export type Test062 = Excludes<string, any>;
+export type Test062 = Not<Intersects<string, any>>;
 
 // $ExpectType false
 export type Test063 = IsExactly<string, any>;
 
-// $ExpectType true
-export type Test064 = HasPartial<string, any>;
+// $ExpectType false
+export type Test065 = Not<Extends<string, any>>;
 
 // $ExpectType false
-export type Test065 = NotHasType<string, any>;
-
-// $ExpectType true
-export type Test066 = NotHasType<any, string>;
+export type Test066 = Not<Extends<any, string>>;
 
 // $ExpectType false
-export type Test067 = Excludes<any, string>;
+export type Test067 = Not<Intersects<any, string>>;
 
 // $ExpectType any
 export type Test068 = Extract<any, string>;
@@ -253,16 +253,16 @@ export type Test070 = IsExactly<string, any>;
 export type Test071 = IsExactly<any, string>;
 
 // $ExpectType false
-export type Test072 = IsNeverType<Exclude<any, string>>;
+export type Test072 = IsNever<Exclude<any, string>>;
 
 // $ExpectType false
-export type Test073 = IsNeverType<Extract<any, string>>;
+export type Test073 = IsNever<Extract<any, string>>;
 
 // $ExpectType true
-export type Test074 = IsNeverType<Exclude<string, any>>;
+export type Test074 = IsNever<Exclude<string, any>>;
 
 // $ExpectType false
-export type Test075 = IsNeverType<Extract<string, any>>;
+export type Test075 = IsNever<Extract<string, any>>;
 
 // $ExpectType false
 export type Test076 = HasAll<string, any>;
@@ -277,16 +277,10 @@ export type Test078 = IsExactly<string, any>;
 export type Test079 = If<IsExactly<any, any>, IsExactly<string, any>, 'a'>;
 
 // export type IsAny<T> = Extends<[any], [T]>;
-export type IsAny<T> = Not<IsNeverType<Extract<T, never>>>;
-
-// export type DoHasAll<T, U> = If<IsExactly<U, any>, IsExactly<T, any>, IsExactly<Extract<U, T>, U>>;
-export type DoHasAll<T, U> = Not<IsNeverType<If<IsAny<U>, IsAny<T>, 'b'>>>;
+// export type IsAny<T> = Not<IsNeverType<Extract<T, never>>>;
 
 // $ExpectType false
 export type Test080 = If<true, false, true>;
-
-// $ExpectType false
-export type Test081 = DoHasAll<string, any>;
 
 export type SampleOne<T> = IsExactly<T, any>;
 export type SampleTwo<T> = IsExactly<any, T>;
@@ -309,8 +303,8 @@ export type Test085 = Extract<any, never>;
 // $ExpectType never
 export type Test086 = Extract<string, never>;
 
-// $ExpectType false
-export type Test087 = HasPartial<any, string>;
+// $ExpectType true
+export type Test087 = Intersects<any, string>;
 
 // // $ExpectType true
 // export type Test088 = HasPartial<Others, string>;
@@ -348,7 +342,7 @@ export type Test087 = HasPartial<any, string>;
 // // $ExpectType any
 // export type Test099 = Extract<any, string>;
 //
-// // $ExpectType 'a'
+// // $ExpectType "a"
 // export type Test100 = Extract<Others, string>;
 //
 // // $ExpectType never
@@ -359,3 +353,23 @@ export type Test087 = HasPartial<any, string>;
 //
 // // $ExpectType "b" | "d"
 // export type Test103 = Extract<More, Others>;
+
+// $ExpectType any
+export type Test104 = Exclude<any, Extract<'t', any>>;
+
+// $ExpectType "t"
+export type Test105 = Extract<'t', any>;
+
+// $ExpectType any
+export type Test106 = Exclude<any, object | string | number | null | undefined | boolean>;
+
+// $ExpectType "a"
+export type Test107 = IsAny<Test104, 'a', 'b'>;
+
+type SomeAny = any;
+
+// $ExpectType "a"
+export type Test108 = IsAny<SomeAny, 'a', 'b'>;
+
+// $ExpectType "a"
+export type Test100 = IsAny<any, 'a', 'b'>;

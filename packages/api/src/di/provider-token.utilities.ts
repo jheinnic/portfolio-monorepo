@@ -25,7 +25,7 @@ import {
    DynamicProviderToken, GlobalProviderToken, IntentQualifier, LocalProviderToken,
    ModuleIdentifier, DynamicProviderBinding, TypeIdentifier
 } from './provider-tokens.interface';
-import {illegalArgs} from '@thi.ng/errors';
+import { illegalArgs } from '@thi.ng/errors';
 
 export function getDynamicProviderToken<Type>(
    moduleId: ModuleIdentifier, binding: DynamicProviderBinding, typeId: TypeIdentifier<Type>, tagName?: string

@@ -1,32 +1,55 @@
-export type Not<Predicate extends boolean> =
-   Predicate extends false ? true : Predicate extends true ? false : never;
-
-export type And<P1 extends boolean, P2 extends boolean> = If<P1, P2, false>;
-
-export type Or<P1 extends boolean, P2 extends boolean> = If<P1, true, P2>;
+/* * True if P is true, False if P is false, undefined if P is boolean, and Then & Else if
+ * P happens to be true and false.
+// export type StrictIf<Predicate extends boolean, Then, Else> =
+//    TrueOrFalse<Predicate> extends true
+//       ? Then
+//       : TrueOrFalse<Predicate> extends false
+//          ? Else
+//          : Then | Else;
+*/
 
 /**
- * True if P is true, False if P is false, undefined if P is boolean, and never if
- * P happens to be true and false.
+ * Resolves to:
+ * -- Then iff Predicate is true (Default: true)
+ * -- Else iff Predicate is false (Default: false)
+ * -- Then | Else iff Predicate is true | false (Default: Then | Else),
+ * -- Then & Else iff Predicate is true & false (Default: Then & Else)
  */
-export type TrueOrFalse<P extends boolean> =
-   true extends P
-      ? false extends P
-         ? undefined
-         : true
-      : false extends P
-         ? false
-         : never;
+export type If<Predicate extends boolean, Then = true, Else = false, Ambiguous = Then | Else, Paradox = never> =
+   true extends Predicate
+      ? (false extends Predicate ? Ambiguous : Then)
+      : (false extends Predicate ? Else : Paradox);
 
-export type StrictIf<Predicate extends boolean, Then, Else, Ambiguous = never> =
-   TrueOrFalse<Predicate> extends true
-      ? Then
-      : TrueOrFalse<Predicate> extends false
-      ? Else
-      : Ambiguous;
+export type WeakIf<Predicate extends boolean, Then = true, Else = false, Paradox = never> =
+   If<Predicate, Then, Else, Then, Paradox>;
 
-export type If<Predicate extends boolean, Then, Else> =
-   Predicate extends true ? Then : Else;
+export type StrictIf<Predicate extends boolean, Then = true, Else = false, Paradox = never> =
+   If<Predicate, Then, Else, Else, Paradox>;
 
-export type Unless<Predicate extends boolean, Then, Else> =
-   Predicate extends false ? Then : Else;
+
+/**
+ * Resolves to Then iff Predicate is either false or boolean.
+ * Resolves to Else iff Predicate is true.
+ */
+export type Not<Predicate extends boolean, Then = true, Else = false, Ambiguous = Then | Else, Paradox = never> =
+   false extends Predicate
+      ? (true extends Predicate ? Ambiguous : Then)
+      : (true extends Predicate ? Else : Paradox);
+
+export type WeakNot<Predicate extends boolean, Then = true, Else = false, Paradox = never> =
+   Not<Predicate, Then, Else, Then, Paradox>;
+
+export type StrictNot<Predicate extends boolean, Then = true, Else = false, Paradox = never> =
+   Not<Predicate, Then, Else, Else, Paradox>;
+
+type WithP2<Predicate extends boolean, A, B, C> = If<Predicate, A, B, A|B, C>;
+
+export type And<P1 extends boolean, P2 extends boolean, Then = true, Else = false> =
+   // If<P1, If<P2, Then, Else>, Else, If<P2, Then | Else, Else, Then | Else, Else>, If<P2, Then & Else, Else, Else, Then & Else>>;
+   If<P1, If<P2, Then, Else>, Else, WithP2<P2, Then | Else, Else, Else>, WithP2<P2, never, Else, never>>;
+
+export type Or<P1 extends boolean, P2 extends boolean, Then = true, Else = false> =
+   // If<P1, Then, If<P2, Then, Else, Then | Else, Then & Else>, If<P2, Then, Then | Else, Then | Else, Else>, If<P2, Then, Then & Else, Then, Then & Else>>;
+   If<P1, Then, If<P2, Then, Else>, WithP2<P2, Then, Then | Else, Else>, WithP2<P2, Then, never, never>>;
+
+export type TrueOrFalse<Predicate extends boolean> = If<Predicate, true, false, never>;

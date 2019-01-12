@@ -2,7 +2,6 @@
 
 export * from './boolean';
 export * from './classification';
-export * from './selection';
 export * from './blank';
 export * from './value_func';
 export * from './getter';

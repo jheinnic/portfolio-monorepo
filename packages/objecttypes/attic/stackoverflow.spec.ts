@@ -2,7 +2,7 @@ type XOr<T, U> = Exclude<T, U> | Exclude<U, T>;
 type IsNeverType<T> = [T] extends [never] ? true : false;
 type IsExactly<T, U> = IsNeverType<XOr<U, T>>;
 type IsAnyTypeOne<T> = IsExactly<T, any>;
-type IsAnyTypeTwo<T> = IsExactly<any, T>;
+// type IsAnyTypeTwo<T> = IsExactly<any, T>;
 type IsAnyType<T> = [T] extends [any] ? true : false;
 
 // $ExpectType true

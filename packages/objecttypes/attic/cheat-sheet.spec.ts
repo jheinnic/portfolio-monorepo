@@ -19,6 +19,9 @@ export type Extend007 = any extends never ? true : false;
 // $ExpectType true
 export type Extend008 = never extends any ? true : false;
 
+export const a: never = 'a' as never;
+export const aa: any = 'a';
+export const b: string = aa;
 
 type Extends<T, U> = T extends U ? true : false;
 

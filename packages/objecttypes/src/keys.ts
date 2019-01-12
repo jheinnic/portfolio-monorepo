@@ -1,58 +1,56 @@
 import { Keys } from 'simplytyped';
 import { If } from './boolean';
-import {
-   IfExcludes, IfExtendedBy, IfExtends, IfIntersects, IfIsExactly, IfStronglyExtendedBy, IfStronglyExtends
-} from './selection';
+import { Extends, Intersects, IsExactly, StronglyExtends } from './classification';
 
 type KeyValue<T, K extends keyof T, IgnoreUndef extends boolean> =
-   If<IgnoreUndef, Required<T>[K], T[K]>;
+   If<IgnoreUndef, Required<T>[K], T[K], T[K], T[K]>;
 
 export type KeysThatAre<T, CheckType, IgnoreUndef extends boolean = true> = {
-   [K in Keys<T>]-?: IfIsExactly<KeyValue<T, K, IgnoreUndef>, CheckType, K, never>
+   [K in Keys<T>]-?: IsExactly<KeyValue<T, K, IgnoreUndef>, CheckType, K, never>
 }[Keys<T>];
 
 export type KeysThatAreNot<T, CheckType, IgnoreUndef extends boolean = true> = {
-   [K in Keys<T>]-?: IfIsExactly<KeyValue<T, K, IgnoreUndef>, CheckType, never, K>
+   [K in Keys<T>]-?: IsExactly<KeyValue<T, K, IgnoreUndef>, CheckType, never, K>
 }[Keys<T>];
 
 export type KeysExtending<T, C, IgnoreUndef extends boolean = true> = {
-   [K in Keys<T>]-?: IfExtends<KeyValue<T, K, IgnoreUndef>, C, K, never>;
+   [K in Keys<T>]-?: If<Extends<KeyValue<T, K, IgnoreUndef>, C>, K, never, never, K>;
 }[Keys<T>];
 
 export type KeysNotExtending<T, C, IgnoreUndef extends boolean = true> = {
-   [K in Keys<T>]-?: IfExtends<KeyValue<T, K, IgnoreUndef>, C, never, K>;
+   [K in Keys<T>]-?: If<Extends<KeyValue<T, K, IgnoreUndef>, C>, never, K, K, never>;
 }[Keys<T>];
 
 export type KeysStronglyExtending<T, C, IgnoreUndef extends boolean = true> = {
-   [K in Keys<T>]-?: IfStronglyExtends<KeyValue<T, K, IgnoreUndef>, C, K, never>;
+   [K in Keys<T>]-?: If<StronglyExtends<KeyValue<T, K, IgnoreUndef>, C>, K, never, never, K>;
 }[Keys<T>];
 
 export type KeysNotStronglyExtending<T, C, IgnoreUndef extends boolean = true> = {
-   [K in Keys<T>]-?: IfStronglyExtends<KeyValue<T, K, IgnoreUndef>, C, never, K>;
+   [K in Keys<T>]-?: If<StronglyExtends<KeyValue<T, K, IgnoreUndef>, C>, never, K, K, never>;
 }[Keys<T>];
 
 export type KeysExtendedBy<T, C, IgnoreUndef extends boolean = true> = {
-   [K in Keys<T>]-?: IfExtendedBy<KeyValue<T, K, IgnoreUndef>, C, K, never>;
+   [K in Keys<T>]-?: Extends<C, KeyValue<T, K, IgnoreUndef>, K, never>;
 }[Keys<T>];
 
 export type KeysNotExtendedBy<T, C, IgnoreUndef extends boolean = true> = {
-   [K in Keys<T>]-?: IfExtendedBy<KeyValue<T, K, IgnoreUndef>, C, never, K>;
+   [K in Keys<T>]-?: Extends<C, KeyValue<T, K, IgnoreUndef>, never, K>;
 }[Keys<T>];
 
 export type KeysStronglyExtendedBy<T, C, IgnoreUndef extends boolean = true> = {
-   [K in Keys<T>]-?: IfStronglyExtendedBy<KeyValue<T, K, IgnoreUndef>, C, K, never>;
+   [K in Keys<T>]-?: StronglyExtends<C, KeyValue<T, K, IgnoreUndef>, K, never>;
 }[Keys<T>];
 
 export type KeysNotStronglyExtendedBy<T, C, IgnoreUndef extends boolean = true> = {
-   [K in Keys<T>]-?: IfStronglyExtendedBy<KeyValue<T, K, IgnoreUndef>, C, never, K>;
+   [K in Keys<T>]-?: StronglyExtends<C, KeyValue<T, K, IgnoreUndef>, never, K>;
 }[Keys<T>];
 
 export type KeysIntersecting<T, C, IgnoreUndef extends boolean = true> = {
-   [K in Keys<T>]-?: IfIntersects<KeyValue<T, K, IgnoreUndef>, C, K, never>;
+   [K in Keys<T>]-?: Intersects<KeyValue<T, K, IgnoreUndef>, C, K, never>;
 }[Keys<T>];
 
 export type KeysExcluding<T, C, IgnoreUndef extends boolean = true> = {
-   [K in Keys<T>]-?: IfExcludes<KeyValue<T, K, IgnoreUndef>, C, K, never>;
+   [K in Keys<T>]-?: Intersects<KeyValue<T, K, IgnoreUndef>, C, never, K>;
 }[Keys<T>];
 
 // export type OnlyKeysThatAre<T, C> =
