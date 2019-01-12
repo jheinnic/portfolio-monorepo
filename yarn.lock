@@ -806,6 +806,13 @@
   resolved "https://registry.yarnpkg.com/@types/config/-/config-0.0.34.tgz#123f91bdb5afdd702294b9de9ca04d9ea11137b0"
   integrity sha512-jWi9DXx77hnzN4kHCNEvP/kab+nchRLTg9yjXYxjTcMBkuc5iBb3QuwJ4sPrb+nzy1GQjrfyfMqZOdR4i7opRQ==
 
+"@types/consul@^0.23.33":
+  version "0.23.33"
+  resolved "https://registry.yarnpkg.com/@types/consul/-/consul-0.23.33.tgz#ef9876fd75fdfed9b5b1afe320ccdb6456eb90d2"
+  integrity sha512-scpn9tiAh+IJXJipP2cpp0kJCUeWGOnoBfChGK+k2Zi0ifQMyPUHhG/d9J+Eyz4T/ZCn+J5yvq4Wr0b45TwACg==
+  dependencies:
+    "@types/node" "*"
+
 "@types/dotenv@^6.1.0":
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/@types/dotenv/-/dotenv-6.1.0.tgz#fba2bfd1f28a46eadaa049f3313ebb89bdedfc53"
