@@ -21,11 +21,10 @@
  *
  * @param base
  */
-import {
-   DynamicProviderToken, GlobalProviderToken, IntentQualifier, LocalProviderToken,
-   ModuleIdentifier, DynamicProviderBinding, TypeIdentifier
-} from './provider-tokens.interface';
 import { illegalArgs } from '@thi.ng/errors';
+import { ModuleIdentifier, StringQualifier, TypeIdentifier } from './string-qualifier.type';
+import { DynamicProviderBinding } from './dynamic-provider-binding.type';
+import { DynamicProviderToken, GlobalProviderToken, LocalProviderToken } from './provider-token.type';
 
 export function getDynamicProviderToken<Type>(
    moduleId: ModuleIdentifier, binding: DynamicProviderBinding, typeId: TypeIdentifier<Type>, tagName?: string
@@ -39,10 +38,10 @@ export function getDynamicProviderToken<Type>(
    // (provisionQualifierName.indexOf(':') >= 0) { throw new Error(': is reserved as a separator and may
    // not appear in provision qualifier name'); }
    if (!! tagName) {
-      return `${moduleId}::${binding}::${typeId}(${tagName})` as DynamicProviderToken<Type>
+      return `${moduleId}::${binding}::${typeId}(${tagName})` as DynamicProviderToken<Type>;
    }
 
-   return `${moduleId}::${binding}::${typeId}` as DynamicProviderToken<Type>
+   return `${moduleId}::${binding}::${typeId}` as DynamicProviderToken<Type>;
 }
 
 export function getLocalProviderToken<Type>(moduleId: ModuleIdentifier, typeId: TypeIdentifier<Type>, tagName?: string): LocalProviderToken<Type>
@@ -79,27 +78,27 @@ export function getModuleIdentifier(moduleName: string): ModuleIdentifier
    }
 
    // return moduleName as ModuleIdentifier;
-   return getIntentQualifier(moduleName, 'ModuleIdentifier') as ModuleIdentifier;
+   return getStringQualifier(moduleName, 'ModuleIdentifier') as ModuleIdentifier;
 }
 
 export function getNamedTypeIntent<Type>(typeId: string): TypeIdentifier<Type> {
-   return getTypedIntentQualifier<'TypeIdentifier', Type>(typeId, 'TypeIdentifier') as TypeIdentifier<Type>;
+   return getTypedStringQualifier<'TypeIdentifier', Type>(typeId, 'TypeIdentifier') as TypeIdentifier<Type>;
 }
 
 export function getNamedSubtypeIntent<Type, Subtype extends Type>(typeId: TypeIdentifier<Type>): TypeIdentifier<Subtype> {
-   return getTypedIntentQualifier<'TypeIdentifier', Subtype>(typeId, 'TypeIdentifier') as TypeIdentifier<Subtype>;
+   return getTypedStringQualifier<'TypeIdentifier', Subtype>(typeId, 'TypeIdentifier') as TypeIdentifier<Subtype>;
 }
 
 export function getDynamicProviderBinding(moduleId: ModuleIdentifier, tagName?: string): DynamicProviderBinding
 {
    if (!! tagName) {
-      return getIntentQualifier<'DynamicProviderBinding'>(`${moduleId}(${tagName})`, 'DynamicProviderBinding') as DynamicProviderBinding;
+      return getStringQualifier<'DynamicProviderBinding'>(`${moduleId}(${tagName})`, 'DynamicProviderBinding') as DynamicProviderBinding;
    }
 
-   return getIntentQualifier<'DynamicProviderBinding'>(moduleId, 'DynamicProviderBinding') as DynamicProviderBinding;
+   return getStringQualifier<'DynamicProviderBinding'>(moduleId, 'DynamicProviderBinding') as DynamicProviderBinding;
 }
 
-function getIntentQualifier<Intent extends string>(name: string, intent: Intent): IntentQualifier<Intent>
+function getStringQualifier<Intent extends string>(name: string, intent: Intent): StringQualifier<Intent>
 {
    if (intent.indexOf(':') >= 0) {
       throw illegalArgs(`Intent types may not include ":" characters.`);
@@ -108,10 +107,10 @@ function getIntentQualifier<Intent extends string>(name: string, intent: Intent)
       throw illegalArgs(`Intent qualifiers may not include ":" characters.`);
    }
 
-   return `${name}` as IntentQualifier<Intent>;
+   return `${name}` as StringQualifier<Intent>;
 }
 
-function getTypedIntentQualifier<Intent extends string, Type>(name: string, intent: Intent): IntentQualifier<Intent, Type>
+function getTypedStringQualifier<Intent extends string, Type>(name: string, intent: Intent): StringQualifier<Intent, Type>
 {
    if (intent.indexOf(':') >= 0) {
       throw illegalArgs(`Intent types may not include ":" characters.`);
@@ -120,5 +119,5 @@ function getTypedIntentQualifier<Intent extends string, Type>(name: string, inte
       throw illegalArgs(`Intent qualifiers may not include ":" characters.`);
    }
 
-   return `${name}` as IntentQualifier<Intent, Type>;
+   return `${name}` as StringQualifier<Intent, Type>;
 }
