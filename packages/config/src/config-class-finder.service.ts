@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as assert from 'assert';
 import {Glob, sync as globSync} from 'glob';
 import {ConstructorFunction} from 'simplytyped';
-import {filter, map, mergeMap} from 'rxjs/operators';
+import {filter, mergeMap} from 'rxjs/operators';
 import {bindNodeCallback, from, Observable} from 'rxjs';
 import {Provider} from '@nestjs/common';
 
@@ -125,14 +125,19 @@ export class ConfigClassFinderService implements IConfigClassFinder
             (clazz: ConstructorFunction<any>) =>
                this.configFactory.hasConfigMetadata(clazz) &&
                this.configFactory.hasProviderToken(clazz)),
-         map(
+         mergeMap(
             (clazz: ConstructorFunction<any>) => {
-               const retVal = {
+               const retValOne = {
                   provide: this.configFactory.getProviderToken(clazz),
                   useFactory: () => this.configFactory.loadInstance(clazz)
                };
-               console.log(retVal);
-               return retVal;
+               const retValTwo = {
+                  provide: clazz,
+                  useFactory: () => this.configFactory.loadInstance(clazz)
+               };
+
+               console.log(retValOne, retValTwo);
+               return from([retValOne, retValTwo]);
             }
          )
       );

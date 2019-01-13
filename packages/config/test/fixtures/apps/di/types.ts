@@ -1,27 +1,31 @@
-import {getDynamicProviderToken, getModuleIdentifier, getNamedTypeIntent} from '@jchptf/api';
-import {CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING} from '../../../../src/di';
+import { getModuleIdentifier, getNamedTypeIntent } from '@jchptf/api';
+import { getConfigClassProviderToken } from '@jchptf/config';
 
 export const appModuleId = getModuleIdentifier('@jchptf/config_fixture');
 
-export const DEPLOYMENT_TYPE = getNamedTypeIntent('Deployment');
-export const EVENT_SPECIFICATION_TYPE = getNamedTypeIntent('EventSpecification');
-export const PRIZE_MINTING_POLICY_TYPE = getNamedTypeIntent('PrizeMintingPolicy');
-export const TICKET_MINTING_POLICY_TYPE = getNamedTypeIntent('TicketMintingPolicy');
-export const TICKET_STAGING_POLICY_TYPE = getNamedTypeIntent('TicketStagingPolicy');
-export const PLAY_ASSETS_TYPE = getNamedTypeIntent('PlayAssets');
+// Provider tags here are used in a Class Decorator, so we cannot leverage the type safety on
+// these NamedTypeIntents because it would create a circular dependency and lead to undefined
+// provider tokens...  Most use cases for Provider strings do not use the provider token in the
+// artifacts they represent, and so won't have this same problem.
+export const DEPLOYMENT_TYPE = getNamedTypeIntent<any>('Deployment');
+export const EVENT_SPECIFICATION_TYPE = getNamedTypeIntent<any>('EventSpecification');
+export const PRIZE_MINTING_POLICY_TYPE = getNamedTypeIntent<any>('PrizeMintingPolicy');
+export const TICKET_MINTING_POLICY_TYPE = getNamedTypeIntent<any>('TicketMintingPolicy');
+export const TICKET_STAGING_POLICY_TYPE = getNamedTypeIntent<any>('TicketStagingPolicy');
+export const PLAY_ASSETS_TYPE = getNamedTypeIntent<any>('PlayAssets');
 
 export const DEPLOYMENT_PROVIDER =
-   getDynamicProviderToken(appModuleId, CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING, DEPLOYMENT_TYPE);
+   getConfigClassProviderToken(appModuleId, DEPLOYMENT_TYPE);
 export const EVENT_SPECIFICATION_PROVIDER =
-   getDynamicProviderToken(appModuleId, CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING, EVENT_SPECIFICATION_TYPE);
+   getConfigClassProviderToken(appModuleId, EVENT_SPECIFICATION_TYPE);
 export const PRIZE_MINTING_POLICY_PROVIDER =
-   getDynamicProviderToken(appModuleId, CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING, PRIZE_MINTING_POLICY_TYPE);
+   getConfigClassProviderToken(appModuleId, PRIZE_MINTING_POLICY_TYPE);
 export const TICKET_MINTING_POLICY_PROVIDER =
-   getDynamicProviderToken(appModuleId, CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING, TICKET_MINTING_POLICY_TYPE);
+   getConfigClassProviderToken(appModuleId, TICKET_MINTING_POLICY_TYPE);
 export const TICKET_STAGING_POLICY_PROVIDER =
-   getDynamicProviderToken(appModuleId, CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING, TICKET_STAGING_POLICY_TYPE);
+   getConfigClassProviderToken(appModuleId, TICKET_STAGING_POLICY_TYPE);
 export const PLAY_ASSETS_PROVIDER =
-   getDynamicProviderToken(appModuleId, CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING, PLAY_ASSETS_TYPE);
+   getConfigClassProviderToken(appModuleId, PLAY_ASSETS_TYPE);
 
 // export type AppConfigTypes =
 //    DEPLOYMENT |
