@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/api",
-    "version": "0.0.28",
+    "version": "0.0.29",
     "description": "Common, generic types & interfaces for jchptf projects",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
@@ -66,9 +66,9 @@
         "typescript": "^3.1.4"
     },
     "dependencies": {
-        "@jchptf/mixins": "^0.0.1",
-        "@jchptf/objecttypes": "^0.0.3",
-        "@jchptf/reflection": "^0.0.7",
+        "@jchptf/mixins": "^0.0.2",
+        "@jchptf/objecttypes": "^0.0.4",
+        "@jchptf/reflection": "^0.0.8",
         "@loopback/metadata": "^1.0.1",
         "@thi.ng/errors": "^0.1.12",
         "conditional-type-checks": "^0.5.0",
