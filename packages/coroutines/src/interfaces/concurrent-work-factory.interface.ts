@@ -1,25 +1,30 @@
-import {Transducer} from 'transducers-js';
-import {SubscriptionLike} from 'rxjs';
-import {AsyncSink} from 'ix';
-import {Chan} from 'medium';
+import { Transducer } from 'transducers-js';
+import { SubscriptionLike } from 'rxjs';
+import { AsyncSink } from 'ix';
+import { Chan } from 'medium';
 
-import {AsyncTx} from '@jchptf/txtypes';
-import {SinkLike, ChanBufferType, Limiter} from '.';
+import { AsyncTx } from '@jchptf/txtypes';
+import { ChanBufferType, Limiter, SinkLike } from '.';
 
-export interface IConcurrentWorkFactory {
+export interface IConcurrentWorkFactory
+{
    /**
-    * Use Priority Queues to deliver messages to co-routines that suspend themselves on a yield when there
-    * is no work available.  Priority queue use cases have fire-and-forget semantics.  If you instead need
-    * call-and-response semantics, then you probably want use co, co.wrap, or LimiterFactory.  The latter
-    * is appropriate if you want the experience of being suspended on the queue for access to a limited
-    * resource with intentionally constrained concurrent access supported.
+    * Use Priority Queues to deliver messages to co-routines that suspend themselves on a yield
+    * when there is no work available.  Priority queue use cases have fire-and-forget semantics.
+    * Work in excess of available concurrency is queued and flow control immediately returns to
+    * caller.  Because
     *
-    * Priority queues deliver incoming messages in the same order they were received, subject to the
-    * priority ranking specified by each caller contributing a message.
+    * If you instead need call-and-response semantics, then you probably want use co, co.wrap, or
+    * LimiterFactory.  The latter is appropriate if you want callers blocked on
+    * the queue for access to a limited resource with intentionally constrained concurrent access
+    * supported.
+    *
+    * Priority queues deliver incoming messages in the same order they were received, subject to
+    * the priority ranking specified by each caller contributing a message.
     *
     * @see co
     * @see co.wrap
-   createPriorityQueue<T extends any = any>(): Queue<T>;
+    createPriorityQueue<T extends any = any>(): Queue<T>;
     */
 
    /**
@@ -68,43 +73,48 @@ export interface IConcurrentWorkFactory {
     * @see co
     * @see co.wrap
     */
-   createLimiter(concurrency: number, defaultPriority?: number): Limiter
+   createLimiter(concurrency: number, defaultPriority?: number): Limiter;
 
-   createChan<T = any>(bufSize?: number, bufType?: ChanBufferType): Chan<T, T>
+   createChan<T = any>(bufSize?: number, bufType?: ChanBufferType): Chan<T, T>;
 
    createTxChan<T = any, M = T>(
-      tx: Transducer<T, M>, bufSize?: number, bufType?: ChanBufferType): Chan<T, M>
+      tx: Transducer<T, M>, bufSize?: number, bufType?: ChanBufferType): Chan<T, M>;
 
-   createAsyncSink<T = any>(): AsyncSink<T>
+   createAsyncSink<T = any>(): AsyncSink<T>;
 
    transformToSink<I, O>(
       source: Chan<any, I>,
-      transform: AsyncTx<[I], O>|AsyncTx<[I], Iterable<O>>,
+      transform: AsyncTx<[I], O> | AsyncTx<[I], Iterable<O>>,
       concurrency: number,
-      sink: SinkLike<O>): void
+      sink: SinkLike<O>): void;
 
    transformToChan<I, O>(
       source: Chan<any, I>,
-      transform: AsyncTx<[I], O>|AsyncTx<[I], Iterable<O>>,
+      transform: AsyncTx<[I], O> | AsyncTx<[I], Iterable<O>>,
       concurrency: number,
-      chan: Chan<O, any>): void
+      chan: Chan<O, any>): void;
 
    loadToChan<T>(
-      source: Iterable<T>|AsyncIterable<T>, concurrency: number, chan: Chan<T, any>, delay?: number): SubscriptionLike;
+      source: Iterable<T> | AsyncIterable<T>, concurrency: number, chan: Chan<T, any>,
+      delay?: number): SubscriptionLike;
 
    loadToSink<T>(
-      source: Iterable<T>|AsyncIterable<T>, concurrency: number, sink: AsyncSink<T>, delay?: number): SubscriptionLike;
+      source: Iterable<T> | AsyncIterable<T>, concurrency: number, sink: AsyncSink<T>,
+      delay?: number): SubscriptionLike;
 
    // cycle<T>(source: Iterable<T>, sink: SinkLike<T>, delay?: number): SubscriptionLike;
 
-   unwind<T>(master: AsyncSink<Iterable<T>>, sink: Chan<T, any>, done?: Chan<Iterable<T>, any>, delay?: number): SubscriptionLike
+   unwind<T>(
+      master: AsyncSink<Iterable<T>>, sink: Chan<T, any>, done?: Chan<Iterable<T>, any>,
+      delay?: number): SubscriptionLike;
 
-   // service<I, O>(source: Chan<any, I>, xducer: Transducer<I, O>, sink: Chan<O, any>, concurrency?: number): void;
+   // service<I, O>(source: Chan<any, I>, xducer: Transducer<I, O>, sink: Chan<O, any>,
+   // concurrency?: number): void;
 
-   // serviceMany<I, O>(source: Chan<any, I>, xducer: Transducer<I, O[]>, sink: Chan<O, any>, concurrency?: number): void;
+   // serviceMany<I, O>(source: Chan<any, I>, xducer: Transducer<I, O[]>, sink: Chan<O, any>,
+   // concurrency?: number): void;
 
    service<I>(source: Chan<any, I>, sink: Chan<I, any>, concurrency?: number): void;
 
    serviceMany<I>(source: Chan<any, I[]>, sink: Chan<I, any>, concurrency?: number): void;
 }
-

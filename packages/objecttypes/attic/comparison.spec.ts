@@ -1,23 +1,19 @@
 import {
-   Awesome, FinalFour, Foo, IOne, More, Others, SimpleManyPlaceholders, SimplePlaceholder, Some, Super
+   Awesome, More, Others, SimpleManyPlaceholders, SimplePlaceholder, Super
 } from './fixtures';
-import {
-   Excludes, Extends, HasAll, HasAny, If, IsExactly, IsNever, KeysAcceptedBy, KeysAccepting,
-   KeysExcluding, KeysThatAre, KeysThatAreNot, Not
-} from '@jchptf/objecttypes';
-import { Keys } from 'simplytyped';
+import { HasAll, HasAny, IsExactly } from '@jchptf/objecttypes';
 
 // $ExpectType true
 export type Test008 = IsExactly<Others, Extract<Awesome, Super>>;
 
 // $ExpectType true
-export type Test009 = IsExactly<"b" | "d", Extract<Awesome, Super>>;
+export type Test009 = IsExactly<'b' | 'd', Extract<Awesome, Super>>;
 
 // $ExpectType true
-export type Test010 = IsExactly<"c", Exclude<More, Awesome | Super>>;
+export type Test010 = IsExactly<'c', Exclude<More, Awesome | Super>>;
 
 // $ExpectType true
-export type Test011 = IsExactly<"c", Extract<Exclude<More, Awesome>, Exclude<More, Super>>>;
+export type Test011 = IsExactly<'c', Extract<Exclude<More, Awesome>, Exclude<More, Super>>>;
 
 // $ExpectType true
 export type Test032 = IsExactly<Extract<SimpleManyPlaceholders, any>, SimpleManyPlaceholders>;

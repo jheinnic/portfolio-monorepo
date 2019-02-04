@@ -8,6 +8,7 @@
         "./typings/**/*.d.ts"
     ],
     "exclude": [
+        "./attic",
         "./node_modules",
         "./dist",
         "./build",

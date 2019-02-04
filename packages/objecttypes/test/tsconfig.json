@@ -12,6 +12,7 @@
     ],
     "exclude": [
         "../src",
+        "../test",
         "../dist",
         "../build",
         "../node_modules"
