@@ -1,20 +1,18 @@
-import {IsOptional, ValidateNested} from 'class-validator';
-import {Type} from 'class-transformer';
+import { IsOptional, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 
-import {configClass, configProp} from '../../../../src/decorators';
-import {DevFakeOptions} from './dev-fake-options.config';
-import {HmacDrbgOptions} from './hmac-drbg-options.config';
-import {IsaacOptions} from './isaac-options.config';
-import {NodeCryptoOptions} from './node-crypto-options.config';
-import {RandomOrgOptions} from './random-org-options.config';
+import { configClass, configProp } from '../../../../src/decorators';
+import { DevFakeOptions } from './dev-fake-options.config';
+import { HmacDrbgOptions } from './hmac-drbg-options.config';
+import { IsaacOptions } from './isaac-options.config';
 
-@configClass("eth.lotto.setupPolicy.entropyDefaults")
+@configClass('eth.lotto.prizeMinting.entropyDefaults')
 export class EntropyAlgorithms
 {
-   @configProp("devFakeKey")
+   @configProp('devFake')
    @IsOptional()
    @Type(() => DevFakeOptions)
-   devFakeKey: DevFakeOptions = new DevFakeOptions();
+   devFake: DevFakeOptions = new DevFakeOptions();
 
 
    @configProp('hmacDrbg')
@@ -29,15 +27,15 @@ export class EntropyAlgorithms
    @Type(() => IsaacOptions)
    isaac: IsaacOptions = new IsaacOptions();
 
-   @configProp('nodeCrypto')
-   @IsOptional()
-   @ValidateNested()
-   @Type(() => NodeCryptoOptions)
-   nodeCrypto: NodeCryptoOptions = new NodeCryptoOptions();
-
-   @configProp('randomOrg')
-   @IsOptional()
-   @ValidateNested()
-   @Type(() => RandomOrgOptions)
-   randomOrg: RandomOrgOptions = new RandomOrgOptions();
+   // @configProp('nodeCrypto')
+   // @IsOptional()
+   // @ValidateNested()
+   // @Type(() => NodeCryptoOptions)
+   // nodeCrypto: NodeCryptoOptions = new NodeCryptoOptions();
+   //
+   // @configProp('randomOrg')
+   // @IsOptional()
+   // @ValidateNested()
+   // @Type(() => RandomOrgOptions)
+   // randomOrg: RandomOrgOptions = new RandomOrgOptions();
 }

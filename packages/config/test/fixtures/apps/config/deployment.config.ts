@@ -1,9 +1,9 @@
-import {Type} from 'class-transformer';
-import {ValidateNested} from 'class-validator';
+import { Type } from 'class-transformer';
+import { ValidateNested } from 'class-validator';
 
-import {VaultAccess, KeySource, LocalAccess, DataSetPaths} from '.';
-import {configClass, configProp} from '../../../../src/decorators';
-import {DEPLOYMENT_PROVIDER} from '../di/types';
+import { DataSetPaths, KeySource, LocalAccess, VaultAccess } from '.';
+import { configClass, configProp } from '../../../../src/decorators';
+import { DEPLOYMENT_PROVIDER } from '../di/types';
 
 @configClass('eth.lotto.deployment', DEPLOYMENT_PROVIDER)
 export class Deployment
@@ -23,7 +23,7 @@ export class Deployment
    @Type(() => DataSetPaths)
    public readonly dataSetPaths: DataSetPaths = new DataSetPaths();
 
-  @configProp('keySource')
+   @configProp('keySource')
    @ValidateNested()
    @Type(() => KeySource)
    public readonly keySource: KeySource = new KeySource();

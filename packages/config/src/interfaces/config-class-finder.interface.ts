@@ -3,7 +3,7 @@ import {Provider} from '@nestjs/common';
 
 export interface IConfigClassFinder
 {
-   loadConfigAsync(): Observable<Provider>
+   loadConfigAsync(): Observable<Provider>;
 
-   loadConfigSync(): Observable<Provider>
+   loadConfigSync(): Observable<Provider>;
 }

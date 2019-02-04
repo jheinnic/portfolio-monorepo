@@ -2,7 +2,7 @@ import {IsIn, IsInt, IsPositive} from 'class-validator';
 
 import {configClass, configProp} from '../../../../src/decorators';
 
-@configClass("eth.lotto.eventSetup.shufflePolicy")
+@configClass("eth.lotto.prizeMinting.shufflePolicy")
 export class ShufflePolicy {
    @configProp("passCount")
    @IsPositive()
@@ -25,7 +25,7 @@ export class ShufflePolicy {
    public readonly entropySeedBits: number = 0;
 
    @configProp("algorithmKey")
-   @IsIn(["isaac", "hmac-drbg", "fortuna", "yarrow", "twister", "random.org"])
+   @IsIn(["isaac", "hmacDrbg", "fortuna", "yarrow", "twister", "randomOrg"])
    public readonly algorithmKey: string = '';
 
 }

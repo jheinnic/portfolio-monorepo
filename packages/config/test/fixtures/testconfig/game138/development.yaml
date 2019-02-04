@@ -1,0 +1,151 @@
+---
+jchptf:
+  boot:
+    web:
+      serviceId: null
+      serviceName: portfolio-paint-gateway-service
+      port: 8081
+    consul:
+      host: localhost
+      port: 8500
+      discoveryHost: localhost
+      health_check:
+        timeout: 1s
+        interval: 10s
+      max_retry: 5
+      retry_interval: 5000
+      config:
+        key: config__{serviceName}__{env}
+        retry: 5
+    dataSource:
+      host: localhost
+      port: 3306
+      username: jchptf
+      password: abcd1234
+      synchronize: true
+      maxQueryExecutionTime: 1000
+eth:
+  lotto:
+    deployment:
+      localAccess:
+        rootPath: myLotto/events/game138
+      vaultAccess:
+        apiVersion: v1
+        endpoint: http://127.0.0.1:8200
+        token: '1234'
+        rootPath: myLotto/events/game138
+    setupPolicy:
+      randomSource: isaacCrypto
+      secureStore: localFiles
+      shufflePolicy:
+        sweepCount: 3
+        sequenceWidth: 4
+        wordBits: 64
+        entropyBits: 8192
+        reseedEvery: 256
+      tierNoncePolicy:
+        entropyBits: 8192
+        reseedEvery: 1536
+      serialNoncePolicy:
+        entropyBits: 8192
+        reseedEvery: 1024
+      proofSeed:
+        batchBits: 3
+        generatedBits: 29
+        entryCount: 380001
+        batchIds: 5
+    eventSpec:
+      sponsorId: 9
+      gameId: 138
+      prizePool:
+        secondChanceCount: 1413127
+        prizeTiers:
+        - tierId: 11
+          prizeValue: 75000
+          prizeUnits: 0
+          instanceCount: 2
+          batched: false
+        - tierId: 10
+          prizeValue: 5000
+          prizeUnits: 0
+          instanceCount: 16
+          batched: false
+        - tierId: 9
+          prizeValue: 500
+          prizeUnits: 0
+          instanceCount: 480
+          batched: true
+        - tierId: 8
+          prizeValue: 250
+          prizeUnits: 0
+          instanceCount: 790
+          batched: true
+        - tierId: 7
+          prizeValue: 100
+          prizeUnits: 0
+          instanceCount: 4560
+          batched: true
+        - tierId: 6
+          prizeValue: 50
+          prizeUnits: 0
+          instanceCount: 10735
+          batched: true
+        - tierId: 5
+          prizeValue: 30
+          prizeUnits: 0
+          instanceCount: 14250
+          batched: true
+        - tierId: 4
+          prizeValue: 20
+          prizeUnits: 0
+          instanceCount: 47500
+          batched: true
+        - tierId: 3
+          prizeValue: 15
+          prizeUnits: 0
+          instanceCount: 95045
+          batched: true
+        - tierId: 2
+          prizeValue: 10
+          prizeUnits: 0
+          instanceCount: 123500
+          batched: true
+        - tierId: 1
+          prizeValue: 5
+          prizeUnits: 0
+          instanceCount: 190000
+          batched: true
+sample:
+  list:
+    - name: Fred
+      age: 34
+      colors:
+        - blue
+        - white
+        - green
+      roles:
+        - title: first
+          salary: 25
+          location: [3, 4]
+        - title: second
+          salary: 39
+          location: [-3, 5]
+        - title: third
+          salary: 83
+          location: [0, 0]
+    - name: Barney
+      age: 34
+      colors:
+        - orange
+        - red
+        - blue
+      roles:
+        - title: final
+          salary: 52
+          location: [4, 3]
+        - title: early
+          salary: 93
+          location: [5, -3]
+        - title: done
+          salary: 38
+          location: [1, 1]

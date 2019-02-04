@@ -2,11 +2,11 @@ import {Allow, IsPositive, Max, Min} from 'class-validator';
 
 import {configClass, configProp} from '../../../../src/decorators';
 
-@configClass("eth.lotto.eventSpec.prizePool.prizeTiers")
+@configClass('eth.lotto.eventSpec.prizePool.prizeTiers')
 export class PrizeTier {
    @Min(0)
    @Max(1023)
-   @configProp("tierId")
+   @configProp('tierId')
    readonly tierId: number;
 
    /**
@@ -14,7 +14,7 @@ export class PrizeTier {
     * prize at this tier in the prize pool.
     */
    @IsPositive()
-   @configProp("prizeValue")
+   @configProp('prizeValue')
    readonly prizeValue: number;
 
    /**
@@ -24,7 +24,7 @@ export class PrizeTier {
     */
    @Min(-12)
    @Max(12)
-   @configProp("prizeUnits")
+   @configProp('prizeUnits')
    readonly prizeUnits: number;
 
    /**
@@ -35,7 +35,7 @@ export class PrizeTier {
     */
    @Min(1)
    @Max(262143)
-   @configProp("instanceCount")
+   @configProp('instanceCount')
    readonly instanceCount: number;
 
    /**
@@ -45,7 +45,7 @@ export class PrizeTier {
     * vault storage to avoid even transient unencrypted storage.
     */
    @Allow()
-   @configProp("batched")
+   @configProp('batched')
    readonly batched: boolean;
 
    constructor(tierId: number, prizeValue: number, prizeUnits: number, instanceCount: number, batched: boolean) {

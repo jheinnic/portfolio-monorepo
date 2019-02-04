@@ -1,8 +1,8 @@
-import {ConstructorFor} from 'simplytyped';
+import { ConstructorFor } from 'simplytyped';
+import { IConfigFileReader } from './config-file-reader.interface';
 
 export interface IConfigLoader
 {
-   hasConfigMetadata<T extends object>(configClass: ConstructorFor<T>): boolean;
-
-   loadInstance<T extends object>(configClass: ConstructorFor<T>/*, rootProperty?: string*/): T
+   loadInstance<T extends object>(
+      configClass: ConstructorFor<T>, configReader: IConfigFileReader): T|undefined;
 }

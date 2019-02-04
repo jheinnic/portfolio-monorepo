@@ -1,6 +1,6 @@
 // import * as assert from "assert";
 // import * as c from "../src/index";
 
-describe("config", () => {
+describe('config', () => {
     it("tests pending");
 });

@@ -2,14 +2,16 @@
     "extends": "../../../tsconfig.json",
     "compilerOptions": {
         "outDir": "../build",
-        "skipLibCheck": true
+        "baseUrl": ".",
+        "skipLibCheck": true,
+        "paths": { "@jchptf/config": ["../build/src"] }
     },
     "include": [
         "./**/*.ts",
-        "../src/**/*.ts",
         "../typings/**/*.d.ts"
     ],
     "exclude": [
+        "../src",
         "../dist",
         "../build",
         "../node_modules"

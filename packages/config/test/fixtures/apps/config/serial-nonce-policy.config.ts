@@ -2,7 +2,7 @@ import {IsInt, IsPositive} from 'class-validator';
 
 import {configClass, configProp} from '../../../../src/decorators';
 
-@configClass("eth.lotto.setupPolicy.serialNoncePolicy") // "eth.lotto.eventSpec")
+@configClass("eth.lotto.prizeMinting.serialNoncePolicy") // "eth.lotto.eventSpec")
 export class SerialNoncePolicy {
    @configProp("entropyBits")
    @IsInt()

@@ -21,17 +21,17 @@ export class DataSetPaths
    @Matches(/^([^/\0]+\/)*[^/\0]+$/)
    public readonly prizeSerialNonce: string = '';
 
-   @configProp('shufflePrizes')
-   @Matches(/^([^/\0]+\/)*[^/\0]+$/)
-   public readonly shufflePrizes: string = '';
-
-   @configProp('shuffleTickets')
-   @Matches(/^([^/\0]+\/)*[^/\0]+$/)
-   public readonly shuffleTickets: string = '';
-
    @configProp('placementKeyPairs')
    @Matches(/^([^/\0]+\/)*[^/\0]+$/)
    public readonly placementKeyPairs: string = '';
+
+   @configProp('prizeShuffle')
+   @Matches(/^([^/\0]+\/)*[^/\0]+$/)
+   public readonly shufflePrizes: string = '';
+
+   @configProp('ticketShuffle')
+   @Matches(/^([^/\0]+\/)*[^/\0]+$/)
+   public readonly shuffleTickets: string = '';
 
    @configProp('ticketRandomWitness')
    @Matches(/^([^/\0]+\/)*[^/\0]+$/)

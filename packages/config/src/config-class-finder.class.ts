@@ -6,8 +6,10 @@ import { Provider } from '@nestjs/common';
 import * as assert from 'assert';
 import * as path from 'path';
 
-import { IConfigClassFinder, IConfigFileReader, IConfigLoader } from './interfaces';
-import { CONFIG_FILE_READER_PROVIDER } from './di';
+import { CONFIG_FILE_READER_PROVIDER, CONFIG_LOADER_PROVIDER } from './di';
+import {
+   IConfigClassFinder, IConfigFileReader, IConfigLoader, IConfigMetadataHelper,
+} from './interfaces';
 
 /**
  * This class is not constructed by Nest through DI because it needs to exist at the time when
@@ -20,35 +22,17 @@ import { CONFIG_FILE_READER_PROVIDER } from './di';
  * BeanFactoryPostProcessors not being eligible for certain DI features by virtue of where their
  * functionality is applied in the framework's broader lifecycle stages.
  */
-export class ConfigClassFinderService implements IConfigClassFinder
+export class ConfigClassFinder implements IConfigClassFinder
 {
    private readonly resolvedSearchRoot: string;
 
    constructor(
-      private readonly configFactory: IConfigLoader,
+      private readonly configMetaHelper: IConfigMetadataHelper,
       private readonly loadConfigGlob: string, searchRootDir?: string)
    {
       this.resolvedSearchRoot =
-         ConfigClassFinderService.resolveSearchRoot(searchRootDir);
+         ConfigClassFinder.resolveSearchRoot(searchRootDir);
    }
-
-   /**
-    * @param {string} dir
-    * @returns {string}
-    */
-   private static root(dir: string = ''): string
-   {
-      return path.resolve(process.cwd(), dir);
-   }
-
-   /**
-    * @param {string} dir
-    * @returns {string}
-    static src(dir: string = ''): string {
-      const srcPath = this.srcPath || this.root();
-      return path.resolve(srcPath, dir);
-   }
-    */
 
    /**
     * Resolves and stores sources directory for application.
@@ -57,7 +41,7 @@ export class ConfigClassFinderService implements IConfigClassFinder
     */
    private static resolveSearchRoot(startPath?: string): string
    {
-      const root = this.root();
+      const root = process.cwd();
       const retVal = !startPath
          ? root
          : !path.isAbsolute(startPath)
@@ -119,24 +103,25 @@ export class ConfigClassFinderService implements IConfigClassFinder
                      require(filePath)))),
          filter(
             (clazz: ConstructorFunction<any>) =>
-               this.configFactory.hasConfigMetadata(clazz) &&
-               this.configFactory.hasProviderToken(clazz)),
+               this.configMetaHelper.hasProviderToken(clazz)),
          mergeMap(
             (clazz: ConstructorFunction<any>) => {
                const retValOne = {
-                  provide: this.configFactory.getProviderToken(clazz),
-                  useFactory: async (configReader: IConfigFileReader) =>
-                     this.configFactory.loadInstance(clazz, configReader),
-                  inject: [CONFIG_FILE_READER_PROVIDER],
+                  provide: this.configMetaHelper.getProviderToken(clazz),
+                  useFactory: async (
+                     configLoader: IConfigLoader, configReader: IConfigFileReader) =>
+                     configLoader.loadInstance(clazz, configReader),
+                  inject: [CONFIG_LOADER_PROVIDER, CONFIG_FILE_READER_PROVIDER],
                };
                const retValTwo = {
                   provide: clazz,
-                  useFactory: async (configReader: IConfigFileReader) =>
-                     this.configFactory.loadInstance(clazz, configReader),
-                  inject: [CONFIG_FILE_READER_PROVIDER],
+                  useFactory: async (
+                     configLoader: IConfigLoader, configReader: IConfigFileReader) =>
+                     configLoader.loadInstance(clazz, configReader),
+                  inject: [CONFIG_LOADER_PROVIDER, CONFIG_FILE_READER_PROVIDER],
                };
 
-               console.log(retValOne, retValTwo);
+               console.log(`1) <${retValOne}>\n 2) <${retValTwo}>`);
                return from([retValOne, retValTwo]);
             },
          ),
