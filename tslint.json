@@ -1,6 +1,7 @@
 {
-  "extends": "dtslint/dtslint.json",
+  "extends": "tslint-config-airbnb",
   "rules": {
+    "brace-style": [false],
     "one-line": [
       true,
       "check-catch",
@@ -9,8 +10,12 @@
       "check-whitespace"
     ],
     "interface-name": [true, "always-prefix"],
-    "no-useless-files": false,
-    /* I find this rule annoying, so I'm disabling it ;) */
-    "eofline": false
+    "ter-indent": [
+      true,
+      3,
+      {
+        "SwitchCase": 1
+      }
+    ]
   }
 }
