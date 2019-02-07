@@ -2,17 +2,17 @@
     "extends": "../../../tsconfig.json",
     "compilerOptions": {
         "outDir": "../build",
-        "baseUrl": ".",
-        "paths": { "@jchptf/api": ["../dist"] }
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "paths": {
+            "@jchptf/api": ["../src"]
+        }
     }
-//    "include": [
-//        "./**/*.ts",
-//        "../src/**/*.ts",
-//        "../typings/**/*.d.ts"
-//    ],
-//    "exclude": [
-//        "../dist",
-//        "../build",
-//        "../node_modules"
-//    ]
+    "include": [
+        "./**/*.ts",
+    ],
+    "references": [
+        { "path": "../src" }
+    ]
 }
