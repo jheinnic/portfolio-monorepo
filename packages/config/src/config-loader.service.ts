@@ -6,7 +6,7 @@ import { ConstructorFor } from 'simplytyped';
 
 import { Wild } from '@jchptf/api';
 import { ConfigPropertyMarker } from './decorators/config-property-marker.interface';
-import { IConfigFileReader, IConfigLoader, IConfigMetadataHelper } from './interfaces';
+import { IConfigReader, IConfigLoader, IConfigMetadataHelper } from './interfaces';
 import { CONFIG_METADATA_HELPER_PROVIDER } from './di';
 import { illegalState } from '@thi.ng/errors';
 
@@ -24,7 +24,7 @@ export class ConfigLoader implements IConfigLoader
 
    public loadInstance<T extends object>(
       configClass: ConstructorFor<T>,
-      configReader: IConfigFileReader,
+      configReader: IConfigReader,
       fromRoot?: string,
    ): T|undefined
    {

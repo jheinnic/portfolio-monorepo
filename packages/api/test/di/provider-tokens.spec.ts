@@ -2,11 +2,11 @@ import chai from 'chai';
 
 import {
    getGlobalProviderToken, getLocalProviderToken, getModuleIdentifier, getNamedSubtypeIntent,
-   getNamedTypeIntent, HasImpliedType, IsImpliedType, TokenDictionary
-} from '../../src/di';
+   getNamedTypeIntent, HasImpliedType, IsImpliedType, TokenDictionary,
+} from '@jchptf/api';
 import { assert, HasType, IsExactType, NotHasType } from 'conditional-type-checks';
 import {
-   AnotherSubclass, Class, ISomething, OneSubclass, SomethingOne, SomethingThree, SomethingTwo
+   AnotherSubclass, Class, ISomething, OneSubclass, SomethingOne, SomethingThree, SomethingTwo,
 } from '../fixtures/primitive';
 
 // chai.use(sinonChai);
@@ -38,11 +38,11 @@ describe('ProviderTokens', () => {
    });
 
    it('Maintains type information on tokens retrieved from a dictionary', () => {
-      const MyMod = getModuleIdentifier('My.Mod');
-      const ClassId = getNamedTypeIntent<Class>('Class');
-      const SomethingId = getNamedTypeIntent<ISomething>('Something');
-      const FOO = getLocalProviderToken<Class>(MyMod, ClassId, 'LocalClass');
-      const BAR = getGlobalProviderToken<ISomething>(SomethingId, 'GlobalClass');
+      const MY_MOD = getModuleIdentifier('My.Mod');
+      const CLASS_ID = getNamedTypeIntent<Class>('Class');
+      const SOMETHING_ID = getNamedTypeIntent<ISomething>('Something');
+      const FOO = getLocalProviderToken<Class>(MY_MOD, CLASS_ID, 'LocalClass');
+      const BAR = getGlobalProviderToken<ISomething>(SOMETHING_ID, 'GlobalClass');
 
       interface ITemplate {
          foo: Class;
@@ -54,66 +54,93 @@ describe('ProviderTokens', () => {
          bar: BAR,
       };
 
-      assert<IsImpliedType<typeof diDict.foo, Class>>(true);
-      assert<IsImpliedType<typeof diDict.bar, ISomething>>(true);
+      type fooType = typeof diDict.foo;
+      type barType = typeof diDict.bar;
 
-      assert<IsImpliedType<typeof diDict.foo, ISomething>>(false);
-      assert<IsImpliedType<typeof diDict.foo, number>>(false);
-      assert<IsImpliedType<typeof diDict.bar, Class>>(false);
-      assert<IsImpliedType<typeof diDict.bar, number>>(false);
+      assert<IsImpliedType<fooType, Class>>(true);
+      assert<IsImpliedType<barType, ISomething>>(true);
 
-      assert<HasImpliedType<typeof diDict.foo, OneSubclass>>(true);
-      assert<HasImpliedType<typeof diDict.foo, AnotherSubclass>>(true);
-      assert<HasImpliedType<typeof diDict.bar, SomethingOne>>(true);
-      assert<HasImpliedType<typeof diDict.bar, SomethingTwo>>(true);
-      assert<HasImpliedType<typeof diDict.bar, SomethingThree>>(true);
+      assert<IsImpliedType<fooType, ISomething>>(false);
+      assert<IsImpliedType<fooType, number>>(false);
+      assert<IsImpliedType<barType, Class>>(false);
+      assert<IsImpliedType<barType, number>>(false);
+
+      assert<IsImpliedType<fooType, OneSubclass>>(false);
+      assert<IsImpliedType<fooType, AnotherSubclass>>(false);
+      assert<IsImpliedType<barType, SomethingOne>>(false);
+      assert<IsImpliedType<barType, SomethingTwo>>(false);
+      assert<IsImpliedType<barType, SomethingThree>>(false);
+
+      assert<HasImpliedType<fooType, OneSubclass>>(true);
+      assert<HasImpliedType<fooType, AnotherSubclass>>(true);
+      assert<HasImpliedType<barType, SomethingOne>>(true);
+      assert<HasImpliedType<barType, SomethingTwo>>(true);
+      assert<HasImpliedType<barType, SomethingThree>>(true);
    });
 
    it('Maintains equality when created equivalently', () => {
-      const MyMod = getModuleIdentifier('My.Mod');
-      const ClassId = getNamedTypeIntent<Class>('Class');
-      const SomethingId = getNamedTypeIntent<ISomething>('Something');
-      const SomethingOneId = getNamedSubtypeIntent<ISomething, SomethingOne>(SomethingId);
-      const SomethingTwoId = getNamedSubtypeIntent<ISomething, SomethingTwo>(SomethingId);
+      const MY_MOD = getModuleIdentifier('My.Mod');
+      const CLASS_ID = getNamedTypeIntent<Class>('Class');
+      const I_SOMETHING_ID = getNamedTypeIntent<ISomething>('Something');
+      const I_SOMETHING_ONE_ID = getNamedSubtypeIntent<ISomething, SomethingOne>('SomethingOne');
+      const I_SOMETHING_TWO_ID = getNamedSubtypeIntent<ISomething, SomethingTwo>('SomethingTwo');
+      const SOMETHING_ONE_ID = getNamedTypeIntent<SomethingOne>('SomethingOne');
+      const SOMETHING_TWO_ID = getNamedTypeIntent<SomethingTwo>('SomethingTwo');
 
-      const FOO_ONE = getLocalProviderToken<Class>(MyMod, ClassId, 'LocalClass');
-      const FOO_TWO = getLocalProviderToken<Class>(MyMod, ClassId, 'LocalClass');
-      const BAR_ONE = getLocalProviderToken<ISomething>(MyMod, SomethingOneId, 'LocalClass');
-      const BAR_TWO = getLocalProviderToken<ISomething>(MyMod, SomethingTwoId, 'LocalClass');
-      const BAZ = getLocalProviderToken<Class>(MyMod, ClassId, 'OtherClass');
-      const WAR = getLocalProviderToken<SomethingTwo>(MyMod, SomethingTwoId, 'LocalClass');
-      const WOR = getLocalProviderToken<SomethingTwo>(MyMod, SomethingTwoId, 'OtherClass');
+      const FOO_ONE = getLocalProviderToken<Class>(MY_MOD, CLASS_ID, 'LocalClass');
+      const FOO_TWO = getLocalProviderToken<Class>(MY_MOD, CLASS_ID, 'LocalClass');
+      const BAR_ONE = getLocalProviderToken<ISomething>(MY_MOD, I_SOMETHING_ONE_ID, 'LocalClass');
+      const BAR_TWO = getLocalProviderToken<ISomething>(MY_MOD, I_SOMETHING_TWO_ID, 'LocalClass');
+      const BAR_THREE = getLocalProviderToken<ISomething>(MY_MOD, I_SOMETHING_ID, 'LocalClass');
+      const BAZ = getLocalProviderToken<Class>(MY_MOD, CLASS_ID, 'OtherClass');
+      const LOB_ONE = getLocalProviderToken<SomethingOne>(MY_MOD, SOMETHING_ONE_ID, 'LocalClass');
+      const LOB_TWO = getLocalProviderToken<SomethingTwo>(MY_MOD, SOMETHING_TWO_ID, 'LocalClass');
+      const WOB_TWO = getLocalProviderToken<SomethingTwo>(MY_MOD, SOMETHING_TWO_ID, 'OtherClass');
+
+      console.log(FOO_ONE);
+      console.log(FOO_TWO);
+      console.log(BAR_ONE);
+      console.log(BAR_TWO);
+      console.log(BAR_THREE);
 
       // Same name and injection type => Tokens are equal and have the same type.
       expect(FOO_ONE).to.be.equal(FOO_TWO);
       assert<IsExactType<typeof FOO_ONE, typeof FOO_TWO>>(true);
 
-      // Same name but different injection types => Tokens are equal, but also typewise-incompatible.
+      // Same name but different injection types => Tokens are unequal and type-incompatible.
       expect(FOO_ONE).to.not.be.equal(BAR_ONE);
       assert<NotHasType<typeof FOO_ONE, typeof BAR_ONE>>(true);
       assert<NotHasType<typeof BAR_ONE, typeof FOO_ONE>>(true);
 
+      // Same name but different injection types => Tokens are unequal and type-incompatible.
       expect(FOO_ONE).to.not.be.equal(BAR_TWO);
       assert<NotHasType<typeof FOO_ONE, typeof BAR_TWO>>(true);
       assert<NotHasType<typeof BAR_TWO, typeof FOO_ONE>>(true);
 
-      expect(FOO_ONE).to.not.be.equal(WAR);
-      assert<NotHasType<typeof FOO_ONE, typeof WAR>>(true);
-      assert<NotHasType<typeof WAR, typeof FOO_ONE>>(true);
+      // Same names and different injection types => Tokens are unequal and type-incompatible.
+      expect(FOO_ONE).to.not.be.equal(LOB_TWO);
+      assert<NotHasType<typeof FOO_ONE, typeof LOB_TWO>>(true);
+      assert<NotHasType<typeof LOB_TWO, typeof FOO_ONE>>(true);
 
-      expect(BAR_ONE).to.be.equal(BAR_TWO);
+      // Same names and different injections subtypes with a common base type =>
+      // Tokens are unequal and have the same type
+      expect(BAR_ONE).to.not.be.equal(BAR_TWO);
       assert<IsExactType<typeof BAR_ONE, typeof BAR_TWO>>(true);
 
-      // Different names but same injection types => Tokens are unequal, but typewise-compatible.
+      // Different names but same injection types => Tokens are unequal and have same type.
       expect(FOO_ONE).to.not.be.equal(BAZ);
       assert<IsExactType<typeof FOO_ONE, typeof BAZ>>(true);
 
-      expect(BAR_TWO).to.be.equal(WAR);
-      assert<HasType<typeof WAR, typeof BAR_TWO>>(true);
-      assert<HasType<typeof BAR_TWO, typeof WAR>>(false);
+      expect(BAR_TWO).to.be.equal(LOB_TWO);
+      assert<HasType<typeof LOB_TWO, typeof BAR_TWO>>(true);
+      assert<HasType<typeof BAR_TWO, typeof LOB_TWO>>(false);
 
-      expect(BAR_TWO).to.not.be.equal(WOR);
-      assert<HasType<typeof WOR, typeof BAR_TWO>>(true);
-      assert<HasType<typeof BAR_TWO, typeof WOR>>(false);
+      expect(BAR_TWO).to.not.be.equal(WOB_TWO);
+      assert<HasType<typeof WOB_TWO, typeof BAR_TWO>>(true);
+      assert<HasType<typeof BAR_TWO, typeof WOB_TWO>>(false);
+
+      expect(LOB_ONE).to.not.be.equal(LOB_TWO);
+      assert<HasType<typeof LOB_TWO, typeof LOB_ONE>>(false);
+      assert<HasType<typeof LOB_ONE, typeof LOB_TWO>>(false);
    });
 });

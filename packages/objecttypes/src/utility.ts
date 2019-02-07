@@ -8,8 +8,13 @@ export type TypeName<T> =
    T extends string ? 'string' : T extends number
       ? 'number' : T extends boolean
          ? 'boolean' : T extends undefined
-            ? 'undefined' : T extends Function
+            ? 'undefined' : T extends AnyFunc
                ? 'function' : 'object';
+
+export interface INoArgsConstructorFor<T extends object> {
+   new (): T;
+   prototype: T;
+}
 
 /**
  * Isomorphic variant that turns all value properties to fluent methods

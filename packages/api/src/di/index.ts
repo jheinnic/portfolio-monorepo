@@ -1,3 +1,5 @@
+export * from './async-module-param.type';
+export * from './async-provider.function';
 export * from './dynamic-provider-binding.type';
 export * from './has-implied-type.type';
 export * from './implied-type.type';

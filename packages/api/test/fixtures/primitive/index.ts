@@ -26,7 +26,7 @@ export class SomethingOne implements ISomething {
 export class SomethingTwo implements ISomething {
    doIt(): number { return 2; }
 
-   name(): string { return 'Two'; }
+   nameTwo(): string { return 'Two'; }
 }
 export class SomethingThree implements ISomething {
    doIt(): number { return 3; }

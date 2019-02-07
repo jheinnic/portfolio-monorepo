@@ -24,32 +24,39 @@
 import { illegalArgs } from '@thi.ng/errors';
 import { ModuleIdentifier, StringQualifier, TypeIdentifier } from './string-qualifier.type';
 import { DynamicProviderBinding } from './dynamic-provider-binding.type';
-import { DynamicProviderToken, GlobalProviderToken, LocalProviderToken } from './provider-token.type';
+import {
+   DynamicProviderToken, GlobalProviderToken, LocalProviderToken,
+} from './provider-token.type';
 
 export function getDynamicProviderToken<Type>(
-   moduleId: ModuleIdentifier, binding: DynamicProviderBinding, typeId: TypeIdentifier<Type>, tagName?: string
+   moduleId: ModuleIdentifier, binding: DynamicProviderBinding, typeId: TypeIdentifier<Type>,
+   tagName?: string,
 ): DynamicProviderToken<Type>
 {
    // if (factoryModuleName.indexOf(':') >= 0) {
-   //    throw new Error(': is reserved as a separator and may not appear in a factory module\'s domain
-   // name'); } if (factoryIntentName.indexOf(':') >= 0) { throw new Error(': is reserved as a separator
-   // and may not appear in factory intent name'); } if (provisionModuleName.indexOf(':') >= 0) { throw new
-   // Error(': is reserved as a separator and may not appear in provision module\'s domain name'); } if
-   // (provisionQualifierName.indexOf(':') >= 0) { throw new Error(': is reserved as a separator and may
-   // not appear in provision qualifier name'); }
-   if (!! tagName) {
+   //    throw new Error(': is reserved as a separator and may not appear in a factory module\'s
+   // domain name'); } if (factoryIntentName.indexOf(':') >= 0) { throw new Error(': is reserved as
+   // a separator and may not appear in factory intent name'); } if
+   // (provisionModuleName.indexOf(':') >= 0) { throw new Error(': is reserved as a separator and
+   // may not appear in provision module\'s domain name'); } if
+   // (provisionQualifierName.indexOf(':') >= 0) { throw new Error(': is reserved as a separator
+   // and may not appear in provision qualifier name'); }
+   if (!!tagName) {
       return `${moduleId}::${binding}::${typeId}(${tagName})` as DynamicProviderToken<Type>;
    }
 
    return `${moduleId}::${binding}::${typeId}` as DynamicProviderToken<Type>;
 }
 
-export function getLocalProviderToken<Type>(moduleId: ModuleIdentifier, typeId: TypeIdentifier<Type>, tagName?: string): LocalProviderToken<Type>
+export function getLocalProviderToken<Type>(
+   moduleId: ModuleIdentifier, typeId: TypeIdentifier<Type>,
+   tagName?: string,
+): LocalProviderToken<Type>
 {
-   if (!! tagName) {
+   if (!!tagName) {
       // TODO: Assert a stronger positive condition rather than a weak negative condition...
       if (tagName.indexOf(':') >= 0) {
-         throw illegalArgs(`Provider token role tags may not include ":" characters.`);
+         throw illegalArgs('Provider token role tags may not include ":" characters.');
       }
 
       return `${moduleId}::${typeId}(${tagName})` as LocalProviderToken<Type>;
@@ -57,15 +64,16 @@ export function getLocalProviderToken<Type>(moduleId: ModuleIdentifier, typeId: 
    return `${moduleId}::${typeId}` as LocalProviderToken<Type>;
 }
 
-export function getGlobalProviderToken<Type>(typeId: TypeIdentifier<Type>, tagName?: string): GlobalProviderToken<Type>
+export function getGlobalProviderToken<Type>(
+   typeId: TypeIdentifier<Type>, tagName?: string): GlobalProviderToken<Type>
 {
-   if (!! tagName) {
+   if (!!tagName) {
       // TODO: Assert a stronger positive condition rather than a weak negative condition...
       if (tagName.indexOf(':') >= 0) {
-         throw illegalArgs(`Provider token role tags may not include ":" characters.`);
+         throw illegalArgs('Provider token role tags may not include ":" characters.');
       }
 
-      return `${typeId}(${tagName})` as LocalProviderToken<Type>;
+      return `${typeId}(${tagName})` as GlobalProviderToken<Type>;
    }
 
    return `${typeId}` as GlobalProviderToken<Type>;
@@ -74,49 +82,59 @@ export function getGlobalProviderToken<Type>(typeId: TypeIdentifier<Type>, tagNa
 export function getModuleIdentifier(moduleName: string): ModuleIdentifier
 {
    if (moduleName.indexOf(':') >= 0) {
-      throw illegalArgs(`Module identifiers may not include ":" characters.`);
+      throw illegalArgs('Module identifiers may not include ":" characters.');
    }
 
    // return moduleName as ModuleIdentifier;
    return getStringQualifier(moduleName, 'ModuleIdentifier') as ModuleIdentifier;
 }
 
-export function getNamedTypeIntent<Type>(typeId: string): TypeIdentifier<Type> {
-   return getTypedStringQualifier<'TypeIdentifier', Type>(typeId, 'TypeIdentifier') as TypeIdentifier<Type>;
-}
-
-export function getNamedSubtypeIntent<Type, Subtype extends Type>(typeId: TypeIdentifier<Type>): TypeIdentifier<Subtype> {
-   return getTypedStringQualifier<'TypeIdentifier', Subtype>(typeId, 'TypeIdentifier') as TypeIdentifier<Subtype>;
-}
-
-export function getDynamicProviderBinding(moduleId: ModuleIdentifier, tagName?: string): DynamicProviderBinding
+export function getNamedTypeIntent<Type>(typeId: string): TypeIdentifier<Type>
 {
-   if (!! tagName) {
-      return getStringQualifier<'DynamicProviderBinding'>(`${moduleId}(${tagName})`, 'DynamicProviderBinding') as DynamicProviderBinding;
+   return getTypedStringQualifier<'TypeIdentifier', Type>(
+      typeId, 'TypeIdentifier') as TypeIdentifier<Type>;
+}
+
+export function getNamedSubtypeIntent<Type, Subtype extends Type>(
+   subtypeId: string): TypeIdentifier<Type>
+{
+   return getTypedStringQualifier<'TypeIdentifier', Subtype>(
+      subtypeId, 'TypeIdentifier') as TypeIdentifier<Subtype>;
+}
+
+export function getDynamicProviderBinding(
+   moduleId: ModuleIdentifier, tagName?: string): DynamicProviderBinding
+{
+   if (!!tagName) {
+      return getStringQualifier<'DynamicProviderBinding'>(
+         `${moduleId}(${tagName})`, 'DynamicProviderBinding') as DynamicProviderBinding;
    }
 
-   return getStringQualifier<'DynamicProviderBinding'>(moduleId, 'DynamicProviderBinding') as DynamicProviderBinding;
+   return getStringQualifier<'DynamicProviderBinding'>(
+      moduleId, 'DynamicProviderBinding') as DynamicProviderBinding;
 }
 
-function getStringQualifier<Intent extends string>(name: string, intent: Intent): StringQualifier<Intent>
+function getStringQualifier<Intent extends string>(
+   name: string, intent: Intent): StringQualifier<Intent>
 {
    if (intent.indexOf(':') >= 0) {
-      throw illegalArgs(`Intent types may not include ":" characters.`);
+      throw illegalArgs('Intent types may not include ":" characters.');
    }
    if (name.indexOf(':') >= 0) {
-      throw illegalArgs(`Intent qualifiers may not include ":" characters.`);
+      throw illegalArgs('Intent qualifiers may not include ":" characters.');
    }
 
    return `${name}` as StringQualifier<Intent>;
 }
 
-function getTypedStringQualifier<Intent extends string, Type>(name: string, intent: Intent): StringQualifier<Intent, Type>
+function getTypedStringQualifier<Intent extends string, Type>(
+   name: string, intent: Intent): StringQualifier<Intent, Type>
 {
    if (intent.indexOf(':') >= 0) {
-      throw illegalArgs(`Intent types may not include ":" characters.`);
+      throw illegalArgs('Intent types may not include ":" characters.');
    }
    if (name.indexOf(':') >= 0) {
-      throw illegalArgs(`Intent qualifiers may not include ":" characters.`);
+      throw illegalArgs('Intent qualifiers may not include ":" characters.');
    }
 
    return `${name}` as StringQualifier<Intent, Type>;

@@ -1,69 +1,114 @@
 import { Provider } from '@nestjs/common';
-import { illegalArgs } from '@thi.ng/errors';
+import { illegalArgs, illegalState } from '@thi.ng/errors';
 import { AnyFunc } from 'simplytyped';
 
+import { ProviderToken } from '../di';
 import {
-   AsyncModuleParam, ClassAsyncModuleParam, ExistingAsyncModuleParam, FactoryAsyncModuleParam,
+   AsyncModuleParam, AsyncModuleParamStyle, ClassAsyncModuleParam, ExistingAsyncModuleParam,
+   FactoryAsyncModuleParam, ValueAsyncModuleParam,
 } from './async-module-param.type';
-import { ProviderToken } from '@jchptf/api';
 
-function isExisting<Type>(
-   moduleParam: AsyncModuleParam<Type, any>): moduleParam is ExistingAsyncModuleParam<Type>
+export function isValue<Type extends object>(
+   moduleParam: AsyncModuleParam<Type>): moduleParam is ValueAsyncModuleParam<Type>
 {
-   return (
-      moduleParam.hasOwnProperty('useExisting')
-   );
+   return moduleParam.style === AsyncModuleParamStyle.VALUE;
 }
 
-function isFactory<Type>(
+export function isExisting<Type extends object>(
+   moduleParam: AsyncModuleParam<Type>): moduleParam is ExistingAsyncModuleParam<Type>
+{
+   return moduleParam.style === AsyncModuleParamStyle.EXISTING;
+}
+
+export function isFactory<Type extends object>(
    moduleParam: FactoryAsyncModuleParam<Type, AnyFunc<Promise<Type>>>
       | ClassAsyncModuleParam<Type, string>):
    moduleParam is FactoryAsyncModuleParam<Type, AnyFunc<Promise<Type>>>
 {
-   return (
-      moduleParam.hasOwnProperty('useFactory')
-   );
+   return moduleParam.style === AsyncModuleParamStyle.FACTORY;
 }
 
-function isClass<Type, Key extends string = string>(
+export function isFactoryClass<Type extends object, Key extends string = string>(
    moduleParam: FactoryAsyncModuleParam<Type, AnyFunc<Promise<Type>>>
       | ClassAsyncModuleParam<Type, Key>):
    moduleParam is ClassAsyncModuleParam<Type, Key>
 {
-   return (
-      moduleParam.hasOwnProperty('useClass')
-   );
+   return moduleParam.style === AsyncModuleParamStyle.CLASS;
 }
 
-export function asyncProviderFromParam<Type extends object>(
+export function asyncProviderFromParam<
+   Type extends object,
+   Key extends string|AnyFunc<Promise<Type>>|undefined = undefined
+>(
    providerToken: ProviderToken<Type>,
-   moduleParam: AsyncModuleParam<Type>,
-   factoryKey?: string): Provider[]
+   moduleParam: AsyncModuleParam<Type, Key>,
+   factoryKey?: Key): Provider[]
 {
-   if (isExisting(moduleParam)) {
-      return [{
-         provide: providerToken,
-         useFactory: async (value: Type) => value,
-         inject: [moduleParam.useExisting],
-      }];
-   }
-   if (isFactory(moduleParam)) {
-      return [{
-         provide: providerToken,
-         ...moduleParam,
-      }];
-   }
+   let retVal: Provider[];
 
-   if (!! factoryKey) {
-      type Key = typeof factoryKey;
-      if (isClass<Type, Key>(moduleParam)) {
-         return [{
+   switch (moduleParam.style) {
+      case AsyncModuleParamStyle.VALUE: {
+         if ('object' === typeof moduleParam.useValue) {
+            retVal = [{
+               provide: providerToken,
+               useValue: moduleParam.useValue,
+            }];
+         } else {
+            retVal = [{
+               provide: providerToken,
+               useClass: moduleParam.useValue,
+            }];
+         }
+
+         break;
+      }
+      case AsyncModuleParamStyle.EXISTING: {
+         retVal = [{
             provide: providerToken,
-            useFactory: async (factory: { [K in Key]: () => Type }) => factory[factoryKey!](),
-            inject: [moduleParam.useClass],
-         }, moduleParam.useClass];
+            useFactory: async (value: Type) => value,
+            inject: [moduleParam.useExisting],
+         }];
+
+         break;
+      }
+      case AsyncModuleParamStyle.FACTORY: {
+         retVal = [{
+            provide: providerToken,
+            useFactory: moduleParam.useFactory,
+            inject: moduleParam.inject,
+         }];
+
+         break;
+      }
+      case AsyncModuleParamStyle.CLASS: {
+         if (!factoryKey || 'string' !== typeof factoryKey) {
+            throw illegalArgs(
+               'Using factory class requires including string key for its factory method');
+         }
+
+         if (! isFactoryClass<Type, Extract<Key, string>>(moduleParam)) {
+            throw illegalArgs(
+               'Using factory class requires including string key for its factory method');
+         }
+
+         retVal = [
+            {
+               provide: providerToken,
+               useFactory: async factory => factory[factoryKey](),
+               inject: [moduleParam.useClass],
+            },
+            {
+               provide: moduleParam.useClass,
+               useClass: moduleParam.useClass,
+            },
+         ];
+
+         break;
+      }
+      default: {
+         throw illegalState('Unreachable code');
       }
    }
 
-   throw illegalArgs(`Insufficient input to use ${moduleParam}`);
+   return retVal;
 }

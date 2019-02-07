@@ -16,6 +16,7 @@
       {
         "SwitchCase": 1
       }
-    ]
+    ],
+    "variable-name": [true, "allow-leading-underscore"]
   }
 }

@@ -5,7 +5,6 @@ import { configClass, configProp } from '../../../../src/decorators';
 import { DevFakeOptions } from './dev-fake-options.config';
 import { HmacDrbgOptions } from './hmac-drbg-options.config';
 import { IsaacOptions } from './isaac-options.config';
-import { RandomOrgOptions } from './random-org-options.config';
 
 @configClass()
 export class EntropyAlgorithmSelection

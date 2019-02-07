@@ -8,7 +8,7 @@ import * as path from 'path';
 
 import { CONFIG_FILE_READER_PROVIDER, CONFIG_LOADER_PROVIDER } from './di';
 import {
-   IConfigClassFinder, IConfigFileReader, IConfigLoader, IConfigMetadataHelper,
+   IConfigClassFinder, IConfigReader, IConfigLoader, IConfigMetadataHelper,
 } from './interfaces';
 
 /**
@@ -109,14 +109,14 @@ export class ConfigClassFinder implements IConfigClassFinder
                const retValOne = {
                   provide: this.configMetaHelper.getProviderToken(clazz),
                   useFactory: async (
-                     configLoader: IConfigLoader, configReader: IConfigFileReader) =>
+                     configLoader: IConfigLoader, configReader: IConfigReader) =>
                      configLoader.loadInstance(clazz, configReader),
                   inject: [CONFIG_LOADER_PROVIDER, CONFIG_FILE_READER_PROVIDER],
                };
                const retValTwo = {
                   provide: clazz,
                   useFactory: async (
-                     configLoader: IConfigLoader, configReader: IConfigFileReader) =>
+                     configLoader: IConfigLoader, configReader: IConfigReader) =>
                      configLoader.loadInstance(clazz, configReader),
                   inject: [CONFIG_LOADER_PROVIDER, CONFIG_FILE_READER_PROVIDER],
                };
