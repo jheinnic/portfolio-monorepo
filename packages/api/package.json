@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/api",
-    "version": "0.0.31",
+    "version": "0.0.32",
     "description": "Common, generic types & interfaces for jchptf projects",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
@@ -8,17 +8,17 @@
     "typings": "./dist/index.d.ts",
     "typesVersions": {
         ">=3.3": {
-            "dist/*": [
+            "dist": [
                 "dist/ts3.3/*"
             ]
         },
         ">=3.2": {
-            "dist/*": [
+            "dist": [
                 "dist/ts3.2/*"
             ]
         },
         ">=3.1": {
-            "dist/*": [
+            "dist": [
                 "dist/ts3.1/*"
             ]
         }

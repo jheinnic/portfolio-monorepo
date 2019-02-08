@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/merkle",
-    "version": "0.0.16",
+    "version": "0.0.17",
     "description": "TODO",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
@@ -8,17 +8,17 @@
     "typings": "./dist/index.d.ts",
     "typesVersions": {
         ">=3.3": {
-            "dist/*": [
+            "dist": [
                 "dist/ts3.3/*"
             ]
         },
         ">=3.2": {
-            "dist/*": [
+            "dist": [
                 "dist/ts3.2/*"
             ]
         },
         ">=3.1": {
-            "dist/*": [
+            "dist": [
                 "dist/ts3.1/*"
             ]
         }
@@ -66,8 +66,8 @@
         "typescript": "3.2.2"
     },
     "dependencies": {
-        "@jchptf/api": "^0.0.31",
-        "@jchptf/builders": "^0.0.14",
+        "@jchptf/api": "^0.0.32",
+        "@jchptf/builders": "^0.0.15",
         "@jchptf/reflection": "^0.0.9",
         "binary-search": "^1.3.4",
         "lru-cache": "^4.1.3",
