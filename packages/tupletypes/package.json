@@ -45,7 +45,7 @@
         "build": "yarn run clean && tsc -b src && echo `pwd`",
         "clean": "tsc -b --clean && rm -rf dist build .nyc_output coverage doc && mkdir dist && mkdir build",
         "cover": "yarn test && nyc report --reporter=lcov",
-        "doc": "node_modules/.bin/typedoc --mode file --module commonjs --target es6 --tsconfig tsconfig.json --externalPattern node_modules --excludeExternals --excludePrivate --out doc --gitRevision feature_bootstrap src typings",
+        "doc": "node_modules/.bin/typedoc --mode file --module es2015 --target es6 --tsconfig tsconfig.json --externalPattern node_modules --excludeExternals --excludePrivate --out doc --gitRevision feature_bootstrap src typings",
         "pub": "yarn build && lerna publish --registry http://localhost:4873",
         "test": "tsc -b test --clean && rm -rf build && mkdir build && tsc -b test && nyc mocha `find build -type f -name '*.js'`"
     },
@@ -61,7 +61,7 @@
         "sinon": "^7.2.2",
         "sinon-chai": "^3.3.0",
         "ts-sinon": "^1.0.12",
-        "typedoc": "^0.13.0",
+        "typedoc": "^0.14.2",
         "typescript": "3.2.2"
     },
     "dependencies": {
