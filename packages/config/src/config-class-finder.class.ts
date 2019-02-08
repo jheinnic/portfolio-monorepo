@@ -6,7 +6,7 @@ import { Provider } from '@nestjs/common';
 import * as assert from 'assert';
 import * as path from 'path';
 
-import { CONFIG_FILE_READER_PROVIDER, CONFIG_LOADER_PROVIDER } from './di';
+import { CONFIG_READER_PROVIDER, CONFIG_LOADER_PROVIDER } from './di';
 import {
    IConfigClassFinder, IConfigReader, IConfigLoader, IConfigMetadataHelper,
 } from './interfaces';
@@ -111,14 +111,14 @@ export class ConfigClassFinder implements IConfigClassFinder
                   useFactory: async (
                      configLoader: IConfigLoader, configReader: IConfigReader) =>
                      configLoader.loadInstance(clazz, configReader),
-                  inject: [CONFIG_LOADER_PROVIDER, CONFIG_FILE_READER_PROVIDER],
+                  inject: [CONFIG_LOADER_PROVIDER, CONFIG_READER_PROVIDER],
                };
                const retValTwo = {
                   provide: clazz,
                   useFactory: async (
                      configLoader: IConfigLoader, configReader: IConfigReader) =>
                      configLoader.loadInstance(clazz, configReader),
-                  inject: [CONFIG_LOADER_PROVIDER, CONFIG_FILE_READER_PROVIDER],
+                  inject: [CONFIG_LOADER_PROVIDER, CONFIG_READER_PROVIDER],
                };
 
                console.log(`1) <${retValOne}>\n 2) <${retValTwo}>`);

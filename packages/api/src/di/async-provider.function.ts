@@ -8,19 +8,19 @@ import {
    FactoryAsyncModuleParam, ValueAsyncModuleParam,
 } from './async-module-param.type';
 
-export function isValue<Type extends object>(
+export function isValue<Type>(
    moduleParam: AsyncModuleParam<Type>): moduleParam is ValueAsyncModuleParam<Type>
 {
    return moduleParam.style === AsyncModuleParamStyle.VALUE;
 }
 
-export function isExisting<Type extends object>(
+export function isExisting<Type>(
    moduleParam: AsyncModuleParam<Type>): moduleParam is ExistingAsyncModuleParam<Type>
 {
    return moduleParam.style === AsyncModuleParamStyle.EXISTING;
 }
 
-export function isFactory<Type extends object>(
+export function isFactory<Type>(
    moduleParam: FactoryAsyncModuleParam<Type, AnyFunc<Promise<Type>>>
       | ClassAsyncModuleParam<Type, string>):
    moduleParam is FactoryAsyncModuleParam<Type, AnyFunc<Promise<Type>>>
@@ -28,7 +28,7 @@ export function isFactory<Type extends object>(
    return moduleParam.style === AsyncModuleParamStyle.FACTORY;
 }
 
-export function isFactoryClass<Type extends object, Key extends string = string>(
+export function isFactoryClass<Type, Key extends string = string>(
    moduleParam: FactoryAsyncModuleParam<Type, AnyFunc<Promise<Type>>>
       | ClassAsyncModuleParam<Type, Key>):
    moduleParam is ClassAsyncModuleParam<Type, Key>
@@ -37,7 +37,7 @@ export function isFactoryClass<Type extends object, Key extends string = string>
 }
 
 export function asyncProviderFromParam<
-   Type extends object,
+   Type,
    Key extends string|AnyFunc<Promise<Type>>|undefined = undefined
 >(
    providerToken: ProviderToken<Type>,

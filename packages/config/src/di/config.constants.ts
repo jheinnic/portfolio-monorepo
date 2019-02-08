@@ -8,14 +8,14 @@ import { IConfigReader, IConfigLoader, IConfigMetadataHelper } from '../interfac
 export const CONFIG_MODULE_ID = getModuleIdentifier('@jchptf/config');
 
 const CMH = getNamedTypeIntent<IConfigMetadataHelper>('IConfigMetadataHelper');
-const CFR = getNamedTypeIntent<IConfigReader>('IConfigReader');
+const CR  = getNamedTypeIntent<IConfigReader>('IConfigReader');
 const CL  = getNamedTypeIntent<IConfigLoader>('IConfigLoader');
 const DCO = getNamedTypeIntent<DotenvConfigOptions|false>('DotenvConfigOptions');
 
 export const CONFIG_METADATA_HELPER_PROVIDER =
    getGlobalProviderToken<IConfigMetadataHelper>(CMH);
-export const CONFIG_FILE_READER_PROVIDER =
-   getGlobalProviderToken<IConfigReader>(CFR);
+export const CONFIG_READER_PROVIDER =
+   getGlobalProviderToken<IConfigReader>(CR);
 export const CONFIG_LOADER_PROVIDER =
    getGlobalProviderToken<IConfigLoader>(CL);
 export const DOTENV_CONFIG_OPTIONS =

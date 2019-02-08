@@ -1,20 +1,25 @@
 {
     "extends": "../../../tsconfig.json",
     "compilerOptions": {
+        "rootDir": "..",
+        "rootDirs": [
+            ".",
+            "../types"
+        ],
         "outDir": "../build",
-
-        /* dtslint needs these to operate in this directory */
         "baseUrl": ".",
-        "paths": { "@jchptf/objecttypes": ["../dist/ts3.1"] }
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "paths": {
+            "@jchptf/objecttypes": ["../src"]
+        }
     },
-    "include": [
-        "./**/*.ts"
+    "references": [
+        { "path": "../src" }
     ],
-    "exclude": [
-        "../src",
-        "../test",
-        "../dist",
-        "../build",
-        "../node_modules"
+    "include": [
+        "./**/*.ts",
+        "../types/fixtures/**.ts"
     ]
 }

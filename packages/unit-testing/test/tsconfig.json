@@ -1,19 +1,23 @@
 {
     "extends": "../../../tsconfig.json",
     "compilerOptions": {
-        "outDir": "../build"
-    },
-    "include": [
-        "./**/*.ts",
-        "../src/**/*.ts",
-        "../typings/**/*.d.ts"
+        "outDir": "../build",
+        "baseUrl": ".",
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "paths": {
+            "@jchptf/mixins": [ "../../mixins/src" ],
+            "@jchptf/objecttypes": [ "../../objecttypes/src" ],
+            "@jchptf/reflection": [ "../../reflection/src" ],
+            "@jchptf/unit-testing": ["../src"]
+        }
+    }
+    "references": [
+        { "path": "../../mixins/src" },
+        { "path": "../../objecttypes/src" },
+        { "path": "../../reflection/src" },
+        { "path": "../src" }
     ],
-    "exclude": [
-        "../dist",
-        "../build",
-        "../node_modules",
-        "../../*/dist",
-        "../../*/build",
-        "../../*/node_modules"
-    ]
+    "include": [ "./**/*.ts" ]
 }

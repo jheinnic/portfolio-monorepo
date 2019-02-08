@@ -3,12 +3,18 @@
     "version": "0.0.5",
     "description": "TODO",
     "main": "./dist/index.js",
+    "module": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "typings": "./dist/index.d.ts",
     "typesVersions": {
+        ">=3.3": {
+            "dist/*": [
+                "dist/ts3.3/*"
+            ]
+        },
         ">=3.2": {
             "dist/*": [
-                "dist/ts3.1/*"
+                "dist/ts3.2/*"
             ]
         },
         ">=3.1": {
@@ -36,13 +42,13 @@
         "registry": "http://localhost:4873"
     },
     "scripts": {
-        "build": "yarn run clean && tsc --declaration",
-        "clean": "rm -rf dist build .nyc_output coverage doc; mkdir dist; mkdir build",
+        "build": "yarn run clean && tsc -b",
+        "clean": "tsc -b --clean && rm -rf dist build .nyc_output coverage doc && mkdir dist && mkdir build",
         "cover": "yarn test && nyc report --reporter=lcov",
         "doc": "node_modules/.bin/typedoc --mode file --module commonjs --target es6 --tsconfig tsconfig.json --externalPattern node_modules --excludeExternals --excludePrivate --out doc --gitRevision feature_bootstrap src typings",
         "pub": "yarn run build && lerna publish --registry http://localhost:4873",
         "dtslint": "dtslint types",
-        "test": "rm -rf build && mkdir build && tsc -p test && nyc mocha `find build/test -type f -name '*.js'`"
+        "test": "tsc -b test --clean && rm -rf build && mkdir build && tsc -b test && nyc mocha `find build -type f -name '*.js'`"
     },
     "devDependencies": {
         "@types/chai": "^4.1.7",

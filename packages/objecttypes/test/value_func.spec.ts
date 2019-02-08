@@ -1,17 +1,17 @@
-import {False, IsType, True} from 'simplytyped'
-import chai from 'chai';
+// import { False, IsType, True } from 'simplytyped'
+// import chai from 'chai';
 
-import {assert, deny, IsImpliedType} from '@jchptf/type-testing';
-import { OnePlaceholder, ManyPlaceholders } from '../types/fixtures';
+// import { IsImpliedType } from '@jchptf/api';
+// import { assert, deny } from '@jchptf/objecttypes';
 
 // chai.use(sinonChai);
-const expect = chai.expect;
+// const expect = chai.expect;
 
 describe('value_func.ts', () => {
    beforeEach(() => {
    });
 
    it('Can selectively pass through subclasses', () => {
-      assert<IsImpliedType<typeof diDict.bar, SomethingThree>>(expect);
+      // assert<IsImpliedType<typeof diDict.bar, SomethingThree>>(expect);
    });
 });

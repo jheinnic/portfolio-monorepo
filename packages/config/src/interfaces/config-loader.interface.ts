@@ -1,5 +1,5 @@
 import { ConstructorFor } from 'simplytyped';
-import { IConfigReader } from './config-file-reader.interface';
+import { IConfigReader } from './config-reader.interface';
 
 export interface IConfigLoader
 {

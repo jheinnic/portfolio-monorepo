@@ -1,17 +1,11 @@
 {
-    "extends": "../../tsconfig.json",
-    "compilerOptions": {
-        "outDir": "./dist",
-        "skipLibCheck": true
+   "extends": "../../tsconfig.json",
+   "compilerOptions": {
+      "skipLibCheck": true
    },
-    "include": [
-        "./src/**/*.ts"
-//	    "./typings/**/*.d.ts"
-    ],
-    "exclude": [
-        "./node_modules",
-        "./dist",
-        "./build",
-        "./test"
-    ]
+   "references": [
+      { "path": "./src" },
+      { "path": "./test" }
+   ],
+   "files": []
 }

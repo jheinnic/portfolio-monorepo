@@ -6,15 +6,15 @@ import * as path from 'path';
 import { IConfigReader } from './interfaces';
 import { Consul } from 'consul';
 
-// @Injectable()
 export class ConfigReader implements IConfigReader
 {
    private config?: IConfig;
 
    constructor(
       private readonly dotenvOptions: dotenv.DotenvConfigOptions | false =
-         { path: path.join(process.cwd(), '.env') }),
+         { path: path.join(process.cwd(), '.env') },
       private readonly consulClient?: Consul,
+   )
    { }
 
    public bootstrap(): void
@@ -23,9 +23,9 @@ export class ConfigReader implements IConfigReader
          throw illegalState('Only call ConfigReader.bootstrap() one time during startup.');
       }
 
-      // Dotenv is used to set the location of configuration file content primarily, but may also be
-      // a source for custom environment variable overrides.  See package.json 'cev' run script.
-      if (!! this.dotenvOptions) {
+// Dotenv is used to set the location of configuration file content primarily, but may also be
+// a source for custom environment variable overrides.  See package.json 'cev' run script.
+      if (!!this.dotenvOptions) {
          dotenv.load(this.dotenvOptions);
       }
 
@@ -35,6 +35,10 @@ export class ConfigReader implements IConfigReader
    ** NODE_ENV=${process.env['NODE_ENV']}`);
 
       this.config = require('config');
+
+      if (!! this.consulClient) {
+         this.consulClient.kv.get('config/defaults.yml');
+      }
    }
 
    public readConfigKey<T = any>(configKey: string, defaultValue?: T): T
@@ -54,9 +58,4 @@ export class ConfigReader implements IConfigReader
 
       return defaultValue;
    }
-
-   // public get<T = any>(configKey: string, defaultValue?: T): T
-   // {
-   //    return this.readConfigKey(configKey, defaultValue);
-   // }
 }

@@ -3,17 +3,19 @@
     "compilerOptions": {
         "outDir": "../build",
         "baseUrl": ".",
-        "skipLibCheck": true,
-        "paths": { "@jchptf/config": ["../build/src"] }
-    },
-    "include": [
-        "./**/*.ts",
-        "../typings/**/*.d.ts"
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "paths": {
+            "@jchptf/api": ["../../api/src"],
+            "@jchptf/reflection": ["../../reflection/src"],
+            "@jchptf/config": ["../src"]
+        }
+    }
+    "references": [
+        { "path": "../../api/src" },
+        { "path": "../../reflection/src" }
+        { "path": "../src" }
     ],
-    "exclude": [
-        "../src",
-        "../dist",
-        "../build",
-        "../node_modules"
-    ]
+    "include": [ "./**/*.ts" ]
 }

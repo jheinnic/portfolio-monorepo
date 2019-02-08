@@ -1,18 +1,10 @@
 {
-    "extends": "../../tsconfig.json",
-    "compilerOptions": {
-        "outDir": "./dist"
-    },
-    "include": [
-        "./src/**/*.ts", "./typings/**/*.d.ts"
-    ],
-    "exclude": [
-        "./dist",
-        "./build",
-        "./node_modules",
-        "../*/typings",
-        "../*/dist",
-        "../*/build",
-        "../*/node_modules"
-    ]
+   "extends": "../../tsconfig.json",
+   "compilerOptions": {
+   },
+   "references": [
+      { "path": "./src" },
+      { "path": "./test" }
+   ],
+   "files": [ ]
 }

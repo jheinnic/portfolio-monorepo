@@ -28,8 +28,10 @@ export enum AsyncModuleParamStyle
  * -- A Factory parameter supplies an asynchronous provider function, and uses FactoryType to
  *    supply i
  */
-export type AsyncModuleParam<ParamType extends object,
-   FactoryType extends (AnyFunc<Promise<ParamType>> | string | undefined) = undefined> =
+export type AsyncModuleParam<
+   ParamType,
+   FactoryType extends (AnyFunc<Promise<ParamType>> | string | undefined) = undefined
+> =
    ValueAsyncModuleParam<ParamType, Extract<FactoryType, undefined>> |
    ExistingAsyncModuleParam<ParamType, Extract<FactoryType, undefined>> |
    ClassAsyncModuleParam<ParamType, Extract<FactoryType, string>> |
@@ -49,19 +51,18 @@ export type ProviderTokenTuple<ProvidedTuple extends any[]> =
 */
 
 export type ValueAsyncModuleParam<
-   ParamType extends object,
+   ParamType,
    _Unused extends undefined = undefined
 > = {
    style: AsyncModuleParamStyle.VALUE,
-   useValue: ParamType | INoArgsConstructorFor<ParamType>,
+   useValue: ParamType | ParamType extends object ? INoArgsConstructorFor<ParamType> : never,
 };
 
 export type ExistingAsyncModuleParam<
-   ParamType extends object,
+   ParamType,
    _Unused extends undefined = undefined
 > = {
    style: AsyncModuleParamStyle.EXISTING,
-   // provide: ProviderToken<ParamType>,
    useExisting: ProviderToken<ParamType>,
 };
 
@@ -92,29 +93,26 @@ export type ArgsAsProviderTokens<F extends AnyFunc> = F extends () => any ? void
                         : ProviderToken<any>[];
 
 export type FactoryAsyncModuleParam<
-   ParamType extends object,
+   ParamType,
    FactoryType extends AnyFunc<Promise<ParamType>>
 > =
    ArgsAsTuple<FactoryType> extends void[]
       ? {
          style: AsyncModuleParamStyle.FACTORY,
-   //       provide: ProviderToken<ParamType>,
          useFactory: FactoryType,
          inject?: void[],
       }
       : {
          style: AsyncModuleParamStyle.FACTORY,
-         // provide: ProviderToken<ParamType>,
          useFactory: FactoryType,
          inject: ArgsAsProviderTokens<FactoryType>,
       }
    ;
 
 export type ClassAsyncModuleParam<
-   ParamType extends object, FactoryType extends string> =
+   ParamType, FactoryType extends string> =
    {
       style: AsyncModuleParamStyle.CLASS,
-      // provide: ProviderToken<ParamType>,
       useClass: ConstructorFor<{ [K in FactoryType]: () => ParamType }>,
    }
    ;

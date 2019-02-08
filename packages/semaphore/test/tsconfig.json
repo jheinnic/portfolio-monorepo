@@ -2,16 +2,24 @@
     "extends": "../../../tsconfig.json",
     "compilerOptions": {
         "outDir": "../build",
-        "skipLibCheck": true
-    },
-    "include": [
-        "./**/*.ts",
-        "../src/**/*.ts",
-        "../typings/**/*.d.ts"
+        "baseUrl": ".",
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "paths": {
+            "@jchptf/api": ["../../api/src"],
+            "@jchptf/coroutines": ["../../coroutines/src"],
+            "@jchptf/reflection": ["../../reflection/src"],
+            "@jchptf/txtypes": ["../../txtypes/src"],
+            "@jchptf/semaphore": ["../src"]
+        }
+    }
+    "references": [
+        { "path": "../../api/src" },
+        { "path": "../../coroutines/src" },
+        { "path": "../../reflection/src" },
+        { "path": "../../txtypes/src" }
+        { "path": "../src" }
     ],
-    "exclude": [
-        "../dist",
-        "../build",
-        "../node_modules"
-    ]
+    "include": [ "./**/*.ts" ]
 }

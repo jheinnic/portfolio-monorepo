@@ -1,20 +1,19 @@
 {
     "extends": "../../../tsconfig.json",
     "compilerOptions": {
-        "outDir": "../build"
-    },
+        "outDir": "../build",
+        "baseUrl": ".",
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "paths": {
+            "@jchptf/reflection": ["../src"]
+        }
+    }
     "include": [
         "./**/*.ts",
-        "../src/**/*.ts",
-        "../typings/**/*.d.ts"
     ],
-    "exclude": [
-        "../dist",
-        "../build",
-        "../node_modules",
-        "../../*/typings",
-        "../../*/dist",
-        "../../*/build",
-        "../../*/node_modules"
+    "references": [
+        { "path": "../src" }
     ]
 }

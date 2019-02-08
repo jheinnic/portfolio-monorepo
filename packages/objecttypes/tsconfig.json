@@ -1,17 +1,10 @@
 {
-    "extends": "../../tsconfig.json",
-    "compilerOptions": {
-        "outDir": "./dist"
-    },
-    "include": [
-        "./src/**/*.ts",
-        "./typings/**/*.d.ts"
-    ],
-    "exclude": [
-        "./attic",
-        "./node_modules",
-        "./dist",
-        "./build",
-        "./test"
-    ]
+   "extends": "../../tsconfig.json",
+   "compilerOptions": {
+   },
+   "references": [
+      { "path": "./src" },
+      { "path": "./test" }
+   ],
+   "files": [ ]
 }

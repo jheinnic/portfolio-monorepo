@@ -1,18 +1,18 @@
 import { DynamicModule, Global, Module, Provider } from '@nestjs/common';
 import { toArray } from 'rxjs/operators';
+import { DotenvConfigOptions } from 'dotenv';
+
+import { AsyncModuleParam, asyncProviderFromParam } from '@jchptf/api';
 
 import { IConfigClassFinder } from '../interfaces';
 import { ConfigClassFinder } from '../config-class-finder.class';
 import { ConfigMetadataHelper } from '../config-metadata-helper.class';
-import { DotenvConfigOptions } from 'dotenv';
 import {
-   CONFIG_FILE_READER_PROVIDER, CONFIG_LOADER_PROVIDER, CONFIG_METADATA_HELPER_PROVIDER,
+   CONFIG_READER_PROVIDER, CONFIG_LOADER_PROVIDER, CONFIG_METADATA_HELPER_PROVIDER,
    DOTENV_CONFIG_OPTIONS,
 } from './config.constants';
-import { ConfigFileReader } from '../config-file-reader.service';
-import { AsyncModuleParam } from '../utilities/async-module-param.type';
-import { asyncProviderFromParam } from '../utilities/async-provider.function';
 import { ConfigLoader } from '../config-loader.service';
+import { ConfigReader } from '../config-reader.service';
 
 @Global()
 @Module({})
@@ -90,9 +90,9 @@ const STANDARD_PROVIDERS = [
       useValue: ConfigMetadataHelper.getInstance(),
    },
    {
-      provide: CONFIG_FILE_READER_PROVIDER,
+      provide: CONFIG_READER_PROVIDER,
       useFactory: async (dotEnvConfig?: (DotenvConfigOptions | false)) => {
-         const retVal = new ConfigFileReader(dotEnvConfig);
+         const retVal = new ConfigReader(dotEnvConfig);
          retVal.bootstrap();
          return retVal;
       },

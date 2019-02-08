@@ -28,13 +28,15 @@ export class HolderTwo
    modifyIt()
    {
       console.log(
-         util.inspect(this.holdIt, 5, true, 5)
+         util.inspect(this.holdIt, true, 5, true),
       );
+
       this.holdIt.env.one = 24;
       this.holdIt.env.two = 11;
       this.holdIt.env.test = this.holdIt.env.test + this.holdIt.env.test;
+
       console.log(
-         util.inspect(this.holdIt, 5, true, 5)
+         util.inspect(this.holdIt, true, 5, true),
       );
       console.log(
          this.holdIt.get('env.two'),

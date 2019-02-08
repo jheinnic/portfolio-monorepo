@@ -3,16 +3,22 @@
     "version": "0.0.16",
     "description": "TODO",
     "main": "./dist/index.js",
+    "module": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "typings": "./dist/index.d.ts",
     "typesVersions": {
+        ">=3.3": {
+            "dist/*": [
+                "dist/ts3.3/*"
+            ]
+        },
         ">=3.2": {
-            "dist/utility": [
-                "dist/ts3.1/*"
+            "dist/*": [
+                "dist/ts3.2/*"
             ]
         },
         ">=3.1": {
-            "dist/utility": [
+            "dist/*": [
                 "dist/ts3.1/*"
             ]
         }
@@ -36,25 +42,27 @@
         "registry": "http://localhost:4873"
     },
     "scripts": {
-        "build": "yarn run clean && tsc --declaration && echo `pwd`",
-        "clean": "rm -rf dist build .nyc_output coverage doc; mkdir dist; mkdir build",
+        "build": "yarn run clean && tsc -b src && echo `pwd`",
+        "clean": "tsc -b --clean && rm -rf dist build .nyc_output coverage doc && mkdir dist && mkdir build",
         "cover": "yarn test && nyc report --reporter=lcov",
         "doc": "node_modules/.bin/typedoc --mode file --module commonjs --target es6 --tsconfig tsconfig.json --externalPattern node_modules --excludeExternals --excludePrivate --out doc --gitRevision feature_bootstrap src typings",
         "pub": "yarn build && lerna publish --registry http://localhost:4873",
-        "test": "rm -rf build && mkdir build && tsc -p test && nyc mocha build/test/*.js"
+        "test": "tsc -b test --clean && rm -rf build && mkdir build && tsc -b test && nyc mocha `find build -type f -name '*.js'`"
     },
     "devDependencies": {
-        "@types/chai": "^4.1.6",
+        "@types/chai": "^4.1.7",
         "@types/mocha": "^5.2.5",
-        "@types/node": "^10.11.4",
-        "@types/sinon": "^5.0.5",
+        "@types/node": "^10.12.18",
+        "@types/sinon": "^7.0.2",
+        "@types/sinon-chai": "^3.2.2",
         "chai": "^4.2.0",
         "mocha": "^5.2.0",
         "nyc": "^12.0.2",
-        "sinon": "^7.0.0",
+        "sinon": "^7.2.2",
+        "sinon-chai": "^3.3.0",
         "ts-sinon": "^1.0.12",
         "typedoc": "^0.13.0",
-        "typescript": "^3.1.1"
+        "typescript": "3.2.2"
     },
     "dependencies": {
         "simplytyped": "^1.6.0",

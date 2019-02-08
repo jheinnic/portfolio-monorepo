@@ -1,16 +1,19 @@
 {
     "extends": "../../../tsconfig.json",
     "compilerOptions": {
-        "outDir": "../build"
-    },
-    "include": [
-        "./**/*.ts",
-        "../src/**/*.ts",
-        "../typings/**/*.d.ts"
+        "outDir": "../build",
+        "baseUrl": ".",
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "paths": {
+            "@jchptf/tupletypes": ["../../tupletypes/src"],
+            "@jchptf/txtypes": ["../src"]
+        }
+    }
+    "references": [
+        { "path": "../../tupletypes/src" },
+        { "path": "../src" }
     ],
-    "exclude": [
-        "../dist",
-        "../build",
-        "../node_modules"
-    ]
+    "include": [ "./**/*.ts" ]
 }
