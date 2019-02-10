@@ -31,11 +31,11 @@
     },
     "references": [
         { "path": "./packages/api" },
-        { "path": "./packages/config/src" },
+        { "path": "./packages/config" },
         { "path": "./packages/mixins" },
         { "path": "./packages/objecttypes" },
         { "path": "./packages/reflection" },
-        { "path": "./packages/unit-testing" },
+        { "path": "./packages/unit-testing" }
     ],
     "files": [ ]
 }
