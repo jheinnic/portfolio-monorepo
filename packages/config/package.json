@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/config",
-    "version": "0.0.18",
+    "version": "0.0.19",
     "description": "TODO",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
