@@ -71,7 +71,7 @@
         "@jchptf/reflection": "^0.0.9",
         "@nestjs/common": "^5.5.0",
         "@thi.ng/errors": "^0.1.12",
-        "class-transformer": "^0.1.10",
+        "class-transformer": "^0.2.0",
         "class-transformer-validator": "^0.6.0",
         "class-validator": "^0.9.1",
         "config": "^3.0.1",
