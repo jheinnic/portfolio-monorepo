@@ -3,6 +3,7 @@
     "compilerOptions": {
         "outDir": "../build",
         "baseUrl": ".",
+        "rootDir": ".",
         "composite": true,
         "declaration": true,
         "declarationMap": true,
@@ -12,7 +13,7 @@
             "@jchptf/txtypes": ["../../txtypes/src"],
             "@jchptf/coroutines": ["../src"]
         }
-    }
+    },
     "references": [
         { "path": "../../api/src" },
         { "path": "../../reflection/src" },

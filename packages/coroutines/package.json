@@ -7,13 +7,18 @@
     "types": "./dist/index.d.ts",
     "typings": "./dist/index.d.ts",
     "typesVersions": {
+        ">=3.3": {
+            "dist": [
+                "dist/ts3.3/*"
+            ]
+        },
         ">=3.2": {
-            "dist/utility": [
-                "dist/ts3.1/*"
+            "dist": [
+                "dist/ts3.2/*"
             ]
         },
         ">=3.1": {
-            "dist/utility": [
+            "dist": [
                 "dist/ts3.1/*"
             ]
         }
@@ -71,7 +76,7 @@
         "@nestjs/core": "^5.5.0",
         "@thi.ng/errors": "^0.1.12",
         "@tyriar/fibonacci-heap": "^2.0.9",
-        "ix": "^2.3.5",
+        "ix": "^2.5.1",
         "medium": "^1.0.2",
         "reflect-metadata": "^0.1.12",
         "rxjs": "^6.3.3",
