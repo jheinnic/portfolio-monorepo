@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {CONCURRENT_WORK_FACTORY, CoroutinesModule} from '../src/di';
-import {IConcurrentWorkFactory} from '../src/interfaces';
-import {expect} from 'chai';
+import { CONCURRENT_WORK_FACTORY, CoroutinesModule } from '@jchptf/coroutines';
+import { IConcurrentWorkFactory } from '@jchptf/coroutines';
+import { expect } from 'chai';
 
 describe('CoroutinesModule', () => {
    let sutModule: TestingModule;

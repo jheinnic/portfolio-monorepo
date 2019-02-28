@@ -12,6 +12,7 @@ const coroutineProviders = [
 @Global()
 @Module({
    providers: [...coroutineProviders],
-   exports: [...coroutineProviders]
+   exports: [...coroutineProviders],
 })
-export class CoroutinesModule { }
+export class CoroutinesModule
+{ }

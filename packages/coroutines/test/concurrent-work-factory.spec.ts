@@ -1,18 +1,15 @@
 import Queue from 'co-priority-queue';
-import {Chan, close, sleep, take} from 'medium';
+import { Chan, close, sleep, take } from 'medium';
 
 import * as chai from 'chai';
-import lolex from 'lolex';
-import sinon, {SinonSpy} from 'sinon';
+import lolex, { Clock } from 'lolex';
+import sinon, { SinonSandbox, SinonSpy, SinonStub } from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import {Clock} from 'lolex';
-import {SinonSandbox, SinonStub} from 'sinon';
-
 import '@jchptf/reflection';
-import {ConcurrentWorkFactory} from '../src/concurrent-work-factory.service';
-import {LoadToChan} from './fixtures/load-to-chan.constants';
-import {LoadToChanScriptDirector} from './utilities/load-to-chan-script-director.class';
+import { ConcurrentWorkFactory } from '@jchptf/coroutines';
+import { LoadToChan } from './fixtures/load-to-chan.constants';
+import { LoadToChanScriptDirector } from './utilities/load-to-chan-script-director.class';
 
 chai.use(sinonChai);
 const expect = chai.expect;
@@ -40,7 +37,10 @@ describe('ConcurrentWorkFactory', () => {
       sandbox = sinon.createSandbox();
       factory = new ConcurrentWorkFactory();
 
-      clock = lolex.install({shouldAdvanceTime: true, advanceTimeDelta: 8});
+      clock = lolex.install({
+         shouldAdvanceTime: true,
+         advanceTimeDelta: 8
+      });
    });
 
    afterEach(function () {
@@ -68,13 +68,14 @@ describe('ConcurrentWorkFactory', () => {
          iterSource = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
          realIterator = iterSource[Symbol.iterator]();
 
-         // The spyOn() mock adaptation can only find and replace string properties, so we have to deal
-         // with spying on Symbol.iterator uniquely...  :(
+         // The spyOn() mock adaptation can only find and replace string properties, so we have to
+         // deal with spying on Symbol.iterator uniquely...  :(
          iterSourceIteratorStub = sandbox.stub();
-         spiedUponIteratorNext = sandbox.spy(realIterator, "next");
+         spiedUponIteratorNext = sandbox.spy(realIterator, 'next');
 
          // Configure spy/stub behavior that is uniform here.
-         iterSourceIteratorStub.onFirstCall().returns(realIterator);
+         iterSourceIteratorStub.onFirstCall()
+            .returns(realIterator);
          iterSource[Symbol.iterator] = iterSourceIteratorStub;
 
       });
@@ -97,34 +98,58 @@ describe('ConcurrentWorkFactory', () => {
 
          // 1, 2, and 3 should be in the queue, and 4 should be the next value
          // waiting to be read because concurrency factor was set to 3.
-         expect(spiedUponIteratorNext).to.have.callCount(3);
+         expect(spiedUponIteratorNext)
+            .to
+            .have
+            .callCount(3);
 
          // Read the output channel twice, which should cause two workers to
          // unblock long enough to take 4 and 5 off input iterable, then re-block
          // waiting to send them to a reader on Chan.
          expect(
             await take(retChan)
-         ).to.be.equal(1);
+         )
+            .to
+            .be
+            .equal(1);
          expect(
             await take(retChan)
-         ).to.be.equal(2);
+         )
+            .to
+            .be
+            .equal(2);
 
-         expect(spiedUponIteratorNext).to.have.callCount(5);
+         expect(spiedUponIteratorNext)
+            .to
+            .have
+            .callCount(5);
 
          expect(
             await take(retChan)
-         ).to.be.equal(3);
+         )
+            .to
+            .be
+            .equal(3);
          expect(
             await take(retChan)
-         ).to.be.equal(4);
+         )
+            .to
+            .be
+            .equal(4);
          expect(
             await take(retChan)
-         ).to.be.equal(5);
+         )
+            .to
+            .be
+            .equal(5);
 
          clock.runAll();
          clock.runToLast();
 
-         expect(spiedUponIteratorNext).to.have.callCount(8);
+         expect(spiedUponIteratorNext)
+            .to
+            .have
+            .callCount(8);
       });
 
       it('Waits for a specified delay before reading next value if so configured.', async () => {
@@ -133,27 +158,36 @@ describe('ConcurrentWorkFactory', () => {
             expect, clock, LoadToChan.realTimeDelta, spiedUponIteratorNext, retChan);
          factory.loadToChan(
             iterSource, LoadToChan.loadConcurrency,
-            retChan, LoadToChan.withDelayMs );
+            retChan, LoadToChan.withDelayMs);
 
          scriptDirector.runScript(LoadToChan.noBufferWithDelayScript);
 
          // 1, 2, and 3 should be in the queue, and 4 should be the next value
          // waiting to be read.
-         expect(spiedUponIteratorNext).to.have.callCount(3);
+         expect(spiedUponIteratorNext)
+            .to
+            .have
+            .callCount(3);
 
          // Read the output channel once, which will start the 50 ms clock before
          // 4 gets read.  Tick the clock forward by 40 and confirm 4 has not yet
          // been read, then read a second value and wait another 20ms.
          expect(
             await take(retChan)
-         ).to.be.equal(1);
+         )
+            .to
+            .be
+            .equal(1);
 
          // Briefly yield flow control so the first read can process its occurrence
          // and promptly re-cue its next interval.  Make sure we still have not fired
          // its resolution yet on return.
          clock.tick(5 - clock.now);
          await sleep(10 - clock.now);
-         expect(spiedUponIteratorNext).to.have.callCount(3);
+         expect(spiedUponIteratorNext)
+            .to
+            .have
+            .callCount(3);
 
          // Read a second time, starting a second delay timer.  Then advance clock
          // to just before the first read's delay will lapse and briefly yield the CPU.
@@ -161,26 +195,41 @@ describe('ConcurrentWorkFactory', () => {
          clock.tick(30 - clock.now);
          expect(
             await take(retChan)
-         ).to.be.equal(2);
+         )
+            .to
+            .be
+            .equal(2);
          await sleep(35 - clock.now);
-         expect(spiedUponIteratorNext).to.have.callCount(3);
+         expect(spiedUponIteratorNext)
+            .to
+            .have
+            .callCount(3);
 
          // Let the first delay lapse and verify its read has occurred when we get the
          // flow of control back.
          clock.tick(54 - clock.now);
          await sleep(58 - clock.now);
-         expect(spiedUponIteratorNext).to.have.callCount(4);
+         expect(spiedUponIteratorNext)
+            .to
+            .have
+            .callCount(4);
 
          // Fast forward to just before the second delay expires and verify it occurs
          // correctly.
          clock.tick(78 - clock.now);
          await sleep(82 - clock.now);
          console.log(clock.now);
-         expect(spiedUponIteratorNext).to.have.callCount(5);
+         expect(spiedUponIteratorNext)
+            .to
+            .have
+            .callCount(5);
       });
 
       it('Resolves multiple overlapping delays in parallel', async () => {
-         expect(spiedUponIteratorNext).to.have.callCount(0);
+         expect(spiedUponIteratorNext)
+            .to
+            .have
+            .callCount(0);
 
          factory.loadToChan(iterSource, 3, retChan, 50);
 
@@ -188,23 +237,41 @@ describe('ConcurrentWorkFactory', () => {
          clock.tick(3600 - clock.now)
          expect(
             await take(retChan)
-         ).to.be.equal(1);
+         )
+            .to
+            .be
+            .equal(1);
          expect(
             await take(retChan)
-         ).to.be.equal(2);
+         )
+            .to
+            .be
+            .equal(2);
          expect(
             await take(retChan)
-         ).to.be.equal(3);
+         )
+            .to
+            .be
+            .equal(3);
          await sleep(3605 - clock.now);
-         expect(spiedUponIteratorNext).to.have.callCount(3);
+         expect(spiedUponIteratorNext)
+            .to
+            .have
+            .callCount(3);
 
          // And watch for the delayed refresh read
          clock.tick(3642 - clock.now);
          await sleep(3645 - clock.now);
-         expect(spiedUponIteratorNext).to.have.callCount(3);
+         expect(spiedUponIteratorNext)
+            .to
+            .have
+            .callCount(3);
 
          await sleep(3652 - clock.now);
-         expect(spiedUponIteratorNext).to.have.callCount(6);
+         expect(spiedUponIteratorNext)
+            .to
+            .have
+            .callCount(6);
       });
 
       it('Terminates overflow workers', () => {

@@ -1,24 +1,27 @@
-import {Injectable} from '@nestjs/common';
-import {buffers, Chan, chan, go, put, repeat, repeatTake, sleep} from 'medium';
-import {identity, Transducer} from 'transducers-js';
-import Queue from 'co-priority-queue';
-import {SubscriptionLike} from 'rxjs';
-import {AsyncSink} from 'ix';
-import {FibonacciHeap, INode} from '@tyriar/fibonacci-heap';
-import {illegalArgs} from '@thi.ng/errors';
+import { Injectable } from '@nestjs/common';
+import { buffers, Chan, chan, go, put, repeat, repeatTake, sleep } from 'medium';
+import { identity, Transducer } from 'transducers-js';
+import { SubscriptionLike } from 'rxjs';
+import { AsyncSink } from 'ix';
+import { FibonacciHeap, INode } from '@tyriar/fibonacci-heap';
+import { illegalArgs } from '@thi.ng/errors';
 
-import {AsyncTx} from '@jchptf/txtypes';
-import {asFunction, IConcurrentWorkFactory, Limiter, SinkLike, ChanBufferType} from './interfaces';
-import {IterPair} from './interfaces/iter-pair.interface';
+import { AsyncTx } from '@jchptf/txtypes';
+import {
+   asFunction, ChanBufferType, IConcurrentWorkFactory, Limiter, SinkLike
+} from './interfaces';
+import { IterPair } from './interfaces/iter-pair.interface';
 
 function isIterable<T>(sinkValue: any): sinkValue is Iterable<T>
 {
-   return sinkValue.hasOwnProperty(Symbol.iterator) || sinkValue.__proto__.hasOwnProperty(Symbol.iterator);
+   return sinkValue.hasOwnProperty(Symbol.iterator) || sinkValue.__proto__.hasOwnProperty(
+      Symbol.iterator);
 }
 
 function isAsyncIterable<T>(sinkValue: any): sinkValue is AsyncIterable<T>
 {
-   return sinkValue.hasOwnProperty(Symbol.asyncIterator) || sinkValue.__proto__.hasOwnProperty(Symbol.asyncIterator);
+   return sinkValue.hasOwnProperty(Symbol.asyncIterator) || sinkValue.__proto__.hasOwnProperty(
+      Symbol.asyncIterator);
 }
 
 
@@ -75,7 +78,8 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       return chan(undefined, tx);
    }
 
-   createAsyncSink<T>() {
+   createAsyncSink<T>()
+   {
       return new AsyncSink<T>();
    }
 
@@ -95,7 +99,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
                const heapNode: INode<number, () => Promise<void>> | null =
                   heap.extractMinimum();
                const yieldable = heapNode!.value;
-               if (!! yieldable) {
+               if (!!yieldable) {
                   await yieldable();
                }
             }
@@ -202,7 +206,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
 
          repeatTake(
             source,
-            async function(value: T): Promise<false|void>
+            async function (value: T): Promise<false | void>
             {
                const transformed = await tx(value);
 
@@ -210,7 +214,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
                   for (const sinkValue of transformed) {
                      toSink(sinkValue);
                   }
-               } else if(isAsyncIterable<M>(transformed)) {
+               } else if (isAsyncIterable<M>(transformed)) {
                   for await (const sinkValue of transformed) {
                      toSink(sinkValue);
                   }
@@ -244,14 +248,14 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
 
          repeatTake(
             source,
-            async function(value: T): Promise<false|void>
+            async function (value: T): Promise<false | void>
             {
                const transformed = await tx(value);
                if (isIterable(transformed)) {
                   for (const sinkValue of transformed) {
-                    await put(chan, sinkValue);
+                     await put(chan, sinkValue);
                   }
-               } else if(isAsyncIterable<M>(transformed)) {
+               } else if (isAsyncIterable<M>(transformed)) {
                   for await (const sinkValue of transformed) {
                      await put(chan, sinkValue);
                   }
@@ -274,12 +278,13 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
    }
 
    loadToChan<T>(
-      iterable: Iterable<T>|AsyncIterable<T>, concurrency: number, chan: Chan<T, any>, delay: number = 0): SubscriptionLike
+      iterable: Iterable<T> | AsyncIterable<T>, concurrency: number, chan: Chan<T, any>,
+      delay: number = 0): SubscriptionLike
    {
       let globalDone: boolean = false;
       const iterator = (isIterable(iterable)) ? iterable[Symbol.iterator]() : iterable[Symbol.asyncIterator]();
 
-      async function queueFromIterator(localIterResult: IteratorResult<T>|Promise<IteratorResult<T>>): Promise<IteratorResult<T> | false>
+      async function queueFromIterator(localIterResult: IteratorResult<T> | Promise<IteratorResult<T>>): Promise<IteratorResult<T> | false>
       {
          let thisResult: IteratorResult<T> = await localIterResult;
          let nextResult: IteratorResult<T> | false = false;
@@ -324,7 +329,8 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
    }
 
    loadToSink<T>(
-      iterable: Iterable<T>|AsyncIterable<T>, concurrency: number, sink: AsyncSink<T>, delay: number = 0): SubscriptionLike
+      iterable: Iterable<T> | AsyncIterable<T>, concurrency: number, sink: AsyncSink<T>,
+      delay: number = 0): SubscriptionLike
    {
       let globalDone: boolean = false;
       const iterator = (isIterable(iterable)) ? iterable[Symbol.iterator]() : iterable[Symbol.asyncIterator]();
@@ -345,7 +351,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
          }
 
          sink.write(thisResult.value);
-         return ! globalDone;
+         return !globalDone;
       }
 
       for (let ii = 0; ii < concurrency; ii++) {
@@ -371,7 +377,6 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
          get closed(): boolean { return globalDone; }
       };
    }
-
 
    /*
    public run<T>(source: Iterable<T>|AsyncIterable<T>, sink: AsyncSink<T>, delay: number = 0): SubscriptionLike
@@ -413,9 +418,11 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
 
    // private static readonly CLOSED: symbol = Symbol.for('closed');
 
-   public unwind<T>(master: AsyncSink<Iterable<T>>, sink: Chan<T, any>, done?: Chan<Iterable<T>, any>, delay: number = 0): SubscriptionLike
+   public unwind<T>(
+      master: AsyncSink<Iterable<T>>, sink: Chan<T, any>, done?: Chan<Iterable<T>, any>,
+      delay: number = 0): SubscriptionLike
    {
-      const sources: AsyncSink<IterPair<T>> = this.createAsyncSink<IterPair<T>>( );
+      const sources: AsyncSink<IterPair<T>> = this.createAsyncSink<IterPair<T>>();
       let closed: boolean = false;
       const retVal = {
          unsubscribe: () => {
@@ -426,7 +433,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
          get closed(): boolean { return closed; }
       };
 
-      go(async function() {
+      go(async function () {
          let nextIterable: Iterable<T>;
          for await (nextIterable of master) {
             if (closed) {
@@ -451,7 +458,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
          let nextIterPair: IterPair<T>;
          for await (nextIterPair of sources) {
             let nextIterResult: IteratorResult<T> = nextIterPair.iterator.next();
-            if (! nextIterResult.done) {
+            if (!nextIterResult.done) {
                const last = new Date().getTime();
                await put(sink, nextIterResult.value);
                sources.write(nextIterPair);
@@ -459,7 +466,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
                if (lapsed < delay) {
                   await sleep(delay - lapsed);
                }
-            } else if (!! done) {
+            } else if (!!done) {
                await put(done, nextIterPair.iterable);
             }
          }
@@ -489,7 +496,6 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       }
    }
 }
-
 
 // export function createQueueFactory<T = any>(_context: interfaces.Context): ConcreteFactory<Queue<T>,
 // [PropertyKey?]> { return (key?: PropertyKey): Queue<T> => { let retVal: Queue<T>;  if (!!key) { if
