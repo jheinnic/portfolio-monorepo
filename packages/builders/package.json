@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/builders",
-    "version": "0.0.16",
+    "version": "0.0.17",
     "description": "TODO",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
@@ -65,8 +65,8 @@
         "typescript": "3.2.2"
     },
     "dependencies": {
-        "@jchptf/api": "^0.0.33",
-        "@jchptf/mixins": "^0.0.4",
+        "@jchptf/api": "^0.0.34",
+        "@jchptf/mixins": "^0.0.5",
         "fluent-interface-builder": "^2.0.1",
         "simplytyped": "^1.6.0",
         "tslib": "^1.9.3"
