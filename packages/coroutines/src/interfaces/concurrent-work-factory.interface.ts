@@ -1,3 +1,4 @@
+/// <reference path="../../typings/medium/index.d.ts">
 import { Transducer } from 'transducers-js';
 import { SubscriptionLike } from 'rxjs';
 import { AsyncSink } from 'ix';

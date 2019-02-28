@@ -1,3 +1,4 @@
+/// <reference path="../typings/medium/index.d.ts">
 import { Chan, close, sleep, take } from 'medium';
 
 import * as chai from 'chai';

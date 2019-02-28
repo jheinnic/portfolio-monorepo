@@ -1,3 +1,4 @@
+/// <reference file="../typings/medium/index.d.ts">
 import { Injectable } from '@nestjs/common';
 import { buffers, Chan, chan, go, put, repeat, repeatTake, sleep } from 'medium';
 import { identity, Transducer } from 'transducers-js';
@@ -24,16 +25,15 @@ function isAsyncIterable<T>(sinkValue: any): sinkValue is AsyncIterable<T>
       Symbol.asyncIterator);
 }
 
-
 @Injectable()
 export class ConcurrentWorkFactory implements IConcurrentWorkFactory
 {
    constructor() { }
 
-   createPriorityQueue<M>(): Queue<M>
-   {
-      return new Queue<M>();
-   }
+   // createPriorityQueue<M>(): Queue<M>
+   // {
+   //    return new Queue<M>();
+   // }
 
    createChan<T = any>(bufSize?: number, bufType?: ChanBufferType): Chan<T, T>
    {
