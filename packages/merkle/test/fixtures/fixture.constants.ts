@@ -1,4 +1,4 @@
-import { MerkleTreeDescription } from '@jchptf/merkle';
+import { getMerklePathNamingProviderToken, MerkleTreeDescription } from '@jchptf/merkle';
 import { getLocalProviderToken, getModuleIdentifier, getNamedTypeIntent } from '@jchptf/api';
 import { FauxContainer } from './faux-container.class';
 import { getMerkleCalculatorProviderToken } from '@jchptf/merkle';
@@ -7,7 +7,8 @@ export const treeOneTag = 'first';
 export const treeTwoTag = 'second';
 
 export const treeDescriptionOne = new MerkleTreeDescription(
-   4096, 512, 8192, 48000, 12288
+   // 4096, 512, 8192, 48000, 12288
+   512, 512, 4096, 256, 169
 );
 
 export const treeDescriptionTwo = new MerkleTreeDescription(
@@ -25,4 +26,7 @@ export const fauxContainerType =
    getNamedTypeIntent<FauxContainer>('FauxContainer');
 export const fauxContainerToken =
    getLocalProviderToken(testModule, fauxContainerType);
+
+export const dynamicNamingOneToken =
+   getMerklePathNamingProviderToken(testModule, treeOneTag);
 

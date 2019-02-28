@@ -1,27 +1,43 @@
-import {IDirector} from '@jchptf/api';
-import {BlockMappedLayerLocator} from '../locator';
-import {DepthFirstVisitMode} from './depth-first-visit-mode.enum';
-import {bindInputParam, buildable, factoryMethod, IDfsOrderBuilder} from './dfs-order-builder.interface';
+import { IDirector } from '@jchptf/api';
+import { BlockMappedLayerLocator } from '../locator';
+import { DepthFirstVisitMode } from './depth-first-visit-mode.enum';
+import { IDfsOrderBuilder } from './dfs-order-builder.interface';
+import { Builder, Ctor, Instance } from 'fluent-interface-builder';
 
-@buildable
+const builderClass: Ctor<DfsOrderOptions, IDfsOrderBuilder & Instance<DfsOrderOptions>> =
+   new Builder<DfsOrderOptions, IDfsOrderBuilder & Instance<DfsOrderOptions>>()
+   .cascade('leftToRight', (value: boolean) => (obj: DfsOrderOptions) => {
+      obj.leftToRight = value;
+   })
+   .cascade('endWith', (value: BlockMappedLayerLocator) => (obj: DfsOrderOptions) => {
+      obj.endWith = value;
+   })
+   .cascade('visitMode', (value: DepthFirstVisitMode) =>(obj: DfsOrderOptions) => {
+      obj.visitMode = value;
+   }).value;
+
 export class DfsOrderOptions
 {
    constructor(
-      @bindInputParam({ name: 'leftToRight' })
-      public leftToRight: boolean,
-      @bindInputParam({ name: 'endWith' })
-      public endWith: BlockMappedLayerLocator,
-      @bindInputParam({ name: 'visitMode' })
-      public visitMode: DepthFirstVisitMode)
-   { }
-
-   @factoryMethod()
-   static create(director: IDirector<IDfsOrderBuilder>): DfsOrderOptions {
-      throw director;
+      public leftToRight: boolean = true,
+      public visitMode: DepthFirstVisitMode = DepthFirstVisitMode.IN_ORDER,
+      public endWith?: BlockMappedLayerLocator )
+   {
    }
 
-   @factoryMethod()
+   static create(director: IDirector<IDfsOrderBuilder>): DfsOrderOptions {
+      const retVal = new DfsOrderOptions();
+      const builder: IDfsOrderBuilder = new builderClass(retVal);
+
+      director(builder);
+      return retVal;
+   }
+
    clone(director: IDirector<IDfsOrderBuilder>): DfsOrderOptions {
-      throw director;
+      const retVal = Object.assign(new DfsOrderOptions(), this);
+      const builder: IDfsOrderBuilder = new builderClass(retVal);
+
+      director(builder);
+      return retVal;
    }
 }

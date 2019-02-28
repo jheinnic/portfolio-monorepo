@@ -1,21 +1,20 @@
-import {BlockMappedDigestLocator, MerkleTreeDescription} from '../locator/index';
+import { BlockMappedDigestLocator, MerkleTreeDescription } from '../locator';
 
-import {DepthFirstVisitMode, IMerkleCalculator} from '../index';
-import {DfsOrderOptions} from '../interface/index';
-// import {MERKLE_TYPES} from '../di/index';
+import { DepthFirstVisitMode, IMerkleCalculator } from '../index';
+import { DfsOrderOptions } from '../interface';
 
 export class DepthFirstOrder
 {
    private readonly maxLevel: number;
 
    constructor(
-      // @inject(MERKLE_TYPES.MerkleCalculator)
       private readonly calculator: IMerkleCalculator,
-      // @inject(MERKLE_TYPES.MerkleTreeDescription)
-      treeDescription: MerkleTreeDescription,
+      public readonly treeDescription: MerkleTreeDescription,
       private readonly orderOptions: DfsOrderOptions)
    {
-      this.maxLevel = (!! orderOptions.endWith)
+      this.maxLevel = (
+         !!orderOptions.endWith
+      )
          ? orderOptions.endWith.level
          : treeDescription.tierCount - 1;
    }
@@ -24,35 +23,42 @@ export class DepthFirstOrder
    {
       const rootBlock = this.calculator.findBlockMappedRootByOffset(0);
       switch (this.orderOptions.visitMode) {
-         case DepthFirstVisitMode.PRE_ORDER: {
+         case DepthFirstVisitMode.PRE_ORDER:
+         {
             yield* this.doPreOrderDfs(rootBlock);
             break;
          }
-         case DepthFirstVisitMode.IN_ORDER: {
+         case DepthFirstVisitMode.IN_ORDER:
+         {
             yield* this.doInOrderDfs(rootBlock);
             break;
          }
-         case DepthFirstVisitMode.POST_ORDER: {
+         case DepthFirstVisitMode.POST_ORDER:
+         {
             yield* this.doPostOrderDfs(rootBlock);
             break;
          }
       }
    }
 
-   public* doPreOrderDfs(parent: BlockMappedDigestLocator): IterableIterator<BlockMappedDigestLocator> {
+   public* doPreOrderDfs(parent: BlockMappedDigestLocator): IterableIterator<BlockMappedDigestLocator>
+   {
       yield parent;
 
       if (parent.blockLevel < this.maxLevel) {
-         for (let child of this.calculator.getChildBlockMappedRoots(parent, this.orderOptions.leftToRight)) {
+         for (let child of
+            this.calculator.getChildBlockMappedRoots(parent, this.orderOptions.leftToRight))
+         {
             yield* this.doPreOrderDfs(child);
          }
       }
    }
 
-
-   public* doInOrderDfs(parent: BlockMappedDigestLocator): IterableIterator<BlockMappedDigestLocator> {
+   public* doInOrderDfs(parent: BlockMappedDigestLocator): IterableIterator<BlockMappedDigestLocator>
+   {
       if (parent.blockLevel < this.maxLevel) {
-         const childIter = this.calculator.getChildBlockMappedRoots(parent, this.orderOptions.leftToRight);
+         const childIter = this.calculator.getChildBlockMappedRoots(
+            parent, this.orderOptions.leftToRight);
          const firstChild = childIter.next();
          if (!firstChild.done) {
             yield* this.doInOrderDfs(firstChild.value);
@@ -66,10 +72,12 @@ export class DepthFirstOrder
       }
    }
 
-
-   public* doPostOrderDfs(parent: BlockMappedDigestLocator): IterableIterator<BlockMappedDigestLocator> {
+   public* doPostOrderDfs(parent: BlockMappedDigestLocator): IterableIterator<BlockMappedDigestLocator>
+   {
       if (parent.blockLevel < this.maxLevel) {
-         for (let child of this.calculator.getChildBlockMappedRoots(parent, this.orderOptions.leftToRight)) {
+         for (let child of
+            this.calculator.getChildBlockMappedRoots(parent, this.orderOptions.leftToRight))
+         {
             yield* this.doPostOrderDfs(child);
          }
       }

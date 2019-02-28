@@ -1,29 +1,42 @@
-import {IDirector} from '@jchptf/api';
-import {
-   bindInputParam, buildable, factoryMethod, ITopoOrderBuilder
-} from './topo-order-builder.interface';
+import { IDirector } from '@jchptf/api';
+import { ITopoOrderBuilder } from './topo-order-builder.interface';
+import { Builder, Ctor, Instance } from 'fluent-interface-builder';
 
-@buildable
+const builderClass: Ctor<TopoOrderOptions, ITopoOrderBuilder & Instance<TopoOrderOptions>> =
+   new Builder<TopoOrderOptions, ITopoOrderBuilder & Instance<TopoOrderOptions>>()
+      .cascade('leftToRight', (value: boolean) => (obj: TopoOrderOptions) => {
+         obj.leftToRight = value;
+      })
+      .cascade('onlyVisitUsed', (value: boolean) => (obj: TopoOrderOptions) => {
+         obj.onlyVisitUsed = value;
+      })
+      .cascade('breadthFirst', (value: boolean) => (obj: TopoOrderOptions) => {
+         obj.breadthFirst = value;
+      }).value;
+
 export class TopoOrderOptions
 {
-   public readonly onlyVisitUsed: boolean = false;
-
    constructor(
-      @bindInputParam({name: 'leftToRight'})
-      public readonly leftToRight: boolean,
-      @bindInputParam({name: 'breadthFirst'})
-      public readonly breadthFirst: boolean)
+      public leftToRight: boolean = true,
+      public breadthFirst: boolean = true,
+      public onlyVisitUsed: boolean = false)
    { }
 
-   @factoryMethod()
    static create(director: IDirector<ITopoOrderBuilder>): TopoOrderOptions
    {
-      throw director;
+      const retVal = new TopoOrderOptions();
+      const builder: ITopoOrderBuilder = new builderClass(retVal);
+
+      director(builder);
+      return retVal;
    }
 
-   @factoryMethod()
    clone(director: IDirector<ITopoOrderBuilder>): TopoOrderOptions
    {
-      throw director;
+      const retVal = Object.assign(new TopoOrderOptions(), this);
+      const builder: ITopoOrderBuilder = new builderClass(retVal);
+
+      director(builder);
+      return retVal;
    }
 }

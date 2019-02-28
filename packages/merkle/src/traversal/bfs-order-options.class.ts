@@ -1,34 +1,49 @@
 import { IDirector } from '@jchptf/api';
 import { BlockMappedDigestLocator, BlockMappedLayerLocator } from '../locator';
-import {
-   bindInputParam, buildable, factoryMethod, IBfsOrderBuilder,
-} from './bfs-order-builder.interface';
+import { IBfsOrderBuilder, } from './bfs-order-builder.interface';
+import { Builder, Ctor, Instance } from 'fluent-interface-builder';
 
-@buildable
+const builderClass: Ctor<BfsOrderOptions, IBfsOrderBuilder & Instance<BfsOrderOptions>> =
+   new Builder<BfsOrderOptions, IBfsOrderBuilder & Instance<BfsOrderOptions>>()
+      .cascade('leftToRight', (value: boolean) => (obj: BfsOrderOptions) => {
+         obj.leftToRight = value;
+      })
+      .cascade('rootBlock', (value: BlockMappedDigestLocator) => (obj: BfsOrderOptions) => {
+         obj.rootBlock = value;
+      })
+      .cascade('leafLayer', (value: BlockMappedLayerLocator) => (obj: BfsOrderOptions) => {
+         obj.leafLayer = value;
+      })
+      .cascade('topToBottom', (value: boolean) => (obj: BfsOrderOptions) => {
+         obj.topToBottom = value;
+      }).value;
+
 // export class BfsOrderOptions<Node extends MerkleDigestLocator = MerkleDigestLocator>
 export class BfsOrderOptions
 {
    constructor(
-      @bindInputParam({ name: 'leftToRight' })
-      public readonly leftToRight: boolean,
-      @bindInputParam({ name: 'topToBottom' })
-      public readonly topToBottom: boolean,
-      @bindInputParam({ name: 'rootBlock' })
-      public readonly rootBlock: BlockMappedDigestLocator,
-      @bindInputParam({ name: 'leafLayer' })
-      public readonly leafLayer: BlockMappedLayerLocator,
+      public leftToRight: boolean = true,
+      public topToBottom: boolean = true,
+      public rootBlock?: BlockMappedDigestLocator,
+      public leafLayer?: BlockMappedLayerLocator,
    )
    { }
 
-   @factoryMethod()
    static create(director: IDirector<IBfsOrderBuilder>): BfsOrderOptions
    {
-      throw director;
+      const retVal = new BfsOrderOptions();
+      const builder: IBfsOrderBuilder = new builderClass(retVal);
+
+      director(builder);
+      return retVal;
    }
 
-   @factoryMethod()
    clone(director: IDirector<IBfsOrderBuilder>): BfsOrderOptions
    {
-      throw director;
+      const retVal = Object.assign(new BfsOrderOptions(), this);
+      const builder: IBfsOrderBuilder = new builderClass(retVal);
+
+      director(builder);
+      return retVal;
    }
 }
