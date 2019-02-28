@@ -13,12 +13,12 @@
             "@jchptf/txtypes": ["../../txtypes/src"],
             "@jchptf/semaphore": ["../src"]
         }
-    }
+    },
     "references": [
         { "path": "../../api/src" },
         { "path": "../../coroutines/src" },
         { "path": "../../reflection/src" },
-        { "path": "../../txtypes/src" }
+        { "path": "../../txtypes/src" },
         { "path": "../src" }
     ],
     "include": [ "./**/*.ts" ]
