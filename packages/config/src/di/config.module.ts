@@ -6,10 +6,10 @@ import { AsyncModuleParam, asyncProviderFromParam } from '@jchptf/api';
 
 import { IConfigClassFinder } from '../interfaces';
 import { ConfigClassFinder } from '../config-class-finder.class';
-import { ConfigMetadataHelper } from '../config-metadata-helper.class';
+import { configMetadataHelper } from '../config-metadata-helper.const';
 import {
-   CONFIG_READER_PROVIDER, CONFIG_LOADER_PROVIDER, CONFIG_METADATA_HELPER_PROVIDER,
-   DOTENV_CONFIG_OPTIONS,
+   CONFIG_READER_PROVIDER, CONFIG_LOADER_PROVIDER, DOTENV_CONFIG_OPTIONS,
+   CONFIG_METADATA_HELPER_PROVIDER,
 } from './config.constants';
 import { ConfigLoader } from '../config-loader.service';
 import { ConfigReader } from '../config-reader.service';
@@ -56,9 +56,9 @@ export class ConfigModule
       resolveGlobRoot?: string): Promise<DynamicModule>
    {
       const configClassFinder: IConfigClassFinder =
-         new ConfigClassFinder(
-            ConfigMetadataHelper.getInstance(), loadConfigGlob, resolveGlobRoot);
+         new ConfigClassFinder(configMetadataHelper, loadConfigGlob, resolveGlobRoot);
 
+      // These are the per-configuration object providers that
       const configProviders: Provider[] =
          await configClassFinder.loadConfigAsync()
             .pipe(
@@ -87,7 +87,7 @@ export class ConfigModule
 const STANDARD_PROVIDERS = [
    {
       provide: CONFIG_METADATA_HELPER_PROVIDER,
-      useValue: ConfigMetadataHelper.getInstance(),
+      useValue: configMetadataHelper,
    },
    {
       provide: CONFIG_READER_PROVIDER,
