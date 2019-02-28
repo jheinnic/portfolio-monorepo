@@ -1,24 +1,21 @@
-import {ResourceSemaphore} from './resource-semaphore.class';
-import {GET_LEASE_MANAGER} from './resource-semaphore.constants';
-import {IResourceAdapter} from './interfaces/resource-adapter.interface';
+import { IResourceAdapter } from './interfaces';
+import { ResourceSemaphore } from './resource-semaphore.class';
+import { GET_LEASE_MANAGER } from './resource-semaphore.constants';
 
-export class ResourceAdapter<T extends object> implements IResourceAdapter<T>, ProxyHandler<T>
-{
+export class ResourceAdapter<T extends object> implements IResourceAdapter<T>, ProxyHandler<T> {
    private inUse: boolean;
-   private dryAdapter?: { proxy: T, revoke: () => void };
+   private dryAdapter?: { proxy: T, revoke(): void };
 
    constructor(
       readonly parentSemaphore: ResourceSemaphore<T>,
-      readonly wetArtifact: T)
-   {
+      readonly wetArtifact: T) {
       this.inUse = false;
       this.dryAdapter = undefined;
    }
 
-   public publish(): T
-   {
+   public publish(): T {
       if (this.dryAdapter !== undefined) {
-         throw new Error('Already published: ' + this.wetArtifact);
+         throw new Error(`Already published: ${this.wetArtifact}`);
       }
 
       this.dryAdapter = Proxy.revocable(this.wetArtifact, this);
@@ -27,10 +24,9 @@ export class ResourceAdapter<T extends object> implements IResourceAdapter<T>, P
       return this.dryAdapter.proxy;
    }
 
-   public recycle(): boolean
-   {
+   public recycle(): boolean {
       if (this.dryAdapter === undefined) {
-         throw new Error('Not published: ' + this.wetArtifact);
+         throw new Error(`Not published: ${this.wetArtifact}`);
       }
 
       this.dryAdapter.revoke();
@@ -39,7 +35,7 @@ export class ResourceAdapter<T extends object> implements IResourceAdapter<T>, P
       return this.inUse;
    }
 
-   get(target: T, prop: PropertyKey, receiver: any) {
+   public get(target: T, prop: PropertyKey, receiver: any) {
       if (prop === GET_LEASE_MANAGER) {
          return this;
       }
@@ -52,7 +48,7 @@ export class ResourceAdapter<T extends object> implements IResourceAdapter<T>, P
       return Reflect.get(target, prop, receiver);
    }
 
-   has(target: T, prop: PropertyKey) {
+   public has(target: T, prop: PropertyKey) {
       if (prop === GET_LEASE_MANAGER) {
          return true;
       }
