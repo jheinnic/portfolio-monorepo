@@ -5,7 +5,9 @@ import { AsyncSink } from 'ix';
 import { Chan } from 'medium';
 
 import { AsyncTx } from '@jchptf/txtypes';
-import { ChanBufferType, Limiter, SinkLike } from '.';
+import { ChanBufferType } from './chan-buffer-type.enum';
+import { Limiter } from './limiter.type';
+import { SinkLike } from './sink-like.type';
 
 export interface IConcurrentWorkFactory
 {
