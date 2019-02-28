@@ -6,10 +6,12 @@ import {
    MerkleLayerLocator, MerkleTreeDescription
 } from './index';
 import {IMerkleLocatorFactory} from '../interface';
+import { Injectable, Inject } from '@nestjs/common';
+import { MERKLE_DIGEST_LRU_CACHE_LPT } from '../di/merkle.constants';
+
 // import {MERKLE_CACHE_TYPES, MERKLE_TAG_KEYS, MERKLE_TYPES} from '../di';
 
-
-// @injectable()
+@Injectable()
 export class MerkleLocatorFactory implements IMerkleLocatorFactory
 {
    private readonly layerCache: MerkleLayerLocator[];
@@ -17,10 +19,8 @@ export class MerkleLocatorFactory implements IMerkleLocatorFactory
    private readonly levelCache: BlockMappedLayerLocator[];
 
    constructor(
-      // @inject(MERKLE_TYPES.MerkleTreeDescription)
       private readonly treeDescription: MerkleTreeDescription,
-      // @inject(MERKLE_TYPES.LRUCache)
-      // @tagged(MERKLE_TAG_KEYS.LRUCacheType, MERKLE_CACHE_TYPES.Digest)
+      @Inject(MERKLE_DIGEST_LRU_CACHE_LPT)
       private readonly digestCache: LRU.Cache<number, MerkleDigestLocator>)
    {
       this.layerCache = new Array<MerkleLayerLocator>(treeDescription.treeDepth);

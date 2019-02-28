@@ -1,15 +1,15 @@
 import {MerkleDigestLocator} from './merkle-digest-locator.value';
 import {BlockMappedDigestLocator} from './block-mapped-digest-locator.value';
 
-export interface MerkleProofLocator {
+export interface IMerkleProofLocator {
    /**
     * Leaf locator for the subject of identified proof.
     */
    readonly subjectDigest: MerkleDigestLocator;
 
    /**
-    * Sequential path of nodes from the blocks referenced by {@see siblingAncestorBlocks}.  Begins with
-    * the sibling of {@link subjectLeaf}, and ends with the locator for the Merkle tree root.
+    * Sequential path of nodes from blocks referenced by {@see siblingAncestorBlocks}.  Begins
+    * with sibling of {@link subjectLeaf}, and ends with Merkle tree root locator.
     */
    readonly validationPath: ReadonlyArray<MerkleDigestLocator>;
 

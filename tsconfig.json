@@ -32,6 +32,8 @@
     "references": [
         { "path": "./packages/api" },
         { "path": "./packages/config" },
+        { "path": "./packages/consul" },
+        { "path": "./packages/merkle" },
         { "path": "./packages/mixins" },
         { "path": "./packages/objecttypes" },
         { "path": "./packages/reflection" },

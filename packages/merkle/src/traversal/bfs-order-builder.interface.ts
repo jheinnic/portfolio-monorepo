@@ -1,5 +1,5 @@
-import {BlockMappedDigestLocator, BlockMappedLayerLocator} from '../locator';
-import {getBuilderDecorators} from '@jchptf/builders';
+import { BlockMappedDigestLocator, BlockMappedLayerLocator } from '../locator';
+import { getBuilderDecorators } from '@jchptf/builders';
 
 export interface IBfsOrderBuilder {
    leftToRight(value: boolean): IBfsOrderBuilder;

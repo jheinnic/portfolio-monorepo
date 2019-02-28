@@ -12,11 +12,11 @@
             "@jchptf/reflection": ["../../reflection/src"],
             "@jchptf/merkle": ["../src"]
         }
-    }
+    },
     "references": [
         { "path": "../../api/src" },
         { "path": "../../builders/src" },
-        { "path": "../../reflection/src" }
+        { "path": "../../reflection/src" },
         { "path": "../src" }
     ],
     "include": [ "./**/*.ts" ]

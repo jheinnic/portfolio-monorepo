@@ -1,7 +1,7 @@
-import {MerkleDigestLocator} from './merkle-digest-locator.value';
-import {MerkleLayerLocator} from './merkle-layer-locator.value';
-import {BlockMappedDigestLocator} from './block-mapped-digest-locator.value';
-import {BlockMappedLayerLocator} from './block-mapped-layer-locator.value';
+import { MerkleDigestLocator } from './merkle-digest-locator.value';
+import { MerkleLayerLocator } from './merkle-layer-locator.value';
+import { BlockMappedDigestLocator } from './block-mapped-digest-locator.value';
+import { BlockMappedLayerLocator } from './block-mapped-layer-locator.value';
 
 export * from './block-mapped-subtree-locator.value';
 export * from './block-mapped-digest-locator.value';

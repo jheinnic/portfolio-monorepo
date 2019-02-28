@@ -3,7 +3,7 @@ import Optional from 'typescript-optional';
 import {IDirector} from '@jchptf/api';
 import {
    BlockMappedDigestLocator, BlockMappedLayerLocator, MerkleDigestLocator, MerkleLayerLocator,
-   MerkleProofLocator
+   IMerkleProofLocator
 } from '../locator';
 import {BlockTopologicalOrder, IBfsOrderBuilder, IDfsOrderBuilder, ITopoOrderBuilder} from '../traversal';
 
@@ -101,5 +101,5 @@ export interface IMerkleCalculator
 
    findNearestBlockMappedRoot(fromDigest: MerkleDigestLocator): BlockMappedDigestLocator;
 
-   findMerkleProofForDigest(mapToProof: MerkleDigestLocator): MerkleProofLocator;
+   findMerkleProofForDigest(mapToProof: MerkleDigestLocator): IMerkleProofLocator;
 }

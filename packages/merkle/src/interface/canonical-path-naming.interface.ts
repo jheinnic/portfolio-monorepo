@@ -1,23 +1,28 @@
-import {BlockMappedDigestLocator, MerkleDigestLocator} from '../locator';
-import {NamedPath} from './named-path.interface';
+import { BlockMappedDigestLocator, MerkleDigestLocator } from '../locator';
+import { INamedPath } from './named-path.interface';
 
-export interface ICanonicalPathNaming {
+export interface ICanonicalPathNaming
+{
    findAllBlocksPathNamesDepthFirst(namespaceRoot: string, leftToRight?: boolean):
-      IterableIterator<NamedPath<BlockMappedDigestLocator>>;
+      IterableIterator<INamedPath<BlockMappedDigestLocator>>;
 
    findLeafBlockPathNames(namespaceRoot: string, leftToRight?: boolean):
-      IterableIterator<NamedPath<BlockMappedDigestLocator>>;
+      IterableIterator<INamedPath<BlockMappedDigestLocator>>;
 
    findLeafDigestPathNames(namespaceRoot: string, leftToRight?: boolean, digestSuffix?: string):
-      IterableIterator<NamedPath<MerkleDigestLocator>>;
+      IterableIterator<INamedPath<MerkleDigestLocator>>;
 
    // getBlockNamePart(digestBlock: BlockMappedDigestLocator): string
 
    // getLeafDigestNamePart(leafDigest: MerkleDigestLocator): string
 
-   getBlockPathName(namespaceRoot: string, digestBlock: BlockMappedDigestLocator): NamedPath<BlockMappedDigestLocator>
+   getBlockPathName(
+      namespaceRoot: string,
+      digestBlock: BlockMappedDigestLocator): INamedPath<BlockMappedDigestLocator>;
 
-   getLeafDigestPathName(namespaceRoot: string, leafDigest: MerkleDigestLocator, digestSuffix?: string): NamedPath<MerkleDigestLocator>;
+   getLeafDigestPathName(
+      namespaceRoot: string, leafDigest: MerkleDigestLocator,
+      digestSuffix?: string): INamedPath<MerkleDigestLocator>;
 
    // getBlockByAbsolutePathName(absoluteName: string): BlockMappedDigestLocator
 

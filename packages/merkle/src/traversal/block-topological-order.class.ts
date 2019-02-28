@@ -33,7 +33,8 @@ export class BlockTopologicalOrder extends TopologicalOrder<BlockMappedDigestLoc
    }
 
    protected getNodesOnLayer(
-      layer: BlockMappedLayerLocator, leftToRight: boolean): IterableIterator<BlockMappedDigestLocator>
+      layer: BlockMappedLayerLocator,
+      leftToRight: boolean): IterableIterator<BlockMappedDigestLocator>
    {
       return this.calculator.getSubtreesOnBlockMappedLayer(layer, leftToRight);
    }

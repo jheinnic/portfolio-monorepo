@@ -17,5 +17,5 @@
         { "path": "../../builders/src" },
         { "path": "../../reflection/src" }
     ],
-    "include": [ "./**/*.ts" ]
+    "include": [ "../src/**/*.ts" ]
 }

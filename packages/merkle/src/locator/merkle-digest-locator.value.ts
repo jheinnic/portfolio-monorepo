@@ -1,8 +1,8 @@
-import {MerkleOrientationType} from './merkle-orientation-type.enum';
-import {MerkleNodeType} from './merkle-node-type.enum';
-import {MerkleLayerLocator} from './merkle-layer-locator.value';
-import {BlockMappedDigestLocator} from './block-mapped-digest-locator.value';
-import Optional from 'typescript-optional';
+import { MerkleOrientationType } from './merkle-orientation-type.enum';
+import { MerkleNodeType } from './merkle-node-type.enum';
+import { MerkleLayerLocator } from './merkle-layer-locator.value';
+import { BlockMappedDigestLocator } from './block-mapped-digest-locator.value';
+import { default as Optional } from 'typescript-optional';
 
 export class MerkleDigestLocator
 {
@@ -22,12 +22,12 @@ export class MerkleDigestLocator
          throw new Error('Node index may not be negative');
       }
       if (index >= layer.size) {
-         throw new Error('Node index cannot exceed layer size, ' + layer.size);
+         throw new Error(`Node index cannot exceed layer size, ${layer.size}`);
       }
       this.leafLayerDepth = this.treeDepth - 1;
    }
 
-  /**
+   /**
     * A zero-based index for locating a node's layer.  The root node is at depth 0, and its
     * and its immediate children are all at depth 1.  All leaf nodes are found at a layer depth
     * equal to the tree's overall height minus one.
@@ -50,8 +50,14 @@ export class MerkleDigestLocator
 
    public get orientation(): MerkleOrientationType
    {
-      return ((this.index % 2) == 0)
-         ? (this.depth > 0)
+      return (
+         (
+            this.index % 2
+         ) === 0
+      )
+         ? (
+            this.depth > 0
+         )
             ? MerkleOrientationType.LEFT_CHILD
             : MerkleOrientationType.ROOT
          : MerkleOrientationType.RIGHT_CHILD;
@@ -72,7 +78,7 @@ export class MerkleDigestLocator
     */
    public get nodeType(): MerkleNodeType
    {
-      if (this.depth == 0) {
+      if (this.depth === 0) {
          return MerkleNodeType.ROOT;
       }
 
@@ -83,40 +89,66 @@ export class MerkleDigestLocator
       return MerkleNodeType.LEAF;
    }
 
-   public get siblingIndex(): number|undefined
+   public get siblingIndex(): number | undefined
    {
-      return ((this.index % 2) == 0)
-         ? (this.depth > 0)
+      return (
+         (
+            this.index % 2
+         ) === 0
+      )
+         ? (
+            this.depth > 0
+         )
             ? this.index + 1
             : undefined
          : this.index - 1;
    }
 
-   public get siblingPosition(): number|undefined
+   public get siblingPosition(): number | undefined
    {
-      return ((this.index % 2) == 0)
-         ? (this.depth > 0)
+      return (
+         (
+            this.index % 2
+         ) === 0
+      )
+         ? (
+            this.depth > 0
+         )
             ? this.position + 1
             : undefined
          : this.position - 1;
    }
 
-   public get leftMostPosition(): number {
-      return (Math.pow(2, this.leafLayerDepth) - 1)
-         + (this.index * Math.pow(2, this.leafLayerDepth - this.depth))
+   public get leftMostPosition(): number
+   {
+      return (
+         Math.pow(2, this.leafLayerDepth) - 1
+         )
+         + (
+            this.index * Math.pow(2, this.leafLayerDepth - this.depth)
+         );
    }
 
-   public get rightMostPosition(): number {
-      return (Math.pow(2, this.leafLayerDepth) - 1)
-         + ((this.index + 1) * Math.pow(2, this.leafLayerDepth - this.depth))
+   public get rightMostPosition(): number
+   {
+      return (
+         Math.pow(2, this.leafLayerDepth) - 1
+         )
+         + (
+            (
+               this.index + 1
+            ) * Math.pow(2, this.leafLayerDepth - this.depth)
+         )
          - 1;
    }
 
-   public get blockMapped(): boolean {
+   public get blockMapped(): boolean
+   {
       return false;
    }
 
-   public asBlockMapped(): Optional<BlockMappedDigestLocator> {
+   public asBlockMapped(): Optional<BlockMappedDigestLocator>
+   {
       return Optional.empty();
    }
 }
