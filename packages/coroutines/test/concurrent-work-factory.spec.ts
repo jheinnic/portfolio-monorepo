@@ -1,4 +1,3 @@
-import Queue from 'co-priority-queue';
 import { Chan, close, sleep, take } from 'medium';
 
 import * as chai from 'chai';
@@ -13,7 +12,6 @@ import { LoadToChanScriptDirector } from './utilities/load-to-chan-script-direct
 
 chai.use(sinonChai);
 const expect = chai.expect;
-
 
 describe('ConcurrentWorkFactory', () => {
    let factory: ConcurrentWorkFactory;
@@ -32,7 +30,6 @@ describe('ConcurrentWorkFactory', () => {
    // Lolex.tick() is still used to roll the virtual clock forward to skip over
    // non-trivial spans of time without the actual passage of time.  The strategy
 
-
    beforeEach(() => {
       sandbox = sinon.createSandbox();
       factory = new ConcurrentWorkFactory();
@@ -47,12 +44,14 @@ describe('ConcurrentWorkFactory', () => {
       clock.uninstall();
    });
 
-   describe('createPriorityQueue', () => {
-      it('Returns a queue', () => {
-         const output = factory.createPriorityQueue();
-         expect(output).is.instanceOf(Queue);
-      })
-   });
+   // describe('createPriorityQueue', () => {
+   //    it('Returns a queue', () => {
+   //       const output = factory.createPriorityQueue();
+   //       expect(output)
+   //          .is
+   //          .instanceOf(Queue);
+   //    })
+   // });
 
    describe('loadToChan', () => {
       let iterSource: Array<number>;
