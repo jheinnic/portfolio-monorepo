@@ -1,6 +1,5 @@
-import {ConcurrentWorkFactory} from '../src/concurrent-work-factory.service';
+import {ConcurrentWorkFactory, Limiter} from '@jchptf/coroutines';
 import {sleep} from 'medium';
-import {Limiter} from '../src/interfaces';
 
 const concurrency: number = 50;
 const jobCount: number = 25000;
@@ -17,7 +16,7 @@ async function doWork(input: number): Promise<number> {
    const sleepTime = Math.round(25 * Math.random());
    await sleep(sleepTime);
    activeWorkerCount = activeWorkerCount - 1;
-   await sleep(sleepTime / 2);
+   // await sleep(sleepTime / 2);
    console.log(`On completing work, there are now ${activeWorkerCount} active workers`);
    return input * 2;
 }

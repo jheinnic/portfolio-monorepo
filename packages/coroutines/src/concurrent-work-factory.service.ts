@@ -462,7 +462,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
                const last = new Date().getTime();
                await put(sink, nextIterResult.value);
                sources.write(nextIterPair);
-               const lapsed = new Date().getTime() - last;
+               const lapsed = Date.now() - last;
                if (lapsed < delay) {
                   await sleep(delay - lapsed);
                }

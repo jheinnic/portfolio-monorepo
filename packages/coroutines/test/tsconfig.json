@@ -3,7 +3,6 @@
     "compilerOptions": {
         "outDir": "../build",
         "baseUrl": ".",
-        "rootDir": ".",
         "composite": true,
         "declaration": true,
         "declarationMap": true,
@@ -20,5 +19,5 @@
         { "path": "../../txtypes/src" },
         { "path": "../src" }
     ],
-    "include": [ "./**/*.ts" ]
+    "include": [ "./**/*.ts", "../typings/**/*.d.ts" ]
 }
