@@ -1,6 +1,6 @@
 import { Provider } from '@nestjs/common';
 import { illegalArgs, illegalState } from '@thi.ng/errors';
-import { AnyFunc } from 'simplytyped';
+import { AnyFunc, ConstructorFor } from 'simplytyped';
 
 import { ProviderToken } from '../di';
 import {
@@ -37,10 +37,9 @@ export function isFactoryClass<Type, Key extends string = string>(
 }
 
 export function asyncProviderFromParam<
-   Type,
-   Key extends string|AnyFunc<Promise<Type>>|undefined = undefined
+   Type, Key extends string|AnyFunc<Promise<Type>>|undefined = undefined
 >(
-   providerToken: ProviderToken<Type>,
+   providerToken: ProviderToken<Type> | (Type extends object ? ConstructorFor<Type> : never),
    moduleParam: AsyncModuleParam<Type, Key>,
    factoryKey?: Key): Provider[]
 {
