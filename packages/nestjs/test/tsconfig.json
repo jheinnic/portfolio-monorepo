@@ -1,0 +1,19 @@
+{
+    "extends": "../../../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../build",
+        "baseUrl": ".",
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "paths": {
+            "@jchptf/objecttypes": ["../../objecttypes/src"],
+            "@jchptf/nestjs": ["../src"]
+        }
+    }
+    "references": [
+        { "path": "../../objecttypes/src" },
+        { "path": "../src" }
+    ],
+    "include": [ "./**/*.ts" ]
+}

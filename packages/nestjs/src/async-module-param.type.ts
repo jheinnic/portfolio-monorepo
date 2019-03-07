@@ -1,6 +1,5 @@
 import { AnyFunc, ArgsAsTuple, ConstructorFor } from 'simplytyped';
-import { INoArgsConstructorFor } from '@jchptf/objecttypes';
-import { ProviderToken } from '../di';
+import { ProviderToken } from './provider-token.type';
 
 // export type AsyncModuleParam<
 //    ParamType,
@@ -16,9 +15,10 @@ import { ProviderToken } from '../di';
 export enum AsyncModuleParamStyle
 {
    VALUE,
+   CLASS,
    EXISTING,
    FACTORY,
-   CLASS,
+   FACTORY_CLASS
 }
 
 /**
@@ -30,13 +30,15 @@ export enum AsyncModuleParamStyle
  */
 export type AsyncModuleParam<
    ParamType,
-   FactoryType extends (AnyFunc<Promise<ParamType>> | string | undefined) = undefined
+   FactoryType extends AnyFunc<ParamType|Promise<ParamType>> = never
 > =
-   ValueAsyncModuleParam<ParamType, Extract<FactoryType, undefined>> |
-   ExistingAsyncModuleParam<ParamType, Extract<FactoryType, undefined>> |
-   ClassAsyncModuleParam<ParamType, Extract<FactoryType, string>> |
-   FactoryAsyncModuleParam<ParamType, Extract<FactoryType, AnyFunc<Promise<ParamType>>>>
-   ;
+   ValueAsyncModuleParam<ParamType> |
+   ExistingAsyncModuleParam<ParamType> |
+   FactoryClassAsyncModuleParam<ParamType> |
+   (ParamType extends object
+      ? ClassAsyncModuleParam<ParamType> : never) |
+   (FactoryType extends AnyFunc<ParamType|Promise<ParamType>>
+      ? FactoryAsyncModuleParam<ParamType, FactoryType> : never);
 
 /*
 export type ProviderTokenTuple<ProvidedTuple extends any[]> =
@@ -50,20 +52,20 @@ export type ProviderTokenTuple<ProvidedTuple extends any[]> =
                : never;
 */
 
-export type ValueAsyncModuleParam<
-   ParamType,
-   _Unused extends undefined = undefined
-> = {
+export type ValueAsyncModuleParam<ParamType> = {
    style: AsyncModuleParamStyle.VALUE,
-   useValue: ParamType extends object ? (ParamType | INoArgsConstructorFor<ParamType>) : ParamType,
+   useValue: ParamType,
 };
 
-export type ExistingAsyncModuleParam<
-   ParamType,
-   _Unused extends undefined = undefined
-> = {
+export type ClassAsyncModuleParam<ParamType extends object> = {
+   style: AsyncModuleParamStyle.CLASS,
+   useClass: ConstructorFor<ParamType>,
+};
+
+export type ExistingAsyncModuleParam<ParamType> = {
    style: AsyncModuleParamStyle.EXISTING,
-   useExisting: ProviderToken<ParamType>,
+   useExisting: ProviderToken<ParamType> | string |
+      (ParamType extends object ? ConstructorFor<ParamType> : never)
 };
 
 export type ArgsAsProviderTokens<F extends AnyFunc> = F extends () => any ? void[]
@@ -94,25 +96,25 @@ export type ArgsAsProviderTokens<F extends AnyFunc> = F extends () => any ? void
 
 export type FactoryAsyncModuleParam<
    ParamType,
-   FactoryType extends AnyFunc<Promise<ParamType>>
+   FactoryFunc extends AnyFunc<ParamType|Promise<ParamType>>
 > =
-   ArgsAsTuple<FactoryType> extends void[]
+   ArgsAsTuple<FactoryFunc> extends void[]
       ? {
          style: AsyncModuleParamStyle.FACTORY,
-         useFactory: FactoryType,
+         useFactory: FactoryFunc,
          inject?: void[],
       }
       : {
          style: AsyncModuleParamStyle.FACTORY,
-         useFactory: FactoryType,
-         inject: ArgsAsProviderTokens<FactoryType>,
-      }
-   ;
+         useFactory: FactoryFunc,
+         inject: ArgsAsProviderTokens<FactoryFunc>,
+      };
 
-export type ClassAsyncModuleParam<
-   ParamType, FactoryType extends string> =
-   {
-      style: AsyncModuleParamStyle.CLASS,
-      useClass: ConstructorFor<{ [K in FactoryType]: () => ParamType }>,
-   }
-   ;
+export interface Factory<ProvidedType> {
+   create(): ProvidedType|Promise<ProvidedType>
+}
+
+export type FactoryClassAsyncModuleParam<ParamType> = {
+   style: AsyncModuleParamStyle.FACTORY_CLASS,
+   useClass: ConstructorFor<Factory<ParamType>>
+};

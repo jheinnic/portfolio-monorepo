@@ -9,3 +9,4 @@ export * from './provider-token.type';
 export * from './provider-token.utilities';
 export * from './string-qualifier.type';
 export * from './token-dictionary.type';
+export * from './built-in-named-types.constants';

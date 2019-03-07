@@ -3,7 +3,7 @@ import chai from 'chai';
 import {
    getGlobalProviderToken, getLocalProviderToken, getModuleIdentifier, getNamedSubtypeIntent,
    getNamedTypeIntent, HasImpliedType, IsImpliedType, TokenDictionary,
-} from '@jchptf/api';
+} from '@jchptf/nestjs';
 import { assert, HasType, IsExactType, NotHasType } from 'conditional-type-checks';
 import {
    AnotherSubclass, Class, ISomething, OneSubclass, SomethingOne, SomethingThree, SomethingTwo,

@@ -1,0 +1,17 @@
+{
+    "extends": "../../../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../dist",
+        "baseUrl": ".",
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "paths": {
+            "@jchptf/objecttypes": ["../../objecttypes/src"]
+        }
+    },
+    "references": [
+        { "path": "../../objecttypes/src" }
+    ],
+    "include": [ "./**/*.ts" ]
+}
