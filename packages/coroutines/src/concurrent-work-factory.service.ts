@@ -8,10 +8,11 @@ import { FibonacciHeap, INode } from '@tyriar/fibonacci-heap';
 import { illegalArgs } from '@thi.ng/errors';
 
 import { AsyncTx } from '@jchptf/txtypes';
+import { IAdapter } from '@jchptf/api';
+
 import {
-   asFunction, ChanBufferType, IConcurrentWorkFactory, Limiter, SinkLike
+   asFunction, ChanBufferType, IConcurrentWorkFactory, Limiter, SinkLike, IterPair
 } from './interfaces';
-import { IterPair } from './interfaces/iter-pair.interface';
 
 function isIterable<T>(sinkValue: any): sinkValue is Iterable<T>
 {
@@ -35,13 +36,16 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
    //    return new Queue<M>();
    // }
 
-   createChan<T = any>(bufSize?: number, bufType?: ChanBufferType): Chan<T, T>
+   createChan<T = any>(
+      bufSize?: number, bufType?: ChanBufferType
+   ): IAdapter<Chan<T, T>>
    {
       return this.createTxChan<T, T>(identity, bufSize, bufType);
    }
 
    createTxChan<T = any, M = T>(
-      tx: Transducer<T, M>, bufSize: number = 0, bufType?: ChanBufferType): Chan<T, M>
+      tx: Transducer<T, M>, bufSize: number = 0, bufType?: ChanBufferType
+   ): IAdapter<Chan<T, M>>
    {
       if (bufSize < 0) {
          illegalArgs(`bufSize, ${bufSize}, may not be negative`);
@@ -50,6 +54,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
          illegalArgs(`bufType, ${bufType}, must be undefined when bufSize is zero`);
       }
 
+      let retVal: Chan<T, M>;
       if (bufSize > 0) {
          if (!bufType) {
             bufType = ChanBufferType.fixed;
@@ -58,24 +63,35 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
          switch (bufType) {
             case ChanBufferType.fixed:
             {
-               return chan(buffers.fixed(bufSize), tx);
+               retVal = chan(buffers.fixed(bufSize), tx);
+               break;
             }
             case ChanBufferType.dropping:
             {
-               return chan(buffers.dropping(bufSize), tx);
+               retVal = chan(buffers.dropping(bufSize), tx);
+               break;
             }
             case ChanBufferType.sliding:
             {
-               return chan(buffers.sliding(bufSize), tx);
+               retVal = chan(buffers.sliding(bufSize), tx);
+               break;
             }
             default:
             {
-               illegalArgs(`Unknown buffer type: ${bufType}`);
+               throw illegalArgs(`Unknown buffer type: ${bufType}`);
             }
          }
+
+         return {
+            unwrap: () => retVal
+         };
       }
 
-      return chan(undefined, tx);
+      retVal = chan(undefined, tx);
+
+      return {
+         unwrap: () => retVal
+      };
    }
 
    createAsyncSink<T>()

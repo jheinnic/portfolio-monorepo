@@ -8,6 +8,7 @@ import { AsyncTx } from '@jchptf/txtypes';
 import { ChanBufferType } from './chan-buffer-type.enum';
 import { Limiter } from './limiter.type';
 import { SinkLike } from './sink-like.type';
+import { IAdapter } from '@jchptf/api';
 
 export interface IConcurrentWorkFactory
 {
@@ -78,10 +79,10 @@ export interface IConcurrentWorkFactory
     */
    createLimiter(concurrency: number, defaultPriority?: number): Limiter;
 
-   createChan<T = any>(bufSize?: number, bufType?: ChanBufferType): Chan<T, T>;
+   createChan<T = any>(bufSize?: number, bufType?: ChanBufferType): IAdapter<Chan<T, T>>;
 
    createTxChan<T = any, M = T>(
-      tx: Transducer<T, M>, bufSize?: number, bufType?: ChanBufferType): Chan<T, M>;
+      tx: Transducer<T, M>, bufSize?: number, bufType?: ChanBufferType): IAdapter<Chan<T, M>>;
 
    createAsyncSink<T = any>(): AsyncSink<T>;
 

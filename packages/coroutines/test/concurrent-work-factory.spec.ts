@@ -73,7 +73,7 @@ describe('ConcurrentWorkFactory', () => {
             .returns(realIterator);
          iterSource[Symbol.iterator] = iterSourceIteratorStub;
 
-         retChan = factory.createChan();
+         retChan = factory.createChan().unwrap();
       });
 
       afterEach(() => {
