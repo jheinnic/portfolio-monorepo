@@ -55,7 +55,7 @@ export type ValueAsyncModuleParam<
    _Unused extends undefined = undefined
 > = {
    style: AsyncModuleParamStyle.VALUE,
-   useValue: ParamType | ParamType extends object ? INoArgsConstructorFor<ParamType> : never,
+   useValue: ParamType extends object ? (ParamType | INoArgsConstructorFor<ParamType>) : ParamType,
 };
 
 export type ExistingAsyncModuleParam<
