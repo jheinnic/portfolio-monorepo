@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.9](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/consul@0.0.8...@jchptf/consul@0.0.9) (2019-03-07)
+
+**Note:** Version bump only for package @jchptf/consul
+
+
+
+
+
 ## [0.0.8](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/consul@0.0.7...@jchptf/consul@0.0.8) (2019-02-28)
 
 **Note:** Version bump only for package @jchptf/consul

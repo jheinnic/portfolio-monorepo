@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/objecttypes",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "TODO",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
