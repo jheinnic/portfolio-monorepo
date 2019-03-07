@@ -3,9 +3,9 @@
         "outDir": "../build",
 
         /* dtslint does not seem to comprehend the 'extends' key... */
+        "target": "es2015",
         "module": "commonjs",
-        "lib": ["es6", "esnext.asynciterable", "es2017.object", "dom"],
-        "target": "es6",
+        "lib": ["es2015", "esnext.asynciterable", "es2017.object", "dom"],
         "strict": true,
         "noEmit": false,
         "alwaysStrict": true,
