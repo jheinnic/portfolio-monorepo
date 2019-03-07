@@ -113,7 +113,7 @@ export class ResourceSemaphore<T extends object> implements IResourceSemaphore<T
    private async scanForRequests(): Promise<void>
    {
       while (this.channelOpen) {
-         let nextMgr: IResourceAdapter<T> | object =
+         let nextMgr: IResourceAdapter<T> | CLOSED =
             await this.recycledResources!;
 
          if (nextMgr instanceof ResourceAdapter) {
