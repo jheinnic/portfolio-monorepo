@@ -1,6 +1,6 @@
 import {
    getDynamicProviderBinding, getLocalProviderToken, getModuleIdentifier, getNamedTypeIntent,
-} from '@jchptf/api';
+} from '@jchptf/nestjs';
 import { ICanonicalPathNaming, IMerkleCalculator, IMerkleLocatorFactory } from '../interface';
 import { default as LRU } from 'lru-cache';
 

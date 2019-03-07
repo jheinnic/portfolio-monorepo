@@ -1,4 +1,4 @@
-import { getDynamicProviderToken, ModuleIdentifier, TypeIdentifier } from '@jchptf/api';
+import { getDynamicProviderToken, ModuleIdentifier, TypeIdentifier } from '@jchptf/nestjs';
 import { CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING } from './config.constants';
 
 export function getConfigClassProviderToken<ConfigClass extends object>(

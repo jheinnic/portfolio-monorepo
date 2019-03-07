@@ -1,5 +1,5 @@
 import {Module} from '@nestjs/common';
-import {ConfigModule} from '../../../../src/di';
+import {ConfigModule} from '@jchptf/config';
 import { APP_MODULE_ID } from './types';
 
 @Module({
@@ -8,7 +8,7 @@ import { APP_MODULE_ID } from './types';
          {},
          APP_MODULE_ID,
          'apps/config/**/!(*.d).{ts,js}',
-         process.env['NODE_ENV'] === 'production' ? './dist' : './build/test/fixtures'
+         process.env['NODE_ENV'] === 'production' ? './dist' : './build/fixtures'
       ),
    ],
    exports: [ ConfigModule ],

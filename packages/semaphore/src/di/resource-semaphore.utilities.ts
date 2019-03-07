@@ -1,63 +1,33 @@
 import {Chan} from 'medium';
 
-import {DynamicProviderToken, getDynamicProviderToken, ModuleIdentifier} from '@jchptf/api';
 import {
-   LOAD_RESOURCE_STRATEGY_CONFIGURATION_TYPE, RESERVATIONS_CHANNEL_TYPE, RESOURCE_RETURN_CHANNEL_TYPE,
-   RESOURCE_SEMAPHORE_DYNAMIC_PROVIDER_BINDING, RESOURCE_SEMAPHORE_SERVICE_TYPE
+   DynamicProviderToken, getDynamicProviderToken, ModuleIdentifier
+} from '@jchptf/nestjs';
+import {
+   RESERVATIONS_CHANNEL_TYPE, RETURN_CHANNEL_TYPE,
+   SEMAPHORE_DYNAMIC_PROVIDER_BINDING, SEMAPHORE_SERVICE_TYPE
 } from './resource-semaphore.constants';
-import {
-   IResourceAdapter, IResourceSemaphore, LoadResourcePoolStrategyConfig
-} from '../interfaces';
-
-function findInputTagName<T extends object>(options: LoadResourcePoolStrategyConfig<T> | string)
-{
-   let tagName: string;
-   if ('string' === typeof options) {
-      tagName = options;
-   } else {
-      tagName = options.name;
-   }
-
-   return tagName;
-}
+import { IResourceAdapter, IResourceSemaphore } from '../interfaces';
 
 export function getResourceSemaphoreToken<T extends object>(
-   moduleId: ModuleIdentifier,
-   options: LoadResourcePoolStrategyConfig<T> | string): DynamicProviderToken<IResourceSemaphore<T>>
+   moduleId: ModuleIdentifier, instanceTag?: string): DynamicProviderToken<IResourceSemaphore<T>>
 {
-   let tagName = findInputTagName(options);
    return getDynamicProviderToken(
-      moduleId, RESOURCE_SEMAPHORE_DYNAMIC_PROVIDER_BINDING, RESOURCE_SEMAPHORE_SERVICE_TYPE, tagName)
+      moduleId, SEMAPHORE_DYNAMIC_PROVIDER_BINDING, SEMAPHORE_SERVICE_TYPE, instanceTag)
 }
 
 export function getReservationChannelToken<T extends object>(
-   moduleId: ModuleIdentifier,
-   options: LoadResourcePoolStrategyConfig<T>): DynamicProviderToken<Chan<IResourceAdapter<T>, T>>
+   moduleId: ModuleIdentifier, instanceTag?: string): DynamicProviderToken<Chan<IResourceAdapter<T>, T>>
 {
-   let tagName: string = findInputTagName(options);
    // const symbolName = `info.jchein.infrastructure.pool.ReservationChannel<${name}>`;
    return getDynamicProviderToken(
-      moduleId, RESOURCE_SEMAPHORE_DYNAMIC_PROVIDER_BINDING, RESERVATIONS_CHANNEL_TYPE, tagName)
+      moduleId, SEMAPHORE_DYNAMIC_PROVIDER_BINDING, RESERVATIONS_CHANNEL_TYPE, instanceTag)
 }
 
 export function getResourceReturnChannelToken<T extends object>(
-   moduleId: ModuleIdentifier,
-   options: LoadResourcePoolStrategyConfig<T>): DynamicProviderToken<Chan<T, IResourceAdapter<T>>>
+   moduleId: ModuleIdentifier, instanceTag?: string): DynamicProviderToken<Chan<T, IResourceAdapter<T>>>
 {
-   let tagName = findInputTagName(options);
    // const symbolName = `info.jchein.infrastructure.pool.ReturnSink<${name}>`;
    return getDynamicProviderToken(
-      moduleId, RESOURCE_SEMAPHORE_DYNAMIC_PROVIDER_BINDING, RESOURCE_RETURN_CHANNEL_TYPE, tagName)
+      moduleId, SEMAPHORE_DYNAMIC_PROVIDER_BINDING, RETURN_CHANNEL_TYPE, instanceTag)
 }
-
-export function getResourceSemaphoreOptionsToken<T extends object>(
-   moduleId: ModuleIdentifier,
-   options: LoadResourcePoolStrategyConfig<T>): DynamicProviderToken<LoadResourcePoolStrategyConfig<T>>
-{
-   let tagName = findInputTagName(options);
-   return getDynamicProviderToken(
-      moduleId, RESOURCE_SEMAPHORE_DYNAMIC_PROVIDER_BINDING, LOAD_RESOURCE_STRATEGY_CONFIGURATION_TYPE,
-      tagName);
-}
-
-// export function getResourcePoolToken

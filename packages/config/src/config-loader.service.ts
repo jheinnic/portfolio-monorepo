@@ -52,7 +52,10 @@ export class ConfigLoader implements IConfigLoader
          if (!! nextEntryTypeMeta) {
             if (!(readConfig instanceof Array))
             {
-               const childClass = nextEntryTypeMeta.reflectedType;
+               let childClass = nextEntryTypeMeta.reflectedType;
+               if (! childClass) {
+                  childClass = nextEntryTypeMeta.typeFunction();
+               }
 
                readConfig =
                   this.loadInstance(

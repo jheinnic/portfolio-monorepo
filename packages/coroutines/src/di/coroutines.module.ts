@@ -1,6 +1,7 @@
-import {Global, Module} from '@nestjs/common';
-import {CONCURRENT_WORK_FACTORY} from './coroutines.constants';
-import {ConcurrentWorkFactory} from '../concurrent-work-factory.service';
+import { Global, Module } from '@nestjs/common';
+
+import { ConcurrentWorkFactory } from '../concurrent-work-factory.service';
+import { CONCURRENT_WORK_FACTORY } from './coroutines.constants';
 
 const coroutineProviders = [
    {

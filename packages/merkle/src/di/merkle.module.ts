@@ -4,7 +4,7 @@ import {
    AsyncModuleParam, asyncProviderFromParam, DynamicProvider, DynamicProviderToken,
    getDynamicProviderToken,
    ModuleIdentifier
-} from '@jchptf/api';
+} from '@jchptf/nestjs';
 import {
    ICanonicalPathNaming, IMerkleCalculator, IMerkleLocatorFactory, MERKLE_TREE_CALCULATOR_LPT,
    MerkleTreeDescription

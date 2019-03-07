@@ -14,7 +14,6 @@ export namespace EagerFixedIterableLoadStrategy
    export interface Required<T extends object>
    {
       readonly loadStrategy: LoadResourcePoolStrategy.EAGER_FIXED_ITERABLE
-      readonly name: string;
       readonly resources: Iterable<T>;
    }
 
@@ -30,7 +29,6 @@ export namespace EagerFixedAsyncIterableLoadStrategy
    export interface Required<T extends object>
    {
       readonly loadStrategy: LoadResourcePoolStrategy.EAGER_FIXED_ASYNC_ITERABLE
-      readonly name: string;
       readonly resources: AsyncIterable<T>;
    }
 
@@ -46,7 +44,6 @@ export namespace EagerFixedCallFactoryLoadStrategy
    export interface Required<T extends object>
    {
       readonly loadStrategy: LoadResourcePoolStrategy.EAGER_FIXED_CALL_FACTORY;
-      readonly name: string;
       readonly factory: () => T;
       readonly poolSize: number
    }

@@ -1,11 +1,12 @@
-import consul, { Consul as IConsul, ConsulOptions } from 'consul';
 import { DynamicModule, Global, Module } from '@nestjs/common';
-import * as util from 'util';
 import {
    CONSUL_CLIENT_PROVIDER, CONSUL_EVENT_EMITTER_PROVIDER, CONSUL_OPTIONS_PROVIDER,
 } from './consul.constants';
-import { AsyncModuleParam, asyncProviderFromParam } from '@jchptf/api';
+import consul, { Consul as IConsul, ConsulOptions } from 'consul';
 import { EventEmitter } from 'events';
+import * as util from 'util';
+
+import { AsyncModuleParam, asyncProviderFromParam } from '@jchptf/nestjs';
 
 @Global()
 @Module({})

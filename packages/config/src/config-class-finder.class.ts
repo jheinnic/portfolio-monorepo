@@ -1,5 +1,5 @@
 import { bindNodeCallback, from, Observable } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { mergeMap, tap } from 'rxjs/operators';
 import { ConstructorFunction } from 'simplytyped';
 import { Glob, sync as globSync } from 'glob';
 import { Provider } from '@nestjs/common';
@@ -8,7 +8,7 @@ import * as path from 'path';
 
 import {
    ModuleIdentifier, getLocalProviderToken, getNamedTypeIntent
-} from '@jchptf/api';
+} from '@jchptf/nestjs';
 
 import { CONFIG_READER_PROVIDER, CONFIG_LOADER_PROVIDER } from './di';
 import {
@@ -68,6 +68,7 @@ export class ConfigClassFinder implements IConfigClassFinder
    {
       const globPattern =
          path.join(this.resolvedSearchRoot, this.loadConfigGlob);
+      console.log('Glob is', globPattern);
       const boundFunction = (callback: (err: Error | null, matches: string[]) => void) => {
          new Glob(globPattern, {}, callback);
       };
@@ -101,6 +102,11 @@ export class ConfigClassFinder implements IConfigClassFinder
    private parseMatchingFiles(configPaths: Observable<string>): Observable<Provider>
    {
       return configPaths.pipe(
+         tap(
+            (file: string) => {
+               console.log('Examining', file);
+            }
+         ),
          mergeMap(
             (filePath: string) => // Observable<ConstructorFunction<any>> =>
                Object.values(

@@ -71,6 +71,7 @@
     },
     "dependencies": {
         "@jchptf/api": "^0.0.37",
+        "@jchptf/nestjs": "^0.0.2",
         "@jchptf/reflection": "^0.0.9",
         "@jchptf/txtypes": "^0.0.8",
         "@nestjs/common": "^5.5.0",

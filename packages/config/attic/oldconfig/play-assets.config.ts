@@ -1,6 +1,6 @@
-import {IsIn} from 'class-validator';
+import { IsIn } from 'class-validator';
 
-import {configClass, configProp} from '../../../../src/decorators';
+import { configClass, configProp } from '@jchptf/config';
 
 @configClass('eth.lotto.playAssets')
 export class PlayAssets

@@ -1,11 +1,12 @@
 import {ClassDecoratorFactory} from '@loopback/metadata';
-import {ProviderToken} from '@jchptf/api';
 
 import {CONFIG_CLASS_MARKER_KEY} from './config-class-marker.interface';
 
-export function configClass(defaultRoot?: string, providerToken?: ProviderToken<any>) {
+export function configClass( defaultRoot?: string ) {
    return ClassDecoratorFactory.createDecorator(
-      CONFIG_CLASS_MARKER_KEY, {defaultRoot, providerToken});
+      CONFIG_CLASS_MARKER_KEY,
+      { defaultRoot }
+   );
    // if (! providerToken) {
    //    return delegate;
    // }

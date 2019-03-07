@@ -1,9 +1,10 @@
-import {IsInt, IsPositive} from 'class-validator';
+import { IsInt, IsPositive } from 'class-validator';
 
-import {configClass, configProp} from '../../../../src/decorators';
+import { configClass, configProp } from '@jchptf/config';
 
 @configClass('eth.lotto.eventSpec.prizePool.batching')
-export class PrizePoolBatching {
+export class PrizePoolBatching
+{
    @configProp('reseedAfter')
    @IsPositive()
    @IsInt()

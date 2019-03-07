@@ -1,13 +1,9 @@
-import {getGlobalProviderToken, getNamedTypeIntent} from '@jchptf/api';
-import {IConcurrentWorkFactory} from '../interfaces';
+import { getGlobalProviderToken, getNamedTypeIntent } from '@jchptf/nestjs';
 
-const CWF = getNamedTypeIntent<IConcurrentWorkFactory>('IConcurrentWorkFactory');
+import { IConcurrentWorkFactory } from '../interfaces';
 
-export const CONCURRENT_WORK_FACTORY = getGlobalProviderToken<IConcurrentWorkFactory>(CWF);
+const CWF =
+   getNamedTypeIntent<IConcurrentWorkFactory>('IConcurrentWorkFactory');
 
-// interface CoroutineRoleNames {
-//    concurrentWorkFactory: IConcurrentWorkFactory;
-// }
-// export const CO_TYPES: TokenDictionary<CoroutineRoleNames> = {
-//    concurrentWorkFactory: CONCURRENT_WORK_FACTORY
-// };
+export const CONCURRENT_WORK_FACTORY =
+   getGlobalProviderToken<IConcurrentWorkFactory>(CWF);

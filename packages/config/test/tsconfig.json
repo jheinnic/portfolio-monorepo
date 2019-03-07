@@ -8,13 +8,15 @@
         "declarationMap": true,
         "paths": {
             "@jchptf/api": ["../../api/src"],
+            "@jchptf/nestjs": ["../../nestjs/src"],
             "@jchptf/reflection": ["../../reflection/src"],
             "@jchptf/config": ["../src"]
         }
-    }
+    },
     "references": [
         { "path": "../../api/src" },
-        { "path": "../../reflection/src" }
+        { "path": "../../nestjs/src" },
+        { "path": "../../reflection/src" },
         { "path": "../src" }
     ],
     "include": [ "./**/*.ts" ]

@@ -35,7 +35,7 @@ export class ResourceSemaphore<T extends object> implements IResourceSemaphore<T
    };
 
    constructor(
-      public readonly name: string, unwrappedResources: Array<T>,
+      unwrappedResources: Array<T>,
       private readonly concurrentWorkFactory: IConcurrentWorkFactory)
    {
       const resourceCount = unwrappedResources.length;

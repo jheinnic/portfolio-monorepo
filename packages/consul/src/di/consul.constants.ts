@@ -1,7 +1,7 @@
 import {
    getDynamicProviderBinding,
    getGlobalProviderToken, getLocalProviderToken, getModuleIdentifier, getNamedTypeIntent
-} from '@jchptf/api';
+} from '@jchptf/nestjs';
 import { Consul, ConsulOptions } from 'consul';
 
 export const CONSUL_MODULE_ID = getModuleIdentifier('@jchptf/consul');

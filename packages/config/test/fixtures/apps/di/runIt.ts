@@ -1,9 +1,8 @@
 import '@jchptf/reflection'
-import {NestFactory} from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 
-import {RootApplicationModule} from './root-application.module';
-import {Deployment} from '../config';
-import {DEPLOYMENT_PROVIDER} from './types';
+import { RootApplicationModule } from './root-application.module';
+import { Deployment } from '../config';
 
 async function bootstrap()
 {
@@ -11,7 +10,7 @@ async function bootstrap()
    // const resourceSemaphore = app.get(getResourceSemaphoreToken("FourSquare"));
    // console.log(resourceSemaphore.name);
 
-   const deployment: Deployment = app.get(DEPLOYMENT_PROVIDER);
+   const deployment: Deployment = app.get(Deployment);
    console.log(deployment);
 
    // logic...

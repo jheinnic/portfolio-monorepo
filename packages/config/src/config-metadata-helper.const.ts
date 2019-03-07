@@ -11,7 +11,7 @@ import { IConfigMetadataHelper } from './interfaces';
 
 export function hasConfigMetadata<T extends object>(configClass: ConstructorFor<T>): boolean
 {
-   const configClassMeta: ConfigClassMarker<T> | undefined =
+   const configClassMeta: ConfigClassMarker | undefined =
       MetadataInspector.getClassMetadata(CONFIG_CLASS_MARKER_KEY, configClass);
 
    return !!configClassMeta;
@@ -75,9 +75,9 @@ export function getPropertyDesignType<T extends object>(sampleInst: T, propName:
 }
 
 export function getConfigClassMarker<T extends object>(
-   configClass: ConstructorFor<T>): ConfigClassMarker<T>
+   configClass: ConstructorFor<T>): ConfigClassMarker
 {
-   const configClassMeta: ConfigClassMarker<T> | undefined =
+   const configClassMeta: ConfigClassMarker | undefined =
       MetadataInspector.getClassMetadata(CONFIG_CLASS_MARKER_KEY, configClass);
    if (!configClassMeta) {
       throw new Error(`${configClass} has no @configClass decorator`);

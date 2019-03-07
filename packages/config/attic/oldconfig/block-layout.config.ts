@@ -1,11 +1,12 @@
-import {ValidateNested} from 'class-validator';
-import {Type} from 'class-transformer';
+import { ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 
-import {BlockLayoutElement} from './block-layout-element.config';
-import {configClass, configProp} from '../../../../src/decorators';
+import { configClass, configProp } from '@jchptf/config';
+import { BlockLayoutElement } from './block-layout-element.config';
 
-@configClass('eth.lotto.setupPolicy.blockLayout')
-export class BlockLayout {
+@configClass('eth.lotto.prizeMinting.blockLayout')
+export class BlockLayout
+{
    @configProp('gameId')
    @ValidateNested()
    @Type(() => BlockLayoutElement)

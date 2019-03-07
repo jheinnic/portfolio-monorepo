@@ -1,17 +1,16 @@
 import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
 
-import { DataSetPaths, KeySource, LocalAccess, VaultAccess } from '.';
-import { configClass, configProp } from '../../../../src/decorators';
-import { DEPLOYMENT_PROVIDER } from '../di/types';
+import { configClass, configProp } from '@jchptf/config';
+import { DataSetPaths, VaultAccess } from '.';
 
-@configClass('eth.lotto.deployment', DEPLOYMENT_PROVIDER)
+@configClass('eth.lotto.deployment')
 export class Deployment
 {
-   @configProp('localAccess')
-   @ValidateNested()
-   @Type(() => LocalAccess)
-   public readonly localAccess: LocalAccess = new LocalAccess();
+   // @configProp('localAccess')
+   // @ValidateNested()
+   // @Type(() => LocalAccess)
+   // public readonly localAccess: LocalAccess = new LocalAccess();
 
    @configProp('vaultAccess')
    @ValidateNested()
@@ -23,8 +22,8 @@ export class Deployment
    @Type(() => DataSetPaths)
    public readonly dataSetPaths: DataSetPaths = new DataSetPaths();
 
-   @configProp('keySource')
-   @ValidateNested()
-   @Type(() => KeySource)
-   public readonly keySource: KeySource = new KeySource();
+   // @configProp('keySource')
+   // @ValidateNested()
+   // @Type(() => KeySource)
+   // public readonly keySource: KeySource = new KeySource();
 }

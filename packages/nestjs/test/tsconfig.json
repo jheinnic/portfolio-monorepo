@@ -10,7 +10,7 @@
             "@jchptf/objecttypes": ["../../objecttypes/src"],
             "@jchptf/nestjs": ["../src"]
         }
-    }
+    },
     "references": [
         { "path": "../../objecttypes/src" },
         { "path": "../src" }

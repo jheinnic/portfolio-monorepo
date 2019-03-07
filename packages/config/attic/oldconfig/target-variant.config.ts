@@ -1,6 +1,6 @@
-import {MaxLength, Min, MinLength} from 'class-validator';
+import { MaxLength, Min, MinLength } from 'class-validator';
 
-import {configClass, configProp} from '../../../../src/decorators';
+import { configClass, configProp } from '@jchptf/config';
 
 @configClass()
 export class TargetVariant

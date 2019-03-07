@@ -2,7 +2,7 @@ import { DynamicModule, Global, Module, Provider } from '@nestjs/common';
 import { toArray } from 'rxjs/operators';
 import { DotenvConfigOptions } from 'dotenv';
 
-import { AsyncModuleParam, asyncProviderFromParam, ModuleIdentifier } from '@jchptf/api';
+import { AsyncModuleParam, asyncProviderFromParam, ModuleIdentifier } from '@jchptf/nestjs';
 
 import { IConfigClassFinder } from '../interfaces';
 import { ConfigClassFinder } from '../config-class-finder.class';
@@ -95,6 +95,7 @@ export class ConfigModule
       dotenvProviders: Provider[], featureProviders: Provider[] = []
    ): DynamicModule
    {
+      console.log('Featuring:', featureProviders);
       return {
          module: ConfigModule,
          imports: [],
