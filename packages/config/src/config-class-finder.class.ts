@@ -1,14 +1,18 @@
 import { bindNodeCallback, from, Observable } from 'rxjs';
-import { filter, mergeMap } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 import { ConstructorFunction } from 'simplytyped';
 import { Glob, sync as globSync } from 'glob';
 import { Provider } from '@nestjs/common';
 import * as assert from 'assert';
 import * as path from 'path';
 
+import {
+   ModuleIdentifier, getLocalProviderToken, getNamedTypeIntent
+} from '@jchptf/api';
+
 import { CONFIG_READER_PROVIDER, CONFIG_LOADER_PROVIDER } from './di';
 import {
-   IConfigClassFinder, IConfigReader, IConfigLoader, IConfigMetadataHelper,
+   IConfigClassFinder, IConfigReader, IConfigLoader,
 } from './interfaces';
 
 /**
@@ -27,7 +31,8 @@ export class ConfigClassFinder implements IConfigClassFinder
    private readonly resolvedSearchRoot: string;
 
    constructor(
-      private readonly configMetaHelper: IConfigMetadataHelper,
+      private readonly moduleId: ModuleIdentifier,
+      // private readonly configMetaHelper: IConfigMetadataHelper,
       private readonly loadConfigGlob: string, searchRootDir?: string)
    {
       this.resolvedSearchRoot =
@@ -97,17 +102,18 @@ export class ConfigClassFinder implements IConfigClassFinder
    {
       return configPaths.pipe(
          mergeMap(
-            (filePath: string): Observable<ConstructorFunction<any>> =>
-               from(
-                  Object.values(
-                     require(filePath)))),
-         filter(
-            (clazz: ConstructorFunction<any>) =>
-               this.configMetaHelper.hasProviderToken(clazz)),
+            (filePath: string) => // Observable<ConstructorFunction<any>> =>
+               Object.values(
+                  require(filePath)) as ConstructorFunction<any>[]),
+         // filter(
+         //    (clazz: ConstructorFunction<any>) =>
+         //       this.configMetaHelper.hasProviderToken(clazz)),
          mergeMap(
             (clazz: ConstructorFunction<any>) => {
+               const typeId = getNamedTypeIntent<InstanceType<typeof clazz>>(clazz.name);
                const retValOne = {
-                  provide: this.configMetaHelper.getProviderToken(clazz),
+                  // provide: this.configMetaHelper.getProviderToken(clazz),
+                  provide: getLocalProviderToken(this.moduleId, typeId),
                   useFactory: async (
                      configLoader: IConfigLoader, configReader: IConfigReader) =>
                      configLoader.loadInstance(clazz, configReader),

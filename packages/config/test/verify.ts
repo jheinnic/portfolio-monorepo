@@ -1,4 +1,7 @@
 import * as util from 'util';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export class HolderOne
 {
@@ -31,6 +34,7 @@ export class HolderTwo
          util.inspect(this.holdIt, true, 5, true),
       );
 
+      this.holdIt.env = { test: 5 };
       this.holdIt.env.one = 24;
       this.holdIt.env.two = 11;
       this.holdIt.env.test = this.holdIt.env.test + this.holdIt.env.test;
@@ -57,6 +61,10 @@ export class HolderThree
       console.log(
          this.holdIt.get('env.test'),
       );
+      // this.holdIt.env.test = -10;
+      // console.log(
+      //    this.holdIt.get('env.test'),
+      // );
    }
 }
 

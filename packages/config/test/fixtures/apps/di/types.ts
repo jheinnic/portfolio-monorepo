@@ -1,7 +1,7 @@
 import { getModuleIdentifier, getNamedTypeIntent } from '@jchptf/api';
 import { getConfigClassProviderToken } from '@jchptf/config';
 
-export const appModuleId = getModuleIdentifier('@jchptf/config_fixture');
+export const APP_MODULE_ID = getModuleIdentifier('@jchptf/config_fixture');
 
 // Provider tags here are used in a Class Decorator, so we cannot leverage the type safety on
 // these NamedTypeIntents because it would create a circular dependency and lead to undefined
@@ -15,17 +15,17 @@ export const TICKET_STAGING_POLICY_TYPE = getNamedTypeIntent<any>('TicketStaging
 export const PLAY_ASSETS_TYPE = getNamedTypeIntent<any>('PlayAssets');
 
 export const DEPLOYMENT_PROVIDER =
-   getConfigClassProviderToken(appModuleId, DEPLOYMENT_TYPE);
+   getConfigClassProviderToken(APP_MODULE_ID, DEPLOYMENT_TYPE);
 export const EVENT_SPECIFICATION_PROVIDER =
-   getConfigClassProviderToken(appModuleId, EVENT_SPECIFICATION_TYPE);
+   getConfigClassProviderToken(APP_MODULE_ID, EVENT_SPECIFICATION_TYPE);
 export const PRIZE_MINTING_POLICY_PROVIDER =
-   getConfigClassProviderToken(appModuleId, PRIZE_MINTING_POLICY_TYPE);
+   getConfigClassProviderToken(APP_MODULE_ID, PRIZE_MINTING_POLICY_TYPE);
 export const TICKET_MINTING_POLICY_PROVIDER =
-   getConfigClassProviderToken(appModuleId, TICKET_MINTING_POLICY_TYPE);
+   getConfigClassProviderToken(APP_MODULE_ID, TICKET_MINTING_POLICY_TYPE);
 export const TICKET_STAGING_POLICY_PROVIDER =
-   getConfigClassProviderToken(appModuleId, TICKET_STAGING_POLICY_TYPE);
+   getConfigClassProviderToken(APP_MODULE_ID, TICKET_STAGING_POLICY_TYPE);
 export const PLAY_ASSETS_PROVIDER =
-   getConfigClassProviderToken(appModuleId, PLAY_ASSETS_TYPE);
+   getConfigClassProviderToken(APP_MODULE_ID, PLAY_ASSETS_TYPE);
 
 // export type AppConfigTypes =
 //    DEPLOYMENT |

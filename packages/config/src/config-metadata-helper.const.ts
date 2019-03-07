@@ -1,15 +1,12 @@
 import { MetadataInspector, MetadataMap } from '@loopback/metadata';
 import { ConstructorFor } from 'simplytyped';
 
-import { ProviderToken } from '@jchptf/api';
-
 import {
    CONFIG_CLASS_MARKER_KEY, ConfigClassMarker,
 } from './decorators/config-class-marker.interface';
 import {
    CONFIG_PROPERTY_MARKER_KEY, ConfigPropertyMarker,
 } from './decorators/config-property-marker.interface';
-import { illegalArgs } from '@thi.ng/errors';
 import { IConfigMetadataHelper } from './interfaces';
 
 export function hasConfigMetadata<T extends object>(configClass: ConstructorFor<T>): boolean
@@ -20,36 +17,36 @@ export function hasConfigMetadata<T extends object>(configClass: ConstructorFor<
    return !!configClassMeta;
 }
 
-export function hasProviderToken<T extends object>(configClass: ConstructorFor<T>): boolean
-{
-   if (!configClass) {
-      throw illegalArgs('configClass argument must be defined.');
-   }
+// export function hasProviderToken<T extends object>(configClass: ConstructorFor<T>): boolean
+// {
+//    if (!configClass) {
+//       throw illegalArgs('configClass argument must be defined.');
+//    }
+//
+//    try {
+//       const configClassMeta: ConfigClassMarker<T> =
+//          getConfigClassMarker(configClass);
+//
+//       return !!configClassMeta.providerToken;
+//    } catch {
+//       return false;
+//    }
+// }
 
-   try {
-      const configClassMeta: ConfigClassMarker<T> =
-         getConfigClassMarker(configClass);
-
-      return !!configClassMeta.providerToken;
-   } catch {
-      return false;
-   }
-}
-
-export function getProviderToken<T extends object>(configClass: ConstructorFor<T>): ProviderToken<T>
-{
-   if (!configClass) {
-      throw illegalArgs('configClass argument must be defined.');
-   }
-
-   const configClassMeta: ConfigClassMarker<T> =
-      getConfigClassMarker(configClass);
-   if (!configClassMeta.providerToken) {
-      throw new Error(`${configClass} is decorated by @configClass, but omits a provider token`);
-   }
-
-   return configClassMeta.providerToken;
-}
+// export function getProviderToken<T extends object>(configClass: ConstructorFor<T>): ProviderToken<T>
+// {
+//    if (!configClass) {
+//       throw illegalArgs('configClass argument must be defined.');
+//    }
+//
+//    const configClassMeta: ConfigClassMarker<T> =
+//       getConfigClassMarker(configClass);
+//    if (!configClassMeta.providerToken) {
+//       throw new Error(`${configClass} is decorated by @configClass, but omits a provider token`);
+//    }
+//
+//    return configClassMeta.providerToken;
+// }
 
 export function getPropertyMetadata<T extends object>(
    configClass: ConstructorFor<T>): MetadataMap<ConfigPropertyMarker>
@@ -89,10 +86,10 @@ export function getConfigClassMarker<T extends object>(
    return configClassMeta;
 }
 
-export const configMetadataHelper: IConfigMetadataHelper = {
+export const CONFIG_METADATA_HELPER: IConfigMetadataHelper = {
    hasConfigMetadata,
-   hasProviderToken,
-   getProviderToken,
+   // hasProviderToken,
+   // getProviderToken,
    getPropertyRoot,
    getPropertyMetadata,
    getPropertyDesignType,
