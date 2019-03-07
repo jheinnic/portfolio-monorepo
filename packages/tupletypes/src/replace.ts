@@ -1,9 +1,6 @@
 import { IndexTypeFor, LengthOf } from './length';
-import { Next } from './math';
-import { LastOf, NthOf } from './nth';
-import { Insert } from './unshift';
 
-type _Replace<T extends any[], M extends number, N extends number, S> =
+export type Replace<T extends any[], N extends IndexTypeFor<T>, S> =
 [
    [
    ], [
@@ -84,11 +81,4 @@ type _Replace<T extends any[], M extends number, N extends number, S> =
       [T[0], T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], S, T[10]],
       [T[0], T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9], S]
    ]
-][M][N];
-
-export type Replace<T extends any[], N extends IndexTypeFor<T>, S> =
-   _Replace<T, LengthOf<T>, N, S>
-
-export type Append<T extends any[], S> =
-   _Replace<T, Next<LengthOf<T>>, LengthOf<T>, S>
-
+][LengthOf<T>][N];
