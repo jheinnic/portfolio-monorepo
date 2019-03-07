@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/merkle",
-    "version": "0.0.20",
+    "version": "0.0.21",
     "description": "TODO",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
@@ -66,8 +66,8 @@
         "typescript": "3.2.2"
     },
     "dependencies": {
-        "@jchptf/api": "^0.0.35",
-        "@jchptf/builders": "^0.0.18",
+        "@jchptf/api": "^0.0.36",
+        "@jchptf/builders": "^0.0.19",
         "@jchptf/reflection": "^0.0.9",
         "binary-search": "^1.3.4",
         "lru-cache": "^4.1.3",
