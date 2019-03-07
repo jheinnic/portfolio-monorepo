@@ -5,7 +5,9 @@ import {
    LOAD_RESOURCE_STRATEGY_CONFIGURATION_TYPE, RESERVATIONS_CHANNEL_TYPE, RESOURCE_RETURN_CHANNEL_TYPE,
    RESOURCE_SEMAPHORE_DYNAMIC_PROVIDER_BINDING, RESOURCE_SEMAPHORE_SERVICE_TYPE
 } from './resource-semaphore.constants';
-import {IResourceAdapter, LoadResourcePoolStrategyConfig} from '../interfaces';
+import {
+   IResourceAdapter, IResourceSemaphore, LoadResourcePoolStrategyConfig
+} from '../interfaces';
 
 function findInputTagName<T extends object>(options: LoadResourcePoolStrategyConfig<T> | string)
 {
@@ -20,7 +22,8 @@ function findInputTagName<T extends object>(options: LoadResourcePoolStrategyCon
 }
 
 export function getResourceSemaphoreToken<T extends object>(
-   moduleId: ModuleIdentifier, options: LoadResourcePoolStrategyConfig<T> | string): string
+   moduleId: ModuleIdentifier,
+   options: LoadResourcePoolStrategyConfig<T> | string): DynamicProviderToken<IResourceSemaphore<T>>
 {
    let tagName = findInputTagName(options);
    return getDynamicProviderToken(
