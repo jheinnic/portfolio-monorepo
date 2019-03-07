@@ -1,3 +1,2 @@
-export type AsyncTx<I extends any[], O> = O extends Promise<any>
-   ? (...input: I) => O
-   : (...input: I) => Promise<O>;
+export type AsyncTx<Params extends any[], Output> =
+   (...input: Params) => Promise<Output>;

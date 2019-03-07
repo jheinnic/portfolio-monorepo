@@ -47,6 +47,7 @@
         "cover": "yarn test && nyc report --reporter=lcov",
         "doc": "node_modules/.bin/typedoc --mode file --module es2015 --target es6 --tsconfig tsconfig.json --externalPattern node_modules --excludeExternals --excludePrivate --out doc --gitRevision feature_bootstrap src typings",
         "pub": "yarn build && lerna publish --registry http://localhost:4873",
+        "dtslint": "dtslint types",
         "test": "tsc -b test --clean && rm -rf build && mkdir build && tsc -b test && nyc mocha `find build -type f -name '*.js'`"
     },
     "devDependencies": {
@@ -56,6 +57,7 @@
         "@types/sinon": "^7.0.2",
         "@types/sinon-chai": "^3.2.2",
         "chai": "^4.2.0",
+        "dtslint": "^0.5.3",
         "lerna": "^3.8.0",
         "mocha": "^5.2.0",
         "mocha-typescript": "^1.1.17",

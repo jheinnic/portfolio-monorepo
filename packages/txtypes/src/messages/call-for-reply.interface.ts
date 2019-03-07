@@ -1,4 +1,4 @@
-export interface CallForReply<R> {
-   resolve: (value: R) => void;
+export interface CallForReply<R extends []> {
+   resolve: (...value: R) => void;
    reject: (err: any) => void;
 }

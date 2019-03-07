@@ -87,29 +87,40 @@ export interface IConcurrentWorkFactory
 
    transformToSink<I, O>(
       source: Chan<any, I>,
+      sink: SinkLike<O>,
       transform: AsyncTx<[I], O> | AsyncTx<[I], Iterable<O>>,
-      concurrency: number,
-      sink: SinkLike<O>): void;
+      concurrency?: number,
+   ): void;
 
    transformToChan<I, O>(
       source: Chan<any, I>,
+      chan: Chan<O, any>,
       transform: AsyncTx<[I], O> | AsyncTx<[I], Iterable<O>>,
-      concurrency: number,
-      chan: Chan<O, any>): void;
+      concurrency?: number,
+   ): void;
 
    loadToChan<T>(
-      source: Iterable<T> | AsyncIterable<T>, concurrency: number, chan: Chan<T, any>,
-      delay?: number): SubscriptionLike;
+      source: Iterable<T> | AsyncIterable<T>,
+      chan: Chan<T, any>,
+      concurrency?: number,
+      delay?: number,
+   ): SubscriptionLike;
 
    loadToSink<T>(
-      source: Iterable<T> | AsyncIterable<T>, concurrency: number, sink: AsyncSink<T>,
-      delay?: number): SubscriptionLike;
+      source: Iterable<T> | AsyncIterable<T>,
+      sink: AsyncSink<T>,
+      concurrency?: number,
+      delay?: number,
+   ): SubscriptionLike;
 
    // cycle<T>(source: Iterable<T>, sink: SinkLike<T>, delay?: number): SubscriptionLike;
 
    unwind<T>(
-      master: AsyncSink<Iterable<T>>, sink: Chan<T, any>, done?: Chan<Iterable<T>, any>,
-      delay?: number): SubscriptionLike;
+      master: AsyncSink<Iterable<T>>,
+      sink: Chan<T, any>,
+      done?: Chan<Iterable<T>, any>,
+      delay?: number,
+   ): SubscriptionLike;
 
    // service<I, O>(source: Chan<any, I>, xducer: Transducer<I, O>, sink: Chan<O, any>,
    // concurrency?: number): void;
@@ -117,7 +128,15 @@ export interface IConcurrentWorkFactory
    // serviceMany<I, O>(source: Chan<any, I>, xducer: Transducer<I, O[]>, sink: Chan<O, any>,
    // concurrency?: number): void;
 
-   service<I>(source: Chan<any, I>, sink: Chan<I, any>, concurrency?: number): void;
+   service<I>(
+      source: Chan<any, I>,
+      sink: Chan<I, any>,
+      concurrency?: number,
+   ): void;
 
-   serviceMany<I>(source: Chan<any, I[]>, sink: Chan<I, any>, concurrency?: number): void;
+   serviceMany<I>(
+      source: Chan<any, I[]>,
+      sink: Chan<I, any>,
+      concurrency?: number,
+   ): void;
 }

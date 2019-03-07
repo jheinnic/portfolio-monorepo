@@ -112,22 +112,17 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
             });
       }
 
-      return function limit(
-         asyncFunction: (...args: any[]) => Promise<any>,
+      return function limit<Params extends any[], RetVal>(
+         asyncFunction: AsyncTx<Params, RetVal>,
          priority: number = defaultPriority
-      ): typeof asyncFunction
+      ): AsyncTx<Params, RetVal>
       {
-         type Signature = typeof asyncFunction;
-         type Params = Parameters<Signature>
-         type RetVal = ReturnType<Signature>
-         type PromiseType = RetVal extends Promise<infer P> ? P : never;
-
-         return async function (...args: Params): RetVal {
-            const deferredCall = new Promise<PromiseType>(
+         return async function (...args: Params): Promise<RetVal> {
+            const deferredCall = new Promise<RetVal>(
                (resolve, reject) => {
                   heap.insert(priority, async function () {
                      try {
-                        const retVal: PromiseType = await asyncFunction(...args);
+                        const retVal: RetVal = await asyncFunction(...args);
                         resolve(retVal);
                      } catch (err) {
                         reject(err);
@@ -143,7 +138,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
                console.error('Failed to resolve limiter-deferred asynchronous call', err);
                throw err;
             }
-         } as Signature;
+         };
       };
    }
 
@@ -194,9 +189,10 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
 
    transformToSink<T, M = T>(
       source: Chan<any, T>,
+      sink: SinkLike<M>,
       transform: AsyncTx<[T], M | Iterable<M> | AsyncIterable<M>>,
-      concurrency: number,
-      sink: SinkLike<M>): void
+      concurrency: number = 1,
+   ): void
    {
       let toSink = asFunction<M>(sink);
 
@@ -237,10 +233,10 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
    }
 
    transformToChan<T, M = T>(
-      source: Chan<any, T>,
+      source: Chan<any, T>, chan: Chan<M, any>,
       transform: AsyncTx<[T], M | Iterable<M> | AsyncIterable<M>>,
-      concurrency: number,
-      chan: Chan<M, any>): void
+      concurrency: number = 1
+   ): void
    {
       for (let ii = 0; ii < concurrency; ii++) {
          const workerId = ii;
@@ -251,6 +247,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
             async function (value: T): Promise<false | void>
             {
                const transformed = await tx(value);
+
                if (isIterable(transformed)) {
                   for (const sinkValue of transformed) {
                      await put(chan, sinkValue);
@@ -278,8 +275,8 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
    }
 
    loadToChan<T>(
-      iterable: Iterable<T> | AsyncIterable<T>, concurrency: number, chan: Chan<T, any>,
-      delay: number = 0): SubscriptionLike
+      iterable: Iterable<T> | AsyncIterable<T>, chan: Chan<T, any>,
+      concurrency: number = 1, delay: number = 0): SubscriptionLike
    {
       let globalDone: boolean = false;
       const iterator = (isIterable(iterable)) ? iterable[Symbol.iterator]() : iterable[Symbol.asyncIterator]();
@@ -295,8 +292,12 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
             await put(chan, thisResult.value);
 
             if (delay > 0) {
+               const last = Date.now();
                await sleep(delay);
+               console.log(delay, last, 0, Date.now());
             }
+
+
             const nextAsyncResult = iterator.next();
             nextResult = await nextAsyncResult;
          }
@@ -329,8 +330,8 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
    }
 
    loadToSink<T>(
-      iterable: Iterable<T> | AsyncIterable<T>, concurrency: number, sink: AsyncSink<T>,
-      delay: number = 0): SubscriptionLike
+      iterable: Iterable<T> | AsyncIterable<T>, sink: AsyncSink<T>,
+      concurrency: number = 1, delay: number = 0): SubscriptionLike
    {
       let globalDone: boolean = false;
       const iterator = (isIterable(iterable)) ? iterable[Symbol.iterator]() : iterable[Symbol.asyncIterator]();
@@ -340,7 +341,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
          if (globalDone) { return false; }
 
          let thisResult = iterator.next();
-         if (looping) { await sleep(delay); }
+         if (looping && (delay > 0)) { await sleep(delay); }
 
          // TODO: If globalDone was set while in a sleep delay, should we drop the
          //       value instead of awaiting and emitting it?
@@ -350,7 +351,16 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
             return false;
          }
 
+         const last = Date.now();
          sink.write(thisResult.value);
+         if (delay > 0) {
+            const lapsed = Date.now() - last;
+            if (lapsed < delay) {
+               await sleep(delay - lapsed);
+            }
+            console.log(delay, last, lapsed, Date.now());
+         }
+
          return !globalDone;
       }
 
@@ -419,15 +429,17 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
    // private static readonly CLOSED: symbol = Symbol.for('closed');
 
    public unwind<T>(
-      master: AsyncSink<Iterable<T>>, sink: Chan<T, any>, done?: Chan<Iterable<T>, any>,
+      master: AsyncSink<Iterable<T>>,
+      sink: Chan<T, any>,
+      done?: Chan<Iterable<T>, any>,
       delay: number = 0): SubscriptionLike
    {
       const sources: AsyncSink<IterPair<T>> = this.createAsyncSink<IterPair<T>>();
       let closed: boolean = false;
       const retVal = {
          unsubscribe: () => {
-            closed = true;
             sources.end();
+            closed = true;
          },
 
          get closed(): boolean { return closed; }
@@ -457,14 +469,19 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       go(async () => {
          let nextIterPair: IterPair<T>;
          for await (nextIterPair of sources) {
-            let nextIterResult: IteratorResult<T> = nextIterPair.iterator.next();
+            const nextIterResult: IteratorResult<T> =
+               nextIterPair.iterator.next();
             if (!nextIterResult.done) {
-               const last = new Date().getTime();
                await put(sink, nextIterResult.value);
+
+               const last = Date.now();
                sources.write(nextIterPair);
-               const lapsed = Date.now() - last;
-               if (lapsed < delay) {
-                  await sleep(delay - lapsed);
+               if (delay > 0) {
+                  const lapsed = Date.now() - last;
+                  if (lapsed < delay) {
+                     await sleep(delay - lapsed);
+                  }
+                  console.log(delay, last, lapsed, Date.now());
                }
             } else if (!!done) {
                await put(done, nextIterPair.iterable);

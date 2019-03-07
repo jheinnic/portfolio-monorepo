@@ -1,4 +1,5 @@
-/// <reference path="../typings/medium/index.d.ts">
+/// <reference file="../typings/medium/index.d.ts">
+// @ts-ignore
 import { Chan, close, sleep, take } from 'medium';
 
 import * as chai from 'chai';
@@ -9,7 +10,9 @@ import sinonChai from 'sinon-chai';
 import '@jchptf/reflection';
 import { ConcurrentWorkFactory } from '@jchptf/coroutines';
 import { LoadToChan } from './fixtures/load-to-chan.constants';
-import { LoadToChanScriptDirector } from './utilities/load-to-chan-script-director.class';
+import {
+   LoadToChanScriptDirector, yieldFlow
+} from './utilities/load-to-chan-script-director.class';
 
 chai.use(sinonChai);
 const expect = chai.expect;
@@ -19,6 +22,7 @@ describe('ConcurrentWorkFactory', () => {
    let sandbox: SinonSandbox;
    let clock: Clock;
 
+   // @ts-ignore
    let scriptDirector: LoadToChanScriptDirector;
 
    // This test case will periodically need to yield flow control back to the event loop
@@ -36,8 +40,8 @@ describe('ConcurrentWorkFactory', () => {
       factory = new ConcurrentWorkFactory();
 
       clock = lolex.install({
-         shouldAdvanceTime: true,
-         advanceTimeDelta: 8
+         shouldAdvanceTime: false,
+         // advanceTimeDelta: LoadToChan.realTimeDelta,
       });
    });
 
@@ -45,16 +49,7 @@ describe('ConcurrentWorkFactory', () => {
       clock.uninstall();
    });
 
-   // describe('createPriorityQueue', () => {
-   //    it('Returns a queue', () => {
-   //       const output = factory.createPriorityQueue();
-   //       expect(output)
-   //          .is
-   //          .instanceOf(Queue);
-   //    })
-   // });
-
-   describe('loadToChan', () => {
+  describe('loadToChan', () => {
       let iterSource: Array<number>;
       let realIterator: IterableIterator<number>;
       // let nextIter: IteratorResult<number>;
@@ -78,6 +73,7 @@ describe('ConcurrentWorkFactory', () => {
             .returns(realIterator);
          iterSource[Symbol.iterator] = iterSourceIteratorStub;
 
+         retChan = factory.createChan();
       });
 
       afterEach(() => {
@@ -87,12 +83,12 @@ describe('ConcurrentWorkFactory', () => {
       });
 
       it('Populates concurrency reads then blocks once foreach record read', async () => {
-         retChan = factory.createChan();
          factory.loadToChan(
             iterSource,
-            LoadToChan.loadConcurrency,
             retChan,
-            LoadToChan.withoutDelayMs);
+            LoadToChan.loadConcurrency,
+            LoadToChan.withoutDelayMs
+         );
 
          // Let the clock roll forward until anything currently scheduled has resolved.
 
@@ -153,77 +149,14 @@ describe('ConcurrentWorkFactory', () => {
       });
 
       it('Waits for a specified delay before reading next value if so configured.', async () => {
-         retChan = factory.createChan();
          scriptDirector = new LoadToChanScriptDirector(
-            expect, clock, LoadToChan.realTimeDelta, spiedUponIteratorNext, retChan);
+            expect, clock, spiedUponIteratorNext, retChan);
+
          factory.loadToChan(
-            iterSource, LoadToChan.loadConcurrency,
-            retChan, LoadToChan.withDelayMs);
+            iterSource, retChan, LoadToChan.loadConcurrency, LoadToChan.withDelayMs);
 
-         scriptDirector.runScript(LoadToChan.noBufferWithDelayScript);
-
-         // 1, 2, and 3 should be in the queue, and 4 should be the next value
-         // waiting to be read.
-         expect(spiedUponIteratorNext)
-            .to
-            .have
-            .callCount(3);
-
-         // Read the output channel once, which will start the 50 ms clock before
-         // 4 gets read.  Tick the clock forward by 40 and confirm 4 has not yet
-         // been read, then read a second value and wait another 20ms.
-         expect(
-            await take(retChan)
-         )
-            .to
-            .be
-            .equal(1);
-
-         // Briefly yield flow control so the first read can process its occurrence
-         // and promptly re-cue its next interval.  Make sure we still have not fired
-         // its resolution yet on return.
-         clock.tick(5 - clock.now);
-         await sleep(10 - clock.now);
-         expect(spiedUponIteratorNext)
-            .to
-            .have
-            .callCount(3);
-
-         // Read a second time, starting a second delay timer.  Then advance clock
-         // to just before the first read's delay will lapse and briefly yield the CPU.
-         // Verify no fourth read has happened still just before yielding.
-         clock.tick(30 - clock.now);
-         expect(
-            await take(retChan)
-         )
-            .to
-            .be
-            .equal(2);
-         await sleep(35 - clock.now);
-         expect(spiedUponIteratorNext)
-            .to
-            .have
-            .callCount(3);
-
-         // Let the first delay lapse and verify its read has occurred when we get the
-         // flow of control back.
-         clock.tick(54 - clock.now);
-         await sleep(58 - clock.now);
-         expect(spiedUponIteratorNext)
-            .to
-            .have
-            .callCount(4);
-
-         // Fast forward to just before the second delay expires and verify it occurs
-         // correctly.
-         clock.tick(78 - clock.now);
-         await sleep(82 - clock.now);
-         console.log(clock.now);
-         expect(spiedUponIteratorNext)
-            .to
-            .have
-            .callCount(5);
-      });
+         await scriptDirector.runScript(LoadToChan.noBufferWithDelayScript);
+     });
 
       it('Resolves multiple overlapping delays in parallel', async () => {
          expect(spiedUponIteratorNext)
@@ -231,7 +164,7 @@ describe('ConcurrentWorkFactory', () => {
             .have
             .callCount(0);
 
-         factory.loadToChan(iterSource, 3, retChan, 50);
+         factory.loadToChan(iterSource, retChan, LoadToChan.loadConcurrency, LoadToChan.withDelayMs);
 
          // Now, empty the queue all at once.
          clock.tick(3600 - clock.now)
@@ -253,31 +186,38 @@ describe('ConcurrentWorkFactory', () => {
             .to
             .be
             .equal(3);
-         await sleep(3605 - clock.now);
-         expect(spiedUponIteratorNext)
-            .to
-            .have
-            .callCount(3);
+
+         const later = take(retChan);
+         const laterTime = later.then(() => clock.now);
 
          // And watch for the delayed refresh read
-         clock.tick(3642 - clock.now);
-         await sleep(3645 - clock.now);
+         clock.tick(3649 - clock.now);
+         await yieldFlow();
          expect(spiedUponIteratorNext)
             .to
             .have
             .callCount(3);
 
-         await sleep(3652 - clock.now);
+         clock.tick(3650 - clock.now);
+         await yieldFlow();
          expect(spiedUponIteratorNext)
             .to
             .have
             .callCount(6);
+
+         expect(await later)
+            .to
+            .be
+            .equal(4);
+         expect(await laterTime)
+            .to
+            .be
+            .equal(3650);
       });
 
       it('Terminates overflow workers', () => {
          let sinonSpy = sinon.spy(console.log);
-         retChan = factory.createChan();
-         factory.loadToChan(iterSource, 2, retChan, 10);
+         factory.loadToChan(iterSource, retChan, 2, 10);
 
          setTimeout(() => {
             expect(sinonSpy.calledTwice).to.true;

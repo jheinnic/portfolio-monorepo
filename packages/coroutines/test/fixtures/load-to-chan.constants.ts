@@ -6,8 +6,8 @@ export namespace LoadToChan {
 
    export const withBuffersCount = 2;
 
-   export const realTimeDelta = 4;
-   export const halfRealTimeDelta = 2;
+   export const realTimeDelta = 2;
+   export const halfRealTimeDelta = 1;
 
 
    export enum StepType {
@@ -18,7 +18,7 @@ export namespace LoadToChan {
       flushEvents = 4,
       checkNextCallCount = 5,
       readFromChan = 6
-   };
+   }
 
    export interface AdvanceStep {
       readonly stepType: StepType.advanceClock;
@@ -105,6 +105,9 @@ export namespace LoadToChan {
       | CountNextCallsStep
       | ReadFromChanStep;
 
+   // With a delay setting of 50ms, read once at 0ms, then twice at 30ms,
+   // and verify that the values read are replaced precisely at 50ms (once)
+   // and then again at 80ms (twice).
    export const noBufferWithDelayScript: ReadonlyArray<ScriptStep> = [
       countNextCalls(3),
       readFromChan(1),
@@ -112,6 +115,7 @@ export namespace LoadToChan {
       countNextCalls(3),
       advance(30),
       readFromChan(2),
+      readFromChan(3),
       yieldFlow(),
       countNextCalls(3),
       advance(45),
@@ -125,6 +129,6 @@ export namespace LoadToChan {
       countNextCalls(4),
       advance(80),
       yieldFlow(),
-      countNextCalls(5)
+      countNextCalls(6)
    ]
 }

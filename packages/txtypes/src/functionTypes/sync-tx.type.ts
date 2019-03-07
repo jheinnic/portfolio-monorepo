@@ -1,3 +1,2 @@
-export type SyncTx<I extends any[], O> = O extends Promise<infer P>
-   ? (...input: I) => P
-   : (...input: I) => O;
+export type SyncTx<Params extends any[], Output> =
+   Output extends Promise<any> ? never : (...input: Params) => Output;

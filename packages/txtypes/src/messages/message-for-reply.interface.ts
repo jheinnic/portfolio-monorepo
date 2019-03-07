@@ -1,8 +1,8 @@
-export interface MessageForReply<P extends any[], R>
+export interface MessageForReply<P extends any[], R extends any[] = []>
 {
    readonly args: P;
    readonly resolveHasParam: true;
-   readonly resolve: (value: R) => void;
+   readonly resolve: (...value: R) => void;
    readonly reject: (err: any) => void;
 }
 
