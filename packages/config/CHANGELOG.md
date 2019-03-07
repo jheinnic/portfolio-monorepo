@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.23](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/config@0.0.22...@jchptf/config@0.0.23) (2019-03-07)
+
+**Note:** Version bump only for package @jchptf/config
+
+
+
+
+
 ## [0.0.22](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/config@0.0.21...@jchptf/config@0.0.22) (2019-03-07)
 
 **Note:** Version bump only for package @jchptf/config
