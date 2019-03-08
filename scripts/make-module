@@ -42,17 +42,17 @@ cat << EOF > $MODULE/package.json
     "typings": "./dist/index.d.ts",
     "typesVersions": {
         ">=3.3": {
-            "dist/*": [
+            "dist": [
                 "dist/ts3.3/*" 
             ]
         },
         ">=3.2": {
-            "dist/*": [
+            "dist": [
                 "dist/ts3.2/*" 
             ]
         },
         ">=3.1": { 
-            "dist/*": [
+            "dist": [
                 "dist/ts3.1/*"
             ]
         }
