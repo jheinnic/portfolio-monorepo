@@ -59,14 +59,14 @@ export class ResourceSemaphore<T extends object> implements IResourceSemaphore<T
 
                throw new Error(`Cannot recycle ${resource}.  It has not been registered as a dynamic resource accessor yet.`);
             }),
-            resourceCount, ChanBufferType.fixed );
+            resourceCount, ChanBufferType.fixed ).unwrap();
 
       this.resourceRequests =
          this.concurrentWorkFactory.createTxChan(
             txMap((leaseMgr: IResourceAdapter<T>): T => {
                return leaseMgr.publish();
             }),
-            resourceCount, ChanBufferType.fixed);
+            resourceCount, ChanBufferType.fixed).unwrap();
 
       this.poolSizes = {
          totalCount: resourceCount,
