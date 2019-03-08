@@ -13,6 +13,9 @@ import { IAdapter } from '@jchptf/api';
 import {
    asFunction, ChanBufferType, IConcurrentWorkFactory, Limiter, SinkLike, IterPair
 } from './interfaces';
+import { IChanMonitor } from './interfaces/chan-monitor.interface';
+import { ChanMonitor } from './chan-monitor.class';
+import { PromiseHandlers } from './interfaces/promise-handlers.interface';
 
 function isIterable<T>(sinkValue: any): sinkValue is Iterable<T>
 {
@@ -527,6 +530,14 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
             }
          });
       }
+   }
+
+   public createMonitor<Msg>( source: Chan<any, Msg> ): IChanMonitor<Msg> {
+      const retVal =
+         new ChanMonitor(source, new Map<Msg, PromiseHandlers<Msg>>());
+      retVal.start();
+
+      return retVal;
    }
 }
 

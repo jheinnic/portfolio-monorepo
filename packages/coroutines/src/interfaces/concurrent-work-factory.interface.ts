@@ -9,6 +9,7 @@ import { ChanBufferType } from './chan-buffer-type.enum';
 import { Limiter } from './limiter.type';
 import { SinkLike } from './sink-like.type';
 import { IAdapter } from '@jchptf/api';
+import { IChanMonitor } from './chan-monitor.interface';
 
 export interface IConcurrentWorkFactory
 {
@@ -140,4 +141,6 @@ export interface IConcurrentWorkFactory
       sink: Chan<I, any>,
       concurrency?: number,
    ): void;
+
+   createMonitor<Msg>( msgSource: Chan<any, Msg> ): IChanMonitor<Msg>;
 }
