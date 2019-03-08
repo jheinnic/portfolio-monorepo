@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.19](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/semaphore@0.0.18...@jchptf/semaphore@0.0.19) (2019-03-08)
+
+**Note:** Version bump only for package @jchptf/semaphore
+
+
+
+
+
 ## [0.0.18](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/semaphore@0.0.17...@jchptf/semaphore@0.0.18) (2019-03-07)
 
 **Note:** Version bump only for package @jchptf/semaphore
