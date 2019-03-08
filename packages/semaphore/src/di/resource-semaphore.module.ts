@@ -18,6 +18,7 @@ import {
 } from '../interfaces';
 
 @Module({
+   imports: [CoroutinesModule],
    providers: [
       {
          provide: SEMAPHORE_FACTORY_PROVIDER_TOKEN,
@@ -47,7 +48,7 @@ export class ResourceSemaphoreModule
          {
             return await semaphoreFactory.createSemaphore(resourcePool);
          },
-         inject: [SEMAPHORE_FACTORY_PROVIDER_TOKEN, resourcePoolProvider],
+         inject: [SEMAPHORE_FACTORY_PROVIDER_TOKEN, SEMAPHORE_RESOURCE_POOL_PROVIDER_TOKEN],
       };
 
       const semaphoreReservationsProvider = {
@@ -84,6 +85,7 @@ export class ResourceSemaphoreModule
             semaphoreReturnsProvider,
          ],
          exports: [
+            ...resourcePoolProvider,
             resourceSemaphoreProvider,
             semaphoreReservationsProvider,
             semaphoreReturnsProvider,
