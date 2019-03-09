@@ -85,5 +85,6 @@
         "simplytyped": "^1.6.0",
         "transducers-js": "^0.4.174",
         "tslib": "^1.9.3"
-    }
+    },
+    "gitHead": "1275cf8ce11d5b419631244a30ed48a0a17280b4"
 }
