@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/coroutines",
-    "version": "0.0.36",
+    "version": "0.0.37",
     "description": "TODO",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
