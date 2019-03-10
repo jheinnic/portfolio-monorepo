@@ -1,14 +1,14 @@
+import { AsyncSink } from 'ix';
+import { Chan } from 'medium';
+
+import { IAdapter } from '@jchptf/api';
 import {
-   getDynamicModuleType, getLocalProviderToken, getModuleIdentifier,
-   getNamedTypeIntent
+   getDynamicModuleType, getLocalProviderToken, getModuleIdentifier, getNamedTypeIntent
 } from '@jchptf/nestjs';
 
-import { IConcurrentWorkFactory, ILimiter } from '../interfaces';
-import { Chan } from 'medium';
-import { IAdapter } from '@jchptf/api';
 import { ModuleChannelConfig } from './model/module-channel-config.type';
 import { IChanMonitor } from '../interfaces/chan-monitor.interface';
-import { AsyncSink } from 'ix';
+import { IConcurrentWorkFactory, ILimiter } from '../interfaces';
 
 export const COROUTINES_MODULE =
    getModuleIdentifier('@jchptf/coroutines');
