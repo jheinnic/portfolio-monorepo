@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.38](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/api@0.0.37...@jchptf/api@0.0.38) (2019-03-10)
+
+**Note:** Version bump only for package @jchptf/api
+
+
+
+
+
 ## [0.0.37](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/api@0.0.36...@jchptf/api@0.0.37) (2019-03-07)
 
 **Note:** Version bump only for package @jchptf/api
