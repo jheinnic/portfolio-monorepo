@@ -64,6 +64,17 @@ cat << EOF > $MODULE/package.json
     },
     "author": "$AUTHOR <$EMAIL>",
     "license": "MIT",
+    "keywords": [
+        "es6",
+        "typescript"
+    ],
+    "engines": {
+        "node": ">=10.13.0"
+    },
+    "publishConfig": {
+        "access": "public",
+        "registry": "http://localhost:4873"
+    },
     "scripts": {
         "build": "yarn run clean && tsc -b && echo `pwd`",
         "clean": "tsc -b --clean && rm -rf .nyc_output coverage doc dist build && mkdir dist && mkdir build ",
@@ -91,20 +102,10 @@ cat << EOF > $MODULE/package.json
         "typedoc": "^0.14.2",
         "typescript": "^3.2.2"
     },
-    "engines": {
-        "node": ">=10.13.0"
-    },
     "dependencies": {
         "@thi.ng/errors": "^0.1.12",
         "simplytyped": "^1.6.0",
         "tslib": "^1.9.3"
-    },
-    "keywords": [
-        "es6",
-        "typescript"
-    ],
-    "publishConfig": {
-        "access": "public"
     }
 }
 EOF
