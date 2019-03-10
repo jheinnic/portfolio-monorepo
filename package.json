@@ -39,7 +39,5 @@
         "test": "yarn build && lerna run test --sort"
     },
     "name": "monorepo",
-    "dependencies": {
-        "rxjs": "^6.4.0"
-    }
+    "dependencies": {}
 }
