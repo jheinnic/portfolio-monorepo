@@ -1,14 +1,11 @@
-import {DepthFirstVisitMode} from './depth-first-visit-mode.enum';
-import {BlockMappedLayerLocator} from '../locator';
-import {getBuilderDecorators} from '@jchptf/builders';
+import { DepthFirstVisitMode } from './depth-first-visit-mode.enum';
+import { BlockMappedLayerLocator } from '../locator';
 
-export interface IDfsOrderBuilder {
+export interface IDfsOrderBuilder
+{
    leftToRight(value: boolean): IDfsOrderBuilder;
+
    endWith(value: BlockMappedLayerLocator): IDfsOrderBuilder;
+
    visitMode(value: DepthFirstVisitMode): IDfsOrderBuilder
 }
-
-const decorators = getBuilderDecorators<IDfsOrderBuilder>('bind-dfs-order-builder-key');
-export const bindInputParam = decorators.bindInputParam;
-export const buildable = decorators.decorateBuildable;
-export const factoryMethod = decorators.factoryMethod;

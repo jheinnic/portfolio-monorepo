@@ -2526,6 +2526,11 @@ find-up@^3.0.0:
   dependencies:
     locate-path "^3.0.0"
 
+fluent-interface-builder@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/fluent-interface-builder/-/fluent-interface-builder-2.0.1.tgz#1aba25d295705ee097cf3b405f9d4c864781fc5b"
+  integrity sha1-Grol0pVwXuCXzztAX51MhkeB/Fs=
+
 flush-write-stream@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/flush-write-stream/-/flush-write-stream-1.0.3.tgz#c5d586ef38af6097650b49bc41b55fabb19f35bd"
