@@ -1,4 +1,3 @@
-/// <reference file="../typings/medium/index.d.ts">
 import { Injectable } from '@nestjs/common';
 import { buffers, Chan, chan, go, put, repeat, repeatTake, sleep } from 'medium';
 import { identity, Transducer } from 'transducers-js';
@@ -368,7 +367,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       let globalDone: boolean = false;
       const iterator = (isIterable(iterable)) ? iterable[Symbol.iterator]() : iterable[Symbol.asyncIterator]();
 
-      async function queueFromIterator(looping: MediumSeedBoolean): Promise<MediumSeedBoolean|false>
+      async function queueFromIterator(looping: MediumSeedBoolean): Promise<MediumSeedBoolean.TRUE|false>
       {
          if (globalDone) { return false; }
 
@@ -399,7 +398,9 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       for (let ii = 0; ii < concurrency; ii++) {
          const workerId = ii;
          if (!globalDone) {
-            repeat(queueFromIterator, MediumSeedBoolean.FALSE)
+            repeat<MediumSeedBoolean>(
+               queueFromIterator,
+               MediumSeedBoolean.FALSE as MediumSeedBoolean)
                .then(function () {
                   console.log(`Concurrent worker #${workerId} signalled complete`);
                })

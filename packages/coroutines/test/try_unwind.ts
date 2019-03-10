@@ -13,7 +13,7 @@ for (let ii=0; ii<2000; ii++) {
 }
 
 const asIn = new AsyncSink<Iterable<number>>();
-const asOut = wf.createChan();
+const asOut = wf.createChan().unwrap();
 
 // async function devourSink(sink: AsyncSink<any>) {
 //    for await (let nextItem of sink) {

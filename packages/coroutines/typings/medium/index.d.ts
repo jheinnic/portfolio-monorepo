@@ -1,5 +1,3 @@
-import { AnyFunc } from 'simplytyped';
-
 declare module 'medium'
 {
   import 'medium';
@@ -58,6 +56,7 @@ declare module 'medium'
   export type Alt<T = any> = Chan<any, T> | Promise<T> | [Chan<T, any>, T];
 
   export type AnyAlt<T = any> = Promise<[T, Chan<any, T> | Chan<T, any> | Promise<T>]>;
+
   /**
    * Like alts in Clojure's core-async.
    *
@@ -72,7 +71,7 @@ declare module 'medium'
    * Always resolves with a double of [ theResolvedValue, theSourceChannel ].
    *
    * All non-winning actions will be canceled so that their data does not go missing.
-  export function any(...ports) -> Promise -> [theResolvedValue, theSourceChannelOrPromise]
+   export function any(...ports) -> Promise -> [theResolvedValue, theSourceChannelOrPromise]
    */
   export function any<S1 = any>(...port: Alt<S1>[]): AnyAlt<S1>
   export function any<S1 = any, S2 = any>(port1: Alt<S1>, port2: Alt<S2>): AnyAlt<S1|S2>
@@ -86,7 +85,7 @@ declare module 'medium'
 
   export type SeededRepeatFn<Seed extends object|string|number|symbol|AnyFunc|true> =
      Seed extends Promise<infer T>
-        ? (seed: T) => SyncOrAsync<T|false>
+        ? (seed: T|Promise<T>) => SyncOrAsync<T|false>
         : (seed: Seed) => SyncOrAsync<Seed|false>;
 
   /**
@@ -110,19 +109,19 @@ declare module 'medium'
   export type RepeatTakeFn<Take> = (value: Take) => SyncOrAsync<void|false>;
 
   /**
-   * SeededRepeatFn is like RepeatTakeFn except to continue the loop a value of 
+   * SeededRepeatFn is like RepeatTakeFn except to continue the loop a value of
    */
   export type SeededRepeatTakeFn<Take, Seed extends object|string|number|symbol|AnyFunc|true> =
      Seed extends Promise<infer T>
         ? (take: Take, seed: T|Promise<T>) => SyncOrAsync<T|false>
         : (take: Take, seed: Seed) => SyncOrAsync<Seed|false>;
 
-   /**
-    * This is just like repeat above, except that before it repeats, it waits for a successful take on the given channel.
-    * Then it passes this taken value in as the first argument, with any local state being passed as the second argument.
-    *
-    * See the ping/pong example above to see this in action.
-    */
+  /**
+   * This is just like repeat above, except that before it repeats, it waits for a successful take on the given channel.
+   * Then it passes this taken value in as the first argument, with any local state being passed as the second argument.
+   *
+   * See the ping/pong example above to see this in action.
+   */
   export function repeatTake<T = any>(ch: Chan<any, T>, fn: RepeatTakeFn<T>): Promise<void>;
   export function repeatTake<T = any, S = any>(ch: Chan<any, T>, fn: SeededRepeatTakeFn<T, S>, seed: SyncOrAsync<S>): Promise<void>;
 
