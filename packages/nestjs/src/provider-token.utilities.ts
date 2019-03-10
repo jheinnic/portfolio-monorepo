@@ -23,13 +23,13 @@
  */
 import { illegalArgs } from '@thi.ng/errors';
 import { ModuleIdentifier, StringQualifier, TypeIdentifier } from './string-qualifier.type';
-import { DynamicProviderBinding } from './dynamic-provider-binding.type';
+import { DynamicModuleType } from './string-qualifier.type';
 import {
    DynamicProviderToken, GlobalProviderToken, LocalProviderToken,
 } from './provider-token.type';
 
 export function getDynamicProviderToken<Type>(
-   moduleId: ModuleIdentifier, binding: DynamicProviderBinding, typeId: TypeIdentifier<Type>,
+   moduleId: ModuleIdentifier, binding: DynamicModuleType, typeId: TypeIdentifier<Type>,
    tagName?: string,
 ): DynamicProviderToken<Type>
 {
@@ -103,15 +103,15 @@ export function getNamedSubtypeIntent<Type, Subtype extends Type>(
 }
 
 export function getDynamicProviderBinding(
-   moduleId: ModuleIdentifier, tagName?: string): DynamicProviderBinding
+   moduleId: ModuleIdentifier, tagName?: string): DynamicModuleType
 {
    if (!!tagName) {
-      return getStringQualifier<'DynamicProviderBinding'>(
-         `${moduleId}(${tagName})`, 'DynamicProviderBinding') as DynamicProviderBinding;
+      return getStringQualifier<'DynamicModuleType'>(
+         `${moduleId}(${tagName})`, 'DynamicModuleType') as DynamicModuleType;
    }
 
-   return getStringQualifier<'DynamicProviderBinding'>(
-      moduleId, 'DynamicProviderBinding') as DynamicProviderBinding;
+   return getStringQualifier<'DynamicModuleType'>(
+      moduleId, 'DynamicModuleType') as DynamicModuleType;
 }
 
 function getStringQualifier<Intent extends string>(

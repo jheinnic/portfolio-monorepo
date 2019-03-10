@@ -6,7 +6,7 @@ import { TxTypeChannelDef } from './model/tx-type-channel-def.interface';
 import { ChannelKind } from './model/channel-kind.enum';
 import { IAdapter } from '@jchptf/api';
 import { Chan } from 'medium';
-import { CHAN_TYPE, COROUTINE_DYNAMIC_CHANNELS_BINDING } from './coroutines.constants';
+import { CHAN_TYPE, COROUTINE_CHANNEL_DYNAMIC_MODULE_TYPE } from './coroutines.constants';
 
 export function getMonoTxChannelDefinition<Type>(
    moduleId: ModuleIdentifier,
@@ -18,7 +18,7 @@ export function getMonoTxChannelDefinition<Type>(
 {
    const providerToken =
       getDynamicProviderToken<IAdapter<Chan<Type, Type>>>(
-         moduleId, COROUTINE_DYNAMIC_CHANNELS_BINDING, CHAN_TYPE, name);
+         moduleId, COROUTINE_CHANNEL_DYNAMIC_MODULE_TYPE, CHAN_TYPE, name);
 
    return {
       kind: ChannelKind.MONO,
@@ -38,7 +38,7 @@ export function getPassThruChannelDefinition<Type>(
 {
    const providerToken =
       getDynamicProviderToken<IAdapter<Chan<Type, Type>>>(
-         moduleId, COROUTINE_DYNAMIC_CHANNELS_BINDING, CHAN_TYPE, name);
+         moduleId, COROUTINE_CHANNEL_DYNAMIC_MODULE_TYPE, CHAN_TYPE, name);
 
    return {
       kind: ChannelKind.MONO,
@@ -58,7 +58,7 @@ export function getTxChannelDefinition<InType, OutType>(
 {
    const providerToken =
       getDynamicProviderToken<IAdapter<Chan<InType, OutType>>>(
-         moduleId, COROUTINE_DYNAMIC_CHANNELS_BINDING, CHAN_TYPE, name);
+         moduleId, COROUTINE_CHANNEL_DYNAMIC_MODULE_TYPE, CHAN_TYPE, name);
 
    return {
       kind: ChannelKind.TX,

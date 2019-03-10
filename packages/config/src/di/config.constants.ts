@@ -1,8 +1,7 @@
 import { DotenvConfigOptions } from 'dotenv';
 
 import {
-   getDynamicProviderBinding, getLocalProviderToken, getModuleIdentifier,
-   getNamedTypeIntent,
+   getDynamicModuleType, getLocalProviderToken, getModuleIdentifier, getNamedTypeIntent,
 } from '@jchptf/nestjs';
 import { IConfigReader, IConfigLoader, IConfigMetadataHelper } from '../interfaces';
 
@@ -22,5 +21,5 @@ export const CONFIG_LOADER_PROVIDER =
 export const DOTENV_CONFIG_OPTIONS =
    getLocalProviderToken<DotenvConfigOptions|false>(CONFIG_MODULE_ID, DCO);
 
-export const CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING =
-   getDynamicProviderBinding(CONFIG_MODULE_ID);
+export const CONFIG_DYNAMIC_MODULE_TYPE =
+   getDynamicModuleType(CONFIG_MODULE_ID);

@@ -1,5 +1,5 @@
 import {
-   getDynamicProviderBinding, getLocalProviderToken, getModuleIdentifier, getNamedTypeIntent,
+   getDynamicModuleType, getLocalProviderToken, getModuleIdentifier, getNamedTypeIntent,
 } from '@jchptf/nestjs';
 import { ICanonicalPathNaming, IMerkleCalculator, IMerkleLocatorFactory } from '../interface';
 import { default as LRU } from 'lru-cache';
@@ -25,5 +25,5 @@ export const MERKLE_IDENTITY_LRU_CACHE_LPT =
 export const MERKLE_DIGEST_LRU_CACHE_LPT =
    getLocalProviderToken<LRU>(MERKLE_MODULE_ID, LRUC);
 
-export const MERKLE_MODULE_DYNAMIC_PROVIDER_BINDING =
-   getDynamicProviderBinding(MERKLE_MODULE_ID);
+export const MERKLE_DYNAMIC_MODULE_TYPE =
+   getDynamicModuleType(MERKLE_MODULE_ID);

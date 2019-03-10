@@ -1,7 +1,7 @@
 import {Chan} from 'medium';
 
 import {
-   getDynamicProviderBinding, getLocalProviderToken, getModuleIdentifier,
+   getDynamicModuleType, getLocalProviderToken, getModuleIdentifier,
    getNamedTypeIntent, NAMED_EITHER_ITERABLE_ANY_TYPE,
    TypeIdentifier
 } from '@jchptf/nestjs';
@@ -31,5 +31,5 @@ export const RETURN_CHANNEL_TYPE: TypeIdentifier<Chan<any, IResourceAdapter<any>
 export const SEMAPHORE_SERVICE_TYPE =
    getNamedTypeIntent<IResourceSemaphore<any>>("IResourceSemaphore<T>")
 
-export const SEMAPHORE_DYNAMIC_PROVIDER_BINDING =
-   getDynamicProviderBinding(SEMAPHORE_MODULE_ID);
+export const SEMAPHORE_DYNAMIC_MODULE_TYPE =
+   getDynamicModuleType(SEMAPHORE_MODULE_ID);

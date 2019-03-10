@@ -1,10 +1,10 @@
 import chai from 'chai';
+import { assert, HasType, IsExactType, NotHasType } from 'conditional-type-checks';
 
 import {
    getGlobalProviderToken, getLocalProviderToken, getModuleIdentifier, getNamedSubtypeIntent,
    getNamedTypeIntent, HasImpliedType, IsImpliedType, TokenDictionary,
 } from '@jchptf/nestjs';
-import { assert, HasType, IsExactType, NotHasType } from 'conditional-type-checks';
 import {
    AnotherSubclass, Class, ISomething, OneSubclass, SomethingOne, SomethingThree, SomethingTwo,
 } from '../fixtures/primitive';
@@ -57,25 +57,25 @@ describe('ProviderTokens', () => {
       type fooType = typeof diDict.foo;
       type barType = typeof diDict.bar;
 
-      assert<IsImpliedType<fooType, Class>>(true);
-      assert<IsImpliedType<barType, ISomething>>(true);
+      assert<IsImpliedType<Class, fooType>>(true);
+      assert<IsImpliedType<ISomething, barType>>(true);
 
-      assert<IsImpliedType<fooType, ISomething>>(false);
-      assert<IsImpliedType<fooType, number>>(false);
-      assert<IsImpliedType<barType, Class>>(false);
-      assert<IsImpliedType<barType, number>>(false);
+      assert<IsImpliedType<ISomething, fooType>>(false);
+      assert<IsImpliedType<number, fooType>>(false);
+      assert<IsImpliedType<Class, barType>>(false);
+      assert<IsImpliedType<number, barType>>(false);
 
-      assert<IsImpliedType<fooType, OneSubclass>>(false);
-      assert<IsImpliedType<fooType, AnotherSubclass>>(false);
-      assert<IsImpliedType<barType, SomethingOne>>(false);
-      assert<IsImpliedType<barType, SomethingTwo>>(false);
-      assert<IsImpliedType<barType, SomethingThree>>(false);
+      assert<IsImpliedType<OneSubclass, fooType>>(false);
+      assert<IsImpliedType<AnotherSubclass, fooType>>(false);
+      assert<IsImpliedType<SomethingOne, barType>>(false);
+      assert<IsImpliedType<SomethingTwo, barType>>(false);
+      assert<IsImpliedType<SomethingThree, barType>>(false);
 
-      assert<HasImpliedType<fooType, OneSubclass>>(true);
-      assert<HasImpliedType<fooType, AnotherSubclass>>(true);
-      assert<HasImpliedType<barType, SomethingOne>>(true);
-      assert<HasImpliedType<barType, SomethingTwo>>(true);
-      assert<HasImpliedType<barType, SomethingThree>>(true);
+      assert<HasImpliedType<OneSubclass, fooType>>(true);
+      assert<HasImpliedType<AnotherSubclass, fooType>>(true);
+      assert<HasImpliedType<SomethingOne, barType>>(true);
+      assert<HasImpliedType<SomethingTwo, barType>>(true);
+      assert<HasImpliedType<SomethingThree, barType>>(true);
    });
 
    it('Maintains equality when created equivalently', () => {

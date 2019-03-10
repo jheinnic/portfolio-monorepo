@@ -11,7 +11,7 @@ import {
 } from '..';
 import {
    MERKLE_LOCATOR_FACTORY_LPT, MERKLE_LOCATOR_FACTORY_TYPE,
-   MERKLE_MODULE_DYNAMIC_PROVIDER_BINDING, MERKLE_PATH_NAMING_LPT, MERKLE_PATH_NAMING_TYPE,
+   MERKLE_DYNAMIC_MODULE_TYPE, MERKLE_PATH_NAMING_LPT, MERKLE_PATH_NAMING_TYPE,
    MERKLE_TREE_CALCULATOR_TYPE
 } from './merkle.constants';
 import {
@@ -85,15 +85,15 @@ export class MerkleModule
    {
       const calculatorToken: DynamicProviderToken<IMerkleCalculator> =
          getDynamicProviderToken(
-            forModule, MERKLE_MODULE_DYNAMIC_PROVIDER_BINDING,
+            forModule, MERKLE_DYNAMIC_MODULE_TYPE,
             MERKLE_TREE_CALCULATOR_TYPE, withTag);
       const locatorFactoryToken: DynamicProviderToken<IMerkleLocatorFactory> =
          getDynamicProviderToken(
-            forModule, MERKLE_MODULE_DYNAMIC_PROVIDER_BINDING,
+            forModule, MERKLE_DYNAMIC_MODULE_TYPE,
             MERKLE_LOCATOR_FACTORY_TYPE, withTag);
       const pathNamingToken: DynamicProviderToken<ICanonicalPathNaming> =
          getDynamicProviderToken(
-            forModule, MERKLE_MODULE_DYNAMIC_PROVIDER_BINDING,
+            forModule, MERKLE_DYNAMIC_MODULE_TYPE,
             MERKLE_PATH_NAMING_TYPE, withTag);
 
       return [

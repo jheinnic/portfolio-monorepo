@@ -1,8 +1,5 @@
-import { StringQualifier } from './string-qualifier.type';
+import { BaseProviderToken } from './string-qualifier.type';
 import { FactoryProvider } from '@nestjs/common/interfaces';
-
-export type BaseProviderToken<Type, Modifier extends string = 'ProviderToken'> =
-   StringQualifier<'ProviderToken' & Modifier, Type>;
 
 export type LocalProviderToken<T> = BaseProviderToken<T, 'Local'>;
 

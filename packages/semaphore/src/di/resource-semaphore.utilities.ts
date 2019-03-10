@@ -5,7 +5,7 @@ import {
 } from '@jchptf/nestjs';
 import {
    RESERVATIONS_CHANNEL_TYPE, RETURN_CHANNEL_TYPE,
-   SEMAPHORE_DYNAMIC_PROVIDER_BINDING, SEMAPHORE_SERVICE_TYPE
+   SEMAPHORE_DYNAMIC_MODULE_TYPE, SEMAPHORE_SERVICE_TYPE
 } from './resource-semaphore.constants';
 import { IResourceAdapter, IResourceSemaphore } from '../interfaces';
 
@@ -13,7 +13,7 @@ export function getResourceSemaphoreToken<T extends object>(
    moduleId: ModuleIdentifier, instanceTag?: string): DynamicProviderToken<IResourceSemaphore<T>>
 {
    return getDynamicProviderToken(
-      moduleId, SEMAPHORE_DYNAMIC_PROVIDER_BINDING, SEMAPHORE_SERVICE_TYPE, instanceTag)
+      moduleId, SEMAPHORE_DYNAMIC_MODULE_TYPE, SEMAPHORE_SERVICE_TYPE, instanceTag)
 }
 
 export function getReservationChannelToken<T extends object>(
@@ -21,7 +21,7 @@ export function getReservationChannelToken<T extends object>(
 {
    // const symbolName = `info.jchein.infrastructure.pool.ReservationChannel<${name}>`;
    return getDynamicProviderToken(
-      moduleId, SEMAPHORE_DYNAMIC_PROVIDER_BINDING, RESERVATIONS_CHANNEL_TYPE, instanceTag)
+      moduleId, SEMAPHORE_DYNAMIC_MODULE_TYPE, RESERVATIONS_CHANNEL_TYPE, instanceTag)
 }
 
 export function getResourceReturnChannelToken<T extends object>(
@@ -29,5 +29,5 @@ export function getResourceReturnChannelToken<T extends object>(
 {
    // const symbolName = `info.jchein.infrastructure.pool.ReturnSink<${name}>`;
    return getDynamicProviderToken(
-      moduleId, SEMAPHORE_DYNAMIC_PROVIDER_BINDING, RETURN_CHANNEL_TYPE, instanceTag)
+      moduleId, SEMAPHORE_DYNAMIC_MODULE_TYPE, RETURN_CHANNEL_TYPE, instanceTag)
 }

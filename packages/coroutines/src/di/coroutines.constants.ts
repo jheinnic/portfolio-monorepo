@@ -1,5 +1,5 @@
 import {
-   getDynamicProviderBinding, getLocalProviderToken, getModuleIdentifier,
+   getDynamicModuleType, getLocalProviderToken, getModuleIdentifier,
    getNamedTypeIntent
 } from '@jchptf/nestjs';
 
@@ -34,5 +34,5 @@ export const CONCURRENT_WORK_FACTORY =
 export const MODULE_CHANNEL_CONFIG_TOKEN_PROVIDER =
    getLocalProviderToken<ModuleChannelConfig<any>>(COROUTINES_MODULE, MODULE_CHANNEL_CONFIG);
 
-export const COROUTINE_DYNAMIC_CHANNELS_BINDING =
-   getDynamicProviderBinding(COROUTINES_MODULE, 'ChanBinding');
+export const COROUTINE_CHANNEL_DYNAMIC_MODULE_TYPE =
+   getDynamicModuleType(COROUTINES_MODULE, 'ChannelsDynamicModule');

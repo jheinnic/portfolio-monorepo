@@ -1,6 +1,6 @@
 import {
-   getDynamicProviderBinding,
-   getGlobalProviderToken, getLocalProviderToken, getModuleIdentifier, getNamedTypeIntent
+   getDynamicModuleType, getGlobalProviderToken, getLocalProviderToken, getModuleIdentifier,
+   getNamedTypeIntent,
 } from '@jchptf/nestjs';
 import { Consul, ConsulOptions } from 'consul';
 
@@ -14,5 +14,7 @@ export const CONSUL_CLIENT_PROVIDER = getGlobalProviderToken<Consul>(IConsul);
 export const CONSUL_OPTIONS_PROVIDER = getLocalProviderToken<ConsulOptions>(CONSUL_MODULE_ID, ConsulOptions);
 export const CONSUL_EVENT_EMITTER_PROVIDER = getLocalProviderToken<NodeJS.EventEmitter>(CONSUL_MODULE_ID, EventEmitter);
 
-export const ServiceBinding = getDynamicProviderBinding(CONSUL_MODULE_ID, 'Service');
-export const WatchBinding = getDynamicProviderBinding(CONSUL_MODULE_ID, 'Watch');
+export const CONSUL_SERVICE_DYNAMIC_MODULE_TYPE =
+   getDynamicModuleType(CONSUL_MODULE_ID, 'ServicesDynamicModule');
+export const CONSUL_WATCH_DYNAMIC_MODULE_TYPE =
+   getDynamicModuleType(CONSUL_MODULE_ID, 'WatchesDynamicModule');

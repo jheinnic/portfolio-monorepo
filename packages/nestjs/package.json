@@ -30,12 +30,24 @@
     },
     "author": "John Heinnickel <jheinnic+npm@hotmail.com>",
     "license": "MIT",
+    "keywords": [
+        "es6",
+        "typescript"
+    ],
+    "engines": {
+        "node": ">=10.13.0"
+    },
+    "publishConfig": {
+        "access": "public",
+        "registry": "http://localhost:4873"
+    },
     "scripts": {
         "build": "yarn run clean && tsc -b && echo /Users/jheinnic/Git/JchPtf/monorepo",
         "clean": "tsc -b --clean && rm -rf .nyc_output coverage doc dist build && mkdir dist && mkdir build ",
         "cover": "yarn test && nyc report --reporter=lcov",
-        "doc": "node_modules/.bin/typedoc --mode file --module es2015 --target es6 --tsconfig tsconfig.json --externalPattern node_modules --excludeExternals --excludePrivate --out doc --gitRevision feature_bootstrap src typings",
+        "doc": "node_modules/.bin/typedoc --mode file --module es2015 --target es015 --tsconfig tsconfig.json --externalPattern node_modules --excludeExternals --excludePrivate --out doc --gitRevision feature_bootstrap src typings",
         "pub": "yarn run build && lerna publish --registry http://localhost:4873",
+        "dtslint": "dtslint types",
         "test": "tsc -b test --clean && rm -rf build && mkdir build && tsc -b test && nyc mocha "
     },
     "devDependencies": {
@@ -45,6 +57,7 @@
         "@types/sinon": "^7.0.2",
         "@types/sinon-chai": "^3.2.2",
         "chai": "^4.2.0",
+        "dtslint": "^0.5.3",
         "lerna": "^3.8.0",
         "mocha": "^5.2.0",
         "mocha-typescript": "^1.1.17",
@@ -56,21 +69,11 @@
         "typedoc": "^0.14.2",
         "typescript": "^3.2.2"
     },
-    "engines": {
-        "node": ">=10.13.0"
-    },
     "dependencies": {
         "@jchptf/objecttypes": "^0.0.8",
         "@nestjs/common": "^5.7.3",
         "@thi.ng/errors": "^0.1.12",
         "simplytyped": "^1.8.0",
         "tslib": "^1.9.3"
-    },
-    "keywords": [
-        "es6",
-        "typescript"
-    ],
-    "publishConfig": {
-        "access": "public"
     }
 }
