@@ -29,6 +29,19 @@ function isAsyncIterable<T>(sinkValue: any): sinkValue is AsyncIterable<T>
       Symbol.asyncIterator);
 }
 
+/**
+ * Medium's seeded repeat*() methods cannot use plain booleans as their seed argument type
+ * because 'false' would have ambiguous meaning due to its use in signalling end-of-iteration.
+ *
+ * We cannot patch Medium to use a symbol or other non-ambiguous value to signal end-of-iteration,
+ * but we can provide a boolean-equivalent enum for use as a seed argument type when boolean
+ * semantics are desired.
+ */
+enum MediumSeedBoolean {
+   FALSE,
+   TRUE
+}
+
 @Injectable()
 export class ConcurrentWorkFactory implements IConcurrentWorkFactory
 {
@@ -355,12 +368,12 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       let globalDone: boolean = false;
       const iterator = (isIterable(iterable)) ? iterable[Symbol.iterator]() : iterable[Symbol.asyncIterator]();
 
-      async function queueFromIterator(looping: boolean): Promise<boolean>
+      async function queueFromIterator(looping: MediumSeedBoolean): Promise<MediumSeedBoolean|false>
       {
          if (globalDone) { return false; }
 
          let thisResult = iterator.next();
-         if (looping && (delay > 0)) { await sleep(delay); }
+         if ((looping === MediumSeedBoolean.TRUE) && (delay > 0)) { await sleep(delay); }
 
          // TODO: If globalDone was set while in a sleep delay, should we drop the
          //       value instead of awaiting and emitting it?
@@ -380,13 +393,13 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
             console.log(delay, last, lapsed, Date.now());
          }
 
-         return !globalDone;
+         return globalDone ? false : MediumSeedBoolean.TRUE;
       }
 
       for (let ii = 0; ii < concurrency; ii++) {
          const workerId = ii;
          if (!globalDone) {
-            repeat(queueFromIterator, false)
+            repeat(queueFromIterator, MediumSeedBoolean.FALSE)
                .then(function () {
                   console.log(`Concurrent worker #${workerId} signalled complete`);
                })

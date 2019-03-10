@@ -1,3 +1,5 @@
+import { AnyFunc } from 'simplytyped';
+
 declare module 'medium'
 {
   import 'medium';
@@ -82,12 +84,10 @@ declare module 'medium'
 
   export type RepeatFn = () => SyncOrAsync<void|false>;
 
-  export type SeededRepeatFn<Seed> =
-     false extends Seed
-        ? never
-        : Seed extends Promise<any>
-           ? never
-           : (seed: Seed) => SyncOrAsync<Seed|false>;
+  export type SeededRepeatFn<Seed extends object|string|number|symbol|AnyFunc|true> =
+     Seed extends Promise<infer T>
+        ? (seed: T) => SyncOrAsync<T|false>
+        : (seed: Seed) => SyncOrAsync<Seed|false>;
 
   /**
    * I don't love while loops, so I use this instead.
@@ -112,12 +112,10 @@ declare module 'medium'
   /**
    * SeededRepeatFn is like RepeatTakeFn except to continue the loop a value of 
    */
-  export type SeededRepeatTakeFn<Take, Seed> =
-     false extends Seed
-        ? never
-        : Seed extends Promise<any>
-           ? never
-           : (take: Take, seed: Seed) => SyncOrAsync<Seed|false>;
+  export type SeededRepeatTakeFn<Take, Seed extends object|string|number|symbol|AnyFunc|true> =
+     Seed extends Promise<infer T>
+        ? (take: Take, seed: T|Promise<T>) => SyncOrAsync<T|false>
+        : (take: Take, seed: Seed) => SyncOrAsync<Seed|false>;
 
    /**
     * This is just like repeat above, except that before it repeats, it waits for a successful take on the given channel.
