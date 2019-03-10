@@ -33,11 +33,15 @@
         { "path": "./packages/api" },
         { "path": "./packages/config" },
         { "path": "./packages/consul" },
+        { "path": "./packages/coroutines" },
         { "path": "./packages/merkle" },
         { "path": "./packages/mixins" },
+        { "path": "./packages/nestjs" },
         { "path": "./packages/objecttypes" },
         { "path": "./packages/reflection" },
-        { "path": "./packages/unit-testing" }
+        { "path": "./packages/semaphore" },
+        { "path": "./packages/tupletypes" },
+        { "path": "./packages/txtypes" }
     ],
     "files": [ ]
 }
