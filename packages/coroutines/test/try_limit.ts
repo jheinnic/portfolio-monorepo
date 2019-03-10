@@ -1,4 +1,4 @@
-import {ConcurrentWorkFactory, Limiter} from '@jchptf/coroutines';
+import {ConcurrentWorkFactory, ILimiter} from '@jchptf/coroutines';
 import {sleep} from 'medium';
 
 const concurrency: number = 50;
@@ -21,7 +21,7 @@ async function doWork(input: number): Promise<number> {
    return input * 2;
 }
 
-const limiter: Limiter = wf.createLimiter(concurrency, 10);
+const limiter: ILimiter = wf.createLimiter(concurrency, 10);
 const limitedDoWork = limiter(doWork, 5);
 
 for (let ii=0; ii<jobCount; ii++) {

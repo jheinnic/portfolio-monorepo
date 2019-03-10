@@ -6,7 +6,7 @@ import { Chan } from 'medium';
 
 import { AsyncTx } from '@jchptf/txtypes';
 import { ChanBufferType } from './chan-buffer-type.enum';
-import { Limiter } from './limiter.type';
+import { ILimiter } from './limiter.type';
 import { SinkLike } from './sink-like.type';
 import { IAdapter } from '@jchptf/api';
 import { IChanMonitor } from './chan-monitor.interface';
@@ -78,7 +78,7 @@ export interface IConcurrentWorkFactory
     * @see co
     * @see co.wrap
     */
-   createLimiter(concurrency: number, defaultPriority?: number): Limiter;
+   createLimiter(concurrency: number, defaultPriority?: number): ILimiter;
 
    createChan<T = any>(bufSize?: number, bufType?: ChanBufferType): IAdapter<Chan<T, T>>;
 

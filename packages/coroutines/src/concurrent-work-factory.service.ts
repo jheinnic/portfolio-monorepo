@@ -11,7 +11,7 @@ import { AsyncTx } from '@jchptf/txtypes';
 import { IAdapter } from '@jchptf/api';
 
 import {
-   asFunction, ChanBufferType, IConcurrentWorkFactory, Limiter, SinkLike, IterPair
+   asFunction, ChanBufferType, IConcurrentWorkFactory, ILimiter, SinkLike, IterPair
 } from './interfaces';
 import { IChanMonitor } from './interfaces/chan-monitor.interface';
 import { ChanMonitor } from './chan-monitor.class';
@@ -102,7 +102,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       return new AsyncSink<T>();
    }
 
-   createLimiter(concurrency: number, defaultPriority: number = 10): Limiter
+   createLimiter(concurrency: number, defaultPriority: number = 10): ILimiter
    {
       const heap = new FibonacciHeap<number, () => Promise<void>>();
          new FibonacciHeap<number, () => Promise<void>>();

@@ -3,7 +3,7 @@ import {
    getNamedTypeIntent
 } from '@jchptf/nestjs';
 
-import { IConcurrentWorkFactory } from '../interfaces';
+import { IConcurrentWorkFactory, ILimiter } from '../interfaces';
 import { Chan } from 'medium';
 import { IAdapter } from '@jchptf/api';
 import { ModuleChannelConfig } from './model/module-channel-config.type';
@@ -24,6 +24,8 @@ export const CHAN_TYPE =
 
 export const MONITOR_TYPE =
    getNamedTypeIntent<IChanMonitor<any>>('IChanMonitor<any>');
+
+export const LIMITER_TYPE = getNamedTypeIntent<ILimiter>('ILimiter');
 
 export const ASYNC_SINK_TYPE =
    getNamedTypeIntent<AsyncSink<any>>('AsyncSink<any>');
