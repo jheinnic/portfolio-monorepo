@@ -71,14 +71,14 @@
         "@jchptf/reflection": "^0.0.9",
         "@nestjs/common": "^5.5.0",
         "@thi.ng/errors": "^0.1.12",
-        "class-transformer": "^0.2.0",
+        "class-transformer": "^0.1.9",
         "class-transformer-validator": "^0.6.0",
         "class-validator": "^0.9.1",
         "config": "^3.0.1",
         "dotenv": "^6.2.0",
         "immutable": "^4.0.0-rc.12",
         "reflect-metadata": "^0.1.12",
-        "rxjs": "^6.3.3",
+        "rxjs": "^6.4.0",
         "simplytyped": "^1.6.0",
         "tslib": "^1.9.3"
     }

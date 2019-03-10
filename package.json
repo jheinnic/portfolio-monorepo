@@ -13,7 +13,7 @@
         "benchmark": "^2.1.4",
         "chai": "^4.2.0",
         "dtslint": "^0.4.2",
-        "lerna": "^3.8.0",
+        "lerna": "^3.13.1",
         "lolex": "^3.0.0",
         "mocha": "^5.2.0",
         "mocha-typescript": "^1.1.17",
@@ -30,13 +30,16 @@
     },
     "scripts": {
         "bootstrap": "lerna bootstrap",
-        "build": "yarn install && lerna -v && lerna bootstrap && lerna run build --sort",
+        "build": "lerna -v && tsc -b --clean && lerna clean && lerna bootstrap && lerna build --sort",
         "cover": "lerna run cover",
         "depgraph": "scripts/depgraph && git add assets/deps.png && git commit -m 'docs: update dep graph' && git push",
         "doc": "lerna run doc",
         "examples": "ex=\"examples/*\"; for e in $ex; do (cd $e && yarn build); done",
-        "pub": "lerna publish --registry http://localhost:4873 && yarn doc && scripts/upload-docs",
+        "pub": "lerna clean && tsc -b --clean && lerna publish --registry http://localhost:4873 && yarn doc && scripts/upload-docs",
         "test": "yarn build && lerna run test"
     },
-    "name": "monorepo"
+    "name": "monorepo",
+    "dependencies": {
+        "rxjs": "^6.4.0"
+    }
 }

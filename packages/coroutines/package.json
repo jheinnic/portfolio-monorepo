@@ -81,7 +81,7 @@
         "ix": "^2.5.1",
         "medium": "^1.0.2",
         "reflect-metadata": "^0.1.12",
-        "rxjs": "^6.3.3",
+        "rxjs": "^6.4.0",
         "simplytyped": "^1.6.0",
         "transducers-js": "^0.4.174",
         "tslib": "^1.9.3"
