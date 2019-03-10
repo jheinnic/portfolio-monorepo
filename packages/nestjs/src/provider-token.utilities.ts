@@ -102,7 +102,7 @@ export function getNamedSubtypeIntent<Type, Subtype extends Type>(
       subtypeId, 'TypeIdentifier') as TypeIdentifier<Subtype>;
 }
 
-export function getDynamicProviderBinding(
+export function getDynamicModuleType(
    moduleId: ModuleIdentifier, tagName?: string): DynamicModuleType
 {
    if (!!tagName) {
