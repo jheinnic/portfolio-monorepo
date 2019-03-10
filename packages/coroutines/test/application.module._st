@@ -1,0 +1,10 @@
+import {Module} from '@nestjs/common';
+import {CoroutinesModule} from '@jchptf/coroutines';
+
+@Module({
+   imports: [CoroutinesModule],
+   exports: [CoroutinesModule]
+})
+export class ApplicationModule {
+
+}
