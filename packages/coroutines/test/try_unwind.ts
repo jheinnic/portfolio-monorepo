@@ -1,14 +1,14 @@
-import {ConcurrentWorkFactory} from '@jchptf/coroutines';
-import {AsyncSink} from 'ix';
+import { ConcurrentWorkFactory } from '@jchptf/coroutines';
+import { AsyncSink } from 'ix';
 import { Chan, CLOSED, take } from 'medium';
 
 const input1: number[] = [];
 const input2: number[] = [];
-const input3: Array<number> = [];
+const input3: number[] = [];
 
 const wf = new ConcurrentWorkFactory();
 
-for (let ii=0; ii<2000; ii++) {
+for (let ii = 0; ii < 2000; ii += 1) {
    input1[ii] = input2[ii] = input3[ii] = ii;
 }
 
@@ -36,14 +36,16 @@ asIn.write(input1);
 Promise.all([devourPromise, unwindPromise]).then(
    (values: any) => {
       console.log('Done', values);
-   }
+   },
 ).catch(
    (err: any) => {
       console.error('Error', err);
-   }
+   },
 );
 
-setTimeout( () => {
-   asIn.write(input2);
-   asIn.write(input3);
-}, 1200);
+setTimeout(
+   () => {
+      asIn.write(input2);
+      asIn.write(input3);
+   },
+   1200);

@@ -1,6 +1,6 @@
 import { IDirector } from '@jchptf/api';
 import { BlockMappedDigestLocator, BlockMappedLayerLocator } from '../locator';
-import { IBfsOrderBuilder, } from './bfs-order-builder.interface';
+import { IBfsOrderBuilder } from './bfs-order-builder.interface';
 import { Builder, Ctor, Instance } from 'fluent-interface-builder';
 
 const builderClass: Ctor<BfsOrderOptions, IBfsOrderBuilder & Instance<BfsOrderOptions>> =

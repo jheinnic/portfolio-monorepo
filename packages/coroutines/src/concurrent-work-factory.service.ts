@@ -10,7 +10,7 @@ import { AsyncTx } from '@jchptf/txtypes';
 import { IAdapter } from '@jchptf/api';
 
 import {
-   asFunction, ChanBufferType, IConcurrentWorkFactory, ILimiter, SinkLike, IterPair
+   asFunction, ChanBufferType, IConcurrentWorkFactory, ILimiter, SinkLike, IterPair,
 } from './interfaces';
 import { IChanMonitor } from './interfaces/chan-monitor.interface';
 import { ChanMonitor } from './chan-monitor.class';
@@ -38,7 +38,7 @@ function isAsyncIterable<T>(sinkValue: any): sinkValue is AsyncIterable<T>
  */
 enum MediumSeedBoolean {
    FALSE,
-   TRUE
+   TRUE,
 }
 
 @Injectable()
@@ -52,14 +52,14 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
    // }
 
    createChan<T = any>(
-      bufSize?: number, bufType?: ChanBufferType
+      bufSize?: number, bufType?: ChanBufferType,
    ): IAdapter<Chan<T, T>>
    {
       return this.createTxChan<T, T>(identity, bufSize, bufType);
    }
 
    createTxChan<T = any, M = T>(
-      tx: Transducer<T, M>, bufSize: number = 0, bufType?: ChanBufferType
+      tx: Transducer<T, M>, bufSize: number = 0, bufType: ChanBufferType = ChanBufferType.fixed,
    ): IAdapter<Chan<T, M>>
    {
       if (bufSize < 0) {
@@ -71,41 +71,37 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
 
       let retVal: Chan<T, M>;
       if (bufSize > 0) {
-         if (!bufType) {
-            bufType = ChanBufferType.fixed;
-         }
-
          switch (bufType) {
             case ChanBufferType.fixed:
-            {
-               retVal = chan(buffers.fixed(bufSize), tx);
-               break;
-            }
+               {
+                  retVal = chan(buffers.fixed(bufSize), tx);
+                  break;
+               }
             case ChanBufferType.dropping:
-            {
-               retVal = chan(buffers.dropping(bufSize), tx);
-               break;
-            }
+               {
+                  retVal = chan(buffers.dropping(bufSize), tx);
+                  break;
+               }
             case ChanBufferType.sliding:
-            {
-               retVal = chan(buffers.sliding(bufSize), tx);
-               break;
-            }
+               {
+                  retVal = chan(buffers.sliding(bufSize), tx);
+                  break;
+               }
             default:
-            {
-               throw illegalArgs(`Unknown buffer type: ${bufType}`);
-            }
+               {
+                  throw illegalArgs(`Unknown buffer type: ${bufType}`);
+               }
          }
 
          return {
-            unwrap: () => retVal
+            unwrap: () => retVal,
          };
       }
 
       retVal = chan(undefined, tx);
 
       return {
-         unwrap: () => retVal
+         unwrap: () => retVal,
       };
    }
 
@@ -117,41 +113,38 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
    createLimiter(concurrency: number, defaultPriority: number = 10): ILimiter
    {
       const heap = new FibonacciHeap<number, () => Promise<void>>();
-         new FibonacciHeap<number, () => Promise<void>>();
-      const sink =
-         this.createAsyncSink<void>();
+      const sink = this.createAsyncSink<void>();
 
       // Create consumers
-      for (let ii = 0; ii < concurrency; ii++) {
+      for (let ii = 0; ii < concurrency; ii += 1) {
          const consumerId = ii;
-         go(async function () {
+         go(async () => {
             let signal: void;
             for await (signal of sink) {
-               const heapNode: INode<number, () => Promise<void>> | null =
-                  heap.extractMinimum();
-               const yieldable = heapNode!.value;
+               const heapNode: INode<number, () => Promise<void>> = heap.extractMinimum()!;
+               const yieldable = heapNode.value;
                if (!!yieldable) {
                   await yieldable();
                }
             }
          })
-            .then(function () {
+            .then(() => {
                console.log(`Consumer ${consumerId} has exited its loop`);
             })
-            .catch(function (err: any) {
+            .catch((err: any) => {
                console.error(err.stack);
             });
       }
 
       return function limit<Params extends any[], RetVal>(
          asyncFunction: AsyncTx<Params, RetVal>,
-         priority: number = defaultPriority
+         priority: number = defaultPriority,
       ): AsyncTx<Params, RetVal>
       {
          return async function (...args: Params): Promise<RetVal> {
             const deferredCall = new Promise<RetVal>(
                (resolve, reject) => {
-                  heap.insert(priority, async function () {
+                  heap.insert(priority, async () => {
                      try {
                         const retVal: RetVal = await asyncFunction(...args);
                         resolve(retVal);
@@ -159,7 +152,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
                         reject(err);
                      }
                   });
-               }
+               },
             );
 
             try {
@@ -179,9 +172,9 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       coWrappable: WrappableCoRoutineGenerator<R, P>, concurrency: number
    ): WrappedCoRoutineGenerator<R, P>
    {
-      // There are no semantics here that enable setting different priorities for different tasks, but
-      // priority queue API requires us to provide a value, so every task submitted through this code
-      // path will use the following fixed and arbitrary priority value.
+      // There are no semantics here that enable setting different priorities for different tasks,
+      // but priority queue API requires us to provide a value, so every task submitted through
+      // this code path will use the following fixed and arbitrary priority value.
       const fixedPriority: number = 10;
 
       const queue: Queue<MessageForReply<P, R>> =
@@ -225,16 +218,15 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       concurrency: number = 1,
    ): void
    {
-      let toSink = asFunction<M>(sink);
+      const toSink = asFunction<M>(sink);
 
-      for (let ii = 0; ii < concurrency; ii++) {
+      for (let ii = 0; ii < concurrency; ii += 1) {
          const workerId = ii;
          const tx = transform;
 
          repeatTake(
             source,
-            async function (value: T): Promise<false | void>
-            {
+            async (value: T): Promise<false | void> => {
                const transformed = await tx(value);
 
                if (isIterable<M>(transformed)) {
@@ -248,17 +240,17 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
                } else {
                   toSink(transformed);
                }
-            }
+            },
          )
             .then(
-               function () {
+               () => {
                   console.log(`Concurrent worker #${workerId} signalled complete`);
-               }
+               },
             )
             .catch(
-               function (err: any) {
+               (err: any) => {
                   console.error(`Concurrent worker #${workerId} exited abnormally: ${err}`);
-               }
+               },
             );
       }
    }
@@ -266,17 +258,16 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
    transformToChan<T, M = T>(
       source: Chan<any, T>, chan: Chan<M, any>,
       transform: AsyncTx<[T], M | Iterable<M> | AsyncIterable<M>>,
-      concurrency: number = 1
+      concurrency: number = 1,
    ): void
    {
-      for (let ii = 0; ii < concurrency; ii++) {
+      for (let ii = 0; ii < concurrency; ii += 1) {
          const workerId = ii;
          const tx = transform;
 
          repeatTake(
             source,
-            async function (value: T): Promise<false | void>
-            {
+            async (value: T): Promise<false | void> => {
                const transformed = await tx(value);
 
                if (isIterable(transformed)) {
@@ -290,17 +281,17 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
                } else {
                   await put(chan, transformed);
                }
-            }
+            },
          )
             .then(
-               function () {
+               () => {
                   console.log(`Concurrent worker #${workerId} signalled complete`);
-               }
+               },
             )
             .catch(
-               function (err: any) {
+               (err: any) => {
                   console.error(`Concurrent worker #${workerId} exited abnormally: ${err}`);
-               }
+               },
             );
       }
    }
@@ -310,11 +301,14 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       concurrency: number = 1, delay: number = 0): SubscriptionLike
    {
       let globalDone: boolean = false;
-      const iterator = (isIterable(iterable)) ? iterable[Symbol.iterator]() : iterable[Symbol.asyncIterator]();
+      const iterator =
+         (isIterable(iterable)) ? iterable[Symbol.iterator]() : iterable[Symbol.asyncIterator]();
 
-      async function queueFromIterator(localIterResult: IteratorResult<T> | Promise<IteratorResult<T>>): Promise<IteratorResult<T> | false>
+      async function queueFromIterator(
+         localIterResult: IteratorResult<T> | Promise<IteratorResult<T>>,
+      ): Promise<IteratorResult<T> | false>
       {
-         let thisResult: IteratorResult<T> = await localIterResult;
+         const thisResult: IteratorResult<T> = await localIterResult;
          let nextResult: IteratorResult<T> | false = false;
 
          if (thisResult.done) {
@@ -328,7 +322,6 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
                console.log(delay, last, 0, Date.now());
             }
 
-
             const nextAsyncResult = iterator.next();
             nextResult = await nextAsyncResult;
          }
@@ -336,14 +329,14 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
          return nextResult;
       }
 
-      for (let ii = 0; ii < concurrency; ii++) {
+      for (let ii = 0; ii < concurrency; ii += 1) {
          const workerId = ii;
          if (!globalDone) {
             repeat(queueFromIterator, iterator.next())
-               .then(function () {
+               .then(() => {
                   console.log(`Concurrent worker #${workerId} signalled complete`);
                })
-               .catch(function (err: any) {
+               .catch((err: any) => {
                   console.error(`Concurrent worker #${workerId} exited abnormally: ${err}`);
                });
          } else {
@@ -356,7 +349,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
             globalDone = true;
          },
 
-         get closed(): boolean { return globalDone; }
+         get closed(): boolean { return globalDone; },
       };
    }
 
@@ -365,9 +358,11 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       concurrency: number = 1, delay: number = 0): SubscriptionLike
    {
       let globalDone: boolean = false;
-      const iterator = (isIterable(iterable)) ? iterable[Symbol.iterator]() : iterable[Symbol.asyncIterator]();
+      const iterator =
+         (isIterable(iterable)) ? iterable[Symbol.iterator]() : iterable[Symbol.asyncIterator]();
 
-      async function queueFromIterator(looping: MediumSeedBoolean): Promise<MediumSeedBoolean.TRUE|false>
+      async function queueFromIterator(
+         looping: MediumSeedBoolean): Promise<MediumSeedBoolean.TRUE|false>
       {
          if (globalDone) { return false; }
 
@@ -395,16 +390,14 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
          return globalDone ? false : MediumSeedBoolean.TRUE;
       }
 
-      for (let ii = 0; ii < concurrency; ii++) {
+      for (let ii = 0; ii < concurrency; ii += 1) {
          const workerId = ii;
          if (!globalDone) {
-            repeat<MediumSeedBoolean>(
-               queueFromIterator,
-               MediumSeedBoolean.FALSE as MediumSeedBoolean)
-               .then(function () {
+            repeat<MediumSeedBoolean>(queueFromIterator, MediumSeedBoolean.FALSE)
+               .then(() => {
                   console.log(`Concurrent worker #${workerId} signalled complete`);
                })
-               .catch(function (err: any) {
+               .catch((err: any) => {
                   console.error(`Concurrent worker #${workerId} exited abnormally: ${err}`);
                });
          } else {
@@ -417,14 +410,18 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
             globalDone = true;
          },
 
-         get closed(): boolean { return globalDone; }
+         get closed(): boolean { return globalDone; },
       };
    }
 
    /*
-   public run<T>(source: Iterable<T>|AsyncIterable<T>, sink: AsyncSink<T>, delay: number = 0): SubscriptionLike
+   public run<T>(
+      source: Iterable<T>|AsyncIterable<T>, sink: AsyncSink<T>,
+      delay: number = 0): SubscriptionLike
    {
-      const sourceIter = (isIterable(source)) ? source[Symbol.iterator]() : source[Symbol.asyncIterator]();
+      const sourceIter = (isIterable(source))
+         ? source[Symbol.iterator]()
+         : source[Symbol.asyncIterator]();
       // const toSink = asFunction(sink);
 
       return this.scheduler.schedule<Iterator<T>>(
@@ -475,27 +472,27 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
             closed = true;
          },
 
-         get closed(): boolean { return closed; }
+         get closed(): boolean { return closed; },
       };
 
-      go(async function () {
+      go(async () => {
          let nextIterable: Iterable<T>;
          for await (nextIterable of master) {
             if (closed) {
-               console.log('Master iterables source still open on unsubscribe');
+               console.warn('New iterables source still open after unsubscribe');
                return;
             }
             sources.write({
                iterator: nextIterable[Symbol.iterator](),
-               iterable: nextIterable
+               iterable: nextIterable,
             });
          }
-         console.log('Master iterables source closed');
+         console.log('New iterables source closed');
          retVal.unsubscribe();
-      }).then(function() {
-         console.log('Done reading from master iterables');
-      }).catch(function(err: any) {
-         console.error(err);
+      }).then(() => {
+         console.debug('Done reading from master iterables');
+      }).catch((err: any) => {
+         console.error('Unwind new sources thread terminated abnormally', err);
          retVal.unsubscribe();
       });
 
@@ -520,45 +517,67 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
                await put(done, nextIterPair.iterable);
             }
          }
-      }).then(console.log)
-         .catch(console.error);
+      }).then(() => {
+         console.error('Unwind active sources thread terminated normally');
+      }).catch((err: any) => {
+         console.error('Unwind active sources thread terminated abnormally', err);
+      });
 
       return retVal;
    }
 
    public service<I>(source: Chan<any, I>, sink: Chan<I, any>, concurrency: number = 1): void
    {
-      for (let ii = 0; ii < concurrency; ii++) {
+      for (let ii = 0; ii < concurrency; ii += 1) {
          repeatTake(source, async (value: I) => {
             await put(sink, value);
+         }).then(() => {
+            console.debug('Service thread exited normally');
+         }).catch((err) => {
+            console.error('Service thread exited abnormally', err);
          });
       }
    }
 
    public serviceMany<I>(source: Chan<any, I[]>, sink: Chan<I, any>, concurrency: number = 1): void
    {
-      for (let ii = 0; ii < concurrency; ii++) {
+      for (let ii = 0; ii < concurrency; ii += 1) {
          repeatTake(source, async (value: I[]) => {
-            for (let innerValue of value) {
+            for (const innerValue of value) {
                await put(sink, innerValue);
             }
+         }).then(() => {
+            console.debug('Service many thread exited normally');
+         }).catch((err) => {
+            console.error('Service many thread exited abnormally', err);
          });
       }
    }
 
-   public createMonitor<Msg>( source: Chan<any, Msg> ): IChanMonitor<Msg> {
+   public createMonitor<Msg>(source: Chan<any, Msg>): IChanMonitor<Msg> {
       const retVal =
          new ChanMonitor(source, new Map<Msg, PromiseHandlers<Msg>>());
-      retVal.start();
+      retVal.start()
+         .then(() => {
+            console.debug('Channel monitor thread exited normally');
+         })
+         .catch((err) => {
+            console.error('Channel monitor thread exited abnormally', err);
+         });
 
       return retVal;
    }
 }
 
-// export function createQueueFactory<T = any>(_context: interfaces.Context): ConcreteFactory<Queue<T>,
-// [PropertyKey?]> { return (key?: PropertyKey): Queue<T> => { let retVal: Queue<T>;  if (!!key) { if
+// export function createQueueFactory<T = any>(
+// _context: interfaces.Context): ConcreteFactory<Queue<T>,
+// [PropertyKey?]> {
+// return (key?: PropertyKey): Queue<T> => {
+// let retVal: Queue<T>;  if (!!key) { if
 // (_context.container.isBoundNamed(CO_TYPES.Queue, key)) { retVal =
 // _context.container.getNamed(CO_TYPES.Queue, key); } else { retVal = new Queue<T>();
-// _context.container.bind(CO_TYPES.Queue).toConstantValue(retVal).whenTargetNamed(key); } } else { retVal
+// _context.container.bind(CO_TYPES.Queue)
+// .toConstantValue(retVal)
+// .whenTargetNamed(key); } } else { retVal
 // = new Queue<T>(); }  return retVal; } }  export const queueFactoryCreator:
 // interfaces.FactoryCreator<Queue<any>> = createQueueFactory;
