@@ -25,7 +25,7 @@ export enum AsyncModuleParamStyle
  * An asynchronously accessed parameter for a DynamicModule's asynchronous creation methods.
  * Requires using one of three styles:
  * -- An Existing parameter supplies the ProviderToken already bound to the desired type.
- * -- A Factory parameter supplies an asynchronous provider function, and uses FactoryType to
+ * -- A IFactory parameter supplies an asynchronous provider function, and uses FactoryType to
  *    supply i
  */
 export type AsyncModuleParam<ParamType extends object,

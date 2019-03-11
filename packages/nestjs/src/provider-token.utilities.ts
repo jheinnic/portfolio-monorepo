@@ -9,7 +9,7 @@
  * consistent protocol for concatenating any such pair of names can be guaranteed to be
  * globally unique.
  *
- * Factory module implementors will likely want to expose this method through a method in
+ * IFactory module implementors will likely want to expose this method through a method in
  * their own public API in order to avoid its necessarily generic/reflective argument names,
  * For example, a TypeORM module that accepts configuration extensions to crate multiple
  * different Connections and uses those to access multiple different Entity repository types

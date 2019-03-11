@@ -1,7 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
 
 import {
-   AsyncModuleParam, asyncProviderFromParam, DynamicProvider, DynamicProviderToken,
+   AsyncModuleParam, asyncProviderFromParam, IDynamicProvider, DynamicProviderToken,
    getDynamicProviderToken,
    ModuleIdentifier
 } from '@jchptf/nestjs';
@@ -79,9 +79,9 @@ export class MerkleModule
 
    private static getDynamicProviders(
       forModule: ModuleIdentifier, withTag?: string
-   ): [DynamicProvider<IMerkleCalculator>,
-       DynamicProvider<IMerkleLocatorFactory>,
-       DynamicProvider<ICanonicalPathNaming>]
+   ): [IDynamicProvider<IMerkleCalculator>,
+       IDynamicProvider<IMerkleLocatorFactory>,
+       IDynamicProvider<ICanonicalPathNaming>]
    {
       const calculatorToken: DynamicProviderToken<IMerkleCalculator> =
          getDynamicProviderToken(

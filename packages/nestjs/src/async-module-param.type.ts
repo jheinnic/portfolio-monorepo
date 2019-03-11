@@ -1,5 +1,7 @@
 import { AnyFunc, ArgsAsTuple, ConstructorFor } from 'simplytyped';
+
 import { ProviderToken } from './provider-token.type';
+import { ArgsAsInjectableKeys } from './args-as-provider-tokens.type';
 
 // export type AsyncModuleParam<
 //    ParamType,
@@ -18,14 +20,14 @@ export enum AsyncModuleParamStyle
    CLASS,
    EXISTING,
    FACTORY,
-   FACTORY_CLASS
+   FACTORY_CLASS,
 }
 
 /**
  * An asynchronously accessed parameter for a DynamicModule's asynchronous creation methods.
  * Requires using one of three styles:
  * -- An Existing parameter supplies the ProviderToken already bound to the desired type.
- * -- A Factory parameter supplies an asynchronous provider function, and uses FactoryType to
+ * -- A IFactory parameter supplies an asynchronous provider function, and uses FactoryType to
  *    supply i
  */
 export type AsyncModuleParam<
@@ -65,34 +67,8 @@ export type ClassAsyncModuleParam<ParamType extends object> = {
 export type ExistingAsyncModuleParam<ParamType> = {
    style: AsyncModuleParamStyle.EXISTING,
    useExisting: ProviderToken<ParamType> | string |
-      (ParamType extends object ? ConstructorFor<ParamType> : never)
+      (ParamType extends object ? ConstructorFor<ParamType> : never),
 };
-
-export type ArgsAsProviderTokens<F extends AnyFunc> = F extends () => any ? void[]
-   : F extends (x1: infer X1) => any
-      ? [ProviderToken<X1>]
-      : F extends (x1: infer X1, x2: infer X2) => any
-         ? [ProviderToken<X1>, ProviderToken<X2>]
-         : F extends (x1: infer X1, x2: infer X2, x3: infer X3) => any
-            ? [ProviderToken<X1>, ProviderToken<X2>, ProviderToken<X3>]
-            : F extends (x1: infer X1, x2: infer X2, x3: infer X3, x4: infer X4) => any
-               ? [ProviderToken<X1>, ProviderToken<X2>, ProviderToken<X3>, ProviderToken<X4>]
-               : F extends (
-                  x1: infer X1, x2: infer X2, x3: infer X3, x4: infer X4, x5: infer X5) => any
-                  ? [ProviderToken<X1>, ProviderToken<X2>, ProviderToken<X3>,
-                     ProviderToken<X4>, ProviderToken<X5>]
-                  : F extends (
-                     x1: infer X1, x2: infer X2, x3: infer X3, x4: infer X4, x5: infer X5,
-                     x6: infer X6) => any
-                     ? [ProviderToken<X1>, ProviderToken<X2>, ProviderToken<X3>,
-                        ProviderToken<X4>, ProviderToken<X5>, ProviderToken<X6>]
-                     : F extends (
-                        x1: infer X1, x2: infer X2, x3: infer X3, x4: infer X4, x5: infer X5,
-                        x6: infer X6, x7: infer X7) => any
-                        ? [ProviderToken<X1>, ProviderToken<X2>,
-                           ProviderToken<X3>, ProviderToken<X4>, ProviderToken<X5>,
-                           ProviderToken<X6>, ProviderToken<X7>]
-                        : ProviderToken<any>[];
 
 export type FactoryAsyncModuleParam<
    ParamType,
@@ -107,14 +83,14 @@ export type FactoryAsyncModuleParam<
       : {
          style: AsyncModuleParamStyle.FACTORY,
          useFactory: FactoryFunc,
-         inject: ArgsAsProviderTokens<FactoryFunc>,
+         inject: ArgsAsInjectableKeys<FactoryFunc>,
       };
 
-export interface Factory<ProvidedType> {
-   create(): ProvidedType|Promise<ProvidedType>
+export interface IFactory<ProvidedType> {
+   create(): ProvidedType|Promise<ProvidedType>;
 }
 
 export type FactoryClassAsyncModuleParam<ParamType> = {
    style: AsyncModuleParamStyle.FACTORY_CLASS,
-   useClass: ConstructorFor<Factory<ParamType>>
+   useClass: ConstructorFor<IFactory<ParamType>>,
 };
