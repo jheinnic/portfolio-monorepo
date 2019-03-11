@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/mixins",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "TODO",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
@@ -68,7 +68,7 @@
     },
     "dependencies": {
         "@jchptf/objecttypes": "^0.0.9",
-        "@jchptf/reflection": "^0.0.9",
+        "@jchptf/reflection": "^0.0.10",
         "@thi.ng/errors": "^0.1.12",
         "simplytyped": "^1.6.0",
         "tslib": "^1.9.3"

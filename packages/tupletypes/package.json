@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/tupletypes",
-    "version": "0.0.19",
+    "version": "0.0.20",
     "description": "TODO",
     "main": "./dist/index.js",
     "module": "./dist/index.js",

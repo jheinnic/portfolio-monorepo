@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/consul",
-    "version": "0.0.17",
+    "version": "0.0.18",
     "description": "TODO",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
@@ -42,7 +42,7 @@
         "node": ">=10.13.0"
     },
     "dependencies": {
-        "@jchptf/nestjs": "^0.0.7",
+        "@jchptf/nestjs": "^0.0.8",
         "@thi.ng/errors": "^0.1.12",
         "simplytyped": "^1.6.0",
         "tslib": "^1.9.3"
