@@ -31,9 +31,12 @@
     "author": "John Heinnickel <jheinnic@hotmail.com>",
     "license": "Apache-2.0",
     "keywords": [
+        "utility",
+        "api",
         "compare",
+        "decorators",
         "equality",
-        "ES6",
+        "ES2015",
         "generic",
         "interfaces",
         "mixins",
