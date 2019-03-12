@@ -59,18 +59,19 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
    }
 
    createTxChan<T = any, M = T>(
-      tx: Transducer<T, M>, bufSize: number = 0, bufType: ChanBufferType = ChanBufferType.fixed,
+      tx: Transducer<T, M>, bufSize: number = 0, bufType: ChanBufferType = ChanBufferType.default,
    ): IAdapter<Chan<T, M>>
    {
       if (bufSize < 0) {
          illegalArgs(`bufSize, ${bufSize}, may not be negative`);
-      } else if ((bufSize === 0) && (bufType !== ChanBufferType.fixed)) {
-         illegalArgs(`bufType, ${bufType}, must be undefined when bufSize is zero`);
+      } else if ((bufSize === 0) && (bufType !== ChanBufferType.default)) {
+         illegalArgs(`bufType, ${bufType}, must be "default" when bufSize is 0`);
       }
 
       let retVal: Chan<T, M>;
       if (bufSize > 0) {
          switch (bufType) {
+            case ChanBufferType.default:
             case ChanBufferType.fixed:
                {
                   retVal = chan(buffers.fixed(bufSize), tx);
