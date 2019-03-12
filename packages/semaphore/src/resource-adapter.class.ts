@@ -35,7 +35,7 @@ export class ResourceAdapter<T extends object> implements IResourceAdapter<T>, P
       return this.inUse;
    }
 
-   public get(target: T, prop: PropertyKey, receiver: any) {
+   public get(target: T, prop: PropertyKey, _receiver: any) {
       if (prop === GET_LEASE_MANAGER) {
          return this;
       }
@@ -45,14 +45,14 @@ export class ResourceAdapter<T extends object> implements IResourceAdapter<T>, P
          this.parentSemaphore.notifyInUse(this.wetArtifact);
       }
 
-      return Reflect.get(target, prop, receiver);
+      return Reflect.get(target, prop, this.wetArtifact);
    }
 
-   public has(target: T, prop: PropertyKey) {
+   public has(_target: T, prop: PropertyKey) {
       if (prop === GET_LEASE_MANAGER) {
          return true;
       }
 
-      return Reflect.get(target, prop);
+      return Reflect.has(this.wetArtifact, prop);
    }
 }
