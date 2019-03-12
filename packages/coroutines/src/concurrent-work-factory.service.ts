@@ -10,7 +10,7 @@ import { AsyncTx } from '@jchptf/txtypes';
 import { IAdapter } from '@jchptf/api';
 
 import {
-   asFunction, ChanBufferType, IConcurrentWorkFactory, ILimiter, SinkLike, IterPair,
+   asFunction, ChanBufferType, IConcurrentWorkFactory, ILimiter, IterPair, SinkLike,
 } from './interfaces';
 import { IChanMonitor } from './interfaces/chan-monitor.interface';
 import { ChanMonitor } from './chan-monitor.class';
@@ -64,8 +64,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
    {
       if (bufSize < 0) {
          illegalArgs(`bufSize, ${bufSize}, may not be negative`);
-      } else if ((!bufSize) && (!!bufType))
-      {
+      } else if ((bufSize === 0) && (bufType !== ChanBufferType.fixed)) {
          illegalArgs(`bufType, ${bufType}, must be undefined when bufSize is zero`);
       }
 
