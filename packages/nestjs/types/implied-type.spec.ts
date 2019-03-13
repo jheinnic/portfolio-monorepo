@@ -1,17 +1,8 @@
-// This example demonstrates that any is a union of every possible type.
-// Some conceivable types are a restriction of SimpleManyPlaceholders, and
-// others are not, therefore the expected type is 'A' | number, not just one
-// value or the other.
 import {
    Nominal, ImpliedName, ImpliedType, ImpliedValue,
-   DynamicProviderToken, HasImpliedType, IsImpliedType, TokenDictionary,
-   getModuleIdentifier, getNamedTypeIntent, getLocalProviderToken, getGlobalProviderToken,
+   DynamicProviderToken, HasImpliedType, IsImpliedType,
 } from '@jchptf/nestjs';
-import {
-   HollowThing, Unicycle, Class,
-   ISomething, OneSubclass, AnotherSubclass,
-   SomethingOne, SomethingTwo, SomethingThree
-} from './fixtures';
+import { HollowThing, Unicycle } from './fixtures';
 
 type HollowString = Nominal<string, "Hollow", HollowThing>;
 
@@ -94,77 +85,3 @@ export type RevIsImpliedTest005 = IsImpliedType<ImpliedType<HollowString>, Hollo
 
 // $ExpectType true
 export type RevIsImpliedTest006 = IsImpliedType<ImpliedType<HollowProviderToken>, HollowString>;
-
-const MY_MOD = getModuleIdentifier('My.Mod');
-const CLASS_ID = getNamedTypeIntent<Class>('Class');
-const SOMETHING_ID = getNamedTypeIntent<ISomething>('Something');
-const FOO = getLocalProviderToken<Class>(MY_MOD, CLASS_ID, 'LocalClass');
-const BAR = getGlobalProviderToken<ISomething>(SOMETHING_ID, 'GlobalClass');
-
-interface ITemplate {
-   foo: Class;
-   bar: ISomething;
-}
-
-const diDict: TokenDictionary<ITemplate> = {
-   foo: FOO,
-   bar: BAR,
-};
-
-type fooType = typeof diDict.foo;
-
-type barType = typeof diDict.bar;
-
-// $ExpectType true
-type MigratedTest001 = IsImpliedType<Class, fooType>;
-
-// $ExpectType Class
-type MigratedTest001B = ImpliedType<fooType>;
-
-// $ExpectType true
-type MigratedTest002 = IsImpliedType<ISomething, barType>;
-
-// $ExpectType ISomething
-type MigratedTest002B = ImpliedType<barType>;
-
-// $ExpectType false
-type MigratedTest003 = IsImpliedType<ISomething, fooType>;
-
-// $ExpectType false
-type MigratedTest004 = IsImpliedType<number, fooType>;
-
-// $ExpectType false
-type MigratedTest005 = IsImpliedType<Class, barType>;
-
-// $ExpectType false
-type MigratedTest006 = IsImpliedType<number, barType>;
-
-// $ExpectType false
-type MigratedTest007 = IsImpliedType<OneSubclass, fooType>;
-
-// $ExpectType false
-type MigratedTest008 = IsImpliedType<AnotherSubclass, fooType>;
-
-// $ExpectType false
-type MigratedTest009 = IsImpliedType<SomethingOne, barType>;
-
-// $ExpectType false
-type MigratedTest010 = IsImpliedType<SomethingTwo, barType>;
-
-// $ExpectType false
-type MigratedTest011 = IsImpliedType<SomethingThree, barType>;
-
-// $ExpectType true
-type MigratedTest012 = HasImpliedType<OneSubclass, fooType>;
-
-// $ExpectType true
-type MigratedTest013 = HasImpliedType<AnotherSubclass, fooType>;
-
-// $ExpectType true
-type MigratedTest014 = HasImpliedType<SomethingOne, barType>;
-
-// $ExpectType true
-type MigratedTest015 = HasImpliedType<SomethingTwo, barType>;
-
-// $ExpectType true
-type MigratedTest016 = HasImpliedType<SomethingThree, barType>;

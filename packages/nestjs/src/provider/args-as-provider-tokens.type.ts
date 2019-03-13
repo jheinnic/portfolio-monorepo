@@ -1,7 +1,7 @@
-import { AnyFunc } from 'simplytyped';
-import { InjectableKey, ProviderToken } from './provider-token.type';
+import { AnyMsyncFunc } from '@jchptf/txtypes';
+import { InjectableKey, ProviderToken } from '../token';
 
-export type ArgsAsProviderTokens<F extends AnyFunc> = F extends () => any ? void[]
+export type ArgsAsProviderTokens<F extends AnyMsyncFunc> = F extends () => any ? void[]
    : F extends (x1: infer X1) => any
       ? [ProviderToken<X1>]
       : F extends (x1: infer X1, x2: infer X2) => any
@@ -27,7 +27,7 @@ export type ArgsAsProviderTokens<F extends AnyFunc> = F extends () => any ? void
                            ProviderToken<X6>, ProviderToken<X7>]
                         : ProviderToken<any>[];
 
-export type ArgsAsInjectableKeys<F extends AnyFunc> = F extends () => any ? void[]
+export type ArgsAsInjectableKeys<F extends AnyMsyncFunc> = F extends () => any ? void[]
    : F extends (x1: infer X1) => any
       ? [InjectableKey<X1>]
       : F extends (x1: infer X1, x2: infer X2) => any

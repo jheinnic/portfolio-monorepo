@@ -1,5 +1,8 @@
-import { BaseProviderToken } from './string-qualifier.type';
+import { StringQualifier } from '@jchptf/api';
 import { ConstructorFor } from 'simplytyped';
+
+export type BaseProviderToken<Type, Modifier extends string = 'ProviderToken'> =
+   StringQualifier<'ProviderToken' & Modifier, Type>;
 
 export type LocalProviderToken<T> = BaseProviderToken<T, 'Local'>;
 
@@ -10,8 +13,8 @@ export type GlobalProviderToken<T> = BaseProviderToken<T, 'Global'>;
 export type ProviderToken<T> =
    LocalProviderToken<T> | DynamicProviderToken<T> | GlobalProviderToken<T>;
 
-export type InjectableKey<T> = T extends object
-   ? ProviderToken<T> | ConstructorFor<T> : ProviderToken<T>;
+export type InjectableKey<T> =
+   T extends object ? ProviderToken<T> | ConstructorFor<T> : ProviderToken<T>;
 
    // NOTE: Nest does allow any for provider token use, but seems to break when symbols are used,
    //       and I have no wish to see any non-string, non-Type identifier yet, so let's try doing

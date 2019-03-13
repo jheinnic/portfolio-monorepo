@@ -7,11 +7,15 @@
         "declaration": true,
         "declarationMap": true,
         "paths": {
-            "@jchptf/objecttypes": ["../../objecttypes/src"]
+            "@jchptf/api": ["../../api/src"],
+            "@jchptf/objecttypes": ["../../objecttypes/src"],
+            "@jchptf/txtypes": ["../../txtypes/src"]
         }
     },
     "references": [
+        { "path": "../../api/src" },
         { "path": "../../objecttypes/src" }
+        { "path": "../../txtypes/src" }
     ],
     "include": [ "./**/*.ts" ]
 }

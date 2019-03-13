@@ -7,11 +7,13 @@
         "declaration": true,
         "declarationMap": true,
         "paths": {
+            "@jchptf/api": ["../../api/src"],
             "@jchptf/objecttypes": ["../../objecttypes/src"],
             "@jchptf/nestjs": ["../src"]
         }
     },
     "references": [
+        { "path": "../../api/src" },
         { "path": "../../objecttypes/src" },
         { "path": "../src" }
     ],

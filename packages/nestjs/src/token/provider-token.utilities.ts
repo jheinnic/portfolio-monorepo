@@ -1,3 +1,13 @@
+import { illegalArgs } from '@thi.ng/errors';
+
+import { StringQualifier } from '@jchptf/api';
+import {
+   DynamicProviderToken, GlobalProviderToken, LocalProviderToken
+} from './provider-token.type';
+import { TypeIdentifier } from './type-identifier.type';
+import { ModuleIdentifier } from './module-identifier.type';
+import { DynamicModuleKind } from './dynamic-module-kind.type';
+
 /**
  * A utility function for dynamic modules that need a deterministic way of agreeing on a
  * pair of token identifier names, given only the consumer's module providing a name
@@ -21,15 +31,10 @@
  *
  * @param base
  */
-import { illegalArgs } from '@thi.ng/errors';
-import { ModuleIdentifier, StringQualifier, TypeIdentifier } from './string-qualifier.type';
-import { DynamicModuleType } from './string-qualifier.type';
-import {
-   DynamicProviderToken, GlobalProviderToken, LocalProviderToken,
-} from './provider-token.type';
-
 export function getDynamicProviderToken<Type>(
-   moduleId: ModuleIdentifier, binding: DynamicModuleType, typeId: TypeIdentifier<Type>,
+   moduleId: ModuleIdentifier,
+   binding: DynamicModuleKind,
+   typeId: TypeIdentifier<Type>,
    tagName?: string,
 ): DynamicProviderToken<Type>
 {
@@ -103,15 +108,15 @@ export function getNamedSubtypeIntent<Type, Subtype extends Type>(
 }
 
 export function getDynamicModuleType(
-   moduleId: ModuleIdentifier, tagName?: string): DynamicModuleType
+   moduleId: ModuleIdentifier, tagName?: string): DynamicModuleKind
 {
    if (!!tagName) {
-      return getStringQualifier<'DynamicModuleType'>(
-         `${moduleId}(${tagName})`, 'DynamicModuleType') as DynamicModuleType;
+      return getStringQualifier<'DynamicModuleKind'>(
+         `${moduleId}(${tagName})`, 'DynamicModuleKind') as DynamicModuleKind;
    }
 
-   return getStringQualifier<'DynamicModuleType'>(
-      moduleId, 'DynamicModuleType') as DynamicModuleType;
+   return getStringQualifier<'DynamicModuleKind'>(
+      moduleId, 'DynamicModuleKind') as DynamicModuleKind;
 }
 
 function getStringQualifier<Intent extends string>(

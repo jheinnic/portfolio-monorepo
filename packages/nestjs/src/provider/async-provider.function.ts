@@ -2,7 +2,7 @@ import { Provider } from '@nestjs/common';
 import { illegalArgs } from '@thi.ng/errors';
 import { AnyFunc, ConstructorFor } from 'simplytyped';
 
-import { ProviderToken } from './provider-token.type';
+import { ProviderToken } from '../token';
 import { AsyncModuleParam, AsyncModuleParamStyle } from './async-module-param.type';
 
 export function asyncProviderFromParam<

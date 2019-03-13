@@ -3,11 +3,12 @@ import { assert, HasType, IsExactType, NotHasType } from 'conditional-type-check
 
 import {
    getGlobalProviderToken, getLocalProviderToken, getModuleIdentifier, getNamedSubtypeIntent,
-   getNamedTypeIntent, HasImpliedType, IsImpliedType, TokenDictionary,
+   getNamedTypeIntent, TokenDictionary
 } from '@jchptf/nestjs';
+import { HasImpliedType, IsImpliedType } from '@jchptf/api';
 import {
    AnotherSubclass, Class, ISomething, OneSubclass, SomethingOne, SomethingThree, SomethingTwo,
-} from '../fixtures/primitive/primitive';
+} from './fixtures';
 
 // chai.use(sinonChai);
 const expect = chai.expect;

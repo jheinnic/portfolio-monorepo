@@ -1,7 +1,7 @@
 import { AnyFunc, ArgsAsTuple, ConstructorFor } from 'simplytyped';
 
-import { ProviderToken } from './provider-token.type';
 import { ArgsAsInjectableKeys } from './args-as-provider-tokens.type';
+import { ProviderToken } from '../token';
 
 // export type AsyncModuleParam<
 //    ParamType,
