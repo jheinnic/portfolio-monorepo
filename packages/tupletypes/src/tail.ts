@@ -1,11 +1,12 @@
 import { Prev, MMinusN } from './math';
-import { IndexTypeFor, LengthOf } from './length';
+import { LengthOf, LengthThatFits, NthOf } from './length';
 
-export type LastNOf<T extends any[], N extends IndexTypeFor<T>> =
+export type LastNOf<T extends any[], N extends LengthThatFits<T>> =
    [
       [
-         []
-      ], [
+         T
+      ],
+      [
          [],
          T
       ], [
@@ -93,16 +94,27 @@ export type LastNOf<T extends any[], N extends IndexTypeFor<T>> =
          [T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9], T[10]],
          [T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9], T[10]],
          T
+      ], [
+         [],
+         [T[11]],
+         [T[10], T[11]],
+         [T[9], T[10], T[11]],
+         [T[8], T[9], T[10], T[11]],
+         [T[7], T[8], T[9], T[10], T[11]],
+         [T[6], T[7], T[8], T[9], T[10], T[11]],
+         [T[5], T[6], T[7], T[8], T[9], T[10], T[11]],
+         [T[4], T[5], T[6], T[7], T[8], T[9], T[10], T[11]],
+         [T[3], T[4], T[5], T[6], T[7], T[8], T[9], T[10], T[11]],
+         [T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9], T[10], T[11]],
+         [T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9], T[10], T[11]],
+         T
       ]
    ][LengthOf<T>][N];
 
-export type ExceptFirstN<T extends any[], N extends IndexTypeFor<T>> = LastNOf<T, MMinusN<LengthOf<T>, N>>
+export type ExceptFirstN<T extends any[], N extends LengthThatFits<T>> =
+   LastNOf<T, MMinusN<LengthOf<T>, N>>;
 
-export type ExceptFirst<T extends any[]> = LastNOf<T, 1>;
+export type ExceptFirst<T extends any[]> = LastNOf<T, Prev<LengthOf<T>>>;
 
-
-
-export type NthOf<T extends any[], N extends number> = T[N];
 export type LastOf<T extends any[]> = NthOf<T, Prev<LengthOf<T>>>;
 export type FirstOf<T extends any[]> = T[0];
-

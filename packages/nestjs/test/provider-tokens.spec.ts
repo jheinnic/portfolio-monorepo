@@ -7,7 +7,7 @@ import {
 } from '@jchptf/nestjs';
 import {
    AnotherSubclass, Class, ISomething, OneSubclass, SomethingOne, SomethingThree, SomethingTwo,
-} from '../fixtures/primitive';
+} from '../fixtures/primitive/primitive';
 
 // chai.use(sinonChai);
 const expect = chai.expect;

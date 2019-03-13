@@ -1,11 +1,11 @@
 import { ConstructorFor } from 'simplytyped';
 
-import { AsyncTx } from '@jchptf/txtypes';
-import { ProviderToken } from './provider-token.type';
+import { AnyMsyncFunc } from '@jchptf/txtypes';
+import { ProviderToken } from '../token';
 import { ArgsAsInjectableKeys } from './args-as-provider-tokens.type';
 
-export declare type NestProvider<Type, Factory extends undefined|AsyncTx<any[], Type> = undefined> =
-   Factory extends AsyncTx<any[], Type>
+export declare type NestProvider<Type, Factory extends undefined|AnyMsyncFunc<Type> = undefined> =
+   Factory extends AnyMsyncFunc<Type>
       ? IFactoryProvider<Type, Factory>
       : NonFactoryProvider<Type>;
 
@@ -26,7 +26,7 @@ export interface IValueProvider<Type>
    useValue: Type;
 }
 
-export interface IFactoryProvider<Type, Factory extends AsyncTx<any[], Type>>
+export interface IFactoryProvider<Type, Factory extends AnyMsyncFunc<Type>>
 {
    provide: ProviderToken<Type>;
    useFactory: Factory;

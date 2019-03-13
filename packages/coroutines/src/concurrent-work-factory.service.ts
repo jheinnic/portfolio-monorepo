@@ -6,7 +6,7 @@ import { AsyncSink } from 'ix';
 import { FibonacciHeap, INode } from '@tyriar/fibonacci-heap';
 import { illegalArgs } from '@thi.ng/errors';
 
-import { AsyncTx } from '@jchptf/txtypes';
+import { AsyncFunc, Proc } from '@jchptf/txtypes';
 import { IAdapter } from '@jchptf/api';
 
 import {
@@ -15,6 +15,7 @@ import {
 import { IChanMonitor } from './interfaces/chan-monitor.interface';
 import { ChanMonitor } from './chan-monitor.class';
 import { PromiseHandlers } from './interfaces/promise-handlers.interface';
+import { AsyncTx } from '@jchptf/txtypes/dist/functionTypes';
 
 function isIterable<T>(sinkValue: any): sinkValue is Iterable<T>
 {
@@ -137,17 +138,17 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       }
 
       return function limit<Params extends any[], RetVal>(
-         asyncFunction: AsyncTx<Params, RetVal>,
+         asyncFunction: AsyncFunc<Params, RetVal>,
          priority: number = defaultPriority,
-      ): AsyncTx<Params, RetVal>
+      ): AsyncFunc<Params, RetVal>
       {
          return async function (...args: Params): Promise<RetVal> {
             const deferredCall = new Promise<RetVal>(
-               (resolve, reject) => {
+               (resolve: Proc<[RetVal]>, reject: Proc<[any]>) => {
                   heap.insert(priority, async () => {
                      try {
-                        const retVal: RetVal = await asyncFunction(...args);
-                        resolve(retVal);
+                        resolve(
+                           await asyncFunction(...args));
                      } catch (err) {
                         reject(err);
                      }

@@ -4,7 +4,7 @@ import { SubscriptionLike } from 'rxjs';
 import { AsyncSink } from 'ix';
 import { Chan } from 'medium';
 
-import { AsyncTx } from '@jchptf/txtypes';
+import { AsyncFunc } from '@jchptf/txtypes';
 import { ChanBufferType } from './chan-buffer-type.enum';
 import { ILimiter } from './limiter.type';
 import { SinkLike } from './sink-like.type';
@@ -90,14 +90,14 @@ export interface IConcurrentWorkFactory
    transformToSink<I, O>(
       source: Chan<any, I>,
       sink: SinkLike<O>,
-      transform: AsyncTx<[I], O> | AsyncTx<[I], Iterable<O>>,
+      transform: AsyncFunc<[I], O> | AsyncFunc<[I], Iterable<O>>,
       concurrency?: number,
    ): void;
 
    transformToChan<I, O>(
       source: Chan<any, I>,
       chan: Chan<O, any>,
-      transform: AsyncTx<[I], O> | AsyncTx<[I], Iterable<O>>,
+      transform: AsyncFunc<[I], O> | AsyncFunc<[I], Iterable<O>>,
       concurrency?: number,
    ): void;
 

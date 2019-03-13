@@ -6,20 +6,6 @@ class NominalTag<Name extends string, Type>
    public [nameTag]: Name;
 
    public [typeTag]: Type;
-   //
-   // constructor(name: Name, type: Type) {
-   //    this[nameTag] = name;
-   //    this[typeTag] = type;
-   //    console.log(this[nameTag], this[typeTag]);
-   // }
-   //
-   // public setName(name: Name) {
-   //    this[nameTag] = name;
-   // }
-   //
-   // public setType(type: Type) {
-   //    this[typeTag] = type;
-   // }
 }
 
 /**
