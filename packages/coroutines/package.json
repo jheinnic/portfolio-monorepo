@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/coroutines",
-    "version": "0.0.41",
+    "version": "0.0.42",
     "description": "TODO",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
@@ -70,10 +70,10 @@
         "typescript": "3.2.2"
     },
     "dependencies": {
-        "@jchptf/api": "^0.0.40",
-        "@jchptf/nestjs": "^0.0.8",
+        "@jchptf/api": "^0.0.41",
+        "@jchptf/nestjs": "^0.0.9",
         "@jchptf/reflection": "^0.0.10",
-        "@jchptf/txtypes": "^0.0.11",
+        "@jchptf/txtypes": "^0.0.12",
         "@nestjs/common": "^5.5.0",
         "@nestjs/core": "^5.5.0",
         "@thi.ng/errors": "^0.1.12",
