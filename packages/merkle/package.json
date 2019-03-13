@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/merkle",
-    "version": "0.0.30",
+    "version": "0.0.31",
     "description": "TODO",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
@@ -66,8 +66,8 @@
         "typescript": "3.2.2"
     },
     "dependencies": {
-        "@jchptf/api": "^0.0.41",
-        "@jchptf/nestjs": "^0.0.9",
+        "@jchptf/api": "^0.0.42",
+        "@jchptf/nestjs": "^0.0.10",
         "@jchptf/reflection": "^0.0.10",
         "binary-search": "^1.3.4",
         "fluent-interface-builder": "^2.0.1",

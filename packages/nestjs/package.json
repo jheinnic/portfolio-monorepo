@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/nestjs",
-    "version": "0.0.9",
+    "version": "0.0.10",
     "description": "TODO",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
@@ -68,8 +68,8 @@
         "typescript": "3.2.2"
     },
     "dependencies": {
-        "@jchptf/api": "^0.0.41",
-        "@jchptf/objecttypes": "^0.0.9",
+        "@jchptf/api": "^0.0.42",
+        "@jchptf/objecttypes": "^0.0.10",
         "@jchptf/txtypes": "^0.0.12",
         "@nestjs/common": "^5.5.0",
         "@thi.ng/errors": "^0.1.12",
