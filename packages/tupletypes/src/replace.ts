@@ -1,6 +1,6 @@
-import { IndexTypeFor, LengthOf } from './length';
+import { IndicesFor, LengthOf } from './length';
 
-export type Replace<T extends any[], N extends IndexTypeFor<T>, S> =
+export type Replace<T extends any[], N extends IndicesFor<T>, S> =
 [
    [
    ], [
@@ -79,6 +79,19 @@ export type Replace<T extends any[], N extends IndexTypeFor<T>, S> =
       [T[0], T[1], T[2], T[3], T[4], T[5], T[6], S, T[8], T[9], T[10]],
       [T[0], T[1], T[2], T[3], T[4], T[5], T[6], T[7], S, T[9], T[10]],
       [T[0], T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], S, T[10]],
-      [T[0], T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9], S]
+      [T[0], T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9],  S]
+   ], [
+      [S, T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9], T[10], T[11]],
+      [T[0], S, T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9], T[10], T[11]],
+      [T[0], T[1], S, T[3], T[4], T[5], T[6], T[7], T[8], T[9], T[10], T[11]],
+      [T[0], T[1], T[2], S, T[4], T[5], T[6], T[7], T[8], T[9], T[10], T[11]],
+      [T[0], T[1], T[2], T[3], S, T[5], T[6], T[7], T[8], T[9], T[10], T[11]],
+      [T[0], T[1], T[2], T[3], T[4], S, T[6], T[7], T[8], T[9], T[10], T[11]],
+      [T[0], T[1], T[2], T[3], T[4], T[5], S, T[7], T[8], T[9], T[10], T[11]],
+      [T[0], T[1], T[2], T[3], T[4], T[5], T[6], S, T[8], T[9], T[10], T[11]],
+      [T[0], T[1], T[2], T[3], T[4], T[5], T[6], T[7], S, T[9], T[10], T[11]],
+      [T[0], T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], S, T[10], T[11]],
+      [T[0], T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9],  S, T[11]],
+      [T[0], T[1], T[2], T[3], T[4], T[5], T[6], T[7], T[8], T[9], T[10],  S]
    ]
 ][LengthOf<T>][N];

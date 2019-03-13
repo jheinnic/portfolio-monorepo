@@ -117,4 +117,3 @@ export type ExceptFirstN<T extends any[], N extends LengthThatFits<T>> =
 export type ExceptFirst<T extends any[]> = LastNOf<T, Prev<LengthOf<T>>>;
 
 export type LastOf<T extends any[]> = NthOf<T, Prev<LengthOf<T>>>;
-export type FirstOf<T extends any[]> = T[0];
