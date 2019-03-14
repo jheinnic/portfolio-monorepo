@@ -1,17 +1,17 @@
 import { Provider } from '@nestjs/common';
 import { illegalArgs } from '@thi.ng/errors';
-import { AnyFunc, ConstructorFor } from 'simplytyped';
+import { ConstructorFor } from 'simplytyped';
 
 import { ProviderToken } from '../token';
 import { AsyncModuleParam, AsyncModuleParamStyle } from './async-module-param.type';
 
-export function asyncProviderFromParam<
-   Type, Factory extends (AnyFunc<Type|Promise<Type>>|never) = never
->(
+export function asyncProviderFromParam<Type>(
+   // Type, Factory extends (AnyFunc<Type|Promise<Type>>|never) = never
+// >(
    providerToken: ProviderToken<Type> |
       (Type extends object ? ConstructorFor<Type> : never) |
       string,
-   moduleParam: AsyncModuleParam<Type, Factory>): Provider[]
+   moduleParam: AsyncModuleParam<Type>): Provider[]
 {
    let retVal: Provider[];
 
@@ -47,7 +47,7 @@ export function asyncProviderFromParam<
          retVal = [{
             provide: providerToken,
             useFactory: moduleParam.useFactory,
-            inject: moduleParam.inject,
+            inject: moduleParam.inject || [],
          }];
 
          break;
@@ -56,17 +56,17 @@ export function asyncProviderFromParam<
          retVal = [{
             provide: providerToken,
             useFactory: async factory => factory.create(),
-            inject: [moduleParam.useClass],
+            inject: [moduleParam.useFactoryClass],
          }, {
-            provide: moduleParam.useClass,
-            useClass: moduleParam.useClass,
+            provide: moduleParam.useFactoryClass,
+            useClass: moduleParam.useFactoryClass,
          }];
 
          break;
       }
       default: {
-         const foo: never = moduleParam;
-         throw illegalArgs(`Unrecognized param style, ${foo}`);
+         // const foo: never = moduleParam;
+         throw illegalArgs(`Unrecognized param style, ${moduleParam}`);
       }
    }
 

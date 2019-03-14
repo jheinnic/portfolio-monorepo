@@ -1,7 +1,9 @@
-import { AnyFunc, ArgsAsTuple, ConstructorFor } from 'simplytyped';
+import { ConstructorFor } from 'simplytyped';
 
 import { ArgsAsInjectableKeys } from './args-as-provider-tokens.type';
 import { ProviderToken } from '../token';
+import { AnyMsyncFunc, NoArgsMsyncFunc } from '@jchptf/txtypes';
+import { IFactory } from '@jchptf/api';
 
 // export type AsyncModuleParam<
 //    ParamType,
@@ -30,17 +32,13 @@ export enum AsyncModuleParamStyle
  * -- A IFactory parameter supplies an asynchronous provider function, and uses FactoryType to
  *    supply i
  */
-export type AsyncModuleParam<
-   ParamType,
-   FactoryType extends AnyFunc<ParamType|Promise<ParamType>> = never
-> =
+export type AsyncModuleParam<ParamType> =
    ValueAsyncModuleParam<ParamType> |
    ExistingAsyncModuleParam<ParamType> |
    FactoryClassAsyncModuleParam<ParamType> |
-   (ParamType extends object
-      ? ClassAsyncModuleParam<ParamType> : never) |
-   (FactoryType extends AnyFunc<ParamType|Promise<ParamType>>
-      ? FactoryAsyncModuleParam<ParamType, FactoryType> : never);
+   FactoryAsyncModuleParam<ParamType> |
+   (ParamType extends object ? ClassAsyncModuleParam<ParamType> : never)
+;
 
 /*
 export type ProviderTokenTuple<ProvidedTuple extends any[]> =
@@ -70,27 +68,24 @@ export type ExistingAsyncModuleParam<ParamType> = {
       (ParamType extends object ? ConstructorFor<ParamType> : never),
 };
 
-export type FactoryAsyncModuleParam<
-   ParamType,
-   FactoryFunc extends AnyFunc<ParamType|Promise<ParamType>>
-> =
-   ArgsAsTuple<FactoryFunc> extends void[]
-      ? {
-         style: AsyncModuleParamStyle.FACTORY,
-         useFactory: FactoryFunc,
-         inject?: void[],
-      }
-      : {
-         style: AsyncModuleParamStyle.FACTORY,
-         useFactory: FactoryFunc,
-         inject: ArgsAsInjectableKeys<FactoryFunc>,
-      };
-
-export interface IFactory<ProvidedType> {
-   create(): ProvidedType|Promise<ProvidedType>;
+interface INoArgsFactoryProvider<Provided>
+{
+   style: AsyncModuleParamStyle.FACTORY;
+   useFactory: NoArgsMsyncFunc<Provided>;
+   inject?: void[];
 }
 
+interface IInjectedFactoryProvider<Provided>
+{
+   style: AsyncModuleParamStyle.FACTORY;
+   useFactory: AnyMsyncFunc<Provided>;
+   inject: ArgsAsInjectableKeys<this['useFactory']>;
+}
+
+export type FactoryAsyncModuleParam<ParamType> =
+   INoArgsFactoryProvider<ParamType> | IInjectedFactoryProvider<ParamType>;
+
 export type FactoryClassAsyncModuleParam<ParamType> = {
-   style: AsyncModuleParamStyle.FACTORY_CLASS,
-   useClass: ConstructorFor<IFactory<ParamType>>,
+   style: AsyncModuleParamStyle.FACTORY_CLASS;
+   useFactoryClass: ConstructorFor<IFactory<ParamType>>;
 };

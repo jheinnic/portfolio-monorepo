@@ -28,6 +28,20 @@ export interface IAdapter<T> {
 }
 
 /**
+ * Generic interface for objects that implement a no-args contract that creates
+ * an instance of their given generic type when called.
+ *
+ * Factory objects may yield their output artifact either synchronously or
+ * asynchronously, and may not expect any input arguments through their IFactory
+ * interface method, although other aspects of their operational lifecycle may
+ * certainly involve parameter-setting.
+ */
+export interface IFactory<Type> {
+    create(): Type | Promise<Type>;
+}
+
+
+/**
  * Generic interface for types with binary backing buffers.
  */
 export interface IBuffered {

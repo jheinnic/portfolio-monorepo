@@ -14,7 +14,7 @@
     },
     "references": [
         { "path": "../../api/src" },
-        { "path": "../../objecttypes/src" }
+        { "path": "../../objecttypes/src" },
         { "path": "../../txtypes/src" }
     ],
     "include": [ "./**/*.ts" ]
