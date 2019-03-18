@@ -1,31 +1,30 @@
 import {Chan} from 'medium';
 
 import {
-   getDynamicModuleType, getLocalProviderToken, getModuleIdentifier,
-   getNamedTypeIntent, NAMED_EITHER_ITERABLE_ANY_TYPE, TypeIdentifier
+   getDynamicModuleKind, getLocalProviderToken, getModuleIdentifier,
 } from '@jchptf/nestjs';
 import { IResourceAdapter, IResourceSemaphore, IResourceSemaphoreFactory } from '../interfaces';
+import { IAdapter } from '@jchptf/api';
 
 export const SEMAPHORE_MODULE_ID =
-   getModuleIdentifier("@jchptf/semaphore");
-
-export const SEMAPHORE_FACTORY_SERVICE_TYPE =
-   getNamedTypeIntent<IResourceSemaphoreFactory>("IResourceSemaphoreFactory");
+   getModuleIdentifier('@jchptf/semaphore');
 
 export const SEMAPHORE_FACTORY_PROVIDER_TOKEN =
-   getLocalProviderToken(SEMAPHORE_MODULE_ID, SEMAPHORE_FACTORY_SERVICE_TYPE);
+   getLocalProviderToken<IResourceSemaphoreFactory>('IResourceSemaphoreFactory');
 
 export const SEMAPHORE_RESOURCE_POOL_PROVIDER_TOKEN =
-   getLocalProviderToken(SEMAPHORE_MODULE_ID, NAMED_EITHER_ITERABLE_ANY_TYPE);
+   getLocalProviderToken<Iterable<any>|AsyncIterable<any>>('Iterable<any>|AsyncIterable<any>');
 
-export const RESERVATIONS_CHANNEL_TYPE: TypeIdentifier<Chan<IResourceAdapter<any>, any>> =
-   getNamedTypeIntent<Chan<IResourceAdapter<any>, any>>("Chan<IResourceAdapter<T>, T>");
+// export const RESERVATIONS_CHANNEL_TYPE =
+//    getLocalProviderToken<IAdapter<Chan<IResourceAdapter<any>, any>>>(
+//       'IAdapter<Chan<IResourceAdapter<any>, any>>');
 
-export const RETURN_CHANNEL_TYPE: TypeIdentifier<Chan<any, IResourceAdapter<any>>> =
-   getNamedTypeIntent<Chan<any, IResourceAdapter<any>>>("Chan<T, IResourceAdapter<T>>");
+// export const RETURN_CHANNEL_TYPE =
+//    getLocalProviderToken<IAdapter<Chan<any, IResourceAdapter<any>>>>(
+//       'IAdapter<Chan<any, IResourceAdapter<any>>>');
 
-export const SEMAPHORE_SERVICE_TYPE =
-   getNamedTypeIntent<IResourceSemaphore<any>>("IResourceSemaphore<T>");
+export const SEMAPHORE_SERVICE_PROVIDER_TOKEN =
+   getLocalProviderToken<IResourceSemaphore<any>>('IResourceSemaphore<any>');
 
 export const SEMAPHORE_DYNAMIC_MODULE_TYPE =
-   getDynamicModuleType(SEMAPHORE_MODULE_ID);
+   getDynamicModuleKind(SEMAPHORE_MODULE_ID);

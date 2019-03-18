@@ -2,12 +2,12 @@ import { AnyFunc, ArgsAsTuple, ConstructorFor } from 'simplytyped';
 import { ProviderToken } from '@jchptf/api';
 import { INoArgsConstructorFor } from '@jchptf/objecttypes';
 
-// export type AsyncModuleParam<
+// export type DynamicModuleParam<
 //    ParamType,
 //    FactoryType extends (AnyFunc<Promise<ParamType>> | string | undefined) = undefined
 //    > =
 //    undefined extends FactoryType
-//       ? ExistingAsyncModuleParam<ParamType>
+//       ? ExistingDynamicModuleParam<ParamType>
 //       : (string extends FactoryType
 //       ? (FactoryType extends string
 //          ? ClassAsyncModuleParam<ParamType, Extract<FactoryType, string>>

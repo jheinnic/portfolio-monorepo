@@ -6,13 +6,13 @@ import consul, { Consul as IConsul, ConsulOptions } from 'consul';
 import { EventEmitter } from 'events';
 import * as util from 'util';
 
-import { AsyncModuleParam, asyncProviderFromParam } from '@jchptf/nestjs';
+import { DynamicModuleParam, asyncProviderFromParam } from '@jchptf/nestjs';
 
 @Global()
 @Module({})
 export class ConsulModule
 {
-   public static forRoot(options: AsyncModuleParam<ConsulOptions, any>): DynamicModule
+   public static forRoot(options: DynamicModuleParam<ConsulOptions, any>): DynamicModule
    {
       const configProviders = asyncProviderFromParam(CONSUL_OPTIONS_PROVIDER, options);
 

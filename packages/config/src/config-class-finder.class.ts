@@ -1,14 +1,12 @@
 import { bindNodeCallback, from, Observable } from 'rxjs';
 import { mergeMap, tap } from 'rxjs/operators';
+import { Provider } from '@nestjs/common';
 import { ConstructorFunction } from 'simplytyped';
 import { Glob, sync as globSync } from 'glob';
-import { Provider } from '@nestjs/common';
 import * as assert from 'assert';
 import * as path from 'path';
 
-import {
-   ModuleIdentifier, getLocalProviderToken, getNamedTypeIntent
-} from '@jchptf/nestjs';
+import { getLocalProviderToken } from '@jchptf/nestjs';
 
 import { CONFIG_READER_PROVIDER, CONFIG_LOADER_PROVIDER } from './di';
 import {
@@ -22,8 +20,8 @@ import {
  * would mean its opportunity to contribute additional Providers to the DI data set would have
  * already come and gone.
  *
- * In many ways this seems similar to constraints found in the Spring Framework with regard to
- * BeanFactoryPostProcessors not being eligible for certain DI features by virtue of where their
+ * In many ways this seems similar to constraints found in the Spring UtilityContainer with regard
+ * to BeanFactoryPostProcessors not being eligible for certain DI features by virtue of where their
  * functionality is applied in the framework's broader lifecycle stages.
  */
 export class ConfigClassFinder implements IConfigClassFinder
@@ -31,9 +29,9 @@ export class ConfigClassFinder implements IConfigClassFinder
    private readonly resolvedSearchRoot: string;
 
    constructor(
-      private readonly moduleId: ModuleIdentifier,
-      // private readonly configMetaHelper: IConfigMetadataHelper,
-      private readonly loadConfigGlob: string, searchRootDir?: string)
+      private readonly loadConfigGlob: string,
+      searchRootDir?: string,
+   )
    {
       this.resolvedSearchRoot =
          ConfigClassFinder.resolveSearchRoot(searchRootDir);
@@ -105,7 +103,7 @@ export class ConfigClassFinder implements IConfigClassFinder
          tap(
             (file: string) => {
                console.log('Examining', file);
-            }
+            },
          ),
          mergeMap(
             (filePath: string) => // Observable<ConstructorFunction<any>> =>
@@ -116,10 +114,8 @@ export class ConfigClassFinder implements IConfigClassFinder
          //       this.configMetaHelper.hasProviderToken(clazz)),
          mergeMap(
             (clazz: ConstructorFunction<any>) => {
-               const typeId = getNamedTypeIntent<InstanceType<typeof clazz>>(clazz.name);
                const retValOne = {
-                  // provide: this.configMetaHelper.getProviderToken(clazz),
-                  provide: getLocalProviderToken(this.moduleId, typeId),
+                  provide: getLocalProviderToken(clazz.name),
                   useFactory: async (
                      configLoader: IConfigLoader, configReader: IConfigReader) =>
                      configLoader.loadInstance(clazz, configReader),

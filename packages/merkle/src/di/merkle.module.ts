@@ -1,7 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
 
 import {
-   AsyncModuleParam, asyncProviderFromParam, IDynamicProvider, DynamicProviderToken,
+   DynamicModuleParam, asyncProviderFromParam, IDynamicProvider, DynamicProviderToken,
    getDynamicProviderToken,
    ModuleIdentifier
 } from '@jchptf/nestjs';
@@ -51,7 +51,7 @@ export class MerkleModule
 
    public static async forFeatureAsync(
       forModule: ModuleIdentifier,
-      asyncTreeDescription: AsyncModuleParam<MerkleTreeDescription>,
+      asyncTreeDescription: DynamicModuleParam<MerkleTreeDescription>,
       withTag?: string): Promise<DynamicModule>
    {
       const treeDescription =

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { CONCURRENT_WORK_FACTORY, IConcurrentWorkFactory } from '@jchptf/coroutines';
+import { CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN, IConcurrentWorkFactory } from '@jchptf/coroutines';
 import { ResourceSemaphore } from './resource-semaphore.class';
 import { IResourceSemaphore, IResourceSemaphoreFactory } from './interfaces';
 
@@ -9,7 +9,7 @@ import { IResourceSemaphore, IResourceSemaphoreFactory } from './interfaces';
 export class ResourceSemaphoreFactory implements IResourceSemaphoreFactory
 {
    constructor(
-      @Inject(CONCURRENT_WORK_FACTORY) private readonly concurrentWorkFactory: IConcurrentWorkFactory)
+      @Inject(CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN) private readonly concurrentWorkFactory: IConcurrentWorkFactory)
    { }
 
    async createSemaphore<T extends object>(resourcePool: Iterable<T>|AsyncIterable<T>):

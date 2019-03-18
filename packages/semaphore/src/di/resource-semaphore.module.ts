@@ -3,7 +3,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { Chan } from 'medium';
 
 import { IAdapter } from '@jchptf/api';
-import { AsyncModuleParam, asyncProviderFromParam, ModuleIdentifier } from '@jchptf/nestjs';
+import { DynamicModuleParam, LocalProviderToken, ModuleIdentifier } from '@jchptf/nestjs';
 import { CoroutinesModule } from '@jchptf/coroutines';
 
 import {
@@ -23,22 +23,21 @@ import {
       {
          provide: SEMAPHORE_FACTORY_PROVIDER_TOKEN,
          useClass: ResourceSemaphoreFactory,
-      }
-   ]
+      },
+   ],
 })
 export class ResourceSemaphoreModule
 {
    public static forFeature<T extends object>(
       moduleId: ModuleIdentifier,
-      config: AsyncModuleParam<Iterable<T>|AsyncIterable<T>>,
-      instanceTag?: string
+      config: DynamicModuleParam<Iterable<T>|AsyncIterable<T>>,
+      resourceSemaphoreToken?: LocalProviderToken,
    ): DynamicModule
    {
-      const resourcePoolProvider =
-         asyncProviderFromParam(SEMAPHORE_RESOURCE_POOL_PROVIDER_TOKEN, config);
-
-      const resourceSemaphoreToken =
-         getResourceSemaphoreToken<T>(moduleId, instanceTag);
+      const resourcePoolBinding = {
+         ...config,
+         boundTo: SEMAPHORE_RESOURCE_POOL_PROVIDER_TOKEN,
+      };
 
       const resourceSemaphoreProvider = {
          provide: resourceSemaphoreToken,

@@ -1,5 +1,5 @@
 import {
-   getDynamicModuleType, getGlobalProviderToken, getLocalProviderToken, getModuleIdentifier,
+   getDynamicModuleKind, getGlobalProviderToken, getLocalProviderToken, getModuleIdentifier,
    getNamedTypeIntent,
 } from '@jchptf/nestjs';
 import { Consul, ConsulOptions } from 'consul';
@@ -18,6 +18,6 @@ export const CONSUL_EVENT_EMITTER_PROVIDER =
    getLocalProviderToken<NodeJS.EventEmitter>(CONSUL_MODULE_ID, EventEmitter);
 
 export const CONSUL_SERVICE_DYNAMIC_MODULE_TYPE =
-   getDynamicModuleType(CONSUL_MODULE_ID, 'ServicesDynamicModule');
+   getDynamicModuleKind(CONSUL_MODULE_ID, 'ServicesDynamicModule');
 export const CONSUL_WATCH_DYNAMIC_MODULE_TYPE =
-   getDynamicModuleType(CONSUL_MODULE_ID, 'WatchesDynamicModule');
+   getDynamicModuleKind(CONSUL_MODULE_ID, 'WatchesDynamicModule');

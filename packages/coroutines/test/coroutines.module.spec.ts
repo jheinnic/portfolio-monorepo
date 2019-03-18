@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CONCURRENT_WORK_FACTORY, CoroutinesModule } from '@jchptf/coroutines';
+import { CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN, CoroutinesModule } from '@jchptf/coroutines';
 import { IConcurrentWorkFactory } from '@jchptf/coroutines';
 import { expect } from 'chai';
 
@@ -12,7 +12,7 @@ describe('CoroutinesModule', () => {
          imports: [CoroutinesModule],
       }).compile();
 
-      concurrentWorkFactory = sutModule.get(CONCURRENT_WORK_FACTORY);
+      concurrentWorkFactory = sutModule.get(CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN);
    });
 
    it('should be importable', () => {
