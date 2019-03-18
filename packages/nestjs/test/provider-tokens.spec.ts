@@ -2,8 +2,7 @@ import chai from 'chai';
 import { assert, HasType, IsExactType, NotHasType } from 'conditional-type-checks';
 
 import {
-   getGlobalProviderToken, getLocalProviderToken, getModuleIdentifier, getNamedSubtypeIntent,
-   getNamedTypeIntent, TokenDictionary
+   getGlobalProviderToken, getLocalProviderToken, getModuleIdentifier,
 } from '@jchptf/nestjs';
 import { HasImpliedType, IsImpliedType } from '@jchptf/api';
 import {
@@ -39,24 +38,17 @@ describe('ProviderTokens', () => {
    });
 
    it('Maintains type information on tokens retrieved from a dictionary', () => {
-      const MY_MOD = getModuleIdentifier('My.Mod');
-      const CLASS_ID = getNamedTypeIntent<Class>('Class');
-      const SOMETHING_ID = getNamedTypeIntent<ISomething>('Something');
-      const FOO = getLocalProviderToken<Class>(MY_MOD, CLASS_ID, 'LocalClass');
-      const BAR = getGlobalProviderToken<ISomething>(SOMETHING_ID, 'GlobalClass');
+      const MY_MOD = getModuleIdentifier('MyModule');
+      const FOO = getLocalProviderToken<Class>('Class', 'LocalClass');
+      const BAR = getGlobalProviderToken<ISomething>(MY_MOD, 'Something', 'GlobalClass');
 
-      interface ITemplate {
-         foo: Class;
-         bar: ISomething;
-      }
+      // const diDict: TokenDictionary<ITemplate> = {
+      //    foo: FOO,
+      //    bar: BAR,
+      // };
 
-      const diDict: TokenDictionary<ITemplate> = {
-         foo: FOO,
-         bar: BAR,
-      };
-
-      type fooType = typeof diDict.foo;
-      type barType = typeof diDict.bar;
+      type fooType = typeof FOO;
+      type barType = typeof BAR;
 
       assert<IsImpliedType<Class, fooType>>(true);
       assert<IsImpliedType<ISomething, barType>>(true);
@@ -80,23 +72,15 @@ describe('ProviderTokens', () => {
    });
 
    it('Maintains equality when created equivalently', () => {
-      const MY_MOD = getModuleIdentifier('My.Mod');
-      const CLASS_ID = getNamedTypeIntent<Class>('Class');
-      const I_SOMETHING_ID = getNamedTypeIntent<ISomething>('Something');
-      const I_SOMETHING_ONE_ID = getNamedSubtypeIntent<ISomething, SomethingOne>('SomethingOne');
-      const I_SOMETHING_TWO_ID = getNamedSubtypeIntent<ISomething, SomethingTwo>('SomethingTwo');
-      const SOMETHING_ONE_ID = getNamedTypeIntent<SomethingOne>('SomethingOne');
-      const SOMETHING_TWO_ID = getNamedTypeIntent<SomethingTwo>('SomethingTwo');
-
-      const FOO_ONE = getLocalProviderToken<Class>(MY_MOD, CLASS_ID, 'LocalClass');
-      const FOO_TWO = getLocalProviderToken<Class>(MY_MOD, CLASS_ID, 'LocalClass');
-      const BAR_ONE = getLocalProviderToken<ISomething>(MY_MOD, I_SOMETHING_ONE_ID, 'LocalClass');
-      const BAR_TWO = getLocalProviderToken<ISomething>(MY_MOD, I_SOMETHING_TWO_ID, 'LocalClass');
-      const BAR_THREE = getLocalProviderToken<ISomething>(MY_MOD, I_SOMETHING_ID, 'LocalClass');
-      const BAZ = getLocalProviderToken<Class>(MY_MOD, CLASS_ID, 'OtherClass');
-      const LOB_ONE = getLocalProviderToken<SomethingOne>(MY_MOD, SOMETHING_ONE_ID, 'LocalClass');
-      const LOB_TWO = getLocalProviderToken<SomethingTwo>(MY_MOD, SOMETHING_TWO_ID, 'LocalClass');
-      const WOB_TWO = getLocalProviderToken<SomethingTwo>(MY_MOD, SOMETHING_TWO_ID, 'OtherClass');
+      const FOO_ONE = getLocalProviderToken<Class>('Class', 'LocalClass');
+      const FOO_TWO = getLocalProviderToken<Class>('Class', 'LocalClass');
+      const BAR_ONE = getLocalProviderToken<ISomething>('SomethingOne', 'LocalClass');
+      const BAR_TWO = getLocalProviderToken<ISomething>('SomethingTwo', 'LocalClass');
+      const BAR_THREE = getLocalProviderToken<ISomething>('Something', 'LocalClass');
+      const BAZ = getLocalProviderToken<Class>('Class', 'OtherClass');
+      const LOB_ONE = getLocalProviderToken<SomethingOne>('SomethingOne', 'LocalClass');
+      const LOB_TWO = getLocalProviderToken<SomethingTwo>('SomethingTwo', 'LocalClass');
+      const WOB_TWO = getLocalProviderToken<SomethingTwo>('SomethingTwo', 'OtherClass');
 
       console.log(FOO_ONE);
       console.log(FOO_TWO);

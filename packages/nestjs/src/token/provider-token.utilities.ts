@@ -1,12 +1,98 @@
 import { illegalArgs } from '@thi.ng/errors';
 
-import { StringQualifier } from '@jchptf/api';
+import { getStringQualifier, getTypedStringQualifier } from '@jchptf/api';
 import {
-   DynamicProviderToken, GlobalProviderToken, LocalProviderToken
+   DynamicProviderToken, GlobalProviderToken, LocalProviderToken,
 } from './provider-token.type';
-import { TypeIdentifier } from './type-identifier.type';
-import { ModuleIdentifier } from './module-identifier.type';
 import { DynamicModuleKind } from './dynamic-module-kind.type';
+import { ModuleIdentifier } from './module-identifier.type';
+
+/**
+ * @deprecated
+ * @param moduleId
+ * @param binding
+ * @param typeId
+ * @param qualifier
+ */
+export function getDynamicProviderToken<Component>(
+   moduleId: ModuleIdentifier,
+   binding: DynamicModuleKind,
+   typeId: string,
+   qualifier?: string,
+): DynamicProviderToken<Component>
+{
+   // if (factoryModuleName.indexOf(':') >= 0) {
+   //    throw new Error(': is reserved as a separator and may not appear in a factory module\'s
+   // domain name'); } if (factoryIntentName.indexOf(':') >= 0) { throw new Error(': is reserved as
+   // a separator and may not appear in factory intent name'); } if
+   // (provisionModuleName.indexOf(':') >= 0) { throw new Error(': is reserved as a separator and
+   // may not appear in provision module\'s domain name'); } if
+   // (provisionQualifierName.indexOf(':') >= 0) { throw new Error(': is reserved as a separator
+   // and may not appear in provision qualifier name'); }
+   const tokenStr = appendQualifier(`${moduleId}::${binding}::${typeId}`, qualifier);
+
+   return tokenStr as DynamicProviderToken<Component>;
+}
+
+export function getLocalProviderToken<Component>(
+   typeId: string, qualifier?: string,
+): LocalProviderToken<Component>
+{
+   return getTypedStringQualifier<'Local' & 'ProviderToken', Component>(
+      appendQualifier(typeId, qualifier),
+   ) as LocalProviderToken<Component>;
+}
+
+export function getGlobalProviderToken<Component>(
+   moduleId: ModuleIdentifier, typeId: string, qualifier?: string,
+): GlobalProviderToken<Component>
+{
+   return getTypedStringQualifier<'Global' & 'ProviderToken', Component>(
+      appendQualifier(`${moduleId}::${typeId}`, qualifier),
+   ) as GlobalProviderToken<Component>;
+}
+
+export function getModuleIdentifier(moduleId: string): ModuleIdentifier
+{
+   if (moduleId.indexOf(':') >= 0) {
+      throw illegalArgs('Module identifiers may not include ":" characters.');
+   }
+
+   return getStringQualifier<'ModuleIdentifier'>(moduleId) as ModuleIdentifier;
+}
+
+function appendQualifier(tokenStr: string, qualifier?: string)
+{
+   if (!!qualifier) {
+      // TODO: Assert a stronger positive condition rather than a weak negative condition...
+      if (qualifier.indexOf(':') >= 0) {
+         throw illegalArgs('Provider token role tags may not include ":" characters.');
+      }
+
+      return `${tokenStr}(${qualifier})`;
+   }
+
+   return tokenStr;
+}
+
+// /**
+//  * @deprecated
+//  * @param typeId
+//  */
+// export function getNamedTypeIntent<Type>(typeId: string): TypeIdentifier<Type>
+// {
+//    return getTypedStringQualifier<'TypeIdentifier', Type>(typeId) as TypeIdentifier<Type>;
+// }
+//
+// /**
+//  * @deprecated
+//  * @param subtypeId
+//  */
+// export function getNamedSubtypeIntent<Type, Subtype extends Type>(
+//    subtypeId: string): TypeIdentifier<Type>
+// {
+//    return getTypedStringQualifier<'TypeIdentifier', Subtype>(subtypeId) as TypeIdentifier<Subtype>;
+// }
 
 /**
  * A utility function for dynamic modules that need a deterministic way of agreeing on a
@@ -29,118 +115,12 @@ import { DynamicModuleKind } from './dynamic-module-kind.type';
  * identifier, and the end consumer's input will drive the value of the second qualifying
  * argument.
  *
- * @param base
+ * @param moduleId
+ * @param qualifier
  */
-export function getDynamicProviderToken<Type>(
-   moduleId: ModuleIdentifier,
-   binding: DynamicModuleKind,
-   typeId: TypeIdentifier<Type>,
-   tagName?: string,
-): DynamicProviderToken<Type>
+export function getDynamicModuleKind(
+   moduleId: ModuleIdentifier, qualifier?: string): DynamicModuleKind
 {
-   // if (factoryModuleName.indexOf(':') >= 0) {
-   //    throw new Error(': is reserved as a separator and may not appear in a factory module\'s
-   // domain name'); } if (factoryIntentName.indexOf(':') >= 0) { throw new Error(': is reserved as
-   // a separator and may not appear in factory intent name'); } if
-   // (provisionModuleName.indexOf(':') >= 0) { throw new Error(': is reserved as a separator and
-   // may not appear in provision module\'s domain name'); } if
-   // (provisionQualifierName.indexOf(':') >= 0) { throw new Error(': is reserved as a separator
-   // and may not appear in provision qualifier name'); }
-   if (!!tagName) {
-      return `${moduleId}::${binding}::${typeId}(${tagName})` as DynamicProviderToken<Type>;
-   }
-
-   return `${moduleId}::${binding}::${typeId}` as DynamicProviderToken<Type>;
-}
-
-export function getLocalProviderToken<Type>(
-   moduleId: ModuleIdentifier, typeId: TypeIdentifier<Type>,
-   tagName?: string,
-): LocalProviderToken<Type>
-{
-   if (!!tagName) {
-      // TODO: Assert a stronger positive condition rather than a weak negative condition...
-      if (tagName.indexOf(':') >= 0) {
-         throw illegalArgs('Provider token role tags may not include ":" characters.');
-      }
-
-      return `${moduleId}::${typeId}(${tagName})` as LocalProviderToken<Type>;
-   }
-   return `${moduleId}::${typeId}` as LocalProviderToken<Type>;
-}
-
-export function getGlobalProviderToken<Type>(
-   typeId: TypeIdentifier<Type>, tagName?: string): GlobalProviderToken<Type>
-{
-   if (!!tagName) {
-      // TODO: Assert a stronger positive condition rather than a weak negative condition...
-      if (tagName.indexOf(':') >= 0) {
-         throw illegalArgs('Provider token role tags may not include ":" characters.');
-      }
-
-      return `${typeId}(${tagName})` as GlobalProviderToken<Type>;
-   }
-
-   return `${typeId}` as GlobalProviderToken<Type>;
-}
-
-export function getModuleIdentifier(moduleName: string): ModuleIdentifier
-{
-   if (moduleName.indexOf(':') >= 0) {
-      throw illegalArgs('Module identifiers may not include ":" characters.');
-   }
-
-   // return moduleName as ModuleIdentifier;
-   return getStringQualifier(moduleName, 'ModuleIdentifier') as ModuleIdentifier;
-}
-
-export function getNamedTypeIntent<Type>(typeId: string): TypeIdentifier<Type>
-{
-   return getTypedStringQualifier<'TypeIdentifier', Type>(
-      typeId, 'TypeIdentifier') as TypeIdentifier<Type>;
-}
-
-export function getNamedSubtypeIntent<Type, Subtype extends Type>(
-   subtypeId: string): TypeIdentifier<Type>
-{
-   return getTypedStringQualifier<'TypeIdentifier', Subtype>(
-      subtypeId, 'TypeIdentifier') as TypeIdentifier<Subtype>;
-}
-
-export function getDynamicModuleType(
-   moduleId: ModuleIdentifier, tagName?: string): DynamicModuleKind
-{
-   if (!!tagName) {
-      return getStringQualifier<'DynamicModuleKind'>(
-         `${moduleId}(${tagName})`, 'DynamicModuleKind') as DynamicModuleKind;
-   }
-
    return getStringQualifier<'DynamicModuleKind'>(
-      moduleId, 'DynamicModuleKind') as DynamicModuleKind;
-}
-
-function getStringQualifier<Intent extends string>(
-   name: string, intent: Intent): StringQualifier<Intent>
-{
-   if (intent.indexOf(':') >= 0) {
-      throw illegalArgs('Intent types may not include ":" characters.');
-   }
-   if (name.indexOf(':') >= 0) {
-      throw illegalArgs('Intent qualifiers may not include ":" characters.');
-   }
-
-   return `${name}` as StringQualifier<Intent>;
-}
-
-function getTypedStringQualifier<Intent extends string, Type>(
-   name: string, intent: Intent): StringQualifier<Intent, Type>
-{
-   if (intent.indexOf(':') >= 0) {
-      throw illegalArgs('Intent types may not include ":" characters.');
-   }
-   if (name.indexOf(':') >= 0) {
-      throw illegalArgs('Intent qualifiers may not include ":" characters.');
-   }
-
-   return `${name}` as StringQualifier<Intent, Type>;
+       appendQualifier(moduleId, qualifier)) as DynamicModuleKind;
 }

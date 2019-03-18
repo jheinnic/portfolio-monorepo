@@ -1,16 +1,16 @@
 import { ConstructorFor } from 'simplytyped';
 
 import { ArgsAsInjectableKeys } from './args-as-provider-tokens.type';
-import { ProviderToken } from '../token';
+import { InjectableKey, LocalProviderToken } from '../token';
 import { AnyMsyncFunc, NoArgsMsyncFunc } from '@jchptf/txtypes';
 import { IFactory } from '@jchptf/api';
 
-// export type AsyncModuleParam<
+// export type DynamicModuleParam<
 //    ParamType,
 //    FactoryType extends (AnyFunc<Promise<ParamType>> | string | undefined) = undefined
 //    > =
 //    undefined extends FactoryType
-//       ? ExistingAsyncModuleParam<ParamType>
+//       ? ExistingDynamicModuleParam<ParamType>
 //       : (string extends FactoryType
 //       ? (FactoryType extends string
 //          ? ClassAsyncModuleParam<ParamType, Extract<FactoryType, string>>
@@ -32,13 +32,18 @@ export enum AsyncModuleParamStyle
  * -- A IFactory parameter supplies an asynchronous provider function, and uses FactoryType to
  *    supply i
  */
-export type AsyncModuleParam<ParamType> =
-   ValueAsyncModuleParam<ParamType> |
-   ExistingAsyncModuleParam<ParamType> |
-   FactoryClassAsyncModuleParam<ParamType> |
-   FactoryAsyncModuleParam<ParamType> |
-   (ParamType extends object ? ClassAsyncModuleParam<ParamType> : never)
+export type DynamicModuleParam<ParamType> =
+   ValueDynamicModuleParam<ParamType> |
+   FactoryDynamicModuleParam<ParamType> |
+   ExistingDynamicModuleParam<ParamType> |
+   FactoryClassDynamicModuleParam<ParamType> |
+   ExistingFactoryClassDynamicModuleParam<ParamType> |
+   (ParamType extends object ? ClassDynamicModuleParam<ParamType> : never)
 ;
+
+export type BoundDynamicModuleParam<ParamType> = DynamicModuleParam<ParamType> & {
+   bindTo: LocalProviderToken<ParamType>;
+};
 
 /*
 export type ProviderTokenTuple<ProvidedTuple extends any[]> =
@@ -52,40 +57,37 @@ export type ProviderTokenTuple<ProvidedTuple extends any[]> =
                : never;
 */
 
-export type ValueAsyncModuleParam<ParamType> = {
-   style: AsyncModuleParamStyle.VALUE,
-   useValue: ParamType,
+export type ValueDynamicModuleParam<ParamType> = {
+   useValue: ParamType;
 };
 
-export type ClassAsyncModuleParam<ParamType extends object> = {
-   style: AsyncModuleParamStyle.CLASS,
-   useClass: ConstructorFor<ParamType>,
+export type ClassDynamicModuleParam<ParamType extends object> = {
+   useClass: ConstructorFor<ParamType>;
 };
 
-export type ExistingAsyncModuleParam<ParamType> = {
-   style: AsyncModuleParamStyle.EXISTING,
-   useExisting: ProviderToken<ParamType> | string |
-      (ParamType extends object ? ConstructorFor<ParamType> : never),
+export type ExistingDynamicModuleParam<ParamType> = {
+   useExisting: InjectableKey<ParamType>;
 };
 
 interface INoArgsFactoryProvider<Provided>
 {
-   style: AsyncModuleParamStyle.FACTORY;
    useFactory: NoArgsMsyncFunc<Provided>;
    inject?: void[];
 }
 
 interface IInjectedFactoryProvider<Provided>
 {
-   style: AsyncModuleParamStyle.FACTORY;
    useFactory: AnyMsyncFunc<Provided>;
    inject: ArgsAsInjectableKeys<this['useFactory']>;
 }
 
-export type FactoryAsyncModuleParam<ParamType> =
+export type FactoryDynamicModuleParam<ParamType> =
    INoArgsFactoryProvider<ParamType> | IInjectedFactoryProvider<ParamType>;
 
-export type FactoryClassAsyncModuleParam<ParamType> = {
-   style: AsyncModuleParamStyle.FACTORY_CLASS;
+export type FactoryClassDynamicModuleParam<ParamType> = {
    useFactoryClass: ConstructorFor<IFactory<ParamType>>;
+};
+
+export type ExistingFactoryClassDynamicModuleParam<ParamType> = {
+   useExistingFactoryClass: InjectableKey<IFactory<ParamType>>;
 };

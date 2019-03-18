@@ -42,3 +42,6 @@ export type func = () => string;
 export type cls = typeof instA;
 export type subCls1 = typeof oneInstA;
 export type subCls2 = typeof anotherInstA;
+
+export class AModule
+{}
