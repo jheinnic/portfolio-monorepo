@@ -15,8 +15,8 @@ export type IsUndefinable<T> = Not<IsNever<Extract<T, undefined>>>;
 /**
  * True if the type is possibly null or undefined, otherwise false.
  *
- * Note that a type that can either be null but not undefined or undefined but not null is not nixable.
- * A nixable type must allow both null and undefined.
+ * Note that a type that can either be null but not undefined or undefined but not null is not
+ * nixable. A nixable type must allow both null and undefined.
  */
 export type IsNixable<T> = And<IsNullable<T>, IsUndefinable<T>>;
 
@@ -28,19 +28,26 @@ export type IsArray<T, Then = true, Else = false> = InternalExtends<T, any[], Th
 export type IsNumber<T, Then = true, Else = false> = InternalExtends<T, number, Then, Else>;
 export type IsString<T, Then = true, Else = false> = InternalExtends<T, string, Then, Else>;
 export type IsFunction<T, Then = true, Else = false> =
-   // Or<InternalExtends<T, { <R = any>(...args: any[]): R; }>, InternalExtends<T, Function>, Then, Else>;
+   // Or<InternalExtends<T, { <R = any>(...args: any[]): R; }>, InternalExtends<T, Function>, Then,
+   // Else>;
    InternalExtends<T, { <R = any>(...args: any[]): R; }, Then, Else>;
 
-// export type IsStringFunction<T extends string, Then = true, Else = false> = And<IsString<T>, IsNever<T>, Then, Else>;
-// export type IsAny<T, Then = true, Else = false> =
-// And<Not<IsArray<T>>, And<Not<IsBoolean<T>>, And<Not<IsNumber<T>>, And<Not<IsString<T>>, And<Not<IsFunction<T>>, And<Not<IsNil<T>>, Not<IsObject<T>>>>>>>, Then, Else>;
+// export type IsStringFunction<T extends string, Then = true, Else = false> = And<IsString<T>,
+// IsNever<T>, Then, Else>; export type IsAny<T, Then = true, Else = false> = And<Not<IsArray<T>>,
+// And<Not<IsBoolean<T>>, And<Not<IsNumber<T>>, And<Not<IsString<T>>, And<Not<IsFunction<T>>,
+// And<Not<IsNil<T>>, Not<IsObject<T>>>>>>>, Then, Else>;
 
-export type IsBoolean<T, Then = true, Else = false> = InternalExtends<T, boolean, Then, Else>;
-export type IsNull<T, Then = true, Else = false> = InternalExtends<T, null, Then, Else>;
-export type IsUndefined<T, Then = true, Else = false> = InternalExtends<T, undefined, Then, Else>;
+export type IsBoolean<T, Then = true, Else = false> =
+   InternalExtends<T, boolean, Then, Else>;
+export type IsNull<T, Then = true, Else = false> =
+   InternalExtends<T, null, Then, Else>;
+export type IsUndefined<T, Then = true, Else = false> =
+   InternalExtends<T, undefined, Then, Else>;
 // export type IsNix<T, Then = true, Else = false> = Or<IsNull<T>, IsUndefined<T>, Then, Else>;
-export type IsNix<T, Then = true, Else = false> = IsNull<T, Then, IsUndefined<T, Then, Else>>;
-export type IsObject<T, Then = true, Else = false> = InternalExtends<T, object, IsFunction<T, Else, IsArray<T, Else, Then>>, Else>;
+export type IsNix<T, Then = true, Else = false> =
+   IsNull<T, Then, IsUndefined<T, Then, Else>>;
+export type IsObject<T, Then = true, Else = false> =
+   InternalExtends<T, object, IsFunction<T, Else, IsArray<T, Else, Then>>, Else>;
 
 /**
  * True iff T is any, otherwise false.
@@ -58,16 +65,19 @@ export type IsAny<T, Then = true, Else = false> = If<InternalExtends<T, never>, 
 /**
  * True iff T is never, otherwise false.
  */
-export type IsNever<T, Then = true, Else = false> = WeakIf<InternalExtends<[T], [never]>, Then, Else, Then>;
+export type IsNever<T, Then = true, Else = false> =
+   WeakIf<InternalExtends<[T], [never]>, Then, Else, Then>;
 
 // These require If for the customization of ambiguous resolution, Then for Weak, Else for Strong
 export type Extends<T, U, Then = true, Else = false> =
    If<IsAny<T>, IsNever<U, Else, Then>, StrictIf<InternalExtends<T, U>, Then, Else>, Then, Then>;
-// If<Or<IsNever<T>, IsAny<U>>, Then, If<InternalExtends<T, U>, Then, IsAny<T, Then, Else>, IsAny<T, Then, Else>, IsAny<T, Then, Else>>, never, If<IsNever<U>, Else, Then, never, Else>>;
+// If<Or<IsNever<T>, IsAny<U>>, Then, If<InternalExtends<T, U>, Then, IsAny<T, Then, Else>,
+// IsAny<T, Then, Else>, IsAny<T, Then, Else>>, never, If<IsNever<U>, Else, Then, never, Else>>;
 
 export type StronglyExtends<T, U, Then = true, Else = false> =
    StrictIf<InternalExtends<T, U>, Then, Else, Then>;
-// If<Or<IsNever<T>, IsAny<U>>, Then, If<InternalExtends<T, U>, Then, Else, Else, Else>, never, If<IsNever<U>, Else, Then, never, Else>>;
+// If<Or<IsNever<T>, IsAny<U>>, Then, If<InternalExtends<T, U>, Then, Else, Else, Else>, never,
+// If<IsNever<U>, Else, Then, never, Else>>;
 
 /**
  * True iff every value of type U is also a value of type T and vice-versa, otherwise false.
@@ -79,10 +89,22 @@ export type IsExactly<T, U, Then = true, Else = false> =
 // And<Extends<U, T>, Extends<T, U>, Then, Else>;
 
 export type Intersects<T, U, Then = true, Else = false> =
-   Or<IsNever<T>, IsNever<U>, Else, Or<IsAny<T>, IsAny<U>, Then, WeakIf<Or<Extends<T, U>, Extends<U, T>>, Then, Else>>>;
-// If<Or<IsAny<T>, IsAny<U>>, Then, If<Or<IsNever<T>, IsNever<U>>, Else, Not<IsNever<Extract<T, U>>>>>;
-// Or<IsAny<T>, IsAny<U>, Then, Or<IsNever<T>, IsNever<U>, Else, Not<IsNever<Extract<T, U>>, Then, Else>>>;
-// Or<IsAny<T>, IsAny<U>, Then, If<Or<IsNever<T>, IsNever<U>>, Else, Or<Extends<T, U>, Extends<U, T>, Then, Else>, never, Else>>;
+   Or<
+      IsNever<T>,
+      IsNever<U>,
+      Else,
+      Or<
+         IsAny<T>,
+         IsAny<U>,
+         Then,
+         WeakIf<
+            Or<Extends<T, U>, Extends<U, T>>,
+            Then,
+            Else>>>;
+// If<Or<IsAny<T>, IsAny<U>>, Then, If<Or<IsNever<T>, IsNever<U>>, Else, Not<IsNever<Extract<T,
+// U>>>>>; Or<IsAny<T>, IsAny<U>, Then, Or<IsNever<T>, IsNever<U>, Else, Not<IsNever<Extract<T,
+// U>>, Then, Else>>>; Or<IsAny<T>, IsAny<U>, Then, If<Or<IsNever<T>, IsNever<U>>, Else,
+// Or<Extends<T, U>, Extends<U, T>, Then, Else>, never, Else>>;
 
 export type HasAll<T, U> = StronglyExtends<U, T>;
 
