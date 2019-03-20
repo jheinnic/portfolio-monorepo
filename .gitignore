@@ -7,6 +7,8 @@ dist/
 doc/
 .DS_Store
 bundle.*
+*.swp
+*.swo
 *.html
 *.log
 *.tgz
