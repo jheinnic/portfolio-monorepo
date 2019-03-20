@@ -1,13 +1,99 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { DynamicModule, Module, Type } from '@nestjs/common';
 import {
-   BLENDER, INJECTED_DEPENDENCY, LAMP, LIBRARY_CLASS, LOCAL_DEPENDENCY, POWER_CONTAINER, SOCKET,
+   buildDynamicModule, IDynamicModuleBuilder, InjectableKey, MODULE_IDENTIFIER,
+} from '@jchptf/nestjs';
+import {
+   APPLICATION_MODULE, BAR_MODULE, BLENDER, DYNAMICS_MODULE, INJECTED_DEPENDENCY, LAMP,
+   LIBRARY_CLASS, LOCAL_DEPENDENCY, POWER_CONTAINER, SOCKET,
 } from './constants';
-import { Application, UtilityContainer } from './classes';
 import { Blender, Lamp, Socket } from './power_classes';
+import { Application, IConnectable, UtilityContainer } from './classes';
+import './alternate';
+import { IDynamicsModuleTypes } from './alternate';
+import { KeysExtending, KeysThatAre } from '@jchptf/objecttypes';
+
+// export interface IApplicationModuleTypes<_X = any, _C = any>
+// {}
+//
+// export interface IFooModuleTypes<_X = any, _C = any>
+// {
+//    [FRUIT_CONTAINER]: UtilityContainer<FruitBox>;
+//    [FRUIT_BOX]: FruitBox;
+//    [APPLE]: Apple;
+//    [ORANGE]: Orange;
+// }
+//
+// export interface IBarModuleTypes<_X = any, _C = any>
+// {
+//    [POWER_CONTAINER]: UtilityContainer<Socket>;
+//    [SOCKET]: Socket;
+//    [LAMP]: Lamp;
+//    [BLENDER]: Blender;
+// }
+//
+// export interface IDynamicsModuleTypes<X = any, C = any>
+// {
+//    [LIBRARY_CLASS]: X extends IConnectable<C> ? UtilityContainer<X> : never;
+//    [INJECTED_DEPENDENCY]: X;
+//    [LOCAL_DEPENDENCY]: Map<string, X>;
+// }
+//
+// export const foo: IComponentTypes = {
+//    [BAR_MODULE]: {
+//       [LAMP]: new Lamp(new UtilityContainer<Socket>(
+//          new Socket(), new Map(),
+//       )),
+//       [POWER_CONTAINER]: new UtilityContainer<Socket>(
+//          new Socket(), new Map(),
+//       ),
+//       [SOCKET]: new Socket(),
+//       [BLENDER]: new Blender(new UtilityContainer<Socket>(
+//          new Socket(), new Map(),
+//       )),
+//    },
+//    [GLOBAL_MODULE_ID]: {},
+//    [DYNAMICS_MODULE]: {
+//       [LIBRARY_CLASS]: new UtilityContainer<Socket>(
+//          new Socket(), new Map(),
+//       ),
+//       [INJECTED_DEPENDENCY]: 6,
+//       [LOCAL_DEPENDENCY]: new Map(),
+//    },
+// };
 
 export class DynamicsModule
 {
-   static forFeature(dependency: symbol, exportAs: symbol, selfMod: any): DynamicModule
+   static forFeatureTwo<Consumer, T extends IConnectable<X>, X = any>(
+      dependency: Extract<keyof Consumer, KeysThatAre<Consumer, T>>,
+      exportAs: Extract<keyof Consumer, KeysThatAre<Consumer, UtilityContainer<T>>>,
+      selfMod: Type<any>): DynamicModule
+   {
+      return buildDynamicModule(
+         selfMod,
+         DynamicsModule,
+         (builder: IDynamicModuleBuilder<IDynamicsModuleTypes<T>, Consumer>) => {
+            builder.bindInputProvider<IDynamicsModuleTypes<any>, Consumer, T>({
+               provide: INJECTED_DEPENDENCY,
+               useExisting: dependency,
+            })
+               .bindProvider(
+                  {
+                     module: DYNAMICS_MODULE,
+                     provide: LIBRARY_CLASS,
+                     useValue: UtilityContainer,
+                  },
+                  exportAs
+               )
+               .bindProvider({
+                  module: DYNAMICS_MODULE,
+                  provide: LOCAL_DEPENDENCY,
+                  useFactory: () => { return new Map(); },
+               })
+         }
+      )
+   }
+
+   static forFeature(dependency: symbol, exportAs: symbol, selfMod: Type<any>): DynamicModule
    {
       return {
          module: DynamicsModule,
@@ -79,7 +165,9 @@ export class FooModule
    exports: [SOCKET, BLENDER, LAMP, DynamicsModule],
 })
 export class BarModule
-{ }
+{
+   public static readonly [MODULE_IDENTIFIER]: symbol = BAR_MODULE;
+}
 
 @Module({
    imports: [BarModule],
@@ -87,4 +175,7 @@ export class BarModule
    exports: [Application],
 })
 export class ApplicationModule
-{}
+{
+   public static readonly [MODULE_IDENTIFIER]: symbol = APPLICATION_MODULE;
+}
+

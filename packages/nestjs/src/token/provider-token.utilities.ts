@@ -1,6 +1,8 @@
 import { illegalArgs } from '@thi.ng/errors';
 
-import { getStringQualifier, getTypedStringQualifier } from '@jchptf/api';
+import {
+   isStringQualifier, isTypedStringQualifier, isTypedSymbolQualifier,
+} from '@jchptf/api';
 import {
    DynamicProviderToken, GlobalProviderToken, LocalProviderToken,
 } from './provider-token.type';
@@ -21,44 +23,77 @@ export function getDynamicProviderToken<Component>(
    qualifier?: string,
 ): DynamicProviderToken<Component>
 {
-   // if (factoryModuleName.indexOf(':') >= 0) {
-   //    throw new Error(': is reserved as a separator and may not appear in a factory module\'s
-   // domain name'); } if (factoryIntentName.indexOf(':') >= 0) { throw new Error(': is reserved as
-   // a separator and may not appear in factory intent name'); } if
-   // (provisionModuleName.indexOf(':') >= 0) { throw new Error(': is reserved as a separator and
-   // may not appear in provision module\'s domain name'); } if
-   // (provisionQualifierName.indexOf(':') >= 0) { throw new Error(': is reserved as a separator
-   // and may not appear in provision qualifier name'); }
-   const tokenStr = appendQualifier(`${moduleId}::${binding}::${typeId}`, qualifier);
+   const tokenStr = appendQualifier(`${moduleId.toString()}::${binding}::${typeId}`, qualifier);
+   if (isTypedStringQualifier<'Local' & 'Dynamic' & 'ProviderToken', Component>(tokenStr)) {
+      return tokenStr;
+   }
 
-   return tokenStr as DynamicProviderToken<Component>;
+   return tokenStr as never;
 }
 
 export function getLocalProviderToken<Component>(
-   typeId: string, qualifier?: string,
+   moduleId: ModuleIdentifier, typeId: string, qualifier?: string,
 ): LocalProviderToken<Component>
 {
-   return getTypedStringQualifier<'Local' & 'ProviderToken', Component>(
-      appendQualifier(typeId, qualifier),
-   ) as LocalProviderToken<Component>;
+   const tokenStr = appendQualifier(`${moduleId.toString()}::${typeId}`, qualifier);
+   if (isTypedStringQualifier<'Local' & 'ProviderToken', Component>(tokenStr)) {
+      return tokenStr;
+   }
+
+   return tokenStr as never;
+}
+
+export function getLocalProviderSymbol<Component>(
+   moduleId: ModuleIdentifier, typeId: string, qualifier?: string,
+): LocalProviderToken<Component>
+{
+   const tokenSym = Symbol(appendQualifier(`${moduleId.toString()}::${typeId}`, qualifier));
+   if (isTypedSymbolQualifier<'Local' & 'ProviderToken', Component>(tokenSym)) {
+      return tokenSym;
+   }
+
+   return tokenSym as never;
 }
 
 export function getGlobalProviderToken<Component>(
    moduleId: ModuleIdentifier, typeId: string, qualifier?: string,
 ): GlobalProviderToken<Component>
 {
-   return getTypedStringQualifier<'Global' & 'ProviderToken', Component>(
-      appendQualifier(`${moduleId}::${typeId}`, qualifier),
-   ) as GlobalProviderToken<Component>;
+   const tokenStr = appendQualifier(`${moduleId.toString()}::${typeId}`, qualifier);
+   if (isTypedStringQualifier<'Global' & 'ProviderToken', Component>(tokenStr)) {
+      return tokenStr;
+   }
+
+   return tokenStr as never;
 }
 
-export function getModuleIdentifier(moduleId: string): ModuleIdentifier
+export function getGlobalProviderSymbol<Component>(
+   moduleId: ModuleIdentifier, typeId: string, qualifier?: string,
+): GlobalProviderToken<Component>
 {
-   if (moduleId.indexOf(':') >= 0) {
+   const tokenSym = Symbol(appendQualifier(`${moduleId.toString()}::${typeId}`, qualifier));
+   if (isTypedSymbolQualifier<'Global' & 'ProviderToken', Component>(tokenSym)) {
+      return tokenSym;
+   }
+
+   return tokenSym as never;
+}
+
+export function getModuleIdentifier(moduleName: string): ModuleIdentifier
+{
+   if (moduleName.indexOf(':') >= 0) {
       throw illegalArgs('Module identifiers may not include ":" characters.');
    }
 
-   return getStringQualifier<'ModuleIdentifier'>(moduleId) as ModuleIdentifier;
+   if (isStringQualifier<'ModuleIdentifier'>(moduleName)) {
+      return moduleName;
+   }
+   // const moduleId = Symbol(moduleName);
+   // if (isSymbolQualifier<'ModuleIdentifier'>(moduleId)) {
+   //    return moduleId;
+   // }
+
+   return moduleName as never;
 }
 
 function appendQualifier(tokenStr: string, qualifier?: string)
@@ -66,7 +101,7 @@ function appendQualifier(tokenStr: string, qualifier?: string)
    if (!!qualifier) {
       // TODO: Assert a stronger positive condition rather than a weak negative condition...
       if (qualifier.indexOf(':') >= 0) {
-         throw illegalArgs('Provider token role tags may not include ":" characters.');
+         throw illegalArgs('Provider token qualifiers may not include ":" characters.');
       }
 
       return `${tokenStr}(${qualifier})`;
@@ -81,7 +116,7 @@ function appendQualifier(tokenStr: string, qualifier?: string)
 //  */
 // export function getNamedTypeIntent<Type>(typeId: string): TypeIdentifier<Type>
 // {
-//    return getTypedStringQualifier<'TypeIdentifier', Type>(typeId) as TypeIdentifier<Type>;
+//    return isTypedStringQualifier<'TypeIdentifier', Type>(typeId) as TypeIdentifier<Type>;
 // }
 //
 // /**
@@ -91,7 +126,8 @@ function appendQualifier(tokenStr: string, qualifier?: string)
 // export function getNamedSubtypeIntent<Type, Subtype extends Type>(
 //    subtypeId: string): TypeIdentifier<Type>
 // {
-//    return getTypedStringQualifier<'TypeIdentifier', Subtype>(subtypeId) as TypeIdentifier<Subtype>;
+//    return isTypedStringQualifier<'TypeIdentifier', Subtype>(
+//       subtypeId) as TypeIdentifier<Subtype>;
 // }
 
 /**
@@ -115,12 +151,17 @@ function appendQualifier(tokenStr: string, qualifier?: string)
  * identifier, and the end consumer's input will drive the value of the second qualifying
  * argument.
  *
+ * @deprecated
  * @param moduleId
  * @param qualifier
  */
 export function getDynamicModuleKind(
    moduleId: ModuleIdentifier, qualifier?: string): DynamicModuleKind
 {
-   return getStringQualifier<'DynamicModuleKind'>(
-       appendQualifier(moduleId, qualifier)) as DynamicModuleKind;
+   const retVal = appendQualifier(moduleId.toString(), qualifier);
+   if (isStringQualifier<'DynamicModuleKind'>(retVal)) {
+      return retVal;
+   }
+
+   return retVal as never;
 }

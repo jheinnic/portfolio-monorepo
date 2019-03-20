@@ -1,15 +1,24 @@
-export const DYNAMO: unique symbol  = Symbol('Dynamo');
+export const DYNAMICS_MODULE = 'DynamicsModule';
+export const BAR_MODULE = 'BarModule';
+export const FOO_MODULE = 'FooModule';
+export const APPLICATION_MODULE = 'ApplicationModule';
 
-export const SOCKET: unique symbol  = Symbol('Socket');
-export const LAMP: unique symbol  = Symbol('Plug');
-export const BLENDER: unique symbol  = Symbol('Blender');
-export const POWER_CONTAINER: unique symbol = Symbol('PowerUtilityContainer');
+export const DYNAMO  = 'Dynamo';
 
-export const APPLE: unique symbol = Symbol('Apple');
-export const ORANGE: unique symbol = Symbol('Orange');
-export const FRUIT_CONTAINER: unique symbol = Symbol('FruitUtilityContainer');
+export const SOCKET  = 'Socket';
+export const LAMP  = 'Plug';
+export const BLENDER  = 'Blender';
+export const POWER_CONTAINER = 'PowerUtilityContainer';
 
-export const LIBRARY_CLASS: unique symbol = Symbol('UtilityContainer');
-export const INJECTED_DEPENDENCY: unique symbol = Symbol('InjectedDependency');
-export const LOCAL_DEPENDENCY: unique symbol = Symbol('LocalDependency');
+export const FRUIT_BOX = 'FruitBox';
+export const APPLE = 'Apple';
+export const ORANGE = 'Orange';
+export const FRUIT_CONTAINER = 'FruitUtilityContainer';
 
+export const LIBRARY_CLASS = 'UtilityContainer';
+// export const LIBRARY_CLASS: LocalProviderToken<UtilityContainer<any>> =
+//    getLocalProviderSymbol<UtilityContainer<any>>('UtilityContainer';
+export const INJECTED_DEPENDENCY = 'InjectedDependency';
+export const LOCAL_DEPENDENCY = 'LocalDependency';
+
+// import { NestModules } from '@jchptf/nestjs/token/nest-modules.interface';

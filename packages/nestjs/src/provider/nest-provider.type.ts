@@ -2,50 +2,47 @@ import { ConstructorFor } from 'simplytyped';
 import { AnyMsyncFunc, NoArgsMsyncFunc } from '@jchptf/txtypes';
 import { IFactory } from '@jchptf/api';
 
-import { InjectableKey, ProviderToken } from '../token';
+import { InjectableKey } from '../token';
 import { ArgsAsInjectableKeys } from './args-as-provider-tokens.type';
 
-export type NestProvider =
-   IClassProvider | ConstructorFor<any> |
-   IValueProvider | IExistingProvider |
-   IFactoryProvider | IFactoryClassProvider |
-   IExistingFactoryClassProvider;
+export type NestProvider<Type> =
+   IClassProvider<Type> | (Type extends object ? ConstructorFor<Type> : never) |
+   IValueProvider<Type> | IExistingProvider<Type> |
+   IFactoryProvider<Type> | IFactoryClassProvider<Type> |
+   IExistingFactoryClassProvider<Type>;
 
-export interface IClassProvider
+export interface IClassProvider<Type>
 {
-   provide: ProviderToken<any>;
-   useClass: this['provide'] extends ProviderToken<infer Type>
-      ? Type extends object
-         ? ConstructorFor<Type> : never
-      : never;
+   provide: Type extends object ? InjectableKey<Type> : never;
+   useClass: Type extends object ? ConstructorFor<Type> : never;
 }
 
-export interface IValueProvider
+export interface IValueProvider<Type>
 {
-   provide: ProviderToken<any>;
-   useValue: this['provide'] extends ProviderToken<infer Type> ? Type : never;
+   provide: InjectableKey<Type>;
+   useValue: Type;
 }
 
-export type IFactoryProvider =
-   IFactoryProviderWithArgs | IFactoryProviderNoArgs;
+export type IFactoryProvider<Type> =
+   IFactoryProviderWithArgs<Type> | IFactoryProviderNoArgs<Type>;
 
-export interface IFactoryProviderWithArgs
+export interface IFactoryProviderWithArgs<Type>
 {
-   provide: ProviderToken<any>;
-   useFactory: this['provide'] extends ProviderToken<infer Type> ? AnyMsyncFunc<Type> : never;
+   provide: InjectableKey<Type>;
+   useFactory: AnyMsyncFunc<Type>;
    inject: ArgsAsInjectableKeys<this['useFactory']>;
 }
 
-interface IFactoryProviderNoArgs
+interface IFactoryProviderNoArgs<Type>
 {
-   provide: ProviderToken<any>;
-   useFactory: this['provide'] extends ProviderToken<infer Type> ? NoArgsMsyncFunc<Type> : never;
+   provide: InjectableKey<Type>;
+   useFactory: NoArgsMsyncFunc<Type>;
 }
 
-export interface IExistingProvider
+export interface IExistingProvider<Type>
 {
-   provide: ProviderToken<any>;
-   useExisting: this['provide'] extends ProviderToken<infer Type> ? InjectableKey<Type> : never;
+   provide: InjectableKey<Type>;
+   useExisting: InjectableKey<Type>;
 }
 
 /**
@@ -63,16 +60,14 @@ export interface IExistingProvider
  * the artifacts produced, which will only be available to modules that see or
  * import the provider tokens bound in those two distinct scenarios.
  */
-export interface IFactoryClassProvider
+export interface IFactoryClassProvider<Type>
 {
-   provide: ProviderToken<any>;
-   useFactoryClass: this['provide'] extends ProviderToken<infer Type>
-      ? ConstructorFor<IFactory<Type>> : never;
+   provide: InjectableKey<Type>;
+   useFactoryClass: ConstructorFor<IFactory<Type>>;
 }
 
-export interface IExistingFactoryClassProvider
+export interface IExistingFactoryClassProvider<Type>
 {
-   provide: ProviderToken<any>;
-   useExistingFactoryClass: this['provide'] extends ProviderToken<infer Type>
-      ? InjectableKey<IFactory<Type>> : never;
+   provide: InjectableKey<Type>;
+   useExistingFactory: InjectableKey<IFactory<Type>>;
 }

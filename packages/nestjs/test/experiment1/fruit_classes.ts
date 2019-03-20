@@ -4,16 +4,6 @@ import { UtilityContainer } from './classes';
 import { Socket } from './power_classes';
 
 @Injectable()
-export class FruitBox
-{
-   public fruit: Apple|Orange|undefined;
-
-   public connect(fruit: Apple|Orange): void {
-      this.fruit = fruit;
-   }
-}
-
-@Injectable()
 export class Apple
 {
    constructor()

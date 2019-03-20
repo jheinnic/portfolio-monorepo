@@ -48,7 +48,7 @@
         "doc": "node_modules/.bin/typedoc --mode file --module es2015 --target es015 --tsconfig tsconfig.json --externalPattern node_modules --excludeExternals --excludePrivate --out doc --gitRevision feature_bootstrap src typings",
         "pub": "yarn run build && lerna publish --registry http://localhost:4873",
         "dtslint": "dtslint types",
-        "test": "tsc -b test --clean && rm -rf build && mkdir build && tsc -b test && nyc mocha "
+        "test": "tsc -b test --clean && rm -rf build && mkdir build && tsc -b test && nyc mocha `find build -type f -name '*.spec.js'`"
     },
     "devDependencies": {
         "@types/chai": "^4.1.7",
