@@ -1,16 +1,14 @@
 import { DynamicModule, Module, Type } from '@nestjs/common';
 import {
-   buildDynamicModule, IDynamicModuleBuilder, InjectableKey, MODULE_IDENTIFIER,
+   InjectableKey
 } from '@jchptf/nestjs';
 import {
-   APPLICATION_MODULE, BAR_MODULE, BLENDER, DYNAMICS_MODULE, INJECTED_DEPENDENCY, LAMP,
-   LIBRARY_CLASS, LOCAL_DEPENDENCY, POWER_CONTAINER, SOCKET,
+   BLENDER, INJECTED_DEPENDENCY, LAMP, LIBRARY_CLASS,
+   LOCAL_DEPENDENCY, POWER_CONTAINER, SOCKET,
 } from './constants';
-import { Blender, Lamp, Socket } from './power_classes';
+import { Blender, IPluggable, Lamp, Socket } from './power_classes';
 import { Application, IConnectable, UtilityContainer } from './classes';
-import './alternate';
-import { IDynamicsModuleTypes } from './alternate';
-import { KeysExtending, KeysThatAre } from '@jchptf/objecttypes';
+import { buildDynamicModule, IDynamicModuleBuilder } from '@jchptf/nestjs';
 
 // export interface IApplicationModuleTypes<_X = any, _C = any>
 // {}
@@ -63,34 +61,33 @@ import { KeysExtending, KeysThatAre } from '@jchptf/objecttypes';
 
 export class DynamicsModule
 {
-   static forFeatureTwo<Consumer, T extends IConnectable<X>, X = any>(
-      dependency: Extract<keyof Consumer, KeysThatAre<Consumer, T>>,
-      exportAs: Extract<keyof Consumer, KeysThatAre<Consumer, UtilityContainer<T>>>,
-      selfMod: Type<any>): DynamicModule
+   static forFeatureTwo<X extends IConnectable<Y>, Y = any>(
+      consumerModule: Type<any>,
+      dependency: InjectableKey<X>,
+      exportAs: InjectableKey<UtilityContainer<X>>,
+   ): DynamicModule
    {
       return buildDynamicModule(
-         selfMod,
+         consumerModule,
          DynamicsModule,
-         (builder: IDynamicModuleBuilder<IDynamicsModuleTypes<T>, Consumer>) => {
-            builder.bindInputProvider<IDynamicsModuleTypes<any>, Consumer, T>({
+         (builder: IDynamicModuleBuilder) => {
+            builder.bindInputProvider({
                provide: INJECTED_DEPENDENCY,
                useExisting: dependency,
             })
                .bindProvider(
-                  {
-                     module: DYNAMICS_MODULE,
-                     provide: LIBRARY_CLASS,
-                     useValue: UtilityContainer,
-                  },
-                  exportAs
-               )
+               {
+                  provide: LIBRARY_CLASS,
+                  useClass: UtilityContainer,
+               },
+               exportAs,
+            )
                .bindProvider({
-                  module: DYNAMICS_MODULE,
                   provide: LOCAL_DEPENDENCY,
                   useFactory: () => { return new Map(); },
-               })
-         }
-      )
+               });
+         },
+      );
    }
 
    static forFeature(dependency: symbol, exportAs: symbol, selfMod: Type<any>): DynamicModule
@@ -149,7 +146,7 @@ export class FooModule
 */
 
 @Module({
-   imports: [DynamicsModule.forFeature(SOCKET, POWER_CONTAINER, BarModule)],
+   imports: [DynamicsModule.forFeatureTwo<Socket, IPluggable>(BarModule, SOCKET, POWER_CONTAINER)],
    providers: [
       {
          provide: SOCKET,
@@ -166,7 +163,6 @@ export class FooModule
 })
 export class BarModule
 {
-   public static readonly [MODULE_IDENTIFIER]: symbol = BAR_MODULE;
 }
 
 @Module({
@@ -176,6 +172,4 @@ export class BarModule
 })
 export class ApplicationModule
 {
-   public static readonly [MODULE_IDENTIFIER]: symbol = APPLICATION_MODULE;
 }
-
