@@ -2,7 +2,7 @@ import { Keys } from 'simplytyped';
 import { If } from './boolean';
 import { Extends, Intersects, IsExactly, StronglyExtends } from './classification';
 
-type KeyValue<T, K extends keyof T, IgnoreUndef extends boolean> =
+type KeyValue<T, K extends keyof T, IgnoreUndef extends boolean = true> =
    If<IgnoreUndef, Required<T>[K], T[K], T[K], T[K]>;
 
 export type KeysThatAre<T, CheckType, IgnoreUndef extends boolean = true> = {
