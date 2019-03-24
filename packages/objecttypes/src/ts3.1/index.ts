@@ -1,6 +1,7 @@
 export * from '../boolean';
 export * from '../classification';
 export * from '../blank';
+export * from '../guards';
 export * from '../value_func';
 export * from '../getter';
 export * from '../setter';

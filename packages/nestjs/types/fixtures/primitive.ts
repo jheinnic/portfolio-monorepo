@@ -1,3 +1,5 @@
+import { Injectable } from '@nestjs/common';
+
 export class Class { x = 'hey'; }
 export class OneSubclass extends Class { y = 'you'; }
 export class AnotherSubclass extends Class { x = 'you'; y = 'hey'; }
@@ -18,16 +20,21 @@ export interface ISomething {
    doIt(): number;
 }
 
+@Injectable()
 export class SomethingOne implements ISomething {
    doIt(): number { return 1; }
 
    name(): string { return 'One'; }
 }
+
+@Injectable()
 export class SomethingTwo implements ISomething {
    doIt(): number { return 2; }
 
    nameTwo(): string { return 'Two'; }
 }
+
+@Injectable()
 export class SomethingThree implements ISomething {
    doIt(): number { return 3; }
 

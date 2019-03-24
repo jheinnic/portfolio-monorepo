@@ -1,4 +1,4 @@
-import { getLocalProviderToken, getModuleIdentifier, } from '@jchptf/nestjs';
+import { getLocalProviderTokenString, getModuleIdentifier, } from '@jchptf/nestjs';
 
 import { IConcurrentWorkFactory } from '../interfaces';
 
@@ -13,4 +13,4 @@ export const COROUTINES_MODULE = getModuleIdentifier('@jchptf/coroutines');
 // export const ASYNC_SINK_TYPE = 'AsyncSink<any>';
 
 export const CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN =
-   getLocalProviderToken<IConcurrentWorkFactory>('IConcurrentWorkFactory');
+   getLocalProviderTokenString<IConcurrentWorkFactory>('IConcurrentWorkFactory');

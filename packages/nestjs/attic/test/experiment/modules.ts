@@ -1,14 +1,12 @@
 import { DynamicModule, Module, Type } from '@nestjs/common';
-import {
-   InjectableKey
-} from '@jchptf/nestjs';
+
+import { InjectableKey, buildDynamicModule, IDynamicModuleBuilder } from '@jchptf/nestjs';
 import {
    BLENDER, INJECTED_DEPENDENCY, LAMP, LIBRARY_CLASS,
    LOCAL_DEPENDENCY, POWER_CONTAINER, SOCKET,
 } from './constants';
 import { Blender, IPluggable, Lamp, Socket } from './power_classes';
 import { Application, IConnectable, UtilityContainer } from './classes';
-import { buildDynamicModule, IDynamicModuleBuilder } from '@jchptf/nestjs';
 
 // export interface IApplicationModuleTypes<_X = any, _C = any>
 // {}
@@ -68,24 +66,25 @@ export class DynamicsModule
    ): DynamicModule
    {
       return buildDynamicModule(
-         consumerModule,
          DynamicsModule,
+         consumerModule,
          (builder: IDynamicModuleBuilder) => {
             builder.bindInputProvider({
                provide: INJECTED_DEPENDENCY,
                useExisting: dependency,
-            })
-               .bindProvider(
+            }).bindProvider(
                {
                   provide: LIBRARY_CLASS,
                   useClass: UtilityContainer,
                },
                exportAs,
-            )
-               .bindProvider({
+            ).bindProvider(
+               {
                   provide: LOCAL_DEPENDENCY,
-                  useFactory: () => { return new Map(); },
-               });
+                  useFactory: () => { return new Map<string, any>(); },
+               },
+               false,
+            );
          },
       );
    }

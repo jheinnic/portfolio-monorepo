@@ -33,7 +33,8 @@ export function hasConfigMetadata<T extends object>(configClass: ConstructorFor<
 //    }
 // }
 
-// export function getProviderToken<T extends object>(configClass: ConstructorFor<T>): ProviderToken<T>
+// export function getProviderToken<T extends object>(
+//    configClass: ConstructorFor<T>): ProviderToken<T>
 // {
 //    if (!configClass) {
 //       throw illegalArgs('configClass argument must be defined.');

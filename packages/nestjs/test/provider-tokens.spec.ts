@@ -2,7 +2,7 @@ import chai from 'chai';
 import { assert, HasType, IsExactType, NotHasType } from 'conditional-type-checks';
 
 import {
-   getGlobalProviderToken, getLocalProviderToken, getModuleIdentifier, ModuleIdentifier,
+   getGlobalProviderTokenString, getLocalProviderTokenString, ModuleIdentifier,
 } from '@jchptf/nestjs';
 import { HasImpliedType, IsImpliedType } from '@jchptf/api';
 import {
@@ -39,8 +39,8 @@ describe('ProviderTokens', () => {
 
    it('Maintains type information on tokens retrieved from a dictionary', () => {
       const MY_MOD: ModuleIdentifier = getModuleIdentifier('MyModule');
-      const FOO = getLocalProviderToken<Class>(MY_MOD, 'Class', 'LocalClass');
-      const BAR = getGlobalProviderToken<ISomething>(MY_MOD, 'Something', 'GlobalClass');
+      const FOO = getLocalProviderTokenString<Class>(MY_MOD, 'Class', 'LocalClass');
+      const BAR = getGlobalProviderTokenString<ISomething>(MY_MOD, 'Something', 'GlobalClass');
 
       // const diDict: TokenDictionary<ITemplate> = {
       //    foo: FOO,
@@ -74,14 +74,14 @@ describe('ProviderTokens', () => {
    it('Maintains equality when created equivalently', () => {
       const MY_MOD: ModuleIdentifier = getModuleIdentifier('MyModule');
 
-      const FOO_ONE = getLocalProviderToken<Class>(MY_MOD, 'Class', 'LocalClass');
-      const FOO_TWO = getLocalProviderToken<Class>(MY_MOD, 'Class', 'LocalClass');
-      const BAR_ONE = getLocalProviderToken<ISomething>(MY_MOD, 'SomethingOne', 'LocalClass');
-      const BAR_TWO = getLocalProviderToken<ISomething>(MY_MOD, 'SomethingTwo', 'LocalClass');
-      // const BAR_THREE = getLocalProviderToken<ISomething>(MY_MOD, 'Something', 'LocalClass');
-      const BAZ = getLocalProviderToken<Class>(MY_MOD, 'Class', 'OtherClass');
-      const LOB_ONE = getLocalProviderToken<SomethingOne>(MY_MOD, 'SomethingOne', 'LocalClass');
-      const LOB_TWO = getLocalProviderToken<SomethingTwo>(MY_MOD, 'SomethingTwo', 'LocalClass');
+      const FOO_ONE = getLocalProviderTokenString<Class>(MY_MOD, 'Class', 'LocalClass');
+      const FOO_TWO = getLocalProviderTokenString<Class>(MY_MOD, 'Class', 'LocalClass');
+      const BAR_ONE = getLocalProviderTokenString<ISomething>(MY_MOD, 'SomethingOne', 'LocalClass');
+      const BAR_TWO = getLocalProviderTokenString<ISomething>(MY_MOD, 'SomethingTwo', 'LocalClass');
+      // const BAR_THREE = getLocalProviderTokenString<ISomething>(MY_MOD, 'Something', 'LocalClass');
+      const BAZ = getLocalProviderTokenString<Class>(MY_MOD, 'Class', 'OtherClass');
+      const LOB_ONE = getLocalProviderTokenString<SomethingOne>(MY_MOD, 'SomethingOne', 'LocalClass');
+      const LOB_TWO = getLocalProviderTokenString<SomethingTwo>(MY_MOD, 'SomethingTwo', 'LocalClass');
 
       // Same name and injection type => Tokens are equal and have the same type.
       expect(FOO_ONE).to.be.equal(FOO_TWO);

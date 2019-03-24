@@ -6,7 +6,7 @@ import { Glob, sync as globSync } from 'glob';
 import * as assert from 'assert';
 import * as path from 'path';
 
-import { getLocalProviderToken } from '@jchptf/nestjs';
+import { getLocalProviderTokenString, ModuleIdentifier } from '@jchptf/nestjs';
 
 import { CONFIG_READER_PROVIDER, CONFIG_LOADER_PROVIDER } from './di';
 import {
@@ -29,6 +29,7 @@ export class ConfigClassFinder implements IConfigClassFinder
    private readonly resolvedSearchRoot: string;
 
    constructor(
+      private readonly moduleId: ModuleIdentifier,
       private readonly loadConfigGlob: string,
       searchRootDir?: string,
    )
@@ -115,7 +116,8 @@ export class ConfigClassFinder implements IConfigClassFinder
          mergeMap(
             (clazz: ConstructorFunction<any>) => {
                const retValOne = {
-                  provide: getLocalProviderToken(clazz.name),
+                  provide: getLocalProviderTokenString(
+                     this.moduleId, clazz.name),
                   useFactory: async (
                      configLoader: IConfigLoader, configReader: IConfigReader) =>
                      configLoader.loadInstance(clazz, configReader),

@@ -1,8 +1,7 @@
 import { DotenvConfigOptions } from 'dotenv';
 
-import {
-   getDynamicModuleKind, getLocalProviderToken, getModuleIdentifier,
-} from '@jchptf/nestjs';
+import { getLocalProviderTokenString, getModuleIdentifier } from '@jchptf/nestjs';
+
 import { IConfigReader, IConfigLoader, IConfigMetadataHelper } from '../interfaces';
 
 export const CONFIG_MODULE_ID = getModuleIdentifier('@jchptf/config');
@@ -13,13 +12,13 @@ export const CONFIG_MODULE_ID = getModuleIdentifier('@jchptf/config');
 // const DCO = getNamedTypeIntent<DotenvConfigOptions|false>('DotenvConfigOptions');
 
 export const CONFIG_METADATA_HELPER_PROVIDER =
-   getLocalProviderToken<IConfigMetadataHelper>('IConfigMetadataHelper');
+   getLocalProviderTokenString<IConfigMetadataHelper>(CONFIG_MODULE_ID, 'IConfigMetadataHelper');
 export const CONFIG_READER_PROVIDER =
-   getLocalProviderToken<IConfigReader>('IConfigReader');
+   getLocalProviderTokenString<IConfigReader>(CONFIG_MODULE_ID, 'IConfigReader');
 export const CONFIG_LOADER_PROVIDER =
-   getLocalProviderToken<IConfigLoader>('IConfigLoader');
+   getLocalProviderTokenString<IConfigLoader>(CONFIG_MODULE_ID, 'IConfigLoader');
 export const DOTENV_CONFIG_OPTIONS =
-   getLocalProviderToken<DotenvConfigOptions|false>('DotenvConfigOptions');
+   getLocalProviderTokenString<DotenvConfigOptions|false>(CONFIG_MODULE_ID, 'DotenvConfigOptions');
 
-export const CONFIG_DYNAMIC_MODULE_TYPE =
-   getDynamicModuleKind(CONFIG_MODULE_ID);
+// export const CONFIG_DYNAMIC_MODULE_TYPE =
+//    getDynamicModuleKind(CONFIG_MODULE_ID);

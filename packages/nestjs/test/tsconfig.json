@@ -10,6 +10,7 @@
             "@jchptf/api": ["../../api/src"],
             "@jchptf/objecttypes": ["../../objecttypes/src"],
             "@jchptf/txtypes": ["../../txtypes/src"],
+            "@jchptf/tupletypes": ["../../tupletypes/src"],
             "@jchptf/nestjs": ["../src"]
         }
     },
@@ -17,6 +18,7 @@
         { "path": "../../api/src" },
         { "path": "../../objecttypes/src" },
         { "path": "../../txtypes/src" },
+        { "path": "../../tupletypes/src" },
         { "path": "../src" }
     ],
     "include": [ "./**/*.ts" ]

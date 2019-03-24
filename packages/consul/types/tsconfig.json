@@ -1,0 +1,38 @@
+{
+    "compilerOptions": {
+        "outDir": "../build",
+
+        /* dtslint does not seem to comprehend the 'extends' key... */
+        "target": "es2015",
+        "module": "commonjs",
+        "lib": ["es2015", "esnext.asynciterable", "es2017.object", "dom"],
+        "strict": true,
+        "noEmit": false,
+        "skipLibCheck": true,
+        "alwaysStrict": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "noImplicitReturns": true,
+        "preserveConstEnums": true,
+        "importHelpers": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "allowUnreachableCode": false,
+        "allowUnusedLabels": false,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        /* "noUnusedLocals": true, */
+
+        /* Need this to tolerate blank index.d.ts */
+        "noUnusedLocals": false,
+
+        /* dtslint needs these to operate in this directory */
+        "baseUrl": ".",
+        "paths": {
+        }
+    }
+}

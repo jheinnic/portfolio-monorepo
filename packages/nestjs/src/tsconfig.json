@@ -9,12 +9,14 @@
         "paths": {
             "@jchptf/api": ["../../api/src"],
             "@jchptf/objecttypes": ["../../objecttypes/src"],
+            "@jchptf/tupletypes": ["../../tupletypes/src"],
             "@jchptf/txtypes": ["../../txtypes/src"]
         }
     },
     "references": [
         { "path": "../../api/src" },
         { "path": "../../objecttypes/src" },
+        { "path": "../../tupletypes/src" },
         { "path": "../../txtypes/src" }
     ],
     "include": [ "./**/*.ts" ]

@@ -1,53 +1,33 @@
-import { DynamicModule, Global, Module } from '@nestjs/common';
-import {
-   CONSUL_CLIENT_PROVIDER, CONSUL_EVENT_EMITTER_PROVIDER, CONSUL_OPTIONS_PROVIDER,
-} from './consul.constants';
-import consul, { Consul as IConsul, ConsulOptions } from 'consul';
+import { DynamicModule, Global, Module, Type } from '@nestjs/common';
+import { CONSUL_CLIENT_PROVIDER } from './consul-client.provider';
+import { ConsulOptions } from 'consul';
 import { EventEmitter } from 'events';
-import * as util from 'util';
 
-import { DynamicModuleParam, asyncProviderFromParam } from '@jchptf/nestjs';
+import { buildDynamicModule, IDynamicModuleBuilder, InputProviderParam } from '@jchptf/nestjs';
+
+import {
+   CONSUL_EVENT_EMITTER_PROVIDER_TOKEN, CONSUL_OPTIONS_PROVIDER_TOKEN,
+} from './consul.constants';
+import { CONSUL_EVENT_EMITTER_PROVIDER, AA } from './consul-event-emitter.provider';
 
 @Global()
 @Module({})
 export class ConsulModule
 {
-   public static forRoot(options: DynamicModuleParam<ConsulOptions, any>): DynamicModule
+   public static forRoot(
+      rootModule: Type<any>,
+      options: InputProviderParam<typeof CONSUL_OPTIONS_PROVIDER_TOKEN, ConsulOptions>,
+   ): DynamicModule
    {
-      const configProviders = asyncProviderFromParam(CONSUL_OPTIONS_PROVIDER, options);
-
-      const consulProvider = {
-         provide: CONSUL_CLIENT_PROVIDER,
-         useFactory: async (
-            consulOptions: ConsulOptions, emitter: EventEmitter,
-         ): Promise<IConsul> => {
-            // if (!get(consulOptions, 'defaults.timeout')) {
-            //    set(consulOptions, 'defaults.timeout', 5000);
-            // }
-            return await new consul({
-               ...consulOptions,
-               promisify: util.promisify,
-               defaults: {
-                  ...consulOptions.defaults,
-                  timeout: 5000,
-                  ctx: emitter,
-               },
-            });
+      return buildDynamicModule(
+         ConsulModule,
+         rootModule,
+         (builder: IDynamicModuleBuilder): void => {
+            builder.bindInputProvider(options)
+               .bindProvider(CONSUL_EVENT_EMITTER_PROVIDER, false)
+               .bindProvider(AA, false)
+               .bindProvider(CONSUL_CLIENT_PROVIDER, true);
          },
-         inject: [CONSUL_OPTIONS_PROVIDER, CONSUL_EVENT_EMITTER_PROVIDER],
-      };
-
-      const consulEventEmitterProvider = {
-         provide: CONSUL_EVENT_EMITTER_PROVIDER,
-         useFactory: async (): Promise<EventEmitter> => {
-            return new EventEmitter();
-         },
-      };
-
-      return {
-         module: ConsulModule,
-         providers: [...configProviders, consulProvider, consulEventEmitterProvider],
-         exports: [consulProvider],
-      };
+      );
    }
 }

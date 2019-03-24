@@ -3,142 +3,144 @@ import { toArray } from 'rxjs/operators';
 import { DotenvConfigOptions } from 'dotenv';
 
 import {
-   DynamicModuleParam, MODULE_IDENTIFIER, ModuleIdentifier,
-   BoundDynamicModuleParam, compileDynamicModuleMetadata,
+   asyncBuildDynamicModule, buildDynamicModule, IDynamicModuleBuilder, InputProviderParam,
+   ModuleIdentifier, NestFactory,
 } from '@jchptf/nestjs';
 
 import { IConfigClassFinder } from '../interfaces';
 import { ConfigClassFinder } from '../config-class-finder.class';
 import { CONFIG_METADATA_HELPER } from '../config-metadata-helper.const';
 import {
-   CONFIG_READER_PROVIDER, CONFIG_LOADER_PROVIDER, DOTENV_CONFIG_OPTIONS,
-   CONFIG_METADATA_HELPER_PROVIDER, CONFIG_MODULE_ID,
+   CONFIG_LOADER_PROVIDER, CONFIG_METADATA_HELPER_PROVIDER, CONFIG_READER_PROVIDER,
+   DOTENV_CONFIG_OPTIONS,
 } from './config.constants';
 import { ConfigLoader } from '../config-loader.service';
 import { ConfigReader } from '../config-reader.service';
+import { DotEnvConfigParam } from './dot-env-config-param.type';
 
 @Global()
 @Module({})
 export class ConfigModule
 {
-   public static readonly [MODULE_IDENTIFIER]: ModuleIdentifier = CONFIG_MODULE_ID;
+   // public static readonly [MODULE_IDENTIFIER]: ModuleIdentifier = CONFIG_MODULE_ID;
 
    protected static readonly defaultGlob: string = 'config/**/!(*.d).{ts,js}';
 
-   static forRoot(rootModule: Type<any>, dotenvConfig: DotenvConfigOptions): DynamicModule
+   static forRoot(
+      rootModule: Type<any>,
+      dotenvConfig: false|DotenvConfigOptions,
+   ): DynamicModule
    {
-      return ConfigModule.withDotenvProvider(
+      return ConfigModule.forRootByProvider(
          rootModule,
          {
+            provide: DOTENV_CONFIG_OPTIONS,
             useValue: dotenvConfig,
-            bindTo: DOTENV_CONFIG_OPTIONS,
          },
       );
    }
 
-   static forRootAsync(
+   static forRootByProvider<Factory extends NestFactory<false|DotenvConfigOptions>>(
       rootModule: Type<any>,
-      dotenvInputParam: DynamicModuleParam<false|DotenvConfigOptions>): DynamicModule
+      dotEnvParam: DotEnvConfigParam<Factory>,
+   ): DynamicModule
    {
-      const dotenvBinding: BoundDynamicModuleParam<false|DotenvConfigOptions> = {
-         ...dotenvInputParam,
-         bindTo: DOTENV_CONFIG_OPTIONS,
-      };
+      return buildDynamicModule(
+         ConfigModule,
+         rootModule,
+         (builder: IDynamicModuleBuilder) => {
+            builder.bindInputProvider(dotEnvParam);
 
-      return ConfigModule.withDotenvProvider(rootModule, dotenvBinding);
+            ConfigModule.withRootProviders(builder);
+         },
+      );
    }
 
    static async forRootWithFeature(
-      rootModule: Type<any>,
-      dotenvConfig: DotenvConfigOptions,
+      rootFeatureModule: Type<any>,
+      featureModuleId: ModuleIdentifier,
+      dotenvConfig: false|DotenvConfigOptions,
       loadConfigGlob: string,
       resolveGlobRoot?: string): Promise<DynamicModule>
    {
-      const featureProviders = await ConfigModule.fromFeature(loadConfigGlob, resolveGlobRoot);
-
-      return ConfigModule.withDotenvProvider(
-         rootModule,
+      return ConfigModule.forRootByProviderWithFeature(
+         rootFeatureModule,
+         featureModuleId,
          {
-            bindTo: DOTENV_CONFIG_OPTIONS,
+            provide: DOTENV_CONFIG_OPTIONS,
             useValue: dotenvConfig,
          },
-         featureProviders,
+         loadConfigGlob,
+         resolveGlobRoot,
       );
    }
 
-   static async forRootWithFeatureAsync(
-      rootModule: Type<any>,
-      asyncDotenvConfig: DynamicModuleParam<DotenvConfigOptions>,
+   static async forRootByProviderWithFeature(
+      rootFeatureModule: Type<any>,
+      featureModuleId: ModuleIdentifier,
+      dotEnvParam:
+         InputProviderParam<typeof DOTENV_CONFIG_OPTIONS, false|DotenvConfigOptions>,
       loadConfigGlob: string,
       resolveGlobRoot?: string,
    ): Promise<DynamicModule>
    {
-      const dotenvBinding = {
-         ...asyncDotenvConfig,
-         bindTo: DOTENV_CONFIG_OPTIONS,
-      };
-      const featureProviders = await ConfigModule.fromFeature(loadConfigGlob, resolveGlobRoot);
-
-      return ConfigModule.withDotenvProvider(
-         rootModule, dotenvBinding, featureProviders,
+      return asyncBuildDynamicModule(
+         ConfigModule,
+         rootFeatureModule,
+         async (builder: IDynamicModuleBuilder) => {
+            builder.bindInputProvider(dotEnvParam);
+            ConfigModule.withRootProviders(builder);
+            await ConfigModule.withFeatureProviders(
+               builder, featureModuleId, loadConfigGlob, resolveGlobRoot);
+         },
       );
    }
 
    public static async forFeature(
-      loadConfigGlob: string, resolveGlobRoot?: string): Promise<DynamicModule>
+      featureModule: Type<any>, featureModuleId: ModuleIdentifier,
+      loadConfigGlob: string, resolveGlobRoot?: string,
+   ): Promise<DynamicModule>
    {
-      const featureProviders = await ConfigModule.fromFeature(loadConfigGlob, resolveGlobRoot);
-
-      return {
-         module: ConfigModule,
-         providers: featureProviders,
-         exports: featureProviders,
-      };
-   }
-
-   private static withDotenvProvider(
-      rootModule: Type<any>,
-      dotenvProviders: BoundDynamicModuleParam<false|DotenvConfigOptions>,
-      featureProviders: Provider[] = [],
-   ): DynamicModule
-   {
-      console.log('Featuring:', featureProviders);
-      return compileDynamicModuleMetadata(
-         {
-            module: ConfigModule,
-            imports: [],
-            providers: [
-               ...STANDARD_PROVIDERS,
-               ...featureProviders,
-            ],
-            exports: [
-               ...featureProviders,
-            ],
+      return asyncBuildDynamicModule(
+         ConfigModule,
+         featureModule,
+         async (builder: IDynamicModuleBuilder) => {
+            await ConfigModule.withFeatureProviders(
+               builder, featureModuleId, loadConfigGlob, resolveGlobRoot);
          },
-         [dotenvProviders],
-         [],
-         rootModule,
       );
    }
 
-   private static async fromFeature(
-      loadConfigGlob: string, resolveGlobRoot?: string): Promise<Provider[]>
+   private static withRootProviders(builder: IDynamicModuleBuilder): void
+   {
+      for (const nextFeature of STANDARD_PROVIDERS) {
+         builder.bindProvider(nextFeature, false);
+      }
+   }
+
+   private static async withFeatureProviders(
+      builder: IDynamicModuleBuilder,
+      featureModuleId: ModuleIdentifier,
+      loadConfigGlob: string,
+      resolveGlobRoot?: string): Promise<void>
    {
       const configClassFinder: IConfigClassFinder =
-         new ConfigClassFinder(loadConfigGlob, resolveGlobRoot);
+         new ConfigClassFinder(featureModuleId, loadConfigGlob, resolveGlobRoot);
 
       // These are the per-configuration object providers that
-      const configProviders: Provider[] =
+      const featureProviders: Provider[] =
          await configClassFinder.loadConfigAsync()
             .pipe(
                toArray(),
             )
             .toPromise();
 
-      console.log(configProviders);
-      return configProviders;
-   }
+      console.log(featureProviders);
 
+      for (const nextFeature of featureProviders) {
+         builder.bindProvider(nextFeature, true);
+      }
+   }
 }
 
 const STANDARD_PROVIDERS = [
