@@ -1,13 +1,16 @@
 import { Nominal } from '@jchptf/api';
-import { ModuleIdentifier } from './module-identifier.type';
+import { Type } from '@nestjs/common';
 
 // export const GLOBAL = 'GlobalModule';
+export const MODULE_ID = Symbol('moduleId');
+export interface IModule extends Type<any> {
+   [MODULE_ID]: symbol;
+}
 
 export const localTag: unique symbol = Symbol('localTag');
 export const globalTag: unique symbol = Symbol('globalTag');
 
-export class ModuleScopingTags<ModuleId extends ModuleIdentifier,
-   IsGlobal extends 'global' | 'local'>
+export class ModuleScopingTags<ModuleId extends symbol, IsGlobal extends 'global' | 'local'>
 {
    [localTag]?: ModuleId;
 
@@ -15,29 +18,21 @@ export class ModuleScopingTags<ModuleId extends ModuleIdentifier,
 }
 
 // Scope building blocks.
-export type GlobalScope = ModuleScopingTags<string, 'global'>;
-export type LocalScope<Module extends ModuleIdentifier> = ModuleScopingTags<Module, 'local'>;
+export type GlobalScope = ModuleScopingTags<any, 'global'>;
+export type LocalScope<Module extends IModule> =
+   ModuleScopingTags<Module[typeof MODULE_ID], 'local'>;
 
 // Base abstraction.  Treat as abstract.
-export type ProviderToken<Token extends symbol | string, Component extends {}> =
-   Nominal<Token, 'ProviderToken', Component>
-// StringQualifier<'ProviderToken', Component> |
-// SymbolQualifier<'ProviderToken', Component>
+export type ProviderToken<Component extends {}> =
+   Nominal<string|symbol, 'ProviderToken', Component>
 ;
-
 // Use these for allocations
-export type GlobalProviderToken<
-   Component extends {}, Token extends symbol | string = symbol| string
-> =
-   ProviderToken<Token, Component> & GlobalScope;
+export type GlobalProviderToken<Component extends {}> =
+   ProviderToken<Component> & GlobalScope;
 
-export type LocalProviderToken<
-   Component extends {},
-   Module extends ModuleIdentifier,
-   Token extends symbol | string = symbol|string,
-> =
-   ProviderToken<Token, Component> & LocalScope<Module>;
+export type LocalProviderToken<Component extends {}, Module extends IModule> =
+   ProviderToken<Component> & LocalScope<Module>;
 
 // Use this for parameter binding
-export type VisibleProviderToken<Component extends {}, Module extends ModuleIdentifier> =
-   ProviderToken<symbol | string, Component> & (LocalScope<Module> | GlobalScope);
+export type VisibleProviderToken<Component extends {}, Module extends IModule> =
+   ProviderToken<Component> & (LocalScope<Module> | GlobalScope);

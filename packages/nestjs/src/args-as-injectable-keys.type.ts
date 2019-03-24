@@ -1,7 +1,7 @@
 import { LengthOf } from '@jchptf/tupletypes';
 
 import { InjectableKey } from './injectable-key.type';
-import { ModuleIdentifier } from './module-identifier.type';
+import { IModule } from './provider-token.type';
 
 // export type ArgsAsProviderTokens<F extends AnyMsyncFunc> = F extends () => any ? void[]
 //    : F extends (x1: infer X1) => any
@@ -35,7 +35,7 @@ import { ModuleIdentifier } from './module-identifier.type';
  * one of this library's ProviderTokens, suitably bound to T, other NestJs-supported keys,
  * such as Class objects, for which this library provides no competing augmentation.
  */
-export type ArgsAsInjectableKeys<F extends () => any, Mod extends ModuleIdentifier> =
+export type ArgsAsInjectableKeys<F extends () => any, Mod extends IModule> =
    LengthOf<Parameters<F>> extends 0
    ? [] : F extends (x1: infer X1) => any
       ? [InjectableKey<X1, Mod>]

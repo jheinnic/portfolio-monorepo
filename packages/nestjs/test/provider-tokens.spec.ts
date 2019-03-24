@@ -2,12 +2,13 @@ import chai from 'chai';
 import { assert, HasType, IsExactType, NotHasType } from 'conditional-type-checks';
 
 import {
-   getGlobalProviderTokenString, getLocalProviderTokenString, ModuleIdentifier,
+   blessGlobalProviderToken, blessLocalProviderToken, LocalProviderToken,
 } from '@jchptf/nestjs';
 import { HasImpliedType, IsImpliedType } from '@jchptf/api';
 import {
    AnotherSubclass, Class, ISomething, OneSubclass, SomethingOne, SomethingThree, SomethingTwo,
 } from './fixtures';
+import { MyModule } from './fixtures/my.module';
 
 // chai.use(sinonChai);
 const expect = chai.expect;
@@ -38,9 +39,9 @@ describe('ProviderTokens', () => {
    });
 
    it('Maintains type information on tokens retrieved from a dictionary', () => {
-      const MY_MOD: ModuleIdentifier = getModuleIdentifier('MyModule');
-      const FOO = getLocalProviderTokenString<Class>(MY_MOD, 'Class', 'LocalClass');
-      const BAR = getGlobalProviderTokenString<ISomething>(MY_MOD, 'Something', 'GlobalClass');
+      // const MY_MOD: ModuleIdentifier = Symbol('MyModule');
+      const FOO = blessLocalProviderToken<Class, typeof MyModule>('localClass', MyModule);
+      const BAR = blessGlobalProviderToken<ISomething>('SomethingGlobal');
 
       // const diDict: TokenDictionary<ITemplate> = {
       //    foo: FOO,
@@ -72,18 +73,30 @@ describe('ProviderTokens', () => {
    });
 
    it('Maintains equality when created equivalently', () => {
-      const MY_MOD: ModuleIdentifier = getModuleIdentifier('MyModule');
+      function blessIt<Component extends {}>(
+         token: string|symbol): LocalProviderToken<Component, typeof MyModule>
+      {
+         return blessLocalProviderToken<Component, typeof MyModule>(token, MyModule);
+      }
 
-      const FOO_ONE = getLocalProviderTokenString<Class>(MY_MOD, 'Class', 'LocalClass');
-      const FOO_TWO = getLocalProviderTokenString<Class>(MY_MOD, 'Class', 'LocalClass');
-      const BAR_ONE = getLocalProviderTokenString<ISomething>(MY_MOD, 'SomethingOne', 'LocalClass');
-      const BAR_TWO = getLocalProviderTokenString<ISomething>(MY_MOD, 'SomethingTwo', 'LocalClass');
-      // const BAR_THREE = getLocalProviderTokenString<ISomething>(MY_MOD, 'Something', 'LocalClass');
-      const BAZ = getLocalProviderTokenString<Class>(MY_MOD, 'Class', 'OtherClass');
-      const LOB_ONE = getLocalProviderTokenString<SomethingOne>(MY_MOD, 'SomethingOne', 'LocalClass');
-      const LOB_TWO = getLocalProviderTokenString<SomethingTwo>(MY_MOD, 'SomethingTwo', 'LocalClass');
+      const A = Symbol('SomethingTwo');
+      const B = Symbol('SomethingTwo');
+      const FOO_ONE = blessIt<Class>('Class');
+      const FOO_TWO = blessIt<Class>('Class');
+      const BAR_ONE = blessIt<ISomething>('SomethingOne');
+      const BAR_TWO = blessIt<ISomething>('SomethingTwo');
+      const ZIP_ONE = blessIt<ISomething>(A);
+      const ZIP_TWO = blessIt<ISomething>(B);
+      // const BAR_THREE = blessIt<ISomething>('Something');
+      const BAZ = blessIt<Class>('OtherClass');
+      const LOB_ONE = blessIt<SomethingOne>('SomethingOne');
+      const LOB_TWO = blessIt<SomethingTwo>('SomethingTwo');
 
-      // Same name and injection type => Tokens are equal and have the same type.
+      // Use a qualifier and a type name to decide each token name.  Injection type is
+      // base type or a subtype used for polymorphic compatibility check.  Injection
+      // type is not used in the token name.
+
+      // Same qualifier and injection type => Tokens are equal and have the same type.
       expect(FOO_ONE).to.be.equal(FOO_TWO);
       assert<IsExactType<typeof FOO_ONE, typeof FOO_TWO>>(true);
 
@@ -102,10 +115,14 @@ describe('ProviderTokens', () => {
       assert<NotHasType<typeof FOO_ONE, typeof LOB_TWO>>(true);
       assert<NotHasType<typeof LOB_TWO, typeof FOO_ONE>>(true);
 
-      // Same names and different injections subtypes with a common base type =>
-      // Tokens are unequal and have the same type
+      // ???
       expect(BAR_ONE).to.not.be.equal(BAR_TWO);
       assert<IsExactType<typeof BAR_ONE, typeof BAR_TWO>>(true);
+
+      // Same names and different injected subtypes, but bound to tokens through a
+      // common base type.  Tokens are unequal but type-wise compatible.
+      expect(ZIP_ONE).to.not.be.equal(ZIP_TWO);
+      assert<IsExactType<typeof ZIP_ONE, typeof ZIP_TWO>>(true);
 
       // Different names but same injection types => Tokens are unequal and have same type.
       expect(FOO_ONE).to.not.be.equal(BAZ);

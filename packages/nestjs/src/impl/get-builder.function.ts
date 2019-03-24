@@ -4,14 +4,13 @@ import { Builder, Ctor } from 'fluent-interface-builder';
 import { IFactory } from '@jchptf/api';
 import { IWorkingDynamicModule } from './working-dynamic-module.interface';
 import { IDynamicModuleBuilderImpl } from './dynamic-module-builder-impl.interface';
-import { LocalProviderToken } from 'provider-token.type';
+import { IModule, LocalProviderToken } from 'provider-token.type';
 import { InjectableKey } from 'injectable-key.type';
 import { NestFactory } from 'nest-factory.type';
 import { ArgsAsInjectableKeys } from 'args-as-injectable-keys.type';
-import { ModuleIdentifier } from 'module-identifier.type';
 
-export function getBuilder<Supplier extends string | symbol, Consumer extends string | symbol>(
-   supplier: Type<any>, consumer: Type<any>): IDynamicModuleBuilderImpl<Supplier, Consumer>
+export function getBuilder<Supplier extends IModule, Consumer extends IModule>(
+   supplier: Supplier, consumer: Consumer): IDynamicModuleBuilderImpl<Supplier, Consumer>
 {
    const BUILDER_CTOR: Ctor<IWorkingDynamicModule, IDynamicModuleBuilderImpl<Supplier, Consumer>> =
       new Builder<IWorkingDynamicModule, IDynamicModuleBuilderImpl<Supplier, Consumer>>()
@@ -210,7 +209,7 @@ export function getBuilder<Supplier extends string | symbol, Consumer extends st
          //       },
          // )
          .chain('bindProvider', (
-            provider: Exclude<Provider, Type<any>>, withExport: boolean
+            provider: Exclude<Provider, Type<any>>, withExport: boolean,
             ) => (ctx: IWorkingDynamicModule): IWorkingDynamicModule => {
                if (withExport) {
                   return {
@@ -337,7 +336,7 @@ function appendSupplierImportProvider(
    };
 }
 
-function appendSupplierExportProvider<Component extends {}, Consumer extends ModuleIdentifier>(
+function appendSupplierExportProvider<Component extends {}, Consumer extends IModule>(
    ctx: IWorkingDynamicModule, newProvider: Provider,
    provide: LocalProviderToken<Component, Consumer>)
 {
@@ -351,7 +350,7 @@ function appendSupplierExportProvider<Component extends {}, Consumer extends Mod
    };
 }
 
-function appendConsumerProvider<Component extends {}, Supplier extends ModuleIdentifier>(
+function appendConsumerProvider<Component extends {}, Supplier extends IModule>(
    ctx: IWorkingDynamicModule, newProvider: Provider,
    provide: LocalProviderToken<Component, Supplier>)
 {

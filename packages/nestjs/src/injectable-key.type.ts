@@ -1,5 +1,5 @@
 import { ConstructorFor } from 'simplytyped';
-import { VisibleProviderToken } from './provider-token.type';
+import { IModule, VisibleProviderToken } from './provider-token.type';
 
-export type InjectableKey<Component extends {}, Module extends string|symbol> =
+export type InjectableKey<Component extends {}, Module extends IModule> =
    VisibleProviderToken<Component, Module> | ConstructorFor<Component>;

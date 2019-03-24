@@ -4,8 +4,7 @@ import { IFactory } from '@jchptf/api';
 
 import { ArgsAsInjectableKeys } from 'args-as-injectable-keys.type';
 import { InjectableKey } from 'injectable-key.type';
-import { LocalProviderToken } from '../provider-token.type';
-import { ModuleIdentifier } from '../module-identifier.type';
+import { IModule, LocalProviderToken } from '../provider-token.type';
 
 // export type DynamicModuleParam<
 //    ParamType,
@@ -48,7 +47,7 @@ export enum DynamicModuleParamStyle
 //    ;
 //
 // export type DynamicModuleSingleContextParam<ParamType extends {},
-//    ModuleId extends ModuleIdentifier
+//    ModuleId extends IModule
 // > =
 //    IFromExisting<ParamType, ModuleId> |
 //    IFromExistingFactoryClass<ParamType, ModuleId> |
@@ -56,139 +55,117 @@ export enum DynamicModuleParamStyle
 //    ;
 //
 // export type DynamicModuleMutualContextParam<ParamType extends {},
-//    SupplierModuleId extends ModuleIdentifier, ConsumerModuleId extends ModuleIdentifier
+//    SupplierModuleId extends IModule, ConsumerModuleId extends IModule
 // > =
 //    IByMutualDIFactoryCall<ParamType, SupplierModuleId, ConsumerModuleId>
 //    ;
 
 export type DynamicModuleParam<
-   ParamType extends {},
-   Supplier extends symbol|string,
-   Consumer extends symbol|string,
-   Token extends LocalProviderToken<ParamType, Supplier, symbol|string> =
-      LocalProviderToken<ParamType, Supplier, symbol|string>,
+   ParamType extends {}, Supplier extends IModule, Consumer extends IModule
 > =
-         IAsValue<Token, ParamType, Supplier> |
-         IAsClass<Token, ParamType, Supplier> |
-         IFromFactoryClass<Token, ParamType, Supplier> |
-         IByNoArgFactoryCall<Token, ParamType, Supplier> |
-         IFromSupplierExisting<Token, ParamType, Supplier> |
-         IFromSupplierExistingFactory<Token, ParamType, Supplier> |
-         IBySupplierFactoryCall<Token, ParamType, Supplier> |
-         IFromConsumerExisting<Token, ParamType, Supplier, Consumer> |
-         IFromConsumerExistingFactory<Token, ParamType, Supplier, Consumer> |
-         IByConsumerFactoryCall<Token, ParamType, Supplier, Consumer>
-      // IByMutualDIFactoryCall<ParamType, Supplier, Consumer>
+   IAsValue<ParamType, Supplier> |
+   IAsClass<ParamType, Supplier> |
+   IFromFactoryClass<ParamType, Supplier> |
+   IByNoArgFactoryCall<ParamType, Supplier> |
+   IFromSupplierExisting<ParamType, Supplier> |
+   IFromSupplierExistingFactory<ParamType, Supplier> |
+   IBySupplierFactoryCall<ParamType, Supplier> |
+   IFromConsumerExisting<ParamType, Supplier, Consumer> |
+   IFromConsumerExistingFactory<ParamType, Supplier, Consumer> |
+   IByConsumerFactoryCall<ParamType, Supplier, Consumer>
+   // IByMutualDIFactoryCall<ParamType, Supplier, Consumer>
    ;
 
-export interface IAsValue<
-   Token extends LocalProviderToken<ParamType, Supplier, symbol|string>,
-   ParamType extends {},
-   Supplier extends ModuleIdentifier,
-> {
+export interface IAsValue<ParamType extends {},
+   Supplier extends IModule,
+   >
+{
    style: DynamicModuleParamStyle.VALUE;
-   provide: Token;
+   provide: LocalProviderToken<ParamType, Supplier>;
    useValue: ParamType;
 }
 
-export interface IAsClass<
-   Token extends LocalProviderToken<ParamType, Supplier, any>,
-   ParamType extends {},
-   Supplier extends ModuleIdentifier
-> {
+export interface IAsClass<ParamType extends {},
+   Supplier extends IModule>
+{
    style: DynamicModuleParamStyle.CLASS;
-   provide: Token;
+   provide: LocalProviderToken<ParamType, Supplier>;
    useClass: Type<ParamType>;
 }
 
-export interface IFromFactoryClass<
-   Token extends LocalProviderToken<ParamType, Supplier, any>,
-   ParamType,
-   Supplier extends ModuleIdentifier
-> {
+export interface IFromFactoryClass<ParamType,
+   Supplier extends IModule>
+{
    style: DynamicModuleParamStyle.FACTORY_CLASS;
-   provide: Token;
+   provide: LocalProviderToken<ParamType, Supplier>;
    provideFactory: LocalProviderToken<IFactory<ParamType>, Supplier>;
    useFactoryClass: Type<IFactory<ParamType>>;
 }
 
-export interface IFromSupplierExisting<
-   Token extends LocalProviderToken<ParamType, Supplier, any>,
-   ParamType extends {},
-   Supplier extends ModuleIdentifier,
->
+export interface IFromSupplierExisting<ParamType extends {},
+   Supplier extends IModule,
+   >
 {
    style: DynamicModuleParamStyle.SUPPLIER_PROVIDED;
-   provide: Token;
+   provide: LocalProviderToken<ParamType, Supplier>;
    useExisting: InjectableKey<ParamType, Supplier>;
 }
 
-export interface IFromSupplierExistingFactory<
-   Token extends LocalProviderToken<ParamType, Supplier, any>,
-   ParamType extends {},
-   Supplier extends ModuleIdentifier,
->
+export interface IFromSupplierExistingFactory<ParamType extends {},
+   Supplier extends IModule,
+   >
 {
    style: DynamicModuleParamStyle.SUPPLIER_PROVIDED_FACTORY;
-   provide: Token;
+   provide: LocalProviderToken<ParamType, Supplier>;
    useExisting: InjectableKey<IFactory<ParamType>, Supplier>;
 }
 
-export interface IFromConsumerExisting<
-   Token extends LocalProviderToken<ParamType, Supplier, any>,
-   ParamType extends {},
-   Supplier extends ModuleIdentifier,
-   Consumer extends ModuleIdentifier,
->
+export interface IFromConsumerExisting<ParamType extends {},
+   Supplier extends IModule,
+   Consumer extends IModule,
+   >
 {
    style: DynamicModuleParamStyle.CONSUMER_PROVIDED;
-   provide: Token;
+   provide: LocalProviderToken<ParamType, Supplier>;
    useExisting: LocalProviderToken<ParamType, Consumer>;
 }
 
-export interface IFromConsumerExistingFactory<
-   Token extends LocalProviderToken<ParamType, Supplier, any>,
-   ParamType extends {},
-   Supplier extends ModuleIdentifier,
-   Consumer extends ModuleIdentifier,
->
+export interface IFromConsumerExistingFactory<ParamType extends {},
+   Supplier extends IModule,
+   Consumer extends IModule,
+   >
 {
    style: DynamicModuleParamStyle.CONSUMER_PROVIDED_FACTORY;
-   provide: Token;
+   provide: LocalProviderToken<ParamType, Supplier>;
    useExisting: LocalProviderToken<IFactory<ParamType>, Consumer>;
 }
 
-export interface IByNoArgFactoryCall<
-   Token extends LocalProviderToken<ParamType, Supplier, any>,
-   ParamType extends {},
-   Supplier extends ModuleIdentifier>
+export interface IByNoArgFactoryCall<ParamType extends {},
+   Supplier extends IModule>
 {
    style: DynamicModuleParamStyle.FACTORY_METHOD_CALL;
-   provide: Token;
+   provide: LocalProviderToken<ParamType, Supplier>;
    useFactory: (() => ParamType) | (() => Promise<ParamType>);
    inject?: void[];
 }
 
-interface IBySupplierFactoryCall<
-   Token extends LocalProviderToken<ParamType, Supplier, any>,
-   ParamType extends {},
-   Supplier extends ModuleIdentifier
->
+interface IBySupplierFactoryCall<ParamType extends {},
+   Supplier extends IModule>
 {
    style: DynamicModuleParamStyle.SUPPLIER_INJECTED_FUNCTION;
-   provide: Token;
+   provide: LocalProviderToken<ParamType, Supplier>;
    useFactory: ((...args: any) => ParamType) | ((...args: any) => Promise<ParamType>);
    inject: InjectableKey<any, Supplier>[];
 }
 
-export function bySupplierFactoryCall<
-   Token extends LocalProviderToken<ParamType, Supplier, any>,
-   ParamType extends {},
+export function bySupplierFactoryCall<ParamType extends {},
    Factory extends ((...args: any) => ParamType) | ((...args: any) => Promise<ParamType>),
-   Supplier extends ModuleIdentifier,
->(
-   provide: Token, useFactory: Factory, inject: ArgsAsInjectableKeys<Factory, Supplier>,
-): IBySupplierFactoryCall<Token, ParamType, Supplier> {
+   Supplier extends IModule,
+   >(
+   provide: LocalProviderToken<ParamType, Supplier>, useFactory: Factory,
+   inject: ArgsAsInjectableKeys<Factory, Supplier>,
+): IBySupplierFactoryCall<ParamType, Supplier>
+{
    return {
       provide,
       useFactory,
@@ -197,28 +174,27 @@ export function bySupplierFactoryCall<
    };
 }
 
-interface IByConsumerFactoryCall<
-   Token extends LocalProviderToken<ParamType, Supplier, any>,
-   ParamType extends {},
-   Supplier extends ModuleIdentifier,
-   Consumer extends ModuleIdentifier,
->
+interface IByConsumerFactoryCall<ParamType extends {},
+   Supplier extends IModule,
+   Consumer extends IModule,
+   >
 {
    style: DynamicModuleParamStyle.CONSUMER_INJECTED_FUNCTION;
-   provide: Token;
+   provide: LocalProviderToken<ParamType, Supplier>;
    useFactory: ((...args: any) => ParamType) | ((...args: any) => Promise<ParamType>);
    inject: InjectableKey<any, Consumer>[];
 }
 
-export function byConsumerFactoryCall<
-   Token extends LocalProviderToken<ParamType, Supplier, any>,
-   ParamType extends {},
+export function byConsumerFactoryCall<ParamType extends {},
    Factory extends ((...args: any) => ParamType) | ((...args: any) => Promise<ParamType>),
-   Supplier extends ModuleIdentifier,
-   Consumer extends ModuleIdentifier,
->(
-   provide: Token, useFactory: Factory, inject: ArgsAsInjectableKeys<Factory, Consumer>,
-): IByConsumerFactoryCall<Token, ParamType, Supplier, Consumer> {
+   Supplier extends IModule,
+   Consumer extends IModule,
+   >(
+   provide: LocalProviderToken<ParamType, Supplier>,
+   useFactory: Factory,
+   inject: ArgsAsInjectableKeys<Factory, Consumer>,
+): IByConsumerFactoryCall<ParamType, Supplier, Consumer>
+{
    return {
       provide,
       useFactory,
@@ -231,8 +207,8 @@ export function byConsumerFactoryCall<
  * This is too complicated to support!
 interface IByMutualDIFactoryCall<
    ParamType extends {},
-   Supplier extends ModuleIdentifier,
-   Consumer extends ModuleIdentifier,
+   Supplier extends IModule,
+   Consumer extends IModule,
 >
 {
    style: DynamicModuleParamStyle.FACTORY_CALL_MUTUAL_DI;
@@ -246,8 +222,8 @@ interface IByMutualDIFactoryCall<
 export function byMutualFactoryCall<
    ParamType extends {},
    Factory extends ((...args: any) => ParamType) | ((...args: any) => Promise<ParamType>),
-   Supplier extends ModuleIdentifier,
-   Consumer extends ModuleIdentifier,
+   Supplier extends IModule,
+   Consumer extends IModule,
 >(
    provide: LocalProviderToken<ParamType, Supplier>,
    useFactory: Factory,

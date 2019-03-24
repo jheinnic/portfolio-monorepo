@@ -4,7 +4,6 @@ export * from './build-dynamic-module.function';
 export * from './dynamic-module-builder.interface';
 export * from './injectable-key.type';
 export * from './nest-factory.type';
-export * from './module-identifier.type';
 export * from './module-identity.type';
 export * from './module-registry.interface';
 export * from './provider-token.type';

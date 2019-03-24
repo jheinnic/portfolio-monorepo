@@ -1,14 +1,14 @@
-import { DynamicModule, Type } from '@nestjs/common';
+import { DynamicModule } from '@nestjs/common';
 import { IAsyncDirector, IDirector } from '@jchptf/api';
 
+import { getBuilder } from './impl';
 import { IDynamicModuleBuilderImpl } from './impl/dynamic-module-builder-impl.interface';
-import { getBuilder } from './impl/get-builder.function';
 import { IDynamicModuleBuilder } from './dynamic-module-builder.interface';
-import { ModuleIdentifier } from './module-identifier.type';
+import { IModule } from './provider-token.type';
 
 export async function asyncBuildDynamicModule<
-   Supplier extends ModuleIdentifier, Consumer extends ModuleIdentifier>(
-   supplier: Type<any>, consumer: Type<any>,
+   Supplier extends IModule, Consumer extends IModule>(
+   supplier: Supplier, consumer: Consumer,
    director: IAsyncDirector<IDynamicModuleBuilder<Supplier, Consumer>> |
              IDirector<IDynamicModuleBuilder<Supplier, Consumer>>,
 ): Promise<DynamicModule>

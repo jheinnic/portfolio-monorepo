@@ -1,13 +1,12 @@
 import { DynamicModule, ForwardReference, Provider, Type } from '@nestjs/common';
 import { IFactory } from '@jchptf/api';
-import { LocalProviderToken } from './provider-token.type';
+import { IModule, LocalProviderToken } from './provider-token.type';
 import { InjectableKey } from './injectable-key.type';
 import { NestFactory } from './nest-factory.type';
 import { ArgsAsInjectableKeys } from './args-as-injectable-keys.type';
-import { ModuleIdentifier } from './module-identifier.type';
 
 export interface IDynamicModuleBuilder<
-   Supplier extends ModuleIdentifier, Consumer extends ModuleIdentifier>
+   Supplier extends IModule, Consumer extends IModule>
 {
    /*
     * An input provider is passed to one of a Module's static constructor methods and is intended

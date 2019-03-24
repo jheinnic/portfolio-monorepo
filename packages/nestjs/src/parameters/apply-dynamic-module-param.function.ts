@@ -1,12 +1,12 @@
-import { ModuleIdentifier } from 'module-identifier.type';
 import { IDynamicModuleBuilder } from 'dynamic-module-builder.interface';
 import { DynamicModuleParam, DynamicModuleParamStyle } from './dynamic-module-param.interface';
 import { ArgsAsInjectableKeys } from '../args-as-injectable-keys.type';
+import { IModule } from '../provider-token.type';
 
 export function applyDynamicModuleParam<
    ParamType extends {},
-   SupplierId extends ModuleIdentifier,
-   ConsumerId extends ModuleIdentifier,
+   SupplierId extends IModule,
+   ConsumerId extends IModule,
 >(
    builder: IDynamicModuleBuilder<SupplierId, ConsumerId>,
    param: DynamicModuleParam<ParamType, SupplierId, ConsumerId>,
