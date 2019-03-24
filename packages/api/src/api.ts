@@ -154,6 +154,12 @@ export interface IWatch<T> {
 
 export type IDirector<IBuilder> = (builder: IBuilder) => void;
 
+export type IAsyncDirector<IBuilder> = (builder: IBuilder) => Promise<void>;
+
 export type IDirectorObj<IBuilder, K extends keyof any = 'apply'> = {
     [Key in K]: IDirector<IBuilder>;
+};
+
+export type IAsyncDirectorObj<IBuilder, K extends keyof any = 'apply'> = {
+    [Key in K]: IAsyncDirector<IBuilder>;
 };
