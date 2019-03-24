@@ -20,7 +20,7 @@ export function mixin<I extends object, S extends object = {}>(behaviour: I, sha
    const sharedKeys: PropertyKey[] = !!sharedBehaviour ? Reflect.ownKeys(sharedBehaviour) : [];
    const typeTag = Symbol('isa');
 
-   function _mixin(clazz: any)
+   function mixinImpl(clazz: any)
    {
       for (const key of instanceKeys) {
          const existing = Object.getOwnPropertyDescriptor(clazz.prototype, key);
@@ -38,7 +38,7 @@ export function mixin<I extends object, S extends object = {}>(behaviour: I, sha
          }
       }
 
-      Object.defineProperty(clazz.prototype, typeTag, {value: true});
+      Object.defineProperty(clazz.prototype, typeTag, { value: true });
 
       if (!! sharedBehaviour) {
          for (const key of sharedKeys) {
@@ -59,7 +59,7 @@ export function mixin<I extends object, S extends object = {}>(behaviour: I, sha
       return clazz;
    }
 
-   Object.defineProperty(_mixin, Symbol.hasInstance, {value: (x: any) => !!x[typeTag]});
+   Object.defineProperty(mixinImpl, Symbol.hasInstance, { value: (x: any) => !!x[typeTag] });
 
-   return _mixin;
+   return mixinImpl;
 }
