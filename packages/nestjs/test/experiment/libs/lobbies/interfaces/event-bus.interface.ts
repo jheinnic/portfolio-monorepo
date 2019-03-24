@@ -1,7 +1,6 @@
-import { iNotify } from '@jchptf/api';
+import { INotify } from '@jchptf/api';
 
-@iNotify()
-export interface IEventBus
+export interface IEventBus extends INotify
 {
-
+    publish(notifier: INotify): void;
 }

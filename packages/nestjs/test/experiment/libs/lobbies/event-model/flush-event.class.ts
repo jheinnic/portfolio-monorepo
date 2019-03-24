@@ -3,6 +3,6 @@ export class FlushEvent {
 
    constructor(flushedLobbyName: string)
    {
-      this.flushedLobbyName = this.flushedLobbyName;
+      this.flushedLobbyName = flushedLobbyName;
    }
 }

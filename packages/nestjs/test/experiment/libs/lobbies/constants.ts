@@ -1,16 +1,11 @@
-import { EventBus } from './event-bus.service';
 import { getLocalProviderTokenString } from '@jchptf/nestjs';
-import { Lobby } from './lobby.class';
+import { Lobby } from './components/lobby.class';
 import { Observable } from 'rxjs';
 import { NewPlayerEvent } from './event-model/new-player-event.class';
 import { LobbyConfig } from './service-model/lobby-config.class';
 
 export const LIBRARY_MODULE_ID = 'LibraryModule';
 export type LIBRARY_MODULE_ID = typeof LIBRARY_MODULE_ID;
-
-export const EVENT_BUS_PROVIDER_TOKEN =
-   getLocalProviderTokenString<EventBus, LIBRARY_MODULE_ID>(
-      LIBRARY_MODULE_ID, 'EventBus');
 
 export const LOBBY_CONFIG_PROVIDER_TOKEN =
    getLocalProviderTokenString<LobbyConfig, LIBRARY_MODULE_ID>(
