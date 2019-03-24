@@ -26,7 +26,7 @@ interface INotifyImpl extends api.INotify {
  * a lazily instantiated `_listeners` property object, storing
  * registered listeners.
  */
-export const iNotify = function () {
+export function iNotify() {
    return mixin<INotifyImpl>({
       _listeners: {},
 
