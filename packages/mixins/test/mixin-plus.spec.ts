@@ -1,12 +1,13 @@
 import { expect } from 'chai';
 
 import {
-   call, callable, ICallFeature, counter, ICounterFeature, counting, reply,
-   AbstractFeature, SimpleFeature
+   call, callable, ICallFeature, ICounterFeature, counting, reply,
+   AbstractFeature, SimpleFeature,
 } from './fixtures';
+import { UnsupportedOperationError } from '@thi.ng/errors';
 
 describe('mixinPlus', () => {
-   @callable
+   @callable()
    class Callable extends AbstractFeature implements ICallFeature
    {
       [call]: string[];
@@ -14,26 +15,34 @@ describe('mixinPlus', () => {
       [reply]: string[];
    }
 
-   @counting
+   @counting()
    class Counter extends AbstractFeature implements ICounterFeature
    {
-      [counter]: number;
+      // [counter]: number;
+
+      public getCount(): number
+      {
+         throw new UnsupportedOperationError();
+      }
    }
 
-   @counting
-   @callable
+   @counting()
+   @callable()
    class CallableCounter extends AbstractFeature implements ICounterFeature, ICallFeature
    {
       [call]: string[];
 
       [reply]: string[];
 
-      [counter]: number;
+      // [counter]: number;
+      public getCount(): number
+      {
+         throw new UnsupportedOperationError();
+      }
    }
 
    it('mixes CallFeature fixture', () => {
       const inst: ICallFeature = new Callable();
-      inst.init();
 
       expect(inst[call])
          .to
@@ -47,24 +56,25 @@ describe('mixinPlus', () => {
 
    it('mixes CounterFeature fixture', () => {
       const inst: ICounterFeature = new Counter();
-      inst.init();
 
-      expect(inst[counter])
+      expect(inst.getCount())
          .to
          .equal(2);
    });
 
    it('mixes CounterFeature dynamically', () => {
-      const CountableTwo = counting(SimpleFeature);
-      const inst: ICounterFeature = new CountableTwo();
+      class CountableTwo extends SimpleFeature { }
+      // const CountableTwo =
+      counting()(CountableTwo);
+      const inst: ICounterFeature = new CountableTwo() as ICounterFeature;
 
-      expect(inst[counter])
+      expect(inst.getCount())
          .to
          .equal(2);
    });
 
    it('mixes CallFeature dynamically', () => {
-      const CallableTwo = callable(SimpleFeature);
+      const CallableTwo = callable()(SimpleFeature);
       const inst: ICallFeature = new CallableTwo();
 
       expect(inst[call])
@@ -78,7 +88,7 @@ describe('mixinPlus', () => {
    });
 
    it('mixes CallFeature dynamically from abstract', () => {
-      const CallableThree = callable(AbstractFeature);
+      const CallableThree = callable()(AbstractFeature);
       const inst: ICallFeature = new CallableThree();
 
       expect(inst[call])
@@ -92,20 +102,20 @@ describe('mixinPlus', () => {
    });
 
    it('mixes CounterFeature dynamically from abstract', () => {
-      const CountableThree = counting(AbstractFeature);
+      const CountableThree = counting()(AbstractFeature);
       const inst: ICounterFeature = new CountableThree();
 
-      expect(inst[counter])
+      expect(inst.getCount())
          .to
          .equal(2);
    });
 
    it('mixes CounterFeature and CallFeature dynamically from abstract', () => {
-      const CountableFour = counting(AbstractFeature);
-      const DualFive = callable(CountableFour);
+      const CountableFour = counting()(AbstractFeature);
+      const DualFive = callable()(CountableFour);
       const inst: ICounterFeature & ICallFeature = new DualFive();
 
-      expect(inst[counter])
+      expect(inst.getCount())
          .to
          .equal(2);
       expect(inst[call])
@@ -119,10 +129,10 @@ describe('mixinPlus', () => {
    });
 
    it('mixed dynamic and static features', () => {
-      const DualSix = callable(Counter);
+      const DualSix = callable()(Counter);
       const inst: ICallFeature & ICounterFeature = new DualSix();
 
-      expect(inst[counter])
+      expect(inst.getCount())
          .to
          .equal(2);
       expect(inst[call])
@@ -138,7 +148,7 @@ describe('mixinPlus', () => {
    it('mixes static features', () => {
       const inst = new CallableCounter();
 
-      expect(inst[counter])
+      expect(inst.getCount())
          .to
          .equal(2);
       expect(inst[call])

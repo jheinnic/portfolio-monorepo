@@ -8,8 +8,15 @@ class CounterImpl implements ICounterFeature
 
    init(): void
    {
+      console.log(`On becoming countable: ${this} and ${this[counter]}`);
       this[counter] = 2;
-      console.log('This is Countable');
+      console.log(`This is Countable: ${this} and ${this[counter]}`);
+   }
+
+   getCount(): number
+   {
+      console.log(`Returning ${this[counter]} for ${this}`);
+      return this[counter];
    }
 }
 
@@ -31,17 +38,19 @@ const mixinContent: MixinContent<InstanceCall, StaticCall> =
             init: makeFunctionReducingConflictHandler(
                (_base: undefined, _mixin: undefined): void => {
                   console.log('Hiya');
-               })
-         }
+               }),
+         },
       },
       {
          implementation: {},
          valueConflicts: {},
-         functionConflicts: {}
-      }
+         functionConflicts: {},
+      },
    );
 
-export const counting = mixinPlus<InstanceCall, StaticCall>(mixinContent);
+export const counting = function () {
+   return mixinPlus<InstanceCall, StaticCall>(mixinContent);
+};
 
 // {
 //    behavior: {

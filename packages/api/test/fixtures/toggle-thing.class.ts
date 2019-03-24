@@ -1,6 +1,6 @@
-import {IEnable, iEnable} from '../../src';
+import { IEnable, iEnable } from '@jchptf/api';
 
-@iEnable
+@iEnable()
 export class ToggleThing implements IEnable {
    constructor(public readonly flags: number[]) { }
 

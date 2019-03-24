@@ -1,6 +1,6 @@
-import {IEvent, INotify, iNotify, Listener} from '../../src';
+import { IEvent, INotify, iNotify, Listener } from '@jchptf/api';
 
-@iNotify
+@iNotify()
 export class Notifier implements INotify
 {
    constructor(public readonly flags: number[]) {

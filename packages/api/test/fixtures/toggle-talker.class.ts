@@ -1,7 +1,7 @@
-import {IEnable, iEnable, INotify, iNotify, IEvent, Listener} from '../../src';
+import { IEnable, iEnable, INotify, iNotify, IEvent, Listener } from '@jchptf/api';
 
-@iEnable
-@iNotify
+@iEnable()
+@iNotify()
 export class ToggleTalker implements IEnable, INotify {
    constructor(public readonly flags: number[]) { }
 

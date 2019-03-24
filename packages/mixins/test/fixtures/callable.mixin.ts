@@ -1,6 +1,9 @@
-import { makeFunctionReducingConflictHandler, MixinContent, mixinPlus } from '@jchptf/mixins';
+import {
+   makeFunctionReducingConflictHandler, makeReplacingConflictHandler, MixinContent, mixinPlus
+} from '@jchptf/mixins';
 import { call, ICallFeature, reply } from './call-feature.interface';
 import { Omit } from 'simplytyped';
+import { counter } from './counter-feature.interface';
 
 class CallImpl implements ICallFeature
 {
@@ -26,20 +29,25 @@ const mixinContent: MixinContent<InstanceCall, StaticCall> =
    new MixinContent<InstanceCall, StaticCall>(
       {
          implementation: protoInst,
-         valueConflicts: { },
+         valueConflicts: {
+            [counter]: makeReplacingConflictHandler(),
+         },
          functionConflicts: {
             init: makeFunctionReducingConflictHandler(
-               (_base: undefined, _mixin: undefined): void => {})
-         }
+               (_base: undefined, _mixin: undefined): void => {}),
+            getCount: makeReplacingConflictHandler(),
+         },
       },
       {
          implementation: {},
          valueConflicts: {},
-         functionConflicts: {}
-      }
+         functionConflicts: {},
+      },
    );
 
-export const callable = mixinPlus<InstanceCall, StaticCall>(mixinContent);
+export const callable = function () {
+   return mixinPlus<InstanceCall, StaticCall>(mixinContent);
+};
 
 //    behavior: {
 //       [call]: ['wrong'],

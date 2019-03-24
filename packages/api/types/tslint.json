@@ -1,0 +1,14 @@
+{
+  "extends": "dtslint/dtslint.json",
+  "rules": {
+    "one-line": [
+      true,
+      "check-catch",
+      "check-finally",
+      "check-else",
+      "check-whitespace"
+    ],
+    "interface-name": [true, "always-prefix"],
+    "no-useless-files": false
+  }
+}
