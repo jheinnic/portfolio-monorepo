@@ -1,31 +1,32 @@
 import { DynamicModule, Global, Module, Type } from '@nestjs/common';
 import { CONSUL_CLIENT_PROVIDER } from './consul-client.provider';
 import { ConsulOptions } from 'consul';
-import { EventEmitter } from 'events';
-
-import { buildDynamicModule, IDynamicModuleBuilder, InputProviderParam } from '@jchptf/nestjs';
 
 import {
-   CONSUL_EVENT_EMITTER_PROVIDER_TOKEN, CONSUL_OPTIONS_PROVIDER_TOKEN,
-} from './consul.constants';
-import { CONSUL_EVENT_EMITTER_PROVIDER, AA } from './consul-event-emitter.provider';
+   applyDynamicModuleParam, buildDynamicModule, DynamicModuleParam, IDynamicModuleBuilder,
+   ModuleIdentifier
+} from '@jchptf/nestjs';
+
+import { CONSUL_MODULE_ID, CONSUL_OPTIONS_PROVIDER_TOKEN, } from './consul.constants';
+import { CONSUL_EVENT_EMITTER_PROVIDER } from './consul-event-emitter.provider';
 
 @Global()
 @Module({})
 export class ConsulModule
 {
-   public static forRoot(
+   public static forRoot<Consumer extends ModuleIdentifier>(
       rootModule: Type<any>,
-      options: InputProviderParam<typeof CONSUL_OPTIONS_PROVIDER_TOKEN, ConsulOptions>,
+      options: DynamicModuleParam<
+         ConsulOptions, CONSUL_MODULE_ID, Consumer, typeof CONSUL_OPTIONS_PROVIDER_TOKEN>
    ): DynamicModule
    {
       return buildDynamicModule(
          ConsulModule,
          rootModule,
-         (builder: IDynamicModuleBuilder): void => {
-            builder.bindInputProvider(options)
+         (builder: IDynamicModuleBuilder<CONSUL_MODULE_ID, Consumer>): void => {
+            applyDynamicModuleParam(builder, options);
+            builder
                .bindProvider(CONSUL_EVENT_EMITTER_PROVIDER, false)
-               .bindProvider(AA, false)
                .bindProvider(CONSUL_CLIENT_PROVIDER, true);
          },
       );

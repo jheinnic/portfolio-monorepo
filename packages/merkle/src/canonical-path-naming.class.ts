@@ -7,15 +7,17 @@ import {
 import { BlockMappedDigestLocator, MerkleDigestLocator, MerkleNodeType } from './locator';
 import { DepthFirstVisitMode } from './traversal';
 import { Inject, Injectable } from '@nestjs/common';
-import { MERKLE_IDENTITY_LRU_CACHE_LPT, MERKLE_TREE_CALCULATOR_LPT } from './di/merkle.constants';
+import {
+   MERKLE_IDENTITY_LRU_CACHE_PROVIDER_TOKEN, MERKLE_CALCULATOR_PROVIDER_TOKEN
+} from './di';
 
 @Injectable()
 export class CanonicalPathNaming implements ICanonicalPathNaming
 {
    constructor(
-      @Inject(MERKLE_TREE_CALCULATOR_LPT)
+      @Inject(MERKLE_CALCULATOR_PROVIDER_TOKEN)
       private readonly calculator: IMerkleCalculator,
-      @Inject(MERKLE_IDENTITY_LRU_CACHE_LPT)
+      @Inject(MERKLE_IDENTITY_LRU_CACHE_PROVIDER_TOKEN)
       private readonly lruCache: LRU.Cache<string, string>)
    { }
 

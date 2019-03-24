@@ -1,24 +1,36 @@
 import { DotenvConfigOptions } from 'dotenv';
 
-import { getLocalProviderTokenString, getModuleIdentifier } from '@jchptf/nestjs';
+import { blessLocalProviderToken, LocalProviderToken } from '@jchptf/nestjs';
 
-import { IConfigReader, IConfigLoader, IConfigMetadataHelper } from '../interfaces';
+import { IConfigLoader, IConfigMetadataHelper, IConfigReader } from '../interfaces';
 
-export const CONFIG_MODULE_ID = getModuleIdentifier('@jchptf/config');
+export const CONFIG_MODULE_ID = Symbol('@jchptf/config');
+export type CONFIG_MODULE_ID = typeof CONFIG_MODULE_ID;
 
-// const CMH = getNamedTypeIntent<IConfigMetadataHelper>('IConfigMetadataHelper');
-// const CR  = getNamedTypeIntent<IConfigReader>('IConfigReader');
-// const CL  = getNamedTypeIntent<IConfigLoader>('IConfigLoader');
-// const DCO = getNamedTypeIntent<DotenvConfigOptions|false>('DotenvConfigOptions');
+export const CONFIG_METADATA_HELPER = Symbol('IConfigMetadataHelper');
+export const CONFIG_READER = Symbol('IConfigReader');
+export const CONFIG_LOADER = Symbol('IConfigLoader');
+export const DOTENV_CONFIG_OPTIONS = Symbol('DotenvConfigOptions');
 
-export const CONFIG_METADATA_HELPER_PROVIDER =
-   getLocalProviderTokenString<IConfigMetadataHelper>(CONFIG_MODULE_ID, 'IConfigMetadataHelper');
-export const CONFIG_READER_PROVIDER =
-   getLocalProviderTokenString<IConfigReader>(CONFIG_MODULE_ID, 'IConfigReader');
-export const CONFIG_LOADER_PROVIDER =
-   getLocalProviderTokenString<IConfigLoader>(CONFIG_MODULE_ID, 'IConfigLoader');
-export const DOTENV_CONFIG_OPTIONS =
-   getLocalProviderTokenString<DotenvConfigOptions|false>(CONFIG_MODULE_ID, 'DotenvConfigOptions');
+export interface IConfigModuleTokens {
+   [CONFIG_METADATA_HELPER]: IConfigMetadataHelper;
+   [CONFIG_READER]: IConfigReader;
+   [CONFIG_LOADER]: IConfigLoader;
+   [DOTENV_CONFIG_OPTIONS]: DotenvConfigOptions;
+}
 
-// export const CONFIG_DYNAMIC_MODULE_TYPE =
-//    getDynamicModuleKind(CONFIG_MODULE_ID);
+function blessLocal<Token extends keyof IConfigModuleTokens>(
+   token: Token): LocalProviderToken<IConfigModuleTokens[Token], CONFIG_MODULE_ID, Token>
+{
+   return blessLocalProviderToken(token);
+}
+
+export const CONFIG_METADATA_HELPER_PROVIDER_TOKEN = blessLocal(CONFIG_METADATA_HELPER);
+export const CONFIG_READER_PROVIDER_TOKEN = blessLocal(CONFIG_READER);
+export const CONFIG_LOADER_PROVIDER_TOKEN = blessLocal(CONFIG_LOADER);
+export const DOTENV_CONFIG_OPTIONS_PROVIDER_TOKEN = blessLocal(DOTENV_CONFIG_OPTIONS);
+
+// export type CONFIG_METADATA_HELPER_PROVIDER_TOKEN = typeof CONFIG_METADATA_HELPER;
+// export type CONFIG_READER_PROVIDER_TOKEN = typeof CONFIG_READER;
+// export type CONFIG_LOADER_PROVIDER_TOKEN = typeof CONFIG_LOADER;
+// export type DOTENV_CONFIG_OPTIONS_PROVIDER_TOKEN = typeof DOTENV_CONFIG_OPTIONS;

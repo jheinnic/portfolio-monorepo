@@ -7,7 +7,7 @@ import { ConstructorFor } from 'simplytyped';
 import { Wild } from '@jchptf/api';
 import { ConfigPropertyMarker } from './decorators/config-property-marker.interface';
 import { IConfigReader, IConfigLoader, IConfigMetadataHelper } from './interfaces';
-import { CONFIG_METADATA_HELPER_PROVIDER } from './di';
+import { CONFIG_METADATA_HELPER_PROVIDER_TOKEN } from './di';
 import { illegalState } from '@thi.ng/errors';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class ConfigLoader implements IConfigLoader
    // private mapToDefaults: Immutable.Map<ConstructorFor<any>, any>;
 
    constructor(
-      @Inject(CONFIG_METADATA_HELPER_PROVIDER)
+      @Inject(CONFIG_METADATA_HELPER_PROVIDER_TOKEN)
       private readonly configMetaHelper: IConfigMetadataHelper)
    {
       // this.mapToDefaults = Immutable.Map.of();

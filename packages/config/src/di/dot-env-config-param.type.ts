@@ -1,6 +1,7 @@
-import { InputProviderParam, NestFactory } from '@jchptf/nestjs';
-import { DOTENV_CONFIG_OPTIONS } from './config.constants';
+import { DynamicModuleParam, ModuleIdentifier } from '@jchptf/nestjs';
 import { DotenvConfigOptions } from 'dotenv';
+import { CONFIG_MODULE_ID, DOTENV_CONFIG_OPTIONS_PROVIDER_TOKEN } from './config.constants';
 
-export type DotEnvConfigParam<Factory extends NestFactory<false | DotenvConfigOptions>> =
-   InputProviderParam<typeof DOTENV_CONFIG_OPTIONS, false | DotenvConfigOptions, Factory>;
+export type DotenvConfigParam<Consumer extends ModuleIdentifier> =
+   DynamicModuleParam<false | DotenvConfigOptions, CONFIG_MODULE_ID, Consumer,
+      typeof DOTENV_CONFIG_OPTIONS_PROVIDER_TOKEN>;

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import {NestFactory} from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { ApplicationModule } from './fixtures/application.module';
 import { fauxContainerToken } from './fixtures/fixture.constants';
 
@@ -22,10 +22,11 @@ bootstrap()
 
 console.log('Returned from async bootstrap.');
 let counter = 0;
-setInterval(() => {
-   counter += 1;
-   // console.log('Wooga wooga', ++counter);
-}, 15000);
+setInterval(
+   () => {
+      counter += 1;
+   },
+   45000,
+);
 
 console.log(`Returned from async keepalive:: ${counter}`);
-

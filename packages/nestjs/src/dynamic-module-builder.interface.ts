@@ -1,4 +1,4 @@
-import { DynamicModule, ForwardReference, Type } from '@nestjs/common';
+import { DynamicModule, ForwardReference, Provider, Type } from '@nestjs/common';
 import { IFactory } from '@jchptf/api';
 import { LocalProviderToken } from './provider-token.type';
 import { InjectableKey } from './injectable-key.type';
@@ -100,16 +100,15 @@ export interface IDynamicModuleBuilder<
     * dependencies on the provided artifact and simply defines it up front using caller-supplied
     * token.)
     *
-    * @deprecated
     * @param provider A provided structure to be added in the context of Dynamic Module under
     * construction.
     * @param exportAs An optional boolean flag or ProviderToken that determines whether or not
     * supplied Provider is exported.
-   bindProvider<Component extends {}> (
-      provider: NestProvider<Component>,
-      exportAs?: InjectableKey<Component> | boolean,
-   ): IDynamicModuleBuilder<Supplier, Consumer>;
     */
+   bindProvider(
+      provider: Exclude<Provider, Type<any>>,
+      withExport: boolean,
+   ): IDynamicModuleBuilder<Supplier, Consumer>;
 
    import(
       source: Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference,

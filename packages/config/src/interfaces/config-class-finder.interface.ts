@@ -1,9 +1,9 @@
-import {Observable} from 'rxjs';
-import {Provider} from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { Provider, Type } from '@nestjs/common';
 
 export interface IConfigClassFinder
 {
-   loadConfigAsync(): Observable<Provider>;
+   loadConfigAsync(): Observable<Exclude<Provider, Type<any>>>;
 
-   loadConfigSync(): Observable<Provider>;
+   loadConfigSync(): Observable<Exclude<Provider, Type<any>>>;
 }

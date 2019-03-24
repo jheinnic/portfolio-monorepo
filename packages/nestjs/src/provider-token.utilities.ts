@@ -1,54 +1,63 @@
 import { illegalArgs } from '@thi.ng/errors';
 
-import { GlobalProviderToken, LocalProviderToken, ProviderToken } from './provider-token.type';
+import { GlobalProviderToken, LocalProviderToken } from './provider-token.type';
 import { ModuleIdentifier } from './module-identifier.type';
 
-export function isLocalProviderToken<Component extends {}, ModuleId extends ModuleIdentifier>(
-   _token: symbol|string): _token is LocalProviderToken<Component, ModuleId>
+export function isLocalProviderToken<
+   Component extends {},
+   ModuleId extends ModuleIdentifier,
+   Token extends symbol|string = symbol|string
+>(_token: Token): _token is LocalProviderToken<Component, ModuleId, Token>
 {
    return true;
 }
 
-export function blessLocalProviderToken<Component extends {}, ModuleId extends ModuleIdentifier>(
-   token: symbol|string): LocalProviderToken<Component, ModuleId>
+export function blessLocalProviderToken<
+   Component extends {},
+   ModuleId extends ModuleIdentifier,
+   Token extends symbol|string = symbol|string
+>(token: Token): LocalProviderToken<Component, ModuleId, Token>
 {
-   if (isLocalProviderToken<Component, ModuleId>(token)) {
+   if (isLocalProviderToken<Component, ModuleId, Token>(token)) {
       return token;
    }
 
    return undefined as never;
 }
 
-export function getLocalProviderTokenString<Component, ModuleId extends ModuleIdentifier>(
+export function getLocalProviderTokenString
+<Component extends {}, ModuleId extends ModuleIdentifier>(
    moduleId: ModuleId, typeId: string, qualifier?: string,
-): ProviderToken<Component>
+): LocalProviderToken<Component, ModuleId, string>
 {
-   return blessLocalProviderToken<Component, ModuleId>(
+   return blessLocalProviderToken<Component, ModuleId, string>(
       appendQualifier(`${moduleId.toString()}::${typeId}`, qualifier),
    );
 }
 
 export function getLocalProviderTokenSymbol<Component, ModuleId extends ModuleIdentifier>(
    moduleId: ModuleId, typeId: string, qualifier?: string,
-): ProviderToken<Component>
+): LocalProviderToken<Component, ModuleId, symbol>
 {
-   return blessLocalProviderToken<Component, ModuleId>(
+   return blessLocalProviderToken<Component, ModuleId, symbol>(
       Symbol(
          appendQualifier(`${moduleId.toString()}::${typeId}`, qualifier),
       ),
    );
 }
 
-export function isGlobalProviderToken<Component extends {}>(
-   _token: symbol|string): _token is GlobalProviderToken<Component>
+export function isGlobalProviderToken<
+   Component extends {}, Token extends symbol|string = symbol|string
+>(_token: Token): _token is GlobalProviderToken<Component, Token>
 {
    return true;
 }
 
-export function blessGlobalProviderToken<Component extends {}>(
-   _token: symbol|string): GlobalProviderToken<Component>
+export function blessGlobalProviderToken<
+   Component extends {}, Token extends symbol|string = symbol|string
+>(_token: Token): GlobalProviderToken<Component, Token>
 {
-   if (isGlobalProviderToken<Component>(_token)) {
+   if (isGlobalProviderToken<Component, Token>(_token)) {
       return _token;
    }
 
@@ -57,18 +66,18 @@ export function blessGlobalProviderToken<Component extends {}>(
 
 export function getGlobalProviderTokenString<Component>(
    moduleId: ModuleIdentifier, typeId: string, qualifier?: string,
-): ProviderToken<Component>
+): GlobalProviderToken<Component, string>
 {
-   return blessGlobalProviderToken<Component>(
+   return blessGlobalProviderToken<Component, string>(
       appendQualifier(`Global::${moduleId.toString()}::${typeId}`, qualifier),
    );
 }
 
 export function getGlobalProviderTokenSymbol<Component>(
    moduleId: ModuleIdentifier, typeId: string, qualifier?: string,
-): ProviderToken<Component>
+): GlobalProviderToken<Component, symbol>
 {
-   return blessGlobalProviderToken<Component>(
+   return blessGlobalProviderToken<Component, symbol>(
       Symbol(
          appendQualifier(`Global::${moduleId.toString()}::${typeId}`, qualifier),
       ),

@@ -1,3 +1,4 @@
+import { Injectable, Inject } from '@nestjs/common';
 import { default as Optional } from 'typescript-optional';
 import binarySearch from 'binary-search';
 import * as util from 'util';
@@ -16,8 +17,9 @@ import {
    BlockTopologicalOrder, BreadthFirstOrder, DepthFirstOrder, ITopoOrderBuilder,
    MerkleTopologicalOrder, TopoOrderOptions,
 } from './traversal';
-import { Injectable, Inject } from '@nestjs/common';
-import { MERKLE_LOCATOR_FACTORY_LPT } from './di/merkle.constants';
+import {
+   MERKLE_LOCATOR_FACTORY_PROVIDER_TOKEN, MERKLE_TREE_DESCRIPTION_PROVIDER_TOKEN,
+} from './di';
 
 /**
  * The MerkleCalculator provides a suite of methods that are useful when iterating over or
@@ -124,8 +126,9 @@ import { MERKLE_LOCATOR_FACTORY_LPT } from './di/merkle.constants';
 export class MerkleCalculator implements IMerkleCalculator
 {
    public constructor(
+      @Inject(MERKLE_TREE_DESCRIPTION_PROVIDER_TOKEN)
       public readonly treeDescription: MerkleTreeDescription,
-      @Inject(MERKLE_LOCATOR_FACTORY_LPT)
+      @Inject(MERKLE_LOCATOR_FACTORY_PROVIDER_TOKEN)
       private readonly locatorFactory: IMerkleLocatorFactory,
    ) { }
 

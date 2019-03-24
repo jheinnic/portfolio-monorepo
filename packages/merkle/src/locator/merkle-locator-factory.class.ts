@@ -1,13 +1,12 @@
 import * as LRU from 'lru-cache';
 
-// import '@jchptf/reflection';
 import {
    BlockMappedDigestLocator, BlockMappedLayerLocator, MerkleDigestLocator,
    MerkleLayerLocator, MerkleTreeDescription
 } from './index';
-import {IMerkleLocatorFactory} from '../interface';
+import { IMerkleLocatorFactory } from '../interface';
 import { Injectable, Inject } from '@nestjs/common';
-import { MERKLE_DIGEST_LRU_CACHE_LPT } from '../di/merkle.constants';
+import { MERKLE_DIGEST_LRU_CACHE_PROVIDER_TOKEN, MERKLE_TREE_DESCRIPTION_PROVIDER_TOKEN } from '../di';
 
 // import {MERKLE_CACHE_TYPES, MERKLE_TAG_KEYS, MERKLE_TYPES} from '../di';
 
@@ -19,21 +18,23 @@ export class MerkleLocatorFactory implements IMerkleLocatorFactory
    private readonly levelCache: BlockMappedLayerLocator[];
 
    constructor(
+      @Inject(MERKLE_TREE_DESCRIPTION_PROVIDER_TOKEN)
       private readonly treeDescription: MerkleTreeDescription,
-      @Inject(MERKLE_DIGEST_LRU_CACHE_LPT)
+      @Inject(MERKLE_DIGEST_LRU_CACHE_PROVIDER_TOKEN)
       private readonly digestCache: LRU.Cache<number, MerkleDigestLocator>)
    {
       this.layerCache = new Array<MerkleLayerLocator>(treeDescription.treeDepth);
       this.levelCache = new Array<BlockMappedLayerLocator>(treeDescription.tierCount);
 
       let storeLevel = 0;
-      let levelLeafCache = new Array<MerkleLayerLocator>(treeDescription.tierCount);
-      for (let [ii, size] = [0, 1]; ii < treeDescription.treeDepth; ii++, size *= 2) {
+      const levelLeafCache = new Array<MerkleLayerLocator>(treeDescription.tierCount);
+      for (let [ii, size] = [0, 1]; ii < treeDescription.treeDepth; ii += 1, size *= 2) {
          if (treeDescription.blockMappedRootLayers[storeLevel] < ii) {
             this.layerCache[ii] = new MerkleLayerLocator(ii, size);
 
-            if(treeDescription.blockMappedLeafLayers[storeLevel] === ii) {
-               levelLeafCache[storeLevel++] = this.layerCache[ii];
+            if (treeDescription.blockMappedLeafLayers[storeLevel] === ii) {
+               levelLeafCache[storeLevel] = this.layerCache[ii];
+               storeLevel += 1;
             }
          }
       }
@@ -46,7 +47,7 @@ export class MerkleLocatorFactory implements IMerkleLocatorFactory
       let subtreeWidth = treeDescription.rootSubtreeWidth;
       let subtreeReach = treeDescription.rootSubtreeReach;
 
-      for (let [ii, size] = [0, 1]; ii < treeDescription.treeDepth; ii++, size *= 2) {
+      for (let [ii, size] = [0, 1]; ii < treeDescription.treeDepth; ii += 1, size *= 2) {
          if (treeDescription.blockMappedRootLayers[storeLevel] === ii) {
             this.levelCache[storeLevel] = new BlockMappedLayerLocator(
                storeLevel, size, ii, levelLeafCache[storeLevel],
@@ -74,10 +75,14 @@ export class MerkleLocatorFactory implements IMerkleLocatorFactory
       if (!retVal) {
          if (layer.blockMapped) {
             retVal = new BlockMappedDigestLocator(
-               layer.asBlockMapped()
-                  .get(), digestIndex, this.treeDescription.treeDepth);
+               layer.asBlockMapped().get(),
+               digestIndex,
+               this.treeDescription.treeDepth);
          } else {
-            retVal = new MerkleDigestLocator(layer, digestIndex, this.treeDescription.treeDepth);
+            retVal = new MerkleDigestLocator(
+               layer,
+               digestIndex,
+               this.treeDescription.treeDepth);
          }
 
          this.digestCache.set(position, retVal);
@@ -100,9 +105,11 @@ export class MerkleLocatorFactory implements IMerkleLocatorFactory
    {
       if ((depth < 0) || (depth >= this.treeDescription.treeDepth))
       {
+         const maxDepth = this.treeDescription.treeDepth - 1;
          throw new Error(
-            `${depth} is not a layer depth index between 0 and ${this.treeDescription.treeDepth - 1}`)
+            `Expected layer depth index between 0 and ${maxDepth}, not ${depth}.`);
       }
+
       return this.layerCache[depth];
    }
 

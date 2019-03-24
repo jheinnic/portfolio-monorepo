@@ -1,7 +1,8 @@
 import { DynamicModule, Type } from '@nestjs/common';
 import { IDirector } from '@jchptf/api';
 
-import { IDynamicModuleBuilderImpl, getBuilder } from './impl';
+import { IDynamicModuleBuilderImpl } from './impl/dynamic-module-builder-impl.interface';
+import { getBuilder } from './impl/get-builder.function';
 import { IDynamicModuleBuilder } from './dynamic-module-builder.interface';
 import { ModuleIdentifier } from './module-identifier.type';
 

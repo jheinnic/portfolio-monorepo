@@ -1,124 +1,46 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { Module, Type, DynamicModule } from '@nestjs/common';
 
+import { IDirector } from '@jchptf/api';
 import {
-   DynamicModuleParam, asyncProviderFromParam, IDynamicProvider, DynamicProviderToken,
-   getDynamicProviderToken,
-   ModuleIdentifier
+   applyDynamicModuleParam, buildDynamicModule, DynamicModuleParam, IDynamicModuleBuilder,
+   ModuleIdentifier,
 } from '@jchptf/nestjs';
+import { MerkleTreeDescription } from '..';
+import { MERKLE_MODULE_ID, MERKLE_TREE_DESCRIPTION_PROVIDER_TOKEN } from './merkle.constants';
 import {
-   ICanonicalPathNaming, IMerkleCalculator, IMerkleLocatorFactory, MERKLE_TREE_CALCULATOR_LPT,
-   MerkleTreeDescription
-} from '..';
+   IMerkleDynamicModuleConfigBuilder,
+} from './dynamic-merkle-module-config-builder.interface';
 import {
-   MERKLE_LOCATOR_FACTORY_LPT, MERKLE_LOCATOR_FACTORY_TYPE,
-   MERKLE_DYNAMIC_MODULE_TYPE, MERKLE_PATH_NAMING_LPT, MERKLE_PATH_NAMING_TYPE,
-   MERKLE_TREE_CALCULATOR_TYPE
-} from './merkle.constants';
-import {
-   MERKLE_CALCULATOR_LOCAL_PROVIDER, MERKLE_DIGEST_LRU_LOCAL_PROVIDER,
-   MERKLE_IDENTITY_LRU_LOCAL_PROVIDER,
-   MERKLE_LOCATOR_FACTORY_LOCAL_PROVIDER,
-   MERKLE_PATH_NAMING_LOCAL_PROVIDER
-} from './merkle.providers';
+   getMerkleDynamicModuleBuilder, IDynamicMerkleModuleOptionsBuilderImpl,
+} from './get-merkle-dynamic-module-builder.function';
 
 @Module({})
 export class MerkleModule
 {
-   public static forFeature(
-      forModule: ModuleIdentifier,
-      treeDescription: MerkleTreeDescription,
-      withTag?: string): DynamicModule
+   public static forFeature<Consumer extends ModuleIdentifier>(
+      forModule: Type<any>,
+      treeDescription: DynamicModuleParam<MerkleTreeDescription, MERKLE_MODULE_ID,
+         Consumer, typeof MERKLE_TREE_DESCRIPTION_PROVIDER_TOKEN>,
+      optionsDirector: IDirector<IMerkleDynamicModuleConfigBuilder<Consumer>>,
+   ): DynamicModule
    {
-      const localProviders = MERKLE_LOCAL_PROVIDERS;
-      const dynamicProviders =
-         MerkleModule.getDynamicProviders(forModule, withTag);
+      // Adapt the raw module types with a factory facade, then wrap that facade
+      // with a builder adapter tailored to the Merkle module specifically and
+      // pass that abstraction to the IDirector received from the caller.  Carry
+      // on with the requested work.
+      return buildDynamicModule(
+         MerkleModule, forModule,
+         (builder: IDynamicModuleBuilder<MERKLE_MODULE_ID, Consumer>): void => {
+            // We have one sure-fire injection--the tree description--since it is a
+            // mandatory argument, it is not covered by the builder.
+            applyDynamicModuleParam(builder, treeDescription);
 
-      return {
-         module: MerkleModule,
-         providers: [
-            {
-               provide: MerkleTreeDescription,
-               useValue: treeDescription
-            },
-            ...localProviders,
-            ...dynamicProviders
-         ],
-         exports: [
-            ...dynamicProviders
-         ],
-      };
-   }
+            const merkleBuilder: IDynamicMerkleModuleOptionsBuilderImpl<Consumer> =
+               getMerkleDynamicModuleBuilder(builder);
 
-   public static async forFeatureAsync(
-      forModule: ModuleIdentifier,
-      asyncTreeDescription: DynamicModuleParam<MerkleTreeDescription>,
-      withTag?: string): Promise<DynamicModule>
-   {
-      const treeDescription =
-         asyncProviderFromParam(MerkleTreeDescription, asyncTreeDescription);
-
-      const localProviders = MERKLE_LOCAL_PROVIDERS;
-      const dynamicProviders =
-         MerkleModule.getDynamicProviders(forModule, withTag);
-
-      return {
-         module: MerkleModule,
-         providers: [
-            {
-               provide: MerkleTreeDescription,
-               useValue: treeDescription
-            },
-            ...localProviders,
-            ...dynamicProviders
-         ],
-         exports: [
-            ...dynamicProviders
-         ],
-      };
-   }
-
-   private static getDynamicProviders(
-      forModule: ModuleIdentifier, withTag?: string
-   ): [IDynamicProvider<IMerkleCalculator>,
-       IDynamicProvider<IMerkleLocatorFactory>,
-       IDynamicProvider<ICanonicalPathNaming>]
-   {
-      const calculatorToken: DynamicProviderToken<IMerkleCalculator> =
-         getDynamicProviderToken(
-            forModule, MERKLE_DYNAMIC_MODULE_TYPE,
-            MERKLE_TREE_CALCULATOR_TYPE, withTag);
-      const locatorFactoryToken: DynamicProviderToken<IMerkleLocatorFactory> =
-         getDynamicProviderToken(
-            forModule, MERKLE_DYNAMIC_MODULE_TYPE,
-            MERKLE_LOCATOR_FACTORY_TYPE, withTag);
-      const pathNamingToken: DynamicProviderToken<ICanonicalPathNaming> =
-         getDynamicProviderToken(
-            forModule, MERKLE_DYNAMIC_MODULE_TYPE,
-            MERKLE_PATH_NAMING_TYPE, withTag);
-
-      return [
-         {
-            provide: calculatorToken,
-            useFactory: (calculator: IMerkleCalculator) => calculator,
-            inject: [MERKLE_TREE_CALCULATOR_LPT],
-         }, {
-            provide: locatorFactoryToken,
-            useFactory: (locatorFactory: IMerkleLocatorFactory) => locatorFactory,
-            inject: [MERKLE_LOCATOR_FACTORY_LPT],
-         }, {
-            provide: pathNamingToken,
-            useFactory: (pathNaming: ICanonicalPathNaming) => pathNaming,
-            inject: [MERKLE_PATH_NAMING_LPT],
-         }
-      ];
+            optionsDirector(merkleBuilder);
+            merkleBuilder.finish();
+         },
+      );
    }
 }
-
-const MERKLE_LOCAL_PROVIDERS = [
-   MERKLE_CALCULATOR_LOCAL_PROVIDER,
-   MERKLE_LOCATOR_FACTORY_LOCAL_PROVIDER,
-   MERKLE_PATH_NAMING_LOCAL_PROVIDER,
-   MERKLE_DIGEST_LRU_LOCAL_PROVIDER,
-   MERKLE_IDENTITY_LRU_LOCAL_PROVIDER
-];
-

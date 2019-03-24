@@ -10,4 +10,4 @@ export * from './module-registry.interface';
 export * from './provider-token.type';
 export * from './provider-token.utilities';
 export * from './parameters';
-// export * from './impl';
+export * from './impl';

@@ -1,6 +1,6 @@
 import { bindNodeCallback, from, Observable } from 'rxjs';
 import { mergeMap, tap } from 'rxjs/operators';
-import { Provider } from '@nestjs/common';
+import { Provider, Type } from '@nestjs/common';
 import { ConstructorFunction } from 'simplytyped';
 import { Glob, sync as globSync } from 'glob';
 import * as assert from 'assert';
@@ -8,7 +8,7 @@ import * as path from 'path';
 
 import { getLocalProviderTokenString, ModuleIdentifier } from '@jchptf/nestjs';
 
-import { CONFIG_READER_PROVIDER, CONFIG_LOADER_PROVIDER } from './di';
+import { CONFIG_READER_PROVIDER_TOKEN, CONFIG_LOADER_PROVIDER_TOKEN } from './di';
 import {
    IConfigClassFinder, IConfigReader, IConfigLoader,
 } from './interfaces';
@@ -63,7 +63,7 @@ export class ConfigClassFinder implements IConfigClassFinder
    /**
     * @returns {Promise<Config>}
     */
-   public loadConfigAsync(): Observable<Provider>
+   public loadConfigAsync(): Observable<Exclude<Provider, Type<any>>>
    {
       const globPattern =
          path.join(this.resolvedSearchRoot, this.loadConfigGlob);
@@ -83,7 +83,7 @@ export class ConfigClassFinder implements IConfigClassFinder
    /**
     * Load config synchronously
     */
-   public loadConfigSync(): Observable<Provider>
+   public loadConfigSync(): Observable<Exclude<Provider, Type<any>>>
    {
       const globPattern: string =
          path.join(this.resolvedSearchRoot, this.loadConfigGlob);
@@ -98,7 +98,8 @@ export class ConfigClassFinder implements IConfigClassFinder
     * @param configPaths
     * @returns {any}
     */
-   private parseMatchingFiles(configPaths: Observable<string>): Observable<Provider>
+   private parseMatchingFiles(
+      configPaths: Observable<string>): Observable<Exclude<Provider, Type<any>>>
    {
       return configPaths.pipe(
          tap(
@@ -121,14 +122,14 @@ export class ConfigClassFinder implements IConfigClassFinder
                   useFactory: async (
                      configLoader: IConfigLoader, configReader: IConfigReader) =>
                      configLoader.loadInstance(clazz, configReader),
-                  inject: [CONFIG_LOADER_PROVIDER, CONFIG_READER_PROVIDER],
+                  inject: [CONFIG_LOADER_PROVIDER_TOKEN, CONFIG_READER_PROVIDER_TOKEN],
                };
                const retValTwo = {
                   provide: clazz,
                   useFactory: async (
                      configLoader: IConfigLoader, configReader: IConfigReader) =>
                      configLoader.loadInstance(clazz, configReader),
-                  inject: [CONFIG_LOADER_PROVIDER, CONFIG_READER_PROVIDER],
+                  inject: [CONFIG_LOADER_PROVIDER_TOKEN, CONFIG_READER_PROVIDER_TOKEN],
                };
 
                console.log(`1) <${retValOne}>\n 2) <${retValTwo}>`);

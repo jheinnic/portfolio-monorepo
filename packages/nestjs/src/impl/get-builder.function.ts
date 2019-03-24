@@ -209,41 +209,29 @@ export function getBuilder<Supplier extends string | symbol, Consumer extends st
          //          return appendSupplierExportProvider(ctx, newProvider, provide);
          //       },
          // )
-         // .chain('bindProvider', <Component extends {}>(
-         //    localProvider: NestProvider<Component>,
-         //    exportAs: InjectableKey<Component> | boolean = false,
-         //    ) => (ctx: IWorkingDynamicModule): IWorkingDynamicModule => {
-         //       const newProviders: Exclude<Provider, Type<any>>[] =
-         //          compileNestProvider(localProvider);
-         //       const localInjectableKey = newProviders[0].provide;
-         //
-         //       const newExports: InjectableKey<Component>[] = [];
-         //       if (exportAs === true) {
-         //          newExports.push(localInjectableKey);
-         //       } else if (exportAs === false) {
-         //          // No-op
-         //       } else {
-         //          newExports.push(exportAs);
-         //
-         //          if (exportAs !== localInjectableKey) {
-         //             newProviders.push({
-         //                provide: exportAs,
-         //                useFactory: obj => obj,
-         //                inject: [localInjectableKey],
-         //             });
-         //          }
-         //       }
-         //
-         //       return {
-         //          ...ctx,
-         //          supplier: {
-         //             ...ctx.supplier,
-         //             providers: [...ctx.supplier.providers!, ...newProviders],
-         //             exports: [...ctx.supplier.exports!, ...newExports],
-         //          },
-         //       };
-         //    },
-         // )
+         .chain('bindProvider', (
+            provider: Exclude<Provider, Type<any>>, withExport: boolean
+            ) => (ctx: IWorkingDynamicModule): IWorkingDynamicModule => {
+               if (withExport) {
+                  return {
+                     ...ctx,
+                     supplier: {
+                        ...ctx.supplier,
+                        providers: [...ctx.supplier.providers!, provider],
+                        exports: [...ctx.supplier.exports!, provider.provide],
+                     },
+                  };
+               }
+
+               return {
+                  ...ctx,
+                  supplier: {
+                     ...ctx.supplier,
+                     providers: [...ctx.supplier.providers!, provider],
+                  },
+               };
+            },
+         )
          .chain(
             'import',
             (
