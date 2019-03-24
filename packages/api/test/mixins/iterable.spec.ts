@@ -1,8 +1,8 @@
-import {expect} from 'chai';
-import {unsupported} from '@thi.ng/errors';
-import {HasIterableProp} from '../fixtures';
-import {iterableOn} from '../../src/mixins';
+import { expect } from 'chai';
+import { unsupported } from '@thi.ng/errors';
 
+import { iterableOn } from '@jchptf/api';
+import { HasIterableProp } from '../fixtures';
 
 describe('iterableOn', () => {
    class ControlType implements Iterable<string>
@@ -12,7 +12,7 @@ describe('iterableOn', () => {
          throw unsupported("This class didn't mix the iterableOf behavior in");
       }
 
-      getIterable: Iterable<string> = ["abc", "def", "xyz"];
+      getIterable: Iterable<string> = ['abc', 'def', 'xyz'];
    }
 
    @iterableOn('getIterable')
@@ -20,10 +20,10 @@ describe('iterableOn', () => {
    {
       [Symbol.iterator](): IterableIterator<string>
       {
-         throw unsupported("This class did mix the iterableOf behavior in");
+         throw unsupported('This class did mix the iterableOf behavior in');
       }
 
-      getIterable: Iterable<string> = ["abc", "def", "xyz"];
+      getIterable: Iterable<string> = ['abc', 'def', 'xyz'];
    }
 
    let control: ControlType;
@@ -42,7 +42,7 @@ describe('iterableOn', () => {
       it('Does not iterate through instance', () => {
          expect(() => {
             const stringIter = control[Symbol.iterator]();
-            for (let item of control) {
+            for (const item of control) {
                console.log(item, stringIter, 'Before');
             }
             console.log([...control]);
@@ -57,7 +57,7 @@ describe('iterableOn', () => {
             .to
             .deep
             .equal(expectedOrder);
-      })
+      });
    });
 
    describe('with mixin', () => {
@@ -73,12 +73,12 @@ describe('iterableOn', () => {
             .to
             .deep
             .equal(expectedOrder);
-      })
+      });
    });
 
    describe('after, without mixin', () => {
       it('Does not iterate through instance', () => {
-         iterableOn("getIterable")(ControlType);
+         iterableOn('getIterable')(ControlType);
          expect(() => {
             return console.log([...controlAfter]);
          })
@@ -87,7 +87,7 @@ describe('iterableOn', () => {
       });
 
       it('Iterates correctly through property de-reference', () => {
-         iterableOn("getIterable")(ControlType);
+         iterableOn('getIterable')(ControlType);
          expect([...controlAfter.getIterable])
             .to
             .deep
@@ -95,7 +95,7 @@ describe('iterableOn', () => {
       });
 
       it('Iterates correctly for instances after late decoration', () => {
-         iterableOn("getIterable")(ControlType);
+         iterableOn('getIterable')(ControlType);
          const mixinAfter = new ControlType();
          expect([...mixinAfter])
             .to
@@ -110,7 +110,7 @@ describe('iterableOn', () => {
             .to
             .throw();
 
-         iterableOn("getIterable")(ControlType);
+         iterableOn('getIterable')(ControlType);
 
          expect(() => {
             return console.log([...controlAfter]);

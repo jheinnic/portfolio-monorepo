@@ -1,13 +1,13 @@
 import * as api from '../api';
-import {mixin} from '@jchptf/mixins';
+import { mixin } from '@jchptf/mixins';
 
-interface WatchImpl<T extends api.IWatch<T>> extends api.IWatch<T> {
-    _watches: api.IObjectOf<api.Watch<T>>
+interface IWatchImpl<T extends {}> extends api.IWatch<T> {
+   _watches: api.IObjectOf<api.Watch<T>>;
 }
 
-export function iWatch<T extends api.IWatch<any>>(): any
+export function iWatch<T extends {}>(): any
 {
-   return mixin<WatchImpl<T>>({
+   return mixin<IWatchImpl<T>>({
       _watches: {},
 
       addWatch(id: string, fn: api.Watch<T>): boolean
@@ -34,9 +34,9 @@ export function iWatch<T extends api.IWatch<any>>(): any
       {
          if (!this._watches) return;
          const w = this._watches;
-         for (let id of Object.getOwnPropertyNames(w)) {
+         for (const id of Object.getOwnPropertyNames(w)) {
             w[id](id, oldState, newState);
          }
-      }
+      },
    });
 }

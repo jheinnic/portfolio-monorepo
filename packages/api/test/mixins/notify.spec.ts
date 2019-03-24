@@ -1,13 +1,13 @@
 import * as assert from 'assert';
-import {Notifier} from '../fixtures';
+import { Notifier } from '../fixtures';
 
-import {IEvent, EVENT_ALL, INotify, iNotify} from '../../src';
+import { IEvent, EVENT_ALL, INotify, iNotify } from '@jchptf/api';
 
 describe('iNotify', () => {
 
    it('works', () => {
 
-      @iNotify
+      @iNotify()
       class Foo implements INotify
       {
          addListener(_: string, __: (e: IEvent) => void, ___?: any): boolean

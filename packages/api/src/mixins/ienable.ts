@@ -13,8 +13,8 @@ interface IEnableImpl extends api.IEnable
  * interface, `enable()` and `disable()` will automatically emit the
  * respective events.
  */
-export const iEnable = //function() {
-   mixin<IEnableImpl>({
+export const iEnable = function () {
+   return mixin<IEnableImpl>({
       _enabled: true,
 
       isEnabled(): boolean
@@ -50,3 +50,4 @@ export const iEnable = //function() {
          return this._enabled;
       }
    });
+}

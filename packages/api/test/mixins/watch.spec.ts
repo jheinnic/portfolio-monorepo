@@ -1,4 +1,4 @@
-import * as api from '../../src';
+import * as api from '@jchptf/api';
 
 @api.iWatch<WatchedThing>()
 export class WatchedThing implements api.IWatch<WatchedThing> {
@@ -17,7 +17,7 @@ export class WatchedThing implements api.IWatch<WatchedThing> {
 
    public removeWatch(id: string): boolean
    {
-      return id === "id";
+      return id === 'id';
    }
 
 }
@@ -29,6 +29,6 @@ export function zib(id: string, old: WatchedThing, inew: WatchedThing): void {
    console.log('callback for ', id, old, inew);
 }
 
-console.log(foo.addWatch("zib", zib));
+console.log(foo.addWatch('zib', zib));
 foo.notifyWatches(foo, bar);
-console.log(foo.removeWatch("zib"));
+console.log(foo.removeWatch('zib'));
