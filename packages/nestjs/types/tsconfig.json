@@ -35,7 +35,9 @@
         "paths": {
             "@jchptf/api": ["../../api/dist"],
             "@jchptf/nestjs": ["../dist"],
-            "@jchptf/objecttypes": ["../../objecttypes/dist"]
+            "@jchptf/objecttypes": ["../../objecttypes/dist"],
+            "@jchptf/txtypes": ["../../txtypes/dist"],
+            "@jchptf/tupletypes": ["../../tupletypes/dist"]
         }
     }
 }
