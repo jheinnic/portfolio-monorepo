@@ -1,7 +1,7 @@
 import { AsyncSink } from 'ix';
 import { Chan } from 'medium';
 
-import { blessLocalProviderToken, LocalProviderToken } from '@jchptf/nestjs';
+import { blessLocalProviderToken, LocalProviderToken, MODULE_ID } from '@jchptf/nestjs';
 import { IAdapter } from '@jchptf/api';
 
 import { IConcurrentWorkFactory, ILimiter, IChanMonitor } from '../interfaces';
@@ -15,19 +15,24 @@ export const CHAN_MONITOR = Symbol('IChanMonitor<any>');
 export const LIMITER = Symbol('ILimiter');
 export const ASYNC_SINK = Symbol('AsyncSink<any>');
 
-export interface ICoroutinesModuleTokens {
+export class CoroutinesModuleId
+{
+   public static readonly [MODULE_ID] = COROUTINES_MODULE_ID;
+
    [CONCURRENT_WORK_FACTORY]: IConcurrentWorkFactory;
+
+   // These next four are not immediately in use
    [CHAN]: IAdapter<Chan<any, any>>;
    [CHAN_MONITOR]: IChanMonitor<any>;
    [LIMITER]: ILimiter;
    [ASYNC_SINK]: AsyncSink<any>;
 }
 
-function blessLocal<Token extends keyof ICoroutinesModuleTokens>(
-   token: Token
-): LocalProviderToken<ICoroutinesModuleTokens[Token], COROUTINES_MODULE_ID, Token>
+function blessLocal<Token extends keyof CoroutinesModuleId>(
+   token: Token,
+): LocalProviderToken<CoroutinesModuleId[Token], typeof CoroutinesModuleId, Token>
 {
-   return blessLocalProviderToken(token);
+   return blessLocalProviderToken(token, CoroutinesModuleId);
 }
 
 export const CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN =
@@ -42,7 +47,8 @@ export const CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN =
 // distinct roles will require multiple tokens mapping to the same type to describe.
 //
 // As an example, consider the ConcurrentWorkFactory methods for transferring objects
-// from one Chan to another Chan, with a transformative Transducer in between.
+// from one Chan to another Chan, with a Transducer in between.  That already would
+// require two role-specific Chan provider tokens to describe.
 export const CHAN_PROVIDER_TOKEN = blessLocal(CHAN);
 export const CHAN_MONITOR_PROVIDER_TOKEN = blessLocal(CHAN_MONITOR);
 export const LIMITER_PROVIDER_TOKEN = blessLocal(LIMITER);

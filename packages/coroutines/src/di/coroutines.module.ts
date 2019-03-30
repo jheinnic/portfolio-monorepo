@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { ConcurrentWorkFactory } from '../concurrent-work-factory.service';
-import { CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN } from './coroutines.constants';
+import { CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN, CoroutinesModuleId } from './coroutines.constants';
 
 const coroutineProviders = [
    {
@@ -11,8 +11,8 @@ const coroutineProviders = [
 ];
 
 @Module({
-   providers: [...coroutineProviders],
-   exports: [...coroutineProviders],
+   providers: coroutineProviders,
+   exports: [CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN],
 })
-export class CoroutinesModule
+export class CoroutinesModule extends CoroutinesModuleId
 { }

@@ -1,13 +1,13 @@
 // import '@jchptf/reflection'
 import 'reflect-metadata';
-import {NestFactory} from '@nestjs/core';
+import {FactoryMethod} from '@nestjs/core';
 import {ApplicationModule} from './application.module';
 import {CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN} from './di/coroutines-di.constants';
 import {IConcurrentWorkFactory} from './interfaces/concurrent-work-factory.interface';
 
 async function bootstrap()
 {
-   const app = await NestFactory.createApplicationContext(ApplicationModule);
+   const app = await FactoryMethod.createApplicationContext(ApplicationModule);
    const concurrentWorkFactory: IConcurrentWorkFactory = app.get(CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN);
    // const resourceSemaphore = app.get(getResourceSemaphoreToken("FourSquare"));
    console.log(concurrentWorkFactory);

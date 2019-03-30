@@ -1,0 +1,26 @@
+import { default as LRU } from 'lru-cache';
+
+import { IBoundDynamicModuleImport, IModule, LocalProviderToken } from '@jchptf/nestjs';
+
+import { MerkleDigestLocator } from '../locator';
+import { ICanonicalPathNaming, IMerkleCalculator } from '../interface';
+import { MerkleModule } from './merkle.module';
+
+export interface IMerkleDynamicModuleConfigBuilder<Consumer extends IModule>
+{
+   injectDigestLRUCache(param: IBoundDynamicModuleImport<
+      LRU.Cache<number, MerkleDigestLocator>, typeof MerkleModule, Consumer
+   >): IMerkleDynamicModuleConfigBuilder<Consumer>;
+
+   injectIdentityLRUCache(param: IBoundDynamicModuleImport<
+      LRU.Cache<string, string>, typeof MerkleModule, Consumer
+   >): IMerkleDynamicModuleConfigBuilder<Consumer>;
+
+   exportCanonicalNameMap(
+      exportTo: LocalProviderToken<ICanonicalPathNaming, Consumer>,
+   ): IMerkleDynamicModuleConfigBuilder<Consumer>;
+
+   exportTreeCalculator(
+      exportTo: LocalProviderToken<IMerkleCalculator, Consumer>,
+   ): IMerkleDynamicModuleConfigBuilder<Consumer>;
+}

@@ -1,3 +1,6 @@
+// import { Injectable } from '@nestjs/common';
+
+// @Injectable()
 export class MerkleTreeDescription {
    public readonly treeDepth: number;
    public readonly tierCount: number;

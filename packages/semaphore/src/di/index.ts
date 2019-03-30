@@ -1,3 +1,3 @@
 export * from './resource-semaphore.constants';
-export * from './resource-semaphore.utilities';
-export * from './resource-semaphore.module';
+export * from './semaphore.module';
+export * from './semaphore-feature-module-options.type';

@@ -1,6 +1,6 @@
 import { IChanMonitor } from './interfaces/chan-monitor.interface';
 import { Chan, repeatTake } from 'medium';
-import { PromiseHandlers } from './interfaces/promise-handlers.interface';
+import { IPromiseHandlers } from './interfaces/promise-handlers.interface';
 import { illegalArgs } from '@thi.ng/errors';
 
 export class ChanMonitor<Msg> implements IChanMonitor<Msg>
@@ -10,7 +10,7 @@ export class ChanMonitor<Msg> implements IChanMonitor<Msg>
 
    constructor(
       private readonly source: Chan<any, Msg>,
-      private readonly handlerMap: Map<Msg, PromiseHandlers<Msg>>)
+      private readonly handlerMap: Map<Msg, IPromiseHandlers<Msg>>)
    {
       this.stopRequested = false;
       this.running = false;

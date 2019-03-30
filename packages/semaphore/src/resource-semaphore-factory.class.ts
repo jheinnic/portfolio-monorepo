@@ -4,7 +4,6 @@ import { CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN, IConcurrentWorkFactory } from '
 import { ResourceSemaphore } from './resource-semaphore.class';
 import { IResourceSemaphore, IResourceSemaphoreFactory } from './interfaces';
 
-
 @Injectable()
 export class ResourceSemaphoreFactory implements IResourceSemaphoreFactory
 {

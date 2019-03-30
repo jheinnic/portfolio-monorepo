@@ -2,7 +2,7 @@ import {
    ICanonicalPathNaming, IMerkleCalculator, MerkleTreeDescription,
 } from '@jchptf/merkle';
 import { FauxContainer } from './faux-container.class';
-import { blessLocalProviderToken, LocalProviderToken } from '@jchptf/nestjs';
+import { blessLocalProviderToken, LocalProviderToken, MODULE_ID } from '@jchptf/nestjs';
 
 export const treeDescriptionOne = new MerkleTreeDescription(
    // 4096, 512, 8192, 48000, 12288
@@ -23,19 +23,21 @@ export const MERKLE_CALCULATOR_TWO = Symbol('IMerkleCalculator(::tagTwo)');
 
 export const FAUX_CONTAINER = Symbol('FauxContainer');
 
-export interface ITestModuleTokens
+export class TestModuleId
 {
+   static readonly [MODULE_ID] = TEST_MODULE_ID;
+
    [MERKLE_CALCULATOR_ONE]: IMerkleCalculator;
    [MERKLE_CALCULATOR_TWO]: IMerkleCalculator;
    [MERKLE_PATH_NAMING_ONE]: ICanonicalPathNaming;
    [FAUX_CONTAINER]: FauxContainer;
 }
 
-export function blessLocal<Token extends keyof ITestModuleTokens>(
+export function blessLocal<Token extends keyof TestModuleId>(
    token: Token,
-): LocalProviderToken<ITestModuleTokens[Token], TEST_MODULE_ID, Token>
+): LocalProviderToken<TestModuleId[Token], typeof TestModuleId>
 {
-   return blessLocalProviderToken(token);
+   return blessLocalProviderToken(token, TestModuleId);
 }
 
 export const dynamicCalculatorOneToken = blessLocal(MERKLE_CALCULATOR_ONE);

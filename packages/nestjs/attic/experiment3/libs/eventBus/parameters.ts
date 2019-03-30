@@ -1,6 +1,6 @@
-// import { DynamicModuleParam } from '@jchptf/nestjs';
+// import { BoundDynamicModuleParam } from '@jchptf/nestjs';
 
 // export type LobbyConfigParameter =
-//    DynamicModuleParam &  {
+//    BoundDynamicModuleParam &  {
 //    provide:
 // }

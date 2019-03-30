@@ -1,14 +1,15 @@
+import { Injectable, Inject } from '@nestjs/common';
 import * as LRU from 'lru-cache';
+
+import { IMerkleLocatorFactory } from '../interface';
+import {
+   MERKLE_DIGEST_LRU_CACHE_PROVIDER_TOKEN, MERKLE_TREE_DESCRIPTION_PROVIDER_TOKEN,
+} from '../di';
 
 import {
    BlockMappedDigestLocator, BlockMappedLayerLocator, MerkleDigestLocator,
-   MerkleLayerLocator, MerkleTreeDescription
+   MerkleLayerLocator, MerkleTreeDescription,
 } from './index';
-import { IMerkleLocatorFactory } from '../interface';
-import { Injectable, Inject } from '@nestjs/common';
-import { MERKLE_DIGEST_LRU_CACHE_PROVIDER_TOKEN, MERKLE_TREE_DESCRIPTION_PROVIDER_TOKEN } from '../di';
-
-// import {MERKLE_CACHE_TYPES, MERKLE_TAG_KEYS, MERKLE_TYPES} from '../di';
 
 @Injectable()
 export class MerkleLocatorFactory implements IMerkleLocatorFactory
@@ -125,8 +126,9 @@ export class MerkleLocatorFactory implements IMerkleLocatorFactory
          const digestIndex = position - layer.leftPosition;
          if (layer.blockMapped) {
             retVal = new BlockMappedDigestLocator(
-               layer.asBlockMapped()
-                  .get(), digestIndex, this.treeDescription.treeDepth);
+               layer.asBlockMapped().get(),
+               digestIndex,
+               this.treeDescription.treeDepth);
          } else {
             retVal = new MerkleDigestLocator(
                layer, digestIndex, this.treeDescription.treeDepth);
@@ -169,8 +171,9 @@ export class MerkleLocatorFactory implements IMerkleLocatorFactory
    {
       if ((level < 0) || (level >= this.treeDescription.tierCount))
       {
+         let maxLayerIndex = this.treeDescription.tierCount - 1;
          throw new Error(
-            `${level} is not a layer level index between 0 and ${this.treeDescription.tierCount - 1}`)
+            `${level} is not a layer level index between 0 and ${maxLayerIndex}`);
       }
 
       return this.levelCache[level];

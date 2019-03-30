@@ -6,16 +6,14 @@ import { AsyncSink } from 'ix';
 import { FibonacciHeap, INode } from '@tyriar/fibonacci-heap';
 import { illegalArgs } from '@thi.ng/errors';
 
-import { AsyncFunc, Proc } from '@jchptf/txtypes';
+import { AsyncFunc, AnyAsyncFunc, Proc } from '@jchptf/txtypes';
 import { IAdapter } from '@jchptf/api';
 
 import {
-   asFunction, ChanBufferType, IConcurrentWorkFactory, ILimiter, IterPair, SinkLike,
+   asFunction, ChanBufferType, IChanMonitor, IConcurrentWorkFactory,
+   ILimiter, IIterPair, IPromiseHandlers, SinkLike,
 } from './interfaces';
-import { IChanMonitor } from './interfaces/chan-monitor.interface';
 import { ChanMonitor } from './chan-monitor.class';
-import { PromiseHandlers } from './interfaces/promise-handlers.interface';
-import { AsyncTx } from '@jchptf/txtypes/dist/functionTypes';
 
 function isIterable<T>(sinkValue: any): sinkValue is Iterable<T>
 {
@@ -215,7 +213,8 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
    transformToSink<T, M = T>(
       source: Chan<any, T>,
       sink: SinkLike<M>,
-      transform: AsyncTx<[T], M | Iterable<M> | AsyncIterable<M>>,
+      transform: AnyAsyncFunc<[M]> | AnyAsyncFunc<M> |
+         AnyAsyncFunc<Iterable<M>> | AnyAsyncFunc<AsyncIterable<M>>,
       concurrency: number = 1,
    ): void
    {
@@ -258,7 +257,8 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
 
    transformToChan<T, M = T>(
       source: Chan<any, T>, chan: Chan<M, any>,
-      transform: AsyncTx<[T], M | Iterable<M> | AsyncIterable<M>>,
+      transform: AnyAsyncFunc<[M]> | AnyAsyncFunc<M> |
+         AnyAsyncFunc<Iterable<M>> | AnyAsyncFunc<AsyncIterable<M>>,
       concurrency: number = 1,
    ): void
    {
@@ -439,7 +439,8 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
    }
    */
 
-   // public cycle<T>(source: Iterable<T>, sink: AsyncSink<T>, delay: number = 0): SubscriptionLike
+   // public cycle<T>(
+   //    source: Iterable<T>, sink: AsyncSink<T>, delay: number = 0): SubscriptionLike
    // {
    //    const sourceIter: Iterator<T> = source[Symbol.iterator]();
    //
@@ -465,7 +466,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       done?: Chan<Iterable<T>, any>,
       delay: number = 0): SubscriptionLike
    {
-      const sources: AsyncSink<IterPair<T>> = this.createAsyncSink<IterPair<T>>();
+      const sources: AsyncSink<IIterPair<T>> = this.createAsyncSink<IIterPair<T>>();
       let closed: boolean = false;
       const retVal = {
          unsubscribe: () => {
@@ -498,7 +499,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
       });
 
       go(async () => {
-         let nextIterPair: IterPair<T>;
+         let nextIterPair: IIterPair<T>;
          for await (nextIterPair of sources) {
             const nextIterResult: IteratorResult<T> =
                nextIterPair.iterator.next();
@@ -557,7 +558,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
 
    public createMonitor<Msg>(source: Chan<any, Msg>): IChanMonitor<Msg> {
       const retVal =
-         new ChanMonitor(source, new Map<Msg, PromiseHandlers<Msg>>());
+         new ChanMonitor(source, new Map<Msg, IPromiseHandlers<Msg>>());
       retVal.start()
          .then(() => {
             console.debug('Channel monitor thread exited normally');

@@ -2,21 +2,20 @@ import consul, { Consul, Consul as IConsul, ConsulOptions } from 'consul';
 import { EventEmitter } from 'events';
 import * as util from 'util';
 
-import {
-   CONSUL_CLIENT_PROVIDER_TOKEN, CONSUL_EVENT_EMITTER_PROVIDER_TOKEN, CONSUL_MODULE_ID,
-   CONSUL_OPTIONS_PROVIDER_TOKEN,
-} from './consul.constants';
-import { Provider } from '@nestjs/common';
-import { bySupplierFactoryCall } from '@jchptf/nestjs';
+import { DynamicProviderBindingStyle, IBySupplierFactoryCall } from '@jchptf/nestjs';
 
-// $ExpectType IAsyncFactoryProviderWithArgs<IConsul>
-export const CONSUL_CLIENT_PROVIDER: Provider =
-   bySupplierFactoryCall<
-      typeof CONSUL_CLIENT_PROVIDER_TOKEN, Consul,
-      (opt: ConsulOptions, emitter: EventEmitter) => Promise<Consul>,
-      CONSUL_MODULE_ID
->(
-      CONSUL_CLIENT_PROVIDER_TOKEN,
+import {
+   CONSUL_CLIENT_PROVIDER_TOKEN, CONSUL_EVENT_EMITTER_PROVIDER_TOKEN, CONSUL_OPTIONS_PROVIDER_TOKEN,
+   ConsulModuleId,
+} from './consul.constants';
+
+export const CONSUL_CLIENT_PROVIDER: IBySupplierFactoryCall<
+   Consul, typeof ConsulModuleId, any,
+   (opt: ConsulOptions, emitter: EventEmitter) => Promise<Consul>
+> = {
+   style: DynamicProviderBindingStyle.SUPPLIER_INJECTED_FUNCTION,
+   provide: CONSUL_CLIENT_PROVIDER_TOKEN,
+   useFactory:
       async (consulOptions: ConsulOptions, emitter: EventEmitter): Promise<IConsul> =>
       {
          return new consul({
@@ -29,5 +28,5 @@ export const CONSUL_CLIENT_PROVIDER: Provider =
             },
          });
       },
-      [CONSUL_OPTIONS_PROVIDER_TOKEN, CONSUL_EVENT_EMITTER_PROVIDER_TOKEN],
-   );
+   inject: [CONSUL_OPTIONS_PROVIDER_TOKEN, CONSUL_EVENT_EMITTER_PROVIDER_TOKEN],
+};

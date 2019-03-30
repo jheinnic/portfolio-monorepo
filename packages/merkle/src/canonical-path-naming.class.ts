@@ -1,15 +1,11 @@
+import { Inject, Injectable } from '@nestjs/common';
 import * as LRU from 'lru-cache';
 import * as path from 'path';
 
-import {
-   IDfsOrderBuilder, ICanonicalPathNaming, IMerkleCalculator, INamedPath,
-} from './interface/index';
+import { IDfsOrderBuilder, ICanonicalPathNaming, IMerkleCalculator, INamedPath } from './interface';
+import { MERKLE_IDENTITY_LRU_CACHE_PROVIDER_TOKEN, MERKLE_CALCULATOR_PROVIDER_TOKEN } from './di';
 import { BlockMappedDigestLocator, MerkleDigestLocator, MerkleNodeType } from './locator';
 import { DepthFirstVisitMode } from './traversal';
-import { Inject, Injectable } from '@nestjs/common';
-import {
-   MERKLE_IDENTITY_LRU_CACHE_PROVIDER_TOKEN, MERKLE_CALCULATOR_PROVIDER_TOKEN
-} from './di';
 
 @Injectable()
 export class CanonicalPathNaming implements ICanonicalPathNaming
@@ -37,7 +33,7 @@ export class CanonicalPathNaming implements ICanonicalPathNaming
       {
          const level = nextElement.blockLevel;
          const name = this.getBlockNamePart(nextElement);
-         pathTokens.splice(level, pathTokens.length, { pathTo: nextElement, name });
+         pathTokens.splice(level, pathTokens.length, { name, pathTo: nextElement });
 
          yield [...pathTokens];
       }
@@ -52,7 +48,7 @@ export class CanonicalPathNaming implements ICanonicalPathNaming
          const element = nextPath[nextPath.length - 1].pathTo;
          const name = path.join(
             namespaceRoot,
-            ...nextPath.map((pathElement) => pathElement.name),
+            ...nextPath.map(pathElement => pathElement.name),
          );
          yield { name, pathTo: element };
       }
@@ -68,7 +64,7 @@ export class CanonicalPathNaming implements ICanonicalPathNaming
             const element = nextPath[nextPath.length - 1].pathTo;
             const name = path.join(
                namespaceRoot,
-               ...nextPath.map((pathElement) => pathElement.name),
+               ...nextPath.map(pathElement => pathElement.name),
             );
             yield { name, pathTo: element };
          }
@@ -105,7 +101,7 @@ export class CanonicalPathNaming implements ICanonicalPathNaming
    {
       const pathSteps =
          [...this.calculator.getBlockMappedPathToRoot(digestBlock)].map(
-            (nextBlock) => this.getBlockNamePart(nextBlock))
+            nextBlock => this.getBlockNamePart(nextBlock))
             .reverse();
       return {
          name: path.join(namespaceRoot, ...pathSteps),
@@ -132,14 +128,14 @@ export class CanonicalPathNaming implements ICanonicalPathNaming
    }
 
    private getBlockNamePart(blockMappedRoot: BlockMappedDigestLocator): string
-  {
-     if (! blockMappedRoot) {
+   {
+      if (! blockMappedRoot) {
          throw new Error('Block-mapped root digest must have a defined value');
       }
 
-     const blockKey = `b${blockMappedRoot.blockOffset}`;
-     let retVal = this.lruCache.get(blockKey);
-     if (! retVal) {
+      const blockKey = `b${blockMappedRoot.blockOffset}`;
+      let retVal = this.lruCache.get(blockKey);
+      if (! retVal) {
          retVal = (
             blockMappedRoot.blockOffset === 0
          ) ? '/'
@@ -147,8 +143,8 @@ export class CanonicalPathNaming implements ICanonicalPathNaming
          this.lruCache.set(blockKey, retVal);
       }
 
-     return retVal;
-  }
+      return retVal;
+   }
 
    private getLeafDigestNamePart(leafDigest: MerkleDigestLocator): string
    {

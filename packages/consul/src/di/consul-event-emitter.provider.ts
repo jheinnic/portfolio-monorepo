@@ -1,9 +1,10 @@
-import { CONSUL_EVENT_EMITTER_PROVIDER_TOKEN } from './consul.constants';
+import { CONSUL_EVENT_EMITTER_PROVIDER_TOKEN, ConsulModuleId } from './consul.constants';
 import { EventEmitter } from 'events';
-import { NestProvider } from '@jchptf/nestjs';
+import { DynamicProviderBindingStyle, IByNoArgFactoryCall } from '@jchptf/nestjs';
 
-export const CONSUL_EVENT_EMITTER_PROVIDER: NestProvider<EventEmitter> = {
-   provide: CONSUL_EVENT_EMITTER_PROVIDER_TOKEN,
-   useFactory: async (): Promise<EventEmitter> => new EventEmitter(),
-   inject: [],
-};
+export const CONSUL_EVENT_EMITTER_PROVIDER:
+   IByNoArgFactoryCall<EventEmitter, typeof ConsulModuleId, any> = {
+      style: DynamicProviderBindingStyle.FACTORY_METHOD_CALL,
+      provide: CONSUL_EVENT_EMITTER_PROVIDER_TOKEN,
+      useFactory: (): EventEmitter => new EventEmitter(),
+   };

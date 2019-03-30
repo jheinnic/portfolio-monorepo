@@ -1,9 +1,10 @@
 import { Observable } from 'rxjs';
-import { Provider, Type } from '@nestjs/common';
+import { IBoundDynamicModuleImport, IModule } from '@jchptf/nestjs';
+import { ConfigModuleId } from '../di';
 
-export interface IConfigClassFinder
+export interface IConfigClassFinder<Consumer extends IModule>
 {
-   loadConfigAsync(): Observable<Exclude<Provider, Type<any>>>;
+   loadConfigAsync(): Observable<IBoundDynamicModuleImport<any, typeof ConfigModuleId, Consumer>>;
 
-   loadConfigSync(): Observable<Exclude<Provider, Type<any>>>;
+   loadConfigSync(): Observable<IBoundDynamicModuleImport<any, typeof ConfigModuleId, Consumer>>;
 }

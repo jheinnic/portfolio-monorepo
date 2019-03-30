@@ -1,0 +1,132 @@
+import { Builder, Ctor } from 'fluent-interface-builder';
+import { default as LRU } from 'lru-cache';
+
+import {
+   LocalProviderToken, IDynamicModuleBuilder, IModule, IBoundDynamicModuleImport,
+} from '@jchptf/nestjs';
+
+import { MerkleDigestLocator } from '../locator';
+import { ICanonicalPathNaming, IMerkleCalculator } from '../interface';
+
+import {
+   MERKLE_CALCULATOR_PROVIDER_TOKEN, MERKLE_PATH_NAMING_PROVIDER_TOKEN, MerkleModuleId,
+} from './merkle.constants';
+import {
+   MERKLE_CALCULATOR_PROVIDER, MERKLE_DIGEST_LRU_PROVIDER, MERKLE_IDENTITY_LRU_PROVIDER,
+   MERKLE_LOCATOR_FACTORY_PROVIDER, MERKLE_PATH_NAMING_PROVIDER,
+} from './merkle.providers';
+import {
+   IMerkleDynamicModuleConfigBuilder,
+} from './dynamic-merkle-module-config-builder.interface._st';
+
+export interface IDynamicMerkleModuleOptionsBuilderImpl<Consumer extends IModule>
+extends IMerkleDynamicModuleConfigBuilder<Consumer>
+{
+   value: IWorkingDynamicMerkleModule<Consumer>;
+
+   finish(): void;
+}
+
+export interface IWorkingDynamicMerkleModule<Consumer extends IModule>
+{
+   moduleBuilder: IDynamicModuleBuilder<typeof MerkleModuleId, Consumer>;
+
+   digestLRU: IBoundDynamicModuleImport<
+      LRU.Cache<number, MerkleDigestLocator>, typeof MerkleModuleId, Consumer>;
+
+   identityLRU: IBoundDynamicModuleImport<
+      LRU.Cache<string, string>, typeof MerkleModuleId, Consumer>;
+
+   nameMapperExport?: LocalProviderToken<ICanonicalPathNaming, Consumer>;
+
+   calculatorExport?: LocalProviderToken<IMerkleCalculator, Consumer>;
+}
+
+export function getMerkleDynamicModuleBuilder<Consumer extends IModule>(
+   moduleBuilder: IDynamicModuleBuilder<typeof MerkleModuleId, Consumer>,
+): IDynamicMerkleModuleOptionsBuilderImpl<Consumer>
+{
+   const BUILDER_CTOR: Ctor<
+      IWorkingDynamicMerkleModule<Consumer>,
+      IDynamicMerkleModuleOptionsBuilderImpl<Consumer>
+   > =
+      new Builder<IWorkingDynamicMerkleModule<Consumer>,
+         IDynamicMerkleModuleOptionsBuilderImpl<Consumer>>()
+         .chain(
+            'injectDigestLRUCache',
+            (param: IBoundDynamicModuleImport<
+               LRU.Cache<number, MerkleDigestLocator>, typeof MerkleModuleId, Consumer
+            >) =>
+               (ctxt: IWorkingDynamicMerkleModule<Consumer>) => {
+                  return {
+                     ...ctxt,
+                     digestLRU: param,
+                  };
+               },
+         )
+         .chain(
+            'injectIdentityLRUCache',
+            (param: IBoundDynamicModuleImport<
+               LRU.Cache<string, string>, typeof MerkleModuleId, Consumer
+            >) =>
+               (ctxt: IWorkingDynamicMerkleModule<Consumer>) => {
+                  return {
+                     ...ctxt,
+                     identityLRU: param,
+                  };
+               },
+         )
+         .chain(
+            'exportCanonicalNameMap',
+            (exportTo: LocalProviderToken<ICanonicalPathNaming, Consumer>) =>
+               (ctxt: IWorkingDynamicMerkleModule<Consumer>) => {
+                  return {
+                     ...ctxt,
+                     nameMapperExport: exportTo,
+                  };
+               },
+         )
+         .chain(
+            'exportTreeCalculator',
+            (exportTo: LocalProviderToken<IMerkleCalculator, Consumer>) =>
+               (ctxt: IWorkingDynamicMerkleModule<Consumer>) => {
+                  return {
+                     ...ctxt,
+                     calculatorExport: exportTo,
+                  };
+               },
+         )
+         .unwrap<void>(
+            'finish',
+            () => (ctx: IWorkingDynamicMerkleModule<Consumer>): void => {
+               const moduleBuilder = ctx.moduleBuilder;
+               moduleBuilder.acceptBoundImport(ctx.digestLRU);
+               moduleBuilder.acceptBoundImport(ctx.identityLRU);
+
+               if ((!! ctx.calculatorExport) || (!! ctx.nameMapperExport)) {
+                  moduleBuilder.acceptBoundImport(MERKLE_LOCATOR_FACTORY_PROVIDER());
+
+                  if (!! ctx.calculatorExport) {
+                     moduleBuilder.acceptBoundImport(MERKLE_CALCULATOR_PROVIDER());
+                     moduleBuilder.exportFromSupplier(
+                        ctx.calculatorExport, MERKLE_CALCULATOR_PROVIDER_TOKEN);
+                  }
+
+                  if (!! ctx.nameMapperExport) {
+                     moduleBuilder.acceptBoundImport(MERKLE_PATH_NAMING_PROVIDER());
+                     moduleBuilder.exportFromSupplier(
+                        ctx.nameMapperExport, MERKLE_PATH_NAMING_PROVIDER_TOKEN);
+                  }
+               }
+            },
+         )
+         .value;
+
+   return new BUILDER_CTOR(
+      {
+         moduleBuilder,
+         digestLRU: MERKLE_DIGEST_LRU_PROVIDER(),
+         identityLRU: MERKLE_IDENTITY_LRU_PROVIDER(),
+      },
+   );
+}

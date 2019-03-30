@@ -1,3 +1,2 @@
-import { getModuleIdentifier } from '@jchptf/nestjs';
-
-export const APP_MODULE_ID = getModuleIdentifier('@jchptf/config_fixture');
+export const APP_MODULE_ID = Symbol('@jchptf/test');
+export type APP_MODULE_ID = typeof APP_MODULE_ID;

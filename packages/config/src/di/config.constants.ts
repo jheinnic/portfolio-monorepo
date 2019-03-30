@@ -1,6 +1,6 @@
 import { DotenvConfigOptions } from 'dotenv';
 
-import { blessLocalProviderToken, LocalProviderToken } from '@jchptf/nestjs';
+import { blessLocalProviderToken, LocalProviderToken, MODULE_ID } from '@jchptf/nestjs';
 
 import { IConfigLoader, IConfigMetadataHelper, IConfigReader } from '../interfaces';
 
@@ -12,17 +12,19 @@ export const CONFIG_READER = Symbol('IConfigReader');
 export const CONFIG_LOADER = Symbol('IConfigLoader');
 export const DOTENV_CONFIG_OPTIONS = Symbol('DotenvConfigOptions');
 
-export interface IConfigModuleTokens {
+export class ConfigModuleId {
+   public static readonly [MODULE_ID]: CONFIG_MODULE_ID;
+
    [CONFIG_METADATA_HELPER]: IConfigMetadataHelper;
    [CONFIG_READER]: IConfigReader;
    [CONFIG_LOADER]: IConfigLoader;
    [DOTENV_CONFIG_OPTIONS]: DotenvConfigOptions;
 }
 
-function blessLocal<Token extends keyof IConfigModuleTokens>(
-   token: Token): LocalProviderToken<IConfigModuleTokens[Token], CONFIG_MODULE_ID, Token>
+function blessLocal<K extends keyof ConfigModuleId>(token: K):
+   LocalProviderToken<ConfigModuleId[K], typeof ConfigModuleId, K>
 {
-   return blessLocalProviderToken(token);
+   return blessLocalProviderToken(token, ConfigModuleId);
 }
 
 export const CONFIG_METADATA_HELPER_PROVIDER_TOKEN = blessLocal(CONFIG_METADATA_HELPER);

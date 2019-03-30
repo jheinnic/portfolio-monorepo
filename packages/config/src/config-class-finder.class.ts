@@ -1,17 +1,18 @@
+import { Type } from '@nestjs/common';
 import { bindNodeCallback, from, Observable } from 'rxjs';
-import { mergeMap, tap } from 'rxjs/operators';
-import { Provider, Type } from '@nestjs/common';
-import { ConstructorFunction } from 'simplytyped';
+import { map, mergeMap, tap } from 'rxjs/operators';
 import { Glob, sync as globSync } from 'glob';
 import * as assert from 'assert';
 import * as path from 'path';
 
-import { getLocalProviderTokenString, ModuleIdentifier } from '@jchptf/nestjs';
-
-import { CONFIG_READER_PROVIDER_TOKEN, CONFIG_LOADER_PROVIDER_TOKEN } from './di';
 import {
-   IConfigClassFinder, IConfigReader, IConfigLoader,
-} from './interfaces';
+   DynamicProviderBindingStyle, IModule, IBySupplierFactoryCall, IBoundDynamicModuleImport,
+} from '@jchptf/nestjs';
+
+import {
+   CONFIG_READER_PROVIDER_TOKEN, CONFIG_LOADER_PROVIDER_TOKEN, ConfigModuleId,
+} from './di';
+import { IConfigClassFinder, IConfigReader, IConfigLoader } from './interfaces';
 
 /**
  * This class is not constructed by Nest through DI because it needs to exist at the time when
@@ -24,15 +25,11 @@ import {
  * to BeanFactoryPostProcessors not being eligible for certain DI features by virtue of where their
  * functionality is applied in the framework's broader lifecycle stages.
  */
-export class ConfigClassFinder implements IConfigClassFinder
+export class ConfigClassFinder<Consumer extends IModule> implements IConfigClassFinder<Consumer>
 {
    private readonly resolvedSearchRoot: string;
 
-   constructor(
-      private readonly moduleId: ModuleIdentifier,
-      private readonly loadConfigGlob: string,
-      searchRootDir?: string,
-   )
+   constructor(private readonly loadConfigGlob: string, searchRootDir?: string)
    {
       this.resolvedSearchRoot =
          ConfigClassFinder.resolveSearchRoot(searchRootDir);
@@ -49,7 +46,8 @@ export class ConfigClassFinder implements IConfigClassFinder
       const retVal = !startPath
          ? root
          : !path.isAbsolute(startPath)
-            ? path.normalize(path.join(root, startPath))
+            ? path.normalize(
+               path.join(root, startPath))
             : path.normalize(startPath);
 
       assert.ok(
@@ -63,7 +61,8 @@ export class ConfigClassFinder implements IConfigClassFinder
    /**
     * @returns {Promise<Config>}
     */
-   public loadConfigAsync(): Observable<Exclude<Provider, Type<any>>>
+   public loadConfigAsync():
+      Observable<IBoundDynamicModuleImport<any, typeof ConfigModuleId, Consumer>>
    {
       const globPattern =
          path.join(this.resolvedSearchRoot, this.loadConfigGlob);
@@ -83,14 +82,16 @@ export class ConfigClassFinder implements IConfigClassFinder
    /**
     * Load config synchronously
     */
-   public loadConfigSync(): Observable<Exclude<Provider, Type<any>>>
+   public loadConfigSync():
+      Observable<IBoundDynamicModuleImport<any, typeof ConfigModuleId, Consumer>>
    {
       const globPattern: string =
          path.join(this.resolvedSearchRoot, this.loadConfigGlob);
       const matches: string[] = globSync(globPattern);
 
       return this.parseMatchingFiles(
-         from(matches));
+         from(matches),
+      );
    }
 
    /**
@@ -98,8 +99,8 @@ export class ConfigClassFinder implements IConfigClassFinder
     * @param configPaths
     * @returns {any}
     */
-   private parseMatchingFiles(
-      configPaths: Observable<string>): Observable<Exclude<Provider, Type<any>>>
+   private parseMatchingFiles(configPaths: Observable<string>):
+      Observable<IBoundDynamicModuleImport<any, typeof ConfigModuleId, Consumer>>
    {
       return configPaths.pipe(
          tap(
@@ -109,33 +110,26 @@ export class ConfigClassFinder implements IConfigClassFinder
          ),
          mergeMap(
             (filePath: string) => // Observable<ConstructorFunction<any>> =>
-               Object.values(
-                  require(filePath)) as ConstructorFunction<any>[]),
+               Object.values(require(filePath)) as Type<any>[]),
          // filter(
          //    (clazz: ConstructorFunction<any>) =>
          //       this.configMetaHelper.hasProviderToken(clazz)),
-         mergeMap(
-            (clazz: ConstructorFunction<any>) => {
-               const retValOne = {
-                  provide: getLocalProviderTokenString(
-                     this.moduleId, clazz.name),
-                  useFactory: async (
-                     configLoader: IConfigLoader, configReader: IConfigReader) =>
-                     configLoader.loadInstance(clazz, configReader),
-                  inject: [CONFIG_LOADER_PROVIDER_TOKEN, CONFIG_READER_PROVIDER_TOKEN],
-               };
-               const retValTwo = {
-                  provide: clazz,
-                  useFactory: async (
-                     configLoader: IConfigLoader, configReader: IConfigReader) =>
-                     configLoader.loadInstance(clazz, configReader),
-                  inject: [CONFIG_LOADER_PROVIDER_TOKEN, CONFIG_READER_PROVIDER_TOKEN],
-               };
+         map((clazz: Type<any>) => {
+            const retValTwo: IBySupplierFactoryCall<
+               typeof clazz, typeof ConfigModuleId, any,
+               (loader: IConfigLoader, reader: IConfigReader) => Promise<typeof clazz>
+            > = {
+               style: DynamicProviderBindingStyle.SUPPLIER_INJECTED_FUNCTION,
+               provide: clazz,
+               useFactory: async (
+                  configLoader: IConfigLoader, configReader: IConfigReader) =>
+                  configLoader.loadInstance(clazz, configReader),
+               inject: [CONFIG_LOADER_PROVIDER_TOKEN, CONFIG_READER_PROVIDER_TOKEN],
+            };
 
-               console.log(`1) <${retValOne}>\n 2) <${retValTwo}>`);
-               return from([retValOne, retValTwo]);
-            },
-         ),
+            console.log(`<${retValTwo}>`);
+            return retValTwo;
+         }),
       );
    }
 }
