@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/config",
-    "version": "0.0.31",
+    "version": "0.0.32",
     "description": "TODO",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
@@ -66,9 +66,9 @@
         "typescript": "3.2.2"
     },
     "dependencies": {
-        "@jchptf/api": "^0.0.42",
-        "@jchptf/nestjs": "^0.0.10",
-        "@jchptf/reflection": "^0.0.10",
+        "@jchptf/api": "^0.0.43",
+        "@jchptf/nestjs": "^0.0.11",
+        "@jchptf/reflection": "^0.0.11",
         "@nestjs/common": "^5.5.0",
         "@thi.ng/errors": "^0.1.12",
         "class-transformer": "^0.1.9",

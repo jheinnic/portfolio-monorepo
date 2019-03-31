@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/semaphore",
-    "version": "0.0.30",
+    "version": "0.0.31",
     "description": "TODO",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
@@ -64,10 +64,10 @@
         "typescript": "3.2.2"
     },
     "dependencies": {
-        "@jchptf/api": "^0.0.42",
-        "@jchptf/coroutines": "^0.0.43",
-        "@jchptf/nestjs": "^0.0.10",
-        "@jchptf/reflection": "^0.0.10",
+        "@jchptf/api": "^0.0.43",
+        "@jchptf/coroutines": "^0.0.44",
+        "@jchptf/nestjs": "^0.0.11",
+        "@jchptf/reflection": "^0.0.11",
         "@jchptf/txtypes": "^0.0.12",
         "@nestjs/common": "^5.5.0",
         "medium": "^1.0.2",
