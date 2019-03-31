@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.11](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/mixins@0.0.10...@jchptf/mixins@0.0.11) (2019-03-31)
+
+**Note:** Version bump only for package @jchptf/mixins
+
+
+
+
+
 ## [0.0.10](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/mixins@0.0.9...@jchptf/mixins@0.0.10) (2019-03-31)
 
 **Note:** Version bump only for package @jchptf/mixins
