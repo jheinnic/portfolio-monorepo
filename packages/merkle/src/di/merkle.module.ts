@@ -11,7 +11,7 @@ import {
    MERKLE_CALCULATOR_PROVIDER, MERKLE_DIGEST_LRU_PROVIDER, MERKLE_IDENTITY_LRU_PROVIDER,
    MERKLE_LOCATOR_FACTORY_PROVIDER, MERKLE_PATH_NAMING_PROVIDER,
 } from './merkle.providers';
-import { MerkleRootModuleOptions } from './merkle-root-module-options.interface';
+import { MerkleModuleOptions } from './merkle-module-options.interface';
 
 @Module({})
 export class MerkleModule extends MerkleModuleId
@@ -47,7 +47,7 @@ export class MerkleModule extends MerkleModuleId
    */
 
    public static forFeature<Consumer extends IModule>(
-      options: MerkleRootModuleOptions<Consumer>,
+      options: MerkleModuleOptions<Consumer>,
    ): DynamicModule
    {
       // Adapt the raw module types with a factory facade, then wrap that facade

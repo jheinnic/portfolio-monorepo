@@ -1,11 +1,13 @@
 import { DynamicModule, Module, Type } from '@nestjs/common';
 
-import { InjectableKey, buildDynamicModule, IDynamicModuleBuilder } from '@jchptf/nestjs';
+import {
+   InjectableKey, buildDynamicModule, IDynamicModuleBuilder, IModule, MODULE_ID,
+} from '@jchptf/nestjs';
 import {
    BLENDER, INJECTED_DEPENDENCY, LAMP, LIBRARY_CLASS,
-   LOCAL_DEPENDENCY, POWER_CONTAINER, SOCKET,
+   LOCAL_DEPENDENCY, /*POWER_CONTAINER,*/ SOCKET,
 } from './constants';
-import { Blender, IPluggable, Lamp, Socket } from './power_classes';
+import { Blender, /*IPluggable,*/ Lamp, Socket } from './power_classes';
 import { Application, IConnectable, UtilityContainer } from './classes';
 
 // export interface IApplicationModuleTypes<_X = any, _C = any>
@@ -59,32 +61,34 @@ import { Application, IConnectable, UtilityContainer } from './classes';
 
 export class DynamicsModule
 {
-   static forFeatureTwo<X extends IConnectable<Y>, Y = any>(
-      consumerModule: Type<any>,
-      dependency: InjectableKey<X>,
-      exportAs: InjectableKey<UtilityContainer<X>>,
+   public static readonly [MODULE_ID] = Symbol('@jchptf/dynamics');
+   static forFeatureTwo<X extends IConnectable<Y>, Y extends IModule = any>(
+      consumerModule: Y,
+      _dependency: InjectableKey<X, Y>,
+      _exportAs: InjectableKey<UtilityContainer<X>, Y>,
    ): DynamicModule
    {
       return buildDynamicModule(
          DynamicsModule,
          consumerModule,
-         (builder: IDynamicModuleBuilder) => {
-            builder.bindInputProvider({
-               provide: INJECTED_DEPENDENCY,
-               useExisting: dependency,
-            }).bindProvider(
-               {
-                  provide: LIBRARY_CLASS,
-                  useClass: UtilityContainer,
-               },
-               exportAs,
-            ).bindProvider(
-               {
-                  provide: LOCAL_DEPENDENCY,
-                  useFactory: () => { return new Map<string, any>(); },
-               },
-               false,
-            );
+         (_builder: IDynamicModuleBuilder<typeof DynamicsModule, Y>) => {
+            // builder.bindInputProvider({
+            //    provide: INJECTED_DEPENDENCY,
+            //    useExisting: dependency,
+            // })
+            // .bindProvider(
+            //    {
+            //       provide: LIBRARY_CLASS,
+            //       useClass: UtilityContainer,
+            //    },
+            //    exportAs,
+            // ).bindProvider(
+            //    {
+            //       provide: LOCAL_DEPENDENCY,
+            //       useFactory: () => { return new Map<string, any>(); },
+            //    },
+            //    false,
+            // );
          },
       );
    }
@@ -145,7 +149,8 @@ export class FooModule
 */
 
 @Module({
-   imports: [DynamicsModule.forFeatureTwo<Socket, IPluggable>(BarModule, SOCKET, POWER_CONTAINER)],
+   // imports: [DynamicsModule.forFeatureTwo<Socket, IPluggable>(
+   //    BarModule, SOCKET, POWER_CONTAINER)],
    providers: [
       {
          provide: SOCKET,

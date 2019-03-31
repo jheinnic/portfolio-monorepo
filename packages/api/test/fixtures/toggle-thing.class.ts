@@ -1,7 +1,8 @@
 import { IEnable, iEnable } from '@jchptf/api';
 
 @iEnable()
-export class ToggleThing implements IEnable {
+export class ToggleThing implements IEnable
+{
    constructor(public readonly flags: number[]) { }
 
    // public readonly isEnabled: boolean = false;

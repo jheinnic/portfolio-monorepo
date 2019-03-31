@@ -13,8 +13,10 @@ export const RESERVATION_CHANNEL_PROVIDER:
    IBoundDynamicModuleImport<any, typeof SemaphoreModuleId, any> = {
       style: DynamicProviderBindingStyle.SUPPLIER_INJECTED_FUNCTION,
       provide: RESERVATION_CHANNEL_PROVIDER_TOKEN,
-      useFactory: <T extends object>(
-      sem: IResourceSemaphore<T>): IAdapter<Chan<IResourceAdapter<T>, T>> =>
+      // TODO: In TypeScript 3.4, this can absorb a generic <T> type variable, but in
+      //       earlier versions, type inference distills <T> down to <{}> and breaks
+      //       compilation if a generic is used...
+      useFactory: (sem: IResourceSemaphore<{}>): IAdapter<Chan<IResourceAdapter<{}>, {}>> =>
       {
          const unwrapValue = sem.getReservationChan();
          return {

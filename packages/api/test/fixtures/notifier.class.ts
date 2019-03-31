@@ -16,9 +16,9 @@ export class Notifier implements INotify
       throw new Error('Unimplemented Mixin');
    }
 
-   public removeListener(_e1: string, _listen: ((e: IEvent) => void) | Listener, _scope?: any): boolean
+   public removeListener(
+      _e1: string, _listen: ((e: IEvent) => void) | Listener, _scope?: any): boolean
    {
       throw new Error('Unimplemented Mixin');
    }
-
 }

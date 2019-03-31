@@ -1,6 +1,6 @@
 import { Type } from '@nestjs/common';
 
-import { IFactory } from '@jchptf/api';
+import { IFactory, IFactoryObject } from '@jchptf/api';
 
 import { IModule } from '../module';
 import { ArgsAsInjectableKeys, FactoryMethod, InjectableKey } from '../provider';
@@ -12,7 +12,7 @@ export type IBoundDynamicModuleImport<
    IAsValue<ParamType, Supplier, Value> |
    IAsClass<ParamType, Supplier, Value> |
    IFromFactoryClass<ParamType, Supplier, Value> |
-   IByNoArgFactoryCall<ParamType, Supplier, Value> |
+   IFromFactoryMethod<ParamType, Supplier, Value> |
    IFromSupplierExisting<ParamType, Supplier, Value> |
    IFromSupplierExistingFactory<ParamType, Supplier, Value> |
    IBySupplierFactoryCall<ParamType, Supplier, Value> |
@@ -47,12 +47,20 @@ export interface IAsClass
 }
 
 export interface IFromFactoryClass
-   <ParamType extends {}, Supplier extends IModule, Value = string|symbol>
+<ParamType extends {}, Supplier extends IModule, Value = string|symbol>
 {
    style: DynamicProviderBindingStyle.FACTORY_CLASS;
    provide: InjectableKey<ParamType, Supplier, Value>;
-   provideFactory: InjectableKey<IFactory<ParamType>, Supplier>;
-   useFactoryClass: Type<IFactory<ParamType>>;
+   provideFactory: InjectableKey<IFactoryObject<ParamType>, Supplier>;
+   useFactoryClass: Type<IFactoryObject<ParamType>>;
+}
+
+export interface IFromFactoryMethod
+<ParamType extends {}, Supplier extends IModule, Value = string|symbol>
+{
+   style: DynamicProviderBindingStyle.FACTORY_METHOD_CALL;
+   provide: InjectableKey<ParamType, Supplier, Value>;
+   useFactory: IFactory<ParamType>;
 }
 
 export interface IFromSupplierExisting
@@ -71,29 +79,26 @@ export interface IFromSupplierExistingFactory
    useExisting: InjectableKey<IFactory<ParamType>, Supplier>;
 }
 
-export interface IFromConsumerExisting
-   <ParamType extends {}, Supplier extends IModule, Consumer extends IModule, Value = string|symbol>
+export interface IFromConsumerExisting <
+   ParamType extends {},
+   Supplier extends IModule,
+   Consumer extends IModule,
+   Value = string|symbol>
 {
    style: DynamicProviderBindingStyle.CONSUMER_PROVIDED;
    provide: InjectableKey<ParamType, Supplier, Value>;
    useExisting: InjectableKey<ParamType, Consumer>;
 }
 
-export interface IFromConsumerExistingFactory
-   <ParamType extends {}, Supplier extends IModule, Consumer extends IModule, Value = string|symbol>
+export interface IFromConsumerExistingFactory <
+   ParamType extends {},
+   Supplier extends IModule,
+   Consumer extends IModule,
+   Value = string|symbol>
 {
    style: DynamicProviderBindingStyle.CONSUMER_PROVIDED_FACTORY;
    provide: InjectableKey<ParamType, Supplier, Value>;
    useExisting: InjectableKey<IFactory<ParamType>, Consumer>;
-}
-
-export interface IByNoArgFactoryCall
-   <ParamType extends {}, Supplier extends IModule, Value = string|symbol>
-{
-   style: DynamicProviderBindingStyle.FACTORY_METHOD_CALL;
-   provide: InjectableKey<ParamType, Supplier, Value>;
-   useFactory: (() => ParamType) | (() => Promise<ParamType>);
-   inject?: void[];
 }
 
 export interface IBySupplierFactoryCall<

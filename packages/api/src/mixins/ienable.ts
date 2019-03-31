@@ -1,5 +1,5 @@
 import * as api from '../api';
-import {mixin} from '@jchptf/mixins';
+import { mixin } from '@jchptf/mixins';
 
 interface IEnableImpl extends api.IEnable
 {
@@ -28,7 +28,7 @@ export const iEnable = function () {
          if (this.notify) {
             this.notify(<api.IEvent>{
                id: api.EVENT_ENABLE,
-               target: this
+               target: this,
             });
          }
       },
@@ -39,7 +39,7 @@ export const iEnable = function () {
          if (this.notify) {
             this.notify(<api.IEvent>{
                id: api.EVENT_DISABLE,
-               target: this
+               target: this,
             });
          }
       },
@@ -48,6 +48,6 @@ export const iEnable = function () {
       {
          this._enabled ? this.disable() : this.enable();
          return this._enabled;
-      }
+      },
    });
-}
+};

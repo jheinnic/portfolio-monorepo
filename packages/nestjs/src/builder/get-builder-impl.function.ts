@@ -1,12 +1,12 @@
 import { DynamicModule, ForwardReference, Provider, Type } from '@nestjs/common';
 import { Builder, Ctor } from 'fluent-interface-builder';
 
-import { IFactory } from '@jchptf/api';
-import { IDynamicModuleBuilder } from './dynamic-module-builder.interface';
+import { IFactory, IFactoryObject, syncCreate } from '@jchptf/api';
+
 import { IModule } from '../module';
 import { ArgsAsInjectableKeys, FactoryMethod, InjectableKey } from '../provider';
 import { DynamicProviderBindingStyle } from './dynamic-provider-binding-style.enum';
-// import { IBoundDynamicModuleExport } from './bound-dynamic-module-export.type';
+import { IDynamicModuleBuilder } from './dynamic-module-builder.interface';
 import { IBoundDynamicModuleImport } from './bound-dynamic-module-import.type';
 
 /**
@@ -51,8 +51,9 @@ export function getBuilder<Supplier extends IModule, Consumer extends IModule>(
             <Component extends {}>
             (
                provide: InjectableKey<Component, Supplier>,
-               provideFactory: InjectableKey<IFactory<Component>, Supplier>,
-               useClass: Type<IFactory<Component>>) =>
+               provideFactory: InjectableKey<IFactoryObject<Component>, Supplier>,
+               useClass: Type<IFactoryObject<Component>>,
+            ) =>
                (ctx: IWorkingDynamicModule): IWorkingDynamicModule =>
                {
                   return provideWithFactoryClass(ctx, provide, provideFactory, useClass);
@@ -85,7 +86,8 @@ export function getBuilder<Supplier extends IModule, Consumer extends IModule>(
             <Component extends {}>
             (
                provide: InjectableKey<Component, Supplier>,
-               existing: InjectableKey<Component, Consumer>) =>
+               existing: InjectableKey<Component, Consumer>,
+            ) =>
                (ctx: IWorkingDynamicModule): IWorkingDynamicModule =>
                {
                   return selectFromConsumer(ctx, provide, existing);
@@ -96,7 +98,8 @@ export function getBuilder<Supplier extends IModule, Consumer extends IModule>(
             <Component extends {}>
             (
                provide: InjectableKey<Component, Supplier>,
-               existing: InjectableKey<IFactory<Component>, Consumer>) =>
+               existing: InjectableKey<IFactory<Component>, Consumer>,
+            ) =>
                (ctx: IWorkingDynamicModule): IWorkingDynamicModule =>
                {
                   return applyFactoryFromConsumer(ctx, provide, existing);
@@ -107,7 +110,8 @@ export function getBuilder<Supplier extends IModule, Consumer extends IModule>(
             <Component extends {}>
             (
                provide: InjectableKey<Component, Supplier>,
-               useFactory: (() => Component) | (() => Promise<Component>)) =>
+               useFactory: IFactory<Component>,
+            ) =>
                (ctx: IWorkingDynamicModule): IWorkingDynamicModule =>
                {
                   return callFactoryMethod(ctx, provide, useFactory);
@@ -116,12 +120,16 @@ export function getBuilder<Supplier extends IModule, Consumer extends IModule>(
          .chain(
             'callSupplierFactoryMethod',
             <Component extends {}, Factory extends FactoryMethod<Component>>
-            (provide: InjectableKey<Component, Supplier>,
-             useFactory: Factory, inject: ArgsAsInjectableKeys<Factory, Supplier>) =>
-               (ctx: IWorkingDynamicModule): IWorkingDynamicModule =>
+            (
+               provide: InjectableKey<Component, Supplier>,
+               useFactory: Factory,
+               inject: ArgsAsInjectableKeys<Factory, Supplier>,
+            ) => {
+               return (ctx: IWorkingDynamicModule): IWorkingDynamicModule =>
                {
                   return callSupplierFactoryMethod(ctx, provide, useFactory, inject);
-               },
+               };
+            },
          )
          .chain(
             'callConsumerFactoryMethod',
@@ -230,22 +238,14 @@ export function getBuilder<Supplier extends IModule, Consumer extends IModule>(
             provider: Exclude<Provider, Type<any>>,
             andExport: boolean,
          ) => (ctx: IWorkingDynamicModule): IWorkingDynamicModule => {
-               if (!! andExport) {
-                  return {
-                     ...ctx,
-                     supplier: {
-                        ...ctx.supplier,
-                        providers: [...ctx.supplier.providers!, provider],
-                        exports: [...ctx.supplier.exports!, provider.provide],
-                     },
-                  };
-               }
-
                return {
                   ...ctx,
                   supplier: {
                      ...ctx.supplier,
                      providers: [...ctx.supplier.providers!, provider],
+                     exports: andExport
+                        ? [...ctx.supplier.exports!, provider.provide]
+                        : ctx.supplier.exports!,
                   },
                };
             },
@@ -396,13 +396,14 @@ function callSupplierFactoryMethod<
 }
 
 function callFactoryMethod<Component extends {}, Supplier extends IModule>(
-   ctx: IWorkingDynamicModule, provide: InjectableKey<Component, Supplier>,
-   useFactory: (() => Component) | (() => Promise<Component>))
+   ctx: IWorkingDynamicModule,
+   provide: InjectableKey<Component, Supplier>,
+   useFactory: IFactory<Component>)
 {
    return BuilderUtilityFacade.appendSupplierImportProvider(
       ctx, {
          provide,
-         useFactory,
+         useFactory: () => syncCreate(useFactory),
       });
 }
 
@@ -446,7 +447,7 @@ function applyFactoryFromSupplier<Component extends {}, Supplier extends IModule
 {
    const newProvider: Provider = {
       provide,
-      useFactory: iFactory => iFactory.create(),
+      useFactory: iFactory => syncCreate(iFactory),
       inject: [factoryToken],
    };
 
@@ -454,7 +455,8 @@ function applyFactoryFromSupplier<Component extends {}, Supplier extends IModule
 }
 
 function selectFromSupplier<Component extends {}, Supplier extends IModule>(
-   ctx: IWorkingDynamicModule, provide: InjectableKey<Component, Supplier>,
+   ctx: IWorkingDynamicModule,
+   provide: InjectableKey<Component, Supplier>,
    existing: InjectableKey<Component, Supplier>)
 {
    const newProvider: Provider = {
@@ -469,8 +471,8 @@ function selectFromSupplier<Component extends {}, Supplier extends IModule>(
 function provideWithFactoryClass<Component extends {}, Supplier extends IModule>(
    ctx: IWorkingDynamicModule,
    provide: InjectableKey<Component, Supplier>,
-   provideFactory: InjectableKey<IFactory<Component>, Supplier>,
-   useClass: Type<IFactory<Component>>,
+   provideFactory: InjectableKey<IFactoryObject<Component>, Supplier>,
+   useClass: Type<IFactoryObject<Component>>,
 )
 {
    const contextWithFactory =

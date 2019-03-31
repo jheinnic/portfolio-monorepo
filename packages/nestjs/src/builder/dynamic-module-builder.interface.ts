@@ -1,5 +1,5 @@
 import { DynamicModule, ForwardReference, Type } from '@nestjs/common';
-import { IFactory } from '@jchptf/api';
+import { IFactory, IFactoryObject } from '@jchptf/api';
 
 import { IModule } from '../module';
 import { ArgsAsInjectableKeys, InjectableKey, FactoryMethod } from '../provider';
@@ -32,8 +32,8 @@ export interface IDynamicModuleBuilder<
 
    provideWithFactoryClass<Component extends {}>(
       provide: InjectableKey<Component, Supplier>,
-      provideFactory: InjectableKey<IFactory<Component>, Supplier>,
-      clazz: Type<IFactory<Component>>,
+      provideFactory: InjectableKey<IFactoryObject<Component>, Supplier>,
+      clazz: Type<IFactoryObject<Component>>,
    ): IDynamicModuleBuilder<Supplier, Consumer>;
 
    selectFromSupplier<Component extends {}>(
@@ -58,16 +58,22 @@ export interface IDynamicModuleBuilder<
 
    callFactoryMethod<Component extends {}>(
       provide: InjectableKey<Component, Supplier>,
-      useFactory: (() => Component) | (() => Promise<Component>),
+      useFactory: IFactory<Component>,
    ): IDynamicModuleBuilder<Supplier, Consumer>;
 
-   callSupplierFactoryMethod<Component extends {}, Factory extends FactoryMethod<Component>>(
+   callSupplierFactoryMethod<
+      Component extends {},
+      Factory extends FactoryMethod<Component>>
+   (
       provide: InjectableKey<Component, Supplier>,
       useFactory: Factory,
       inject: ArgsAsInjectableKeys<Factory, Supplier>,
    ): IDynamicModuleBuilder<Supplier, Consumer>;
 
-   callConsumerFactoryMethod<Component extends {}, Factory extends FactoryMethod<Component>>(
+   callConsumerFactoryMethod<
+      Component extends {},
+      Factory extends FactoryMethod<Component>>
+   (
       provide: InjectableKey<Component, Supplier>,
       useFactory: Factory,
       inject: ArgsAsInjectableKeys<Factory, Consumer>,

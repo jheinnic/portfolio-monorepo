@@ -1,6 +1,6 @@
-export const EVENT_ALL = "*";
-export const EVENT_ENABLE = "enable";
-export const EVENT_DISABLE = "disable";
+export const EVENT_ALL = '*';
+export const EVENT_ENABLE = 'enable';
+export const EVENT_DISABLE = 'disable';
 
 /**
  * Event listener.
@@ -36,10 +36,36 @@ export interface IAdapter<T> {
  * interface method, although other aspects of their operational lifecycle may
  * certainly involve parameter-setting.
  */
-export interface IFactory<Type> {
-    create(): Type | Promise<Type>;
+export type IFactoryObject<Type> = {
+   create(): Type;
+} | {
+   create(): Promise<Type>;
+} | {
+   create(): Type | Promise<Type>;
+};
+
+export type IFactoryMethod<Type> =
+   (() => Type) | (() => Promise<Type>) | (() => Type | Promise<Type>);
+
+export type IFactory<Type> = IFactoryObject<Type> | IFactoryMethod<Type>;
+
+export async function asyncCreate<Type>(factory: IFactory<Type>): Promise<Type>
+{
+   if ('function' === typeof factory) {
+      return await factory();
+   }
+
+   return await factory.create();
 }
 
+export function syncCreate<Type>(factory: IFactory<Type>): Type|Promise<Type>
+{
+   if ('function' === typeof factory) {
+      return factory();
+   }
+
+   return factory.create();
+}
 
 /**
  * Generic interface for types with binary backing buffers.
@@ -49,11 +75,11 @@ export interface IBuffered {
      * An implementation's publicly accessible backing array /
      * ArrayBuffer (usually a typed array instance).
      */
-    buffer: ArrayBufferLike;
+   buffer: ArrayBufferLike;
     /**
      * Returns an Uint8Array view of backing array.
      */
-    bytes?(): Uint8Array;
+   bytes?(): Uint8Array;
 }
 
 /**
@@ -64,7 +90,7 @@ export interface ICopy<T> {
      * Returns a copy of this instance. Shallow or deep copies are
      * implementation specific.
      */
-    copy(): T;
+   copy(): T;
 }
 
 /**
@@ -74,25 +100,25 @@ export interface ICopy<T> {
  * @see mixins/IEnable
  */
 export interface IEnable {
-    isEnabled(): boolean;
+   isEnabled(): boolean;
 
     /**
      * Disables this entity.
      */
-    disable(): void;
+   disable(): void;
 
     /**
      * Enables this entity.
      */
-    enable(): void;
+   enable(): void;
 
-    toggle?(): boolean;
+   toggle?(): boolean;
 }
 
 export interface IEvent extends IID<Exclude<PropertyKey, symbol>> {
-    target?: any;
-    canceled?: boolean;
-    value?: any;
+   target?: any;
+   canceled?: boolean;
+   value?: any;
 }
 
 /**
@@ -102,23 +128,23 @@ export interface IEvent extends IID<Exclude<PropertyKey, symbol>> {
  * @see mixins/INotify
  */
 export interface INotify {
-    addListener(id: string, fn: Listener, scope?: any): boolean;
-    removeListener(id: string, fn: Listener, scope?: any): boolean;
-    notify(event: IEvent): void;
+   addListener(id: string, fn: Listener, scope?: any): boolean;
+   removeListener(id: string, fn: Listener, scope?: any): boolean;
+   notify(event: IEvent): void;
 }
 
 /**
  * `id` property declaration.
  */
 export interface IID<T> {
-    readonly id: T extends symbol ? never : T;
+   readonly id: T extends symbol ? never : T;
 }
 
 /**
  * Generic plain object with all key values of given type.
  */
 export interface IObjectOf<T> {
-    [id: string]: T;
+   [id: string]: T;
 }
 
 export type IBagOf<T, P extends keyof any> = {
@@ -137,7 +163,7 @@ export type SymbolEnum<P extends keyof any = keyof any> = IMapTo<symbol, any, P>
  * Interface for types supported the release of internal resources.
  */
 export interface IRelease {
-    release(opt?: any): boolean;
+   release(opt?: any): boolean;
 }
 
 /**
@@ -147,9 +173,9 @@ export interface IRelease {
  * @see mixins/iWatch
  */
 export interface IWatch<T> {
-    addWatch(id: string, fn: Watch<T>): boolean;
-    removeWatch(id: string): boolean;
-    notifyWatches(oldState: T, newState: T): void;
+   addWatch(id: string, fn: Watch<T>): boolean;
+   removeWatch(id: string): boolean;
+   notifyWatches(oldState: T, newState: T): void;
 }
 
 export type IDirector<IBuilder> = (builder: IBuilder) => void;
