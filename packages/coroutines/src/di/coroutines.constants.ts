@@ -2,7 +2,7 @@ import { AsyncSink } from 'ix';
 import { Chan } from 'medium';
 
 import { blessLocalProviderToken, LocalProviderToken, MODULE_ID } from '@jchptf/nestjs';
-import { IAdapter } from '@jchptf/api';
+import { IAdapter, IFactoryMethod } from '@jchptf/api';
 
 import { IConcurrentWorkFactory, ILimiter, IChanMonitor } from '../interfaces';
 
@@ -14,6 +14,8 @@ export const CHAN = Symbol('IAdapter<Chan<any, any>>');
 export const CHAN_MONITOR = Symbol('IChanMonitor<any>');
 export const LIMITER = Symbol('ILimiter');
 export const ASYNC_SINK = Symbol('AsyncSink<any>');
+export const CHAN_FACTORY = Symbol('IFactoryMethod<IAdapter<Chan<any, any>>>');
+export const ASYNC_SINK_FACTORY = Symbol('IFactoryMethod<AsyncSink<any>>');
 
 export class CoroutinesModuleId
 {
@@ -26,6 +28,8 @@ export class CoroutinesModuleId
    [CHAN_MONITOR]: IChanMonitor<any>;
    [LIMITER]: ILimiter;
    [ASYNC_SINK]: AsyncSink<any>;
+   [CHAN_FACTORY]: IFactoryMethod<IAdapter<Chan<any, any>>>;
+   [ASYNC_SINK_FACTORY]: IFactoryMethod<AsyncSink<any>>;
 }
 
 function blessLocal<Token extends keyof CoroutinesModuleId>(
@@ -53,3 +57,5 @@ export const CHAN_PROVIDER_TOKEN = blessLocal(CHAN);
 export const CHAN_MONITOR_PROVIDER_TOKEN = blessLocal(CHAN_MONITOR);
 export const LIMITER_PROVIDER_TOKEN = blessLocal(LIMITER);
 export const ASYNC_SINK_PROVIDER_TOKEN = blessLocal(ASYNC_SINK);
+export const CHAN_FACTORY_PROVIDER_TOKEN = blessLocal(CHAN_FACTORY);
+export const ASYNC_SINK_FACTORY_PROVIDER_TOKEN = blessLocal(ASYNC_SINK_FACTORY);
