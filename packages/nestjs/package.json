@@ -1,6 +1,6 @@
 {
     "name": "@jchptf/nestjs",
-    "version": "0.0.12",
+    "version": "0.0.13",
     "description": "TODO",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
@@ -68,7 +68,7 @@
         "typescript": "3.2.2"
     },
     "dependencies": {
-        "@jchptf/api": "^0.0.44",
+        "@jchptf/api": "^0.0.45",
         "@jchptf/objecttypes": "^0.0.12",
         "@jchptf/tupletypes": "^0.0.21",
         "@jchptf/txtypes": "^0.0.12",
