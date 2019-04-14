@@ -7,7 +7,7 @@ import { CoroutinesModule } from '@jchptf/coroutines';
 import { ResourceSemaphoreFactory } from '../resource-semaphore-factory.class';
 
 import {
-   RESERVATION_CHANNEL_PROVIDER_TOKEN, RESERVATIONS_CHANNEL, RETURN_CHANNEL,
+   RESERVATION_CHANNEL_PROVIDER_TOKEN, RESERVATION_CHANNEL, RETURN_CHANNEL,
    RETURN_CHANNEL_PROVIDER_TOKEN, SEMAPHORE_FACTORY_PROVIDER_TOKEN, SEMAPHORE_RESOURCE_POOL,
    SEMAPHORE_SERVICE, SEMAPHORE_SERVICE_PROVIDER_TOKEN, SemaphoreModuleId,
 } from './resource-semaphore.constants';
@@ -38,7 +38,7 @@ export class SemaphoreModule extends SemaphoreModuleId
             builder.acceptBoundImport(options[SEMAPHORE_RESOURCE_POOL]);
 
             const serviceToken = options[SEMAPHORE_SERVICE];
-            const reservationsToken = options[RESERVATIONS_CHANNEL];
+            const reservationsToken = options[RESERVATION_CHANNEL];
             const returnsToken = options[RETURN_CHANNEL];
 
             if (!! (serviceToken || reservationsToken || returnsToken)) {
