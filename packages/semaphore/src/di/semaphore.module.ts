@@ -7,14 +7,11 @@ import { CoroutinesModule } from '@jchptf/coroutines';
 import { ResourceSemaphoreFactory } from '../resource-semaphore-factory.class';
 
 import {
-   RESERVATION_CHANNEL_PROVIDER_TOKEN, RESERVATION_CHANNEL, RETURN_CHANNEL,
-   RETURN_CHANNEL_PROVIDER_TOKEN, SEMAPHORE_FACTORY_PROVIDER_TOKEN, SEMAPHORE_RESOURCE_POOL,
-   SEMAPHORE_SERVICE, SEMAPHORE_SERVICE_PROVIDER_TOKEN, SemaphoreModuleId,
+   RESERVATION_CHANNEL, RETURN_CHANNEL, SEMAPHORE_FACTORY_PROVIDER_TOKEN, SEMAPHORE_RESOURCE_POOL,
+   SEMAPHORE_SERVICE, SemaphoreModuleId, expandGeneric,
 } from './resource-semaphore.constants';
 import { SemaphoreFeatureModuleOptions } from './semaphore-feature-module-options.type';
-import { SEMAPHORE_SERVICE_PROVIDER } from './semaphore-service.provider';
-import { RESERVATION_CHANNEL_PROVIDER } from './reservation-channel.provider';
-import { RETURN_CHANNEL_PROVIDER } from './return-channel.provider';
+import { expandGenericProviders } from './semaphore.providers';
 
 @Module({
    imports: [CoroutinesModule],
@@ -27,10 +24,13 @@ import { RETURN_CHANNEL_PROVIDER } from './return-channel.provider';
 })
 export class SemaphoreModule extends SemaphoreModuleId
 {
-   public static forFeature<Consumer extends IModule>(
-      options: SemaphoreFeatureModuleOptions<Consumer>,
+   public static forFeature<Consumer extends IModule, T = any>(
+      options: SemaphoreFeatureModuleOptions<T, Consumer>,
    ): DynamicModule
    {
+      const genericTokens = expandGeneric<T>();
+      const genericProviders = expandGenericProviders<T>(genericTokens);
+
       return buildDynamicModule(
          SemaphoreModule,
          options.forModule,
@@ -42,23 +42,26 @@ export class SemaphoreModule extends SemaphoreModuleId
             const returnsToken = options[RETURN_CHANNEL];
 
             if (!! (serviceToken || reservationsToken || returnsToken)) {
-               builder.acceptBoundImport(SEMAPHORE_SERVICE_PROVIDER);
+               builder.acceptBoundImport(genericProviders.SEMAPHORE_SERVICE_PROVIDER);
             }
 
             if (!!serviceToken) {
-               builder.exportFromSupplier(serviceToken, SEMAPHORE_SERVICE_PROVIDER_TOKEN);
+               builder.exportFromSupplier(
+                  serviceToken, genericTokens.SEMAPHORE_SERVICE_PROVIDER_TOKEN);
             }
 
             if (!!reservationsToken) {
                builder
-                  .acceptBoundImport(RESERVATION_CHANNEL_PROVIDER)
-                  .exportFromSupplier(reservationsToken, RESERVATION_CHANNEL_PROVIDER_TOKEN);
+                  .acceptBoundImport(genericProviders.RESERVATION_CHANNEL_PROVIDER)
+                  .exportFromSupplier(
+                     reservationsToken, genericTokens.RESERVATION_CHANNEL_PROVIDER_TOKEN);
             }
 
             if (!!returnsToken) {
                builder
-                  .acceptBoundImport(RETURN_CHANNEL_PROVIDER)
-                  .exportFromSupplier(returnsToken, RETURN_CHANNEL_PROVIDER_TOKEN);
+                  .acceptBoundImport(genericProviders.RETURN_CHANNEL_PROVIDER)
+                  .exportFromSupplier(
+                     returnsToken, genericTokens.RETURN_CHANNEL_PROVIDER_TOKEN);
             }
          },
       );

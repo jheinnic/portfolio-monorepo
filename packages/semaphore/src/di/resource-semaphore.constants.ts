@@ -9,51 +9,52 @@ export const SEMAPHORE_MODULE_ID = Symbol('@jchptf/semaphore');
 export type SEMAPHORE_MODULE_ID = typeof SEMAPHORE_MODULE_ID;
 
 export const SEMAPHORE_FACTORY = Symbol('IResourceSemaphoreFactory');
-export const SEMAPHORE_RESOURCE_POOL = Symbol('Iterable<T>|AsyncIterable<T>');
-export const RESERVATION_CHANNEL = Symbol('IAdapter<Chan<IResourceAdapter<T>, T>>');
-export const RETURN_CHANNEL = Symbol('IAdapter<Chan<T, IResourceAdapter<T>>>');
-export const SEMAPHORE_SERVICE = Symbol('IResourceSemaphore<T>');
 
 export class SemaphoreModuleId
 {
    public static readonly [MODULE_ID]: SEMAPHORE_MODULE_ID;
 
    [SEMAPHORE_FACTORY]: IResourceSemaphoreFactory;
-   [SEMAPHORE_RESOURCE_POOL]: Iterable<any> | AsyncIterable<any>;
-   [RESERVATION_CHANNEL]: IAdapter<Chan<IResourceAdapter<any>, any>>;
-   [RETURN_CHANNEL]: IAdapter<Chan<any, IResourceAdapter<any>>>;
-   [SEMAPHORE_SERVICE]: IResourceSemaphore<any>;
 }
 
 export type SemaphoreModuleType = typeof SemaphoreModuleId;
 
 function blessLocal<Token extends keyof SemaphoreModuleId>(
    token: Token,
-): LocalProviderToken<SemaphoreModuleId[Token], typeof SemaphoreModuleId, Token>
+): LocalProviderToken<SemaphoreModuleId[Token], SemaphoreModuleType, Token>
 {
    return blessLocalProviderToken(token, SemaphoreModuleId);
+}
+
+export const SEMAPHORE_RESOURCE_POOL = Symbol('Iterable<T>|AsyncIterable<T>');
+export const RESERVATION_CHANNEL = Symbol('IAdapter<Chan<IResourceAdapter<T>, T>>');
+export const RETURN_CHANNEL = Symbol('IAdapter<Chan<T, IResourceAdapter<T>>>');
+export const SEMAPHORE_SERVICE = Symbol('IResourceSemaphore<T>');
+
+export class SemaphoreModuleGeneric<T> {
+   [SEMAPHORE_RESOURCE_POOL]: Iterable<T> | AsyncIterable<T>;
+   [RESERVATION_CHANNEL]: IAdapter<Chan<IResourceAdapter<T>, T>>;
+   [RETURN_CHANNEL]: IAdapter<Chan<T, IResourceAdapter<T>>>;
+   [SEMAPHORE_SERVICE]: IResourceSemaphore<T>;
 }
 
 export const SEMAPHORE_FACTORY_PROVIDER_TOKEN =
    blessLocal(SEMAPHORE_FACTORY);
 
-export const SEMAPHORE_RESOURCE_POOL_PROVIDER_TOKEN =
-   blessLocalProviderToken<Iterable<any> | AsyncIterable<any>, SemaphoreModuleType>(
-      SEMAPHORE_RESOURCE_POOL, SemaphoreModuleId);
+export function expandGeneric<T>() {
+   function blessGenericLocal<Token extends keyof SemaphoreModuleGeneric<T>>(token: Token):
+      LocalProviderToken<SemaphoreModuleGeneric<T>[Token], SemaphoreModuleType, Token>
+   {
+      return blessLocalProviderToken(token, SemaphoreModuleId);
+   }
 
-export const SEMAPHORE_SERVICE_PROVIDER_TOKEN =
-   blessLocalProviderToken<IResourceSemaphore<any>, SemaphoreModuleType>(
-      SEMAPHORE_SERVICE, SemaphoreModuleId);
-
-export const RESERVATION_CHANNEL_PROVIDER_TOKEN =
-   blessLocalProviderToken<
-      IAdapter<Chan<IResourceAdapter<any>, any>>, SemaphoreModuleType>(
-         RESERVATION_CHANNEL, SemaphoreModuleId);
-
-export const RETURN_CHANNEL_PROVIDER_TOKEN =
-   blessLocalProviderToken<
-      IAdapter<Chan<any, IResourceAdapter<any>>>, SemaphoreModuleType>(
-         RETURN_CHANNEL, SemaphoreModuleId);
+   return {
+      SEMAPHORE_RESOURCE_POOL_PROVIDER_TOKEN: blessGenericLocal(SEMAPHORE_RESOURCE_POOL),
+      SEMAPHORE_SERVICE_PROVIDER_TOKEN: blessGenericLocal(SEMAPHORE_SERVICE),
+      RESERVATION_CHANNEL_PROVIDER_TOKEN: blessGenericLocal(RESERVATION_CHANNEL),
+      RETURN_CHANNEL_PROVIDER_TOKEN: blessGenericLocal(RETURN_CHANNEL),
+   };
+}
 
 // export const SEMAPHORE_DYNAMIC_MODULE_TYPE =
 //    getDynamicModuleKind(SEMAPHORE_MODULE_ID);

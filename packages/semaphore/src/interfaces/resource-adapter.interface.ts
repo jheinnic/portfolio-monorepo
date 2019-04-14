@@ -1,4 +1,4 @@
-export interface IResourceAdapter<T extends object> {
+export interface IResourceAdapter<T> {
    publish(): T;
 
    recycle(): boolean;
