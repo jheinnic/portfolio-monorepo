@@ -15,7 +15,7 @@ import { CONFIG_METADATA_HELPER } from '../config-metadata-helper.const';
 
 import {
    CONFIG_LOADER_PROVIDER_TOKEN, CONFIG_METADATA_HELPER_PROVIDER_TOKEN,
-   CONFIG_READER_PROVIDER_TOKEN, ConfigModuleId, DOTENV_CONFIG_OPTIONS,
+   CONFIG_READER_PROVIDER_TOKEN, ConfigModuleId, ConfigModuleType, DOTENV_CONFIG_OPTIONS,
    DOTENV_CONFIG_OPTIONS_PROVIDER_TOKEN,
 } from './config.constants';
 import { IFeatureConfigProps } from './feature-config-props.interface';
@@ -36,7 +36,7 @@ export class ConfigModule extends ConfigModuleId
       return buildDynamicModule(
          ConfigModule,
          options.forModule,
-         (builder: IDynamicModuleBuilder<typeof ConfigModuleId, Consumer>) => {
+         (builder: IDynamicModuleBuilder<ConfigModuleType, Consumer>) => {
             const dotenvConfig = options[DOTENV_CONFIG_OPTIONS];
             if (!! dotenvConfig) {
                builder.acceptBoundImport(dotenvConfig);

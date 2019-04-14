@@ -35,17 +35,18 @@ export class SemaphoreModule<T extends {}> extends SemaphoreModuleId<T>
          SemaphoreModule,
          options.forModule,
          (builder: IDynamicModuleBuilder<typeof SemaphoreModuleId, Consumer>): void => {
-            builder
-               .acceptBoundImport(options[SEMAPHORE_RESOURCE_POOL])
-               .acceptBoundImport(SEMAPHORE_SERVICE_PROVIDER);
+            builder.acceptBoundImport(options[SEMAPHORE_RESOURCE_POOL]);
 
             const serviceToken = options[SEMAPHORE_SERVICE];
             const reservationsToken = options[RESERVATIONS_CHANNEL];
             const returnsToken = options[RETURN_CHANNEL];
 
+            if (!! (serviceToken || reservationsToken || returnsToken)) {
+               builder.acceptBoundImport(SEMAPHORE_SERVICE_PROVIDER);
+            }
+
             if (!!serviceToken) {
-               builder.exportFromSupplier(
-                  serviceToken, SEMAPHORE_SERVICE_PROVIDER_TOKEN);
+               builder.exportFromSupplier(serviceToken, SEMAPHORE_SERVICE_PROVIDER_TOKEN);
             }
 
             if (!!reservationsToken) {

@@ -20,6 +20,7 @@ export class ConfigModuleId {
    [CONFIG_LOADER]: IConfigLoader;
    [DOTENV_CONFIG_OPTIONS]: DotenvConfigOptions;
 }
+export type ConfigModuleType = typeof ConfigModuleId;
 
 function blessLocal<K extends keyof ConfigModuleId>(token: K):
    LocalProviderToken<ConfigModuleId[K], typeof ConfigModuleId, K>
