@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.48](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/coroutines@0.0.47...@jchptf/coroutines@0.0.48) (2019-04-14)
+
+**Note:** Version bump only for package @jchptf/coroutines
+
+
+
+
+
 ## [0.0.47](https://github.com/jheinnic/portfolio-monorepo/compare/@jchptf/coroutines@0.0.46...@jchptf/coroutines@0.0.47) (2019-04-01)
 
 **Note:** Version bump only for package @jchptf/coroutines
