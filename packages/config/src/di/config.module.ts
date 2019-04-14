@@ -40,6 +40,12 @@ export class ConfigModule extends ConfigModuleId
             const dotenvConfig = options[DOTENV_CONFIG_OPTIONS];
             if (!! dotenvConfig) {
                builder.acceptBoundImport(dotenvConfig);
+            } else {
+               builder.acceptBoundImport({
+                  style: DynamicProviderBindingStyle.VALUE,
+                  provide: DOTENV_CONFIG_OPTIONS_PROVIDER_TOKEN,
+                  useValue: {},
+               });
             }
 
             ConfigModule.withRootProviders(builder);
@@ -58,6 +64,12 @@ export class ConfigModule extends ConfigModuleId
             const dotenvConfig = options[DOTENV_CONFIG_OPTIONS];
             if (!! dotenvConfig) {
                builder.acceptBoundImport(dotenvConfig);
+            } else {
+               builder.acceptBoundImport({
+                  style: DynamicProviderBindingStyle.VALUE,
+                  provide: DOTENV_CONFIG_OPTIONS_PROVIDER_TOKEN,
+                  useValue: {},
+               });
             }
 
             ConfigModule.withRootProviders(builder);
