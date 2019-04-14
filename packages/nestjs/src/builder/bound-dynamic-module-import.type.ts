@@ -7,7 +7,10 @@ import { ArgsAsInjectableKeys, FactoryMethod, InjectableKey } from '../provider'
 import { DynamicProviderBindingStyle } from './dynamic-provider-binding-style.enum';
 
 export type IBoundDynamicModuleImport<
-   ParamType extends {}, Supplier extends IModule, Consumer extends IModule, Value = string|symbol
+   ParamType extends {},
+   Supplier extends IModule,
+   Consumer extends IModule = any,
+   Value = string|symbol
 > =
    IAsValue<ParamType, Supplier, Value> |
    IAsClass<ParamType, Supplier, Value> |

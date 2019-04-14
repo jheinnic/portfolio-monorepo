@@ -4,7 +4,7 @@ import { LocalProviderToken } from '../provider';
 export interface IBoundDynamicModuleExport <
    ParamType extends {},
    Supplier extends IModule,
-   Consumer extends IModule,
+   Consumer extends IModule = any,
    Token = string|symbol
 >
 {
