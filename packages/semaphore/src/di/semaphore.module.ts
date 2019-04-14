@@ -25,10 +25,10 @@ import { RETURN_CHANNEL_PROVIDER } from './return-channel.provider';
       },
    ],
 })
-export class SemaphoreModule<T extends {}> extends SemaphoreModuleId<T>
+export class SemaphoreModule extends SemaphoreModuleId
 {
-   public static forFeature<T extends object, Consumer extends IModule>(
-      options: SemaphoreFeatureModuleOptions<T, Consumer>,
+   public static forFeature<Consumer extends IModule>(
+      options: SemaphoreFeatureModuleOptions<Consumer>,
    ): DynamicModule
    {
       return buildDynamicModule(

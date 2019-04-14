@@ -14,20 +14,20 @@ export const RESERVATIONS_CHANNEL = Symbol('IAdapter<Chan<IResourceAdapter<T>, T
 export const RETURN_CHANNEL = Symbol('IAdapter<Chan<T, IResourceAdapter<T>>>');
 export const SEMAPHORE_SERVICE = Symbol('IResourceSemaphore<T>');
 
-export class SemaphoreModuleId<T extends {}>
+export class SemaphoreModuleId
 {
    public static readonly [MODULE_ID]: SEMAPHORE_MODULE_ID;
 
    [SEMAPHORE_FACTORY]: IResourceSemaphoreFactory;
-   [SEMAPHORE_RESOURCE_POOL]: Iterable<T> | AsyncIterable<T>;
-   [RESERVATIONS_CHANNEL]: IAdapter<Chan<IResourceAdapter<T>, T>>;
-   [RETURN_CHANNEL]: IAdapter<Chan<T, IResourceAdapter<T>>>;
-   [SEMAPHORE_SERVICE]: IResourceSemaphore<T>;
+   [SEMAPHORE_RESOURCE_POOL]: Iterable<any> | AsyncIterable<any>;
+   [RESERVATIONS_CHANNEL]: IAdapter<Chan<IResourceAdapter<any>, any>>;
+   [RETURN_CHANNEL]: IAdapter<Chan<any, IResourceAdapter<any>>>;
+   [SEMAPHORE_SERVICE]: IResourceSemaphore<any>;
 }
 
-function blessLocal<T, Token extends keyof SemaphoreModuleId<T>>(
+function blessLocal<Token extends keyof SemaphoreModuleId>(
    token: Token,
-): LocalProviderToken<SemaphoreModuleId<T>[Token], typeof SemaphoreModuleId, Token>
+): LocalProviderToken<SemaphoreModuleId[Token], typeof SemaphoreModuleId, Token>
 {
    return blessLocalProviderToken(token, SemaphoreModuleId);
 }

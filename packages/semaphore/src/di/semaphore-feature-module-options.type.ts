@@ -5,11 +5,11 @@ import {
    SEMAPHORE_SERVICE, SemaphoreModuleId,
 } from './resource-semaphore.constants';
 
-export type SemaphoreFeatureModuleOptions<T extends {}, Consumer extends IModule> =
+export type SemaphoreFeatureModuleOptions<Consumer extends IModule> =
    DynamicModuleConfigTwo<
       typeof SemaphoreModuleId,
       IBaseConfigProps<Consumer>,
-      SemaphoreModuleId<T>,
+      SemaphoreModuleId,
       typeof SEMAPHORE_RESOURCE_POOL,
       never,
       typeof SEMAPHORE_SERVICE | typeof RESERVATIONS_CHANNEL | typeof RETURN_CHANNEL

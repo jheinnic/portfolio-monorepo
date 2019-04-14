@@ -9,11 +9,11 @@ import {
 
 export const SEMAPHORE_SERVICE_PROVIDER:
    IBySupplierFactoryCall<
-      {}, typeof SemaphoreModuleId, any,
+      any, typeof SemaphoreModuleId, any,
       (
          semaphoreFactory: IResourceSemaphoreFactory,
-         resourcePool: Iterable<{}> | AsyncIterable<{}>,
-      ) => Promise<IResourceSemaphore<{}>>
+         resourcePool: Iterable<any> | AsyncIterable<any>,
+      ) => Promise<IResourceSemaphore<any>>
    > = {
       style: DynamicProviderBindingStyle.SUPPLIER_INJECTED_FUNCTION,
       provide: SEMAPHORE_SERVICE_PROVIDER_TOKEN,
