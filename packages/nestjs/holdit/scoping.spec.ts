@@ -1,5 +1,5 @@
 // import {
-//    blessGlobalProviderToken, blessLocalProviderToken, GlobalProviderToken, LocalProviderToken,
+//    blessGlobalProviderSymbol, blessLocalProviderToken, GlobalProviderToken, LocalProviderToken,
 //    ProviderToken,
 //    VisibleProviderToken
 // } from './provider-token.type';
@@ -19,8 +19,8 @@
 // export const modTwoSomeOne = blessLocalProviderToken<SomethingOne, modTwo>(nameThree);
 // export const modTwoSomeTwo = blessLocalProviderToken<SomethingTwo, modTwo>(nameTwo);
 //
-// export const globalSomeOne = blessGlobalProviderToken<SomethingOne>(nameOne);
-// export const globalSomeTwo = blessGlobalProviderToken<SomethingTwo>(nameOne);
+// export const globalSomeOne = blessGlobalProviderSymbol<SomethingOne>(nameOne);
+// export const globalSomeTwo = blessGlobalProviderSymbol<SomethingTwo>(nameOne);
 //
 // function doo<Comp extends {}, Mod1 extends string, Mod2 extends string>(
 //    fromToken: LocalProviderToken<Comp, Mod1>, toToken: LocalProviderToken<Comp, Mod2>)

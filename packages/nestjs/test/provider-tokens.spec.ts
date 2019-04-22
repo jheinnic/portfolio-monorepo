@@ -2,7 +2,7 @@ import chai from 'chai';
 import { assert, HasType, IsExactType, NotHasType } from 'conditional-type-checks';
 
 import {
-   blessGlobalProviderToken, blessLocalProviderToken, LocalProviderToken,
+   blessGlobalProviderSymbol, blessLocalProviderToken, LocalProviderToken,
 } from '@jchptf/nestjs';
 import { HasImpliedType, IsImpliedType } from '@jchptf/api';
 import {
@@ -41,7 +41,7 @@ describe('ProviderTokens', () => {
    it('Maintains type information on tokens retrieved from a dictionary', () => {
       // const MY_MOD: ModuleIdentifier = Symbol('MyModule');
       const FOO = blessLocalProviderToken<Class, typeof MyModule>('localClass', MyModule);
-      const BAR = blessGlobalProviderToken<ISomething>('SomethingGlobal');
+      const BAR = blessGlobalProviderSymbol<ISomething>('SomethingGlobal');
 
       // const diDict: TokenDictionary<ITemplate> = {
       //    foo: FOO,

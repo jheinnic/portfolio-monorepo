@@ -1,5 +1,3 @@
-import { LengthOf } from '@jchptf/tupletypes';
-
 import { IModule } from '../module';
 import { InjectableKey } from './injectable-key.type';
 
@@ -10,7 +8,7 @@ import { InjectableKey } from './injectable-key.type';
  * such as Class objects, for which this library provides no competing augmentation.
  */
 export type ArgsAsInjectableKeys<F extends () => any, Mod extends IModule> =
-   LengthOf<Parameters<F>> extends 0
+   F extends (() => any)
    ? [] : F extends (x1: infer X1) => any
       ? [InjectableKey<X1, Mod>]
       : F extends (x1: infer X1, x2: infer X2) => any

@@ -34,7 +34,7 @@
         "baseUrl": ".",
         "paths": {
             "@jchptf/api": ["../../api/dist"],
-            "@jchptf/nestjs": ["../dist"],
+            "@jchptf/nestjs": ["../src"],
             "@jchptf/objecttypes": ["../../objecttypes/dist"],
             "@jchptf/txtypes": ["../../txtypes/dist"],
             "@jchptf/tupletypes": ["../../tupletypes/dist"]

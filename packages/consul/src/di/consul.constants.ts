@@ -1,5 +1,5 @@
 import {
-   blessGlobalProviderToken, blessLocalProviderToken, LocalProviderToken, MODULE_ID,
+   blessGlobalProviderSymbol, blessLocalProviderToken, LocalProviderToken, MODULE_ID,
 } from '@jchptf/nestjs';
 import { Consul, ConsulOptions } from 'consul';
 import { EventEmitter } from 'events';
@@ -26,7 +26,7 @@ function blessLocal<Token extends keyof ConsulModuleId>(token: Token):
    return blessLocalProviderToken(token, ConsulModuleId);
 }
 
-export const CONSUL_CLIENT_PROVIDER_TOKEN = blessGlobalProviderToken(CONSUL_CLIENT);
+export const CONSUL_CLIENT_PROVIDER_TOKEN = blessGlobalProviderSymbol(CONSUL_CLIENT);
 
 export const CONSUL_OPTIONS_PROVIDER_TOKEN = blessLocal(CONSUL_OPTIONS);
 export const CONSUL_EVENT_EMITTER_PROVIDER_TOKEN = blessLocal(CONSUL_EVENT_EMITTER);
