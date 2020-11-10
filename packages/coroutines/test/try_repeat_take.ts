@@ -6,19 +6,19 @@ const ctrl: Chan<number[], number[]> =
    chan<number[], number[]>();
 
 function makePromise(ref: number): number|Promise<number> {
-   if ( (ref % 2) === 1) {
+   if ((ref % 2) === 1) {
       return new Promise(
          (resolve, reject) => {
             setTimeout(() => {
                console.log(ref, 10000);
                resolve(10000);
                console.log(10000, ref);
-            }, 10000);
+            },         10000);
             setTimeout(() => {
                console.error('error', ref, 15000);
                reject(15000);
                console.error('error', 15000, ref);
-            }, 15000);
+            },         15000);
          });
    }
 
@@ -42,15 +42,15 @@ function tryIt(value: number[], seed: number): number|Promise<number>|false {
 
 // @ts-ignore
 repeatTake<number[], number>(
-   ctrl, tryIt, makePromise(-1)
+   ctrl, tryIt, makePromise(-1),
 ).then(
-   function() {
+   function () {
       console.log('repeatTake ends');
-   }
+   },
 ).catch(
-   function(err: any) {
+   function (err: any) {
       console.error('repeatTake fails', err);
-   }
+   },
 );
 
 async function addWork() {
@@ -75,12 +75,11 @@ async function addWork() {
 }
 
 addWork().then(
-   function() {
+   function () {
       console.log('Done adding work');
-   }
+   },
 ).catch(
-   function() {
+   function () {
       console.error('Failed adding work');
-   }
+   },
 );
-

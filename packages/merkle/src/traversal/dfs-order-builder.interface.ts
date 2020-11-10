@@ -7,5 +7,5 @@ export interface IDfsOrderBuilder
 
    endWith(value: BlockMappedLayerLocator): IDfsOrderBuilder;
 
-   visitMode(value: DepthFirstVisitMode): IDfsOrderBuilder
+   visitMode(value: DepthFirstVisitMode): IDfsOrderBuilder;
 }

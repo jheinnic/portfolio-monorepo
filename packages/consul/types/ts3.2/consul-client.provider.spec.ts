@@ -47,11 +47,11 @@ export const CONSUL_CLIENT_PROVIDERS: NestProvider<IConsul> = {
    inject: [CONSUL_EVENT_EMITTER_PROVIDER_TOKEN, CONSUL_CLIENT_PROVIDER_TOKEN],
 };
 
-export type GG<T, P extends any[]> = {
+export interface GG<T, P extends any[]> {
    a: T;
    b: (...args: P) => T;
    c: TupleAsInjectableKeys<P>
-};
+}
 
 function woo<T, P extends any[]>(_arg: GG<T, P>) {
    return 1;
@@ -61,8 +61,6 @@ export const Mm = getModuleIdentifier('ammm');
 
 let hh: ProviderToken<string>;
 woo({a: 5, b: (_a: string, _b: boolean): number => 3, c: [hh = getLocalProviderTokenString(Mm, 'apple'), hh = getLocalProviderTokenString(Mm, 'pie')]});
-
-
 
 type PromiseTuple<T> = {
    [K in keyof T]: Promise<T[K]>

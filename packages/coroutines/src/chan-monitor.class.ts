@@ -38,8 +38,8 @@ export class ChanMonitor<Msg> implements IChanMonitor<Msg>
             if (this.stopRequested) { return false; }
 
             return;
-         }
-      ).then( (result: any) => {
+         },
+      ).then((result: any) => {
          this.running = false;
          return result;
       });
@@ -77,10 +77,10 @@ export class ChanMonitor<Msg> implements IChanMonitor<Msg>
       if (this.handlerMap.has(msg)) {
          throw illegalArgs(`${msg} is already being monitored`);
       }
-      return new Promise<Msg>( (resolve, reject) => {
+      return new Promise<Msg>((resolve, reject) => {
          const handlers = { resolve, reject };
          this.handlerMap.set(msg, handlers);
-      })
+      });
    }
 
 }

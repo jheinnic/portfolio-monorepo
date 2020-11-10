@@ -21,4 +21,3 @@ export interface MessageForReply<P extends any[], R extends any[] = []>
 //          resolve: R extends void ? () => void : (value: R) => void;
 //          reject: (err: any) => void;
 //       }
-

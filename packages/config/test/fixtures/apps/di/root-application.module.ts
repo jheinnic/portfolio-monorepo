@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { DynamicProviderBindingStyle, MODULE_ID } from '@jchptf/nestjs';
 import {
-   ConfigModule, DOTENV_CONFIG_OPTIONS, DOTENV_CONFIG_OPTIONS_PROVIDER_TOKEN
+   ConfigModule, DOTENV_CONFIG_OPTIONS, DOTENV_CONFIG_OPTIONS_PROVIDER_TOKEN,
 } from '@jchptf/config';
 
 import { APP_MODULE_ID } from './types';

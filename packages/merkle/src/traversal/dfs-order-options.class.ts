@@ -12,7 +12,7 @@ const builderClass: Ctor<DfsOrderOptions, IDfsOrderBuilder & Instance<DfsOrderOp
    .cascade('endWith', (value: BlockMappedLayerLocator) => (obj: DfsOrderOptions) => {
       obj.endWith = value;
    })
-   .cascade('visitMode', (value: DepthFirstVisitMode) =>(obj: DfsOrderOptions) => {
+   .cascade('visitMode', (value: DepthFirstVisitMode) => (obj: DfsOrderOptions) => {
       obj.visitMode = value;
    }).value;
 
@@ -21,7 +21,7 @@ export class DfsOrderOptions
    constructor(
       public leftToRight: boolean = true,
       public visitMode: DepthFirstVisitMode = DepthFirstVisitMode.IN_ORDER,
-      public endWith?: BlockMappedLayerLocator )
+      public endWith?: BlockMappedLayerLocator)
    {
    }
 

@@ -1,5 +1,5 @@
-import Optional from 'typescript-optional';
-import {BlockMappedLayerLocator} from './block-mapped-layer-locator.value';
+import typescriptOptional from 'typescript-optional';
+import { BlockMappedLayerLocator } from './block-mapped-layer-locator.value';
 
 export class MerkleLayerLocator
 {
@@ -19,14 +19,13 @@ export class MerkleLayerLocator
     */
    public readonly rightPosition: number;
 
-
    public constructor(public readonly depth: number, public readonly size: number)
    {
       this.leftPosition = size - 1;
       this.rightPosition = this.leftPosition * 2;
    }
 
-   public get blockMapped(): boolean{
+   public get blockMapped(): boolean {
       return false;
    }
 

@@ -6,5 +6,5 @@
  * avoid them being overridden by mixed-in behaviour.
  */
 export function nomixin(_: any, __: string, descriptor: PropertyDescriptor) {
-    descriptor.configurable = false;
+   descriptor.configurable = false;
 }

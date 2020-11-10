@@ -1,6 +1,6 @@
 // import '@jchptf/reflection';
-import {LayerFor, MerkleDigestLocator, MerkleTreeDescription, IMerkleCalculator} from '..';
-import {TopoOrderOptions} from './topo-order-options.class';
+import { LayerFor, MerkleDigestLocator, MerkleTreeDescription, IMerkleCalculator } from '..';
+import { TopoOrderOptions } from './topo-order-options.class';
 
 export abstract class TopologicalOrder<Node extends MerkleDigestLocator = MerkleDigestLocator>
 {
@@ -9,7 +9,7 @@ export abstract class TopologicalOrder<Node extends MerkleDigestLocator = Merkle
       protected readonly calculator: IMerkleCalculator,
       // @inject(MERKLE_TYPES.MerkleTreeDescription)
       protected readonly treeDescription: MerkleTreeDescription,
-      private readonly traversalOptions: TopoOrderOptions
+      private readonly traversalOptions: TopoOrderOptions,
    ) { }
 
    protected abstract get terminalDepth(): number;
@@ -25,7 +25,7 @@ export abstract class TopologicalOrder<Node extends MerkleDigestLocator = Merkle
       const layerIter = this.getLayers();
       const rootNodeGenerators: IterableIterator<Node>[] =
          [...layerIter].map((layer: LayerFor<Node>) =>
-            this.getNodesOnLayer(layer, this.traversalOptions.leftToRight)
+            this.getNodesOnLayer(layer, this.traversalOptions.leftToRight),
          );
 
       const rootIter = rootNodeGenerators[0];
@@ -38,11 +38,11 @@ export abstract class TopologicalOrder<Node extends MerkleDigestLocator = Merkle
             1, rootNodeGenerators[this.terminalDepth]);
       }
 
-      yield rootIter.next().value
+      yield rootIter.next().value;
    }
 
    private* orderBlocksFromDepth(
-      depth: number, rootNodeGenerators: IterableIterator<Node>[]
+      depth: number, rootNodeGenerators: IterableIterator<Node>[],
    ): IterableIterator<Node>
    {
       const myLayer = rootNodeGenerators[depth];
@@ -60,19 +60,19 @@ export abstract class TopologicalOrder<Node extends MerkleDigestLocator = Merkle
       }
 
       nextRootNode = myLayer.next();
-      if(this.mayYield(nextDepth, nextRootNode)) {
+      if (this.mayYield(nextDepth, nextRootNode)) {
          yield nextRootNode.value;
       }
    }
 
    private* orderBlocksFromLeaf(
-      depth: number, myLayer: IterableIterator<Node>
+      depth: number, myLayer: IterableIterator<Node>,
    ): IterableIterator<Node>
    {
       for (let ii = 0; ii < this.subtreeReach; ii++) {
          const nextResultNode = myLayer.next();
 
-         if(this.mayYield(depth, nextResultNode)) {
+         if (this.mayYield(depth, nextResultNode)) {
             yield nextResultNode.value;
          }
       }

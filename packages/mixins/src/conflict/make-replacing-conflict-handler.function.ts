@@ -14,7 +14,7 @@ export function makeReplacingConflictHandler<T>( )
          configurable: true,
          writable: desc.writable,
          enumerable: desc.enumerable,
-         value: mixinValue
+         value: mixinValue,
       };
    }
 

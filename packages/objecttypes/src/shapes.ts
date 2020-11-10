@@ -1,6 +1,6 @@
 // Conditional on Inheritance
 import {
-   FunctionProperties, GetterProperties, OptionsBag, ReadableProperties, SetterProperties, ValueProperties
+   FunctionProperties, GetterProperties, OptionsBag, ReadableProperties, SetterProperties, ValueProperties,
 } from './partitions';
 import { IsExactType } from 'conditional-type-checks';
 /**

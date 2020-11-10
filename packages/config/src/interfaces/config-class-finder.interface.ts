@@ -4,7 +4,7 @@ import { ConfigModuleId } from '../di';
 
 export interface IConfigClassFinder<Consumer extends IModule>
 {
-   loadConfigAsync(): Observable<IBoundDynamicModuleImport<any, typeof ConfigModuleId, Consumer>>;
+   loadConfigAsync(): Observable<IBoundDynamicModuleImport<any, ConfigModuleId, Consumer>>;
 
-   loadConfigSync(): Observable<IBoundDynamicModuleImport<any, typeof ConfigModuleId, Consumer>>;
+   loadConfigSync(): Observable<IBoundDynamicModuleImport<any, ConfigModuleId, Consumer>>;
 }

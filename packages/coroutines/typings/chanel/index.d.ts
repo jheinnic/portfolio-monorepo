@@ -17,7 +17,7 @@ declare module 'chanel'
    }
 
    interface Thunk<V = any> {
-      (cb: Callback<V>): void
+      (cb: Callback<V>): void;
    }
 
    interface Chanel<T> { // extends Thunk<T> {
@@ -25,7 +25,7 @@ declare module 'chanel'
       (bool: true): Promise<void>;
       (cb: Callback<T> | true): void | Promise<void>;
 
-      put(rcvr: Thunk<T>): void
+      put(rcvr: Thunk<T>): void;
       pushed(rcvr: Thunk<boolean>): void;
 
       readonly queue: number;

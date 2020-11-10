@@ -119,7 +119,7 @@ export class MerkleLocatorFactory implements IMerkleLocatorFactory
       let retVal: MerkleDigestLocator | undefined = this.digestCache.get(position);
       if (!retVal) {
          const layerIndex = Math.floor(
-            Math.log2(position + 1)
+            Math.log2(position + 1),
          );
 
          const layer = this.layerCache[layerIndex];
@@ -164,14 +164,14 @@ export class MerkleLocatorFactory implements IMerkleLocatorFactory
       }
 
       throw new Error(
-         `${offset} exceeds the maximum tree offset of ${this.levelCache[this.levelCache.length-1].rightOffset}`);
+         `${offset} exceeds the maximum tree offset of ${this.levelCache[this.levelCache.length - 1].rightOffset}`);
    }
 
    public findBlockMappedLayerByLevel(level: number): BlockMappedLayerLocator
    {
       if ((level < 0) || (level >= this.treeDescription.tierCount))
       {
-         let maxLayerIndex = this.treeDescription.tierCount - 1;
+         const maxLayerIndex = this.treeDescription.tierCount - 1;
          throw new Error(
             `${level} is not a layer level index between 0 and ${maxLayerIndex}`);
       }

@@ -1,10 +1,5 @@
-import { DynamicModuleConfigTwo, IBaseConfigProps, IModule } from '@jchptf/nestjs';
+import { DynamicModuleConfig, IModule, IModuleRegistry } from '@jchptf/nestjs';
 
-import { ConfigModuleId, DOTENV_CONFIG_OPTIONS } from './config.constants';
+import { DOTENV_CONFIG_OPTIONS } from './config.constants';
+import { ConfigModule } from './config.module';
 
-export type ConfigRootModuleOptions<Consumer extends IModule> = DynamicModuleConfigTwo<
-   typeof ConfigModuleId,
-   IBaseConfigProps<Consumer>,
-   ConfigModuleId,
-   never,
-   typeof DOTENV_CONFIG_OPTIONS>;

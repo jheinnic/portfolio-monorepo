@@ -1,6 +1,6 @@
-import {MerkleLayerLocator} from './merkle-layer-locator.value';
-import {MerkleOrientationType} from './merkle-orientation-type.enum';
-import {BlockMappedDigestLocator} from './block-mapped-digest-locator.value';
+import { MerkleLayerLocator } from './merkle-layer-locator.value';
+import { MerkleOrientationType } from './merkle-orientation-type.enum';
+import { BlockMappedDigestLocator } from './block-mapped-digest-locator.value';
 
 /**
  * Specialized subclass of LogicalSubtreeLocator that is suitable only for subtrees aligned with a

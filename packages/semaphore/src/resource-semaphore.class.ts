@@ -1,11 +1,11 @@
-import {Chan, CLOSED, go, put, take} from 'medium';
-import {map as txMap} from 'transducers-js';
+import { Chan, CLOSED, go, put, take } from 'medium';
+import { map as txMap } from 'transducers-js';
 
-import {IWatch, iWatch, Watch} from '@jchptf/api';
-import {ChanBufferType, IConcurrentWorkFactory} from '@jchptf/coroutines';
-import {GET_LEASE_MANAGER} from './resource-semaphore.constants';
-import {ResourceAdapter} from './resource-adapter.class';
-import {IResourceAdapter, IResourceSemaphore, IManagedResource} from './interfaces';
+import { IWatch, iWatch, Watch } from '@jchptf/api';
+import { ChanBufferType, IConcurrentWorkFactory } from '@jchptf/coroutines';
+import { GET_LEASE_MANAGER } from './resource-semaphore.constants';
+import { ResourceAdapter } from './resource-adapter.class';
+import { IResourceAdapter, IResourceSemaphore, IManagedResource } from './interfaces';
 
 interface PoolSizes
 {
@@ -14,7 +14,6 @@ interface PoolSizes
    readonly inUse: number;
    readonly recycling: number;
 }
-
 
 @iWatch<IWatch<PoolSizes>>()
 export class ResourceSemaphore<T extends object> implements IResourceSemaphore<T>
@@ -31,7 +30,7 @@ export class ResourceSemaphore<T extends object> implements IResourceSemaphore<T
       totalCount: 0,
       ready: 0,
       inUse: 0,
-      recycling: 0
+      recycling: 0,
    };
 
    constructor(
@@ -39,8 +38,8 @@ export class ResourceSemaphore<T extends object> implements IResourceSemaphore<T
       private readonly concurrentWorkFactory: IConcurrentWorkFactory)
    {
       const resourceCount = unwrappedResources.length;
-      this.resources = unwrappedResources.map( (item: T) => {
-         return new ResourceAdapter<T>(this, item)
+      this.resources = unwrappedResources.map((item: T) => {
+         return new ResourceAdapter<T>(this, item);
       });
 
       this.recycledResources =
@@ -59,7 +58,7 @@ export class ResourceSemaphore<T extends object> implements IResourceSemaphore<T
 
                throw new Error(`Cannot recycle ${resource}.  It has not been registered as a dynamic resource accessor yet.`);
             }),
-            resourceCount, ChanBufferType.fixed ).unwrap();
+            resourceCount, ChanBufferType.fixed).unwrap();
 
       this.resourceRequests =
          this.concurrentWorkFactory.createTxChan(
@@ -72,14 +71,14 @@ export class ResourceSemaphore<T extends object> implements IResourceSemaphore<T
          totalCount: resourceCount,
          ready: 0,
          inUse: 0,
-         recycling: resourceCount
+         recycling: resourceCount,
       };
 
       let ii;
-      for( ii = 0; ii < resourceCount; ii++ ) {
+      for (ii = 0; ii < resourceCount; ii++) {
          put(this.recycledResources, this.resources[ii].publish());
       }
-      for( ii = 0; ii < resourceCount; ii++ ) {
+      for (ii = 0; ii < resourceCount; ii++) {
          const managerId = ii;
          go(this.scanForRequests.bind(this))
             .then(() => {
@@ -97,23 +96,22 @@ export class ResourceSemaphore<T extends object> implements IResourceSemaphore<T
    // }
 
    public async borrowResource<R>(
-      callback: (param: T) => R | Promise<R>
+      callback: (param: T) => R | Promise<R>,
    ): Promise<R> {
       const resource: T|CLOSED = await take(this.resourceRequests!);
       if (resource !== CLOSED) {
          const retVal: R | Promise<R> = callback(resource as T);
          await put(this.recycledResources!, resource);
          return await retVal;
-      } else {
+      } 
          throw new Error('Resource channel closed before API call could be made');
-      }
+      
    }
-
 
    private async scanForRequests(): Promise<void>
    {
       while (this.channelOpen) {
-         let nextMgr: IResourceAdapter<T> | CLOSED =
+         const nextMgr: IResourceAdapter<T> | CLOSED =
             await this.recycledResources!;
 
          if (nextMgr instanceof ResourceAdapter) {
@@ -143,7 +141,7 @@ export class ResourceSemaphore<T extends object> implements IResourceSemaphore<T
          totalCount: oldPoolSizes.totalCount,
          ready: oldPoolSizes.ready - 1,
          inUse: oldPoolSizes.inUse + 1,
-         recycling: oldPoolSizes.recycling
+         recycling: oldPoolSizes.recycling,
       };
       this.poolSizes = newPoolSizes;
       this.notifyWatches(oldPoolSizes, newPoolSizes);
@@ -161,7 +159,7 @@ export class ResourceSemaphore<T extends object> implements IResourceSemaphore<T
          totalCount: oldPoolSizes.totalCount,
          ready: oldPoolSizes.ready,
          inUse: oldPoolSizes.inUse - 1,
-         recycling: oldPoolSizes.recycling + 1
+         recycling: oldPoolSizes.recycling + 1,
       };
       this.poolSizes = newPoolSizes;
       this.notifyWatches(oldPoolSizes, newPoolSizes);
@@ -174,7 +172,7 @@ export class ResourceSemaphore<T extends object> implements IResourceSemaphore<T
          totalCount: oldPoolSizes.totalCount,
          ready: oldPoolSizes.ready + 1,
          inUse: oldPoolSizes.inUse,
-         recycling: oldPoolSizes.recycling - 1
+         recycling: oldPoolSizes.recycling - 1,
       };
       this.poolSizes = newPoolSizes;
       this.notifyWatches(oldPoolSizes, newPoolSizes);
@@ -196,11 +194,11 @@ export class ResourceSemaphore<T extends object> implements IResourceSemaphore<T
 
    getReturnChan(): Chan<T, IResourceAdapter<T>>
    {
-      return this.recycledResources
+      return this.recycledResources;
    }
 
    getReservationChan(): Chan<IResourceAdapter<T>, T>
    {
-      return this.resourceRequests
+      return this.resourceRequests;
    }
 }

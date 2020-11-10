@@ -5,7 +5,7 @@
  * @param state
  */
 export function configurable(state: boolean): MethodDecorator {
-    return function (_: any, __: string | symbol, descriptor: PropertyDescriptor) {
-        descriptor.configurable = state;
+   return function (_: any, __: string | symbol, descriptor: PropertyDescriptor) {
+       descriptor.configurable = state;
     };
 }

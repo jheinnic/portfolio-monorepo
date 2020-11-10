@@ -1,11 +1,11 @@
-import Optional from 'typescript-optional';
+import typescriptOptional from 'typescript-optional';
 
-import {IDirector} from '@jchptf/api';
+import { IDirector } from '@jchptf/api';
 import {
    BlockMappedDigestLocator, BlockMappedLayerLocator, MerkleDigestLocator, MerkleLayerLocator,
-   IMerkleProofLocator
+   IMerkleProofLocator,
 } from '../locator';
-import {BlockTopologicalOrder, IBfsOrderBuilder, IDfsOrderBuilder, ITopoOrderBuilder} from '../traversal';
+import { BlockTopologicalOrder, IBfsOrderBuilder, IDfsOrderBuilder, ITopoOrderBuilder } from '../traversal';
 
 export interface IMerkleCalculator
 {
@@ -15,21 +15,21 @@ export interface IMerkleCalculator
 
    getLayers(topDown?: boolean): IterableIterator<MerkleLayerLocator>;
 
-   getBlockMappedLayers(topDown?: boolean): IterableIterator<BlockMappedLayerLocator>
+   getBlockMappedLayers(topDown?: boolean): IterableIterator<BlockMappedLayerLocator>;
 
-   getDigestsOnLeafLayer(leftToRight?: boolean): IterableIterator<MerkleDigestLocator>
+   getDigestsOnLeafLayer(leftToRight?: boolean): IterableIterator<MerkleDigestLocator>;
 
    getDigestsOnLayer(
       fromLayer: MerkleLayerLocator, leftToRight?: boolean): IterableIterator<MerkleDigestLocator>;
 
    getChildDigests(
-      fromParent: MerkleDigestLocator, leftToRight?: boolean): IterableIterator<MerkleDigestLocator>
+      fromParent: MerkleDigestLocator, leftToRight?: boolean): IterableIterator<MerkleDigestLocator>;
 
    getRelatedDigestsOnLayer(
       fromParent: MerkleDigestLocator, onLayer: MerkleLayerLocator,
-      leftToRight?: boolean): IterableIterator<MerkleDigestLocator>
+      leftToRight?: boolean): IterableIterator<MerkleDigestLocator>;
 
-   getDigestPathToRoot(leafBlock: MerkleDigestLocator): IterableIterator<MerkleDigestLocator>
+   getDigestPathToRoot(leafBlock: MerkleDigestLocator): IterableIterator<MerkleDigestLocator>;
 
    getSubtreesOnBlockMappedLayer(
       fromLevel: BlockMappedLayerLocator,
@@ -37,19 +37,19 @@ export interface IMerkleCalculator
 
    getChildBlockMappedRoots(
       fromParent: BlockMappedDigestLocator,
-      leftToRight?: boolean): IterableIterator<BlockMappedDigestLocator>
+      leftToRight?: boolean): IterableIterator<BlockMappedDigestLocator>;
 
    getRelatedBlockMappedRootsOnLevel(
       fromParent: BlockMappedDigestLocator, onLevel: BlockMappedLayerLocator,
-      leftToRight?: boolean): IterableIterator<BlockMappedDigestLocator>
+      leftToRight?: boolean): IterableIterator<BlockMappedDigestLocator>;
 
-   getBlockMappedPathToRoot(leafBlock: MerkleDigestLocator): IterableIterator<BlockMappedDigestLocator>
+   getBlockMappedPathToRoot(leafBlock: MerkleDigestLocator): IterableIterator<BlockMappedDigestLocator>;
 
-   getBlockMappedPathFromRoot(leafBlock: MerkleDigestLocator): IterableIterator<BlockMappedDigestLocator>
+   getBlockMappedPathFromRoot(leafBlock: MerkleDigestLocator): IterableIterator<BlockMappedDigestLocator>;
 
    getDigestsInBlockSubtree(
       subtreeBlock: BlockMappedDigestLocator, topDown?: boolean,
-      leftToRight?: boolean): IterableIterator<MerkleDigestLocator>
+      leftToRight?: boolean): IterableIterator<MerkleDigestLocator>;
 
    getTopoDigestOrder(director: IDirector<ITopoOrderBuilder>): Iterable<MerkleDigestLocator>;
 
@@ -93,11 +93,11 @@ export interface IMerkleCalculator
 
    findSiblingDigest(mapToSibling: MerkleDigestLocator): MerkleDigestLocator | undefined;
 
-   findFurthestDescendant(fromDigest: MerkleDigestLocator, leftMost?: boolean): MerkleDigestLocator
+   findFurthestDescendant(fromDigest: MerkleDigestLocator, leftMost?: boolean): MerkleDigestLocator;
 
    findBlockMappedRootByOffset(offset: number): BlockMappedDigestLocator;
 
-   findParentBlockMappedRoot(fromChild: BlockMappedDigestLocator): Optional<BlockMappedDigestLocator>
+   findParentBlockMappedRoot(fromChild: BlockMappedDigestLocator): Optional<BlockMappedDigestLocator>;
 
    findNearestBlockMappedRoot(fromDigest: MerkleDigestLocator): BlockMappedDigestLocator;
 

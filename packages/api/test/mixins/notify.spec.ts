@@ -34,32 +34,32 @@ describe('iNotify', () => {
       assert.doesNotThrow(() => foo.addListener(EVENT_ALL, lall));
       foo.notify({
          id: 'x',
-         value: 1
+         value: 1,
       });
       assert.deepEqual(
          res, {
             x: 1,
-            [EVENT_ALL]: 1
+            [EVENT_ALL]: 1,
          });
       assert.doesNotThrow(() => foo.removeListener('x', l));
       foo.notify({
          id: 'x',
-         value: 2
+         value: 2,
       });
       assert.deepEqual(
          res, {
             x: 1,
-            [EVENT_ALL]: 2
+            [EVENT_ALL]: 2,
          });
       assert.doesNotThrow(() => foo.removeListener(EVENT_ALL, lall));
       foo.notify({
          id: 'x',
-         value: 3
+         value: 3,
       });
       assert.deepEqual(
          res, {
             x: 1,
-            [EVENT_ALL]: 2
+            [EVENT_ALL]: 2,
          });
    });
 
@@ -68,7 +68,7 @@ describe('iNotify', () => {
 
    beforeEach(() => {
       foo = new Notifier([1, 4, 4]);
-      e = {id: 'e'};
+      e = { id: 'e' };
    });
 
    function listen(e: IEvent)
@@ -84,4 +84,3 @@ describe('iNotify', () => {
       console.log(foo.removeListener('e', listen));
    });
 });
-

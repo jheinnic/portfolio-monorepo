@@ -37,10 +37,9 @@ export function makeFunctionChainingConflictHandler<InOutParam, ThisType = any>(
          configurable: true,
          writable: desc.writable,
          enumerable: desc.enumerable,
-         value: newReducingFunction
+         value: newReducingFunction,
       };
    }
 
    return reducingHandler;
 }
-

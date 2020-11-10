@@ -1,4 +1,4 @@
-import {MetadataAccessor} from '@loopback/metadata';
+import { MetadataAccessor } from '@loopback/metadata';
 
 export interface ConfigClassMarker {
    readonly defaultRoot?: string;

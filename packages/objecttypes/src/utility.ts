@@ -28,6 +28,6 @@ export interface INoArgsConstructorFor<T extends object> {
  */
 export type Fluently<T> = {
    [K in keyof T]: T[K] extends AnyFunc
-      ? (...args: any[] /*Parameters<T[K]>*/) => Fluently<T>
+      ? (...args: any[]) => Fluently<T>
       : (arg: T[K]) => Fluently<T>;
 };

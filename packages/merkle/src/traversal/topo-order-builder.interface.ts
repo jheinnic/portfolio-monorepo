@@ -3,4 +3,3 @@ export interface ITopoOrderBuilder {
    breadthFirst(value: boolean): ITopoOrderBuilder;
    onlyVisitUsed(value: boolean): ITopoOrderBuilder;
 }
-

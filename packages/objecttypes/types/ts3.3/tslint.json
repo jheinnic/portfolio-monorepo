@@ -1,0 +1,15 @@
+{
+  "extends": "dtslint/dtslint.json",
+  "rules": {
+    "one-line": [
+      true,
+      "check-catch",
+      "check-finally",
+      "check-else",
+      "check-whitespace"
+    ],
+    "no-useless-files": false,
+    /* I find this rule annoying, so I'm disabeling it ;) */
+    "eofline": false
+  }
+}

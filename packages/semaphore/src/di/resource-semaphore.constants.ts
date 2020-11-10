@@ -1,7 +1,7 @@
 import { Chan } from 'medium';
 
 import { IAdapter } from '@jchptf/api';
-import { blessLocalProviderToken, LocalProviderToken, MODULE_ID } from '@jchptf/nestjs';
+import { prepareModule, blessLocalProviderToken, LocalProviderToken, MODULE_ID } from '@jchptf/nestjs';
 
 import { IResourceAdapter, IResourceSemaphore, IResourceSemaphoreFactory } from '../interfaces';
 
@@ -19,12 +19,13 @@ export class SemaphoreModuleId
 
 export type SemaphoreModuleType = typeof SemaphoreModuleId;
 
-function blessLocal<Token extends keyof SemaphoreModuleId>(
-   token: Token,
-): LocalProviderToken<SemaphoreModuleId[Token], SemaphoreModuleType, Token>
-{
-   return blessLocalProviderToken(token, SemaphoreModuleId);
-}
+// function blessLocal<Token extends keyof SemaphoreModuleId>(
+//    token: Token,
+// ): LocalProviderToken<SemaphoreModuleId[Token], SemaphoreModuleType, Token>
+// {
+//    return blessLocalProviderToken(token, SemaphoreModuleId);
+// }
+const blessLocal = prepapreModule(SEMAPHORE_MODULE_ID);
 
 export const SEMAPHORE_RESOURCE_POOL = Symbol('Iterable<T>|AsyncIterable<T>');
 export const RESERVATION_CHANNEL = Symbol('IAdapter<Chan<IResourceAdapter<T>, T>>');

@@ -1,4 +1,4 @@
-import '@jchptf/reflection'
+import '@jchptf/reflection';
 import { NestFactory } from '@nestjs/core';
 
 import { RootApplicationModule } from './root-application.module';

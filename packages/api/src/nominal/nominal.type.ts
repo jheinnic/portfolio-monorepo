@@ -51,3 +51,37 @@ class NominalTag<Name extends string, Type>
  * remain--only the {@bold instance string} will survive to compiled output.
  */
 export type Nominal<Value, Name extends string, Type = any> = Value & NominalTag<Name, Type>;
+
+export type BlessFunction<
+  Value extends any,
+  N extends Nominal<Value, string>
+> =
+  N extends Nominal<infer Value2, string> ?
+    Value extends Value2 ?
+         (v: Value) => v is N : never : never;
+
+export type BlessFunction2<
+  Value extends any,
+  Name extends string,
+  N extends Nominal<Value, Name>,
+> =
+  N extends Nominal<infer Value2, infer Name2> ?
+    Value extends Value2 ?
+      Name extends Name2 ?
+        (v: Value) => v is N : never : never : never;
+
+export type ValuesForNominal<N extends Nominal<any, string>> =
+   N extends Nominal<infer Value, string> ? Value : never;
+
+export function bless<
+  Name extends string,
+  Type extends any,
+  N extends Nominal<any, Name, Type>
+>(value: ValuesForNominal<N>): N {
+   return value;
+}
+
+export type Foo<T> = Nominal<string, 'cats', T>;
+export let aa: Foo<number>;
+export let val = 'aa';
+aa = bless<'a', number, Foo<number>>(val);)

@@ -1,5 +1,5 @@
-import {MerkleLayerLocator} from './merkle-layer-locator.value';
-import Optional from 'typescript-optional';
+import { MerkleLayerLocator } from './merkle-layer-locator.value';
+import typescriptOptional from 'typescript-optional';
 
 export class BlockMappedLayerLocator extends MerkleLayerLocator
 {

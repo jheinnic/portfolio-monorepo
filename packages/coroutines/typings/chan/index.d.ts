@@ -4,7 +4,7 @@ declare namespace Chan {
    }
 
    interface Thunk<V = any> {
-      (cb: Callback<V>): void
+      (cb: Callback<V>): void;
    }
 
    export interface Chan<V = any> extends Thunk<V> {

@@ -8,7 +8,7 @@ import { CanonicalPathNaming } from '../canonical-path-naming.class';
 import { MerkleCalculator } from '../merkle-calculator.class';
 
 import {
-   MERKLE_CALCULATOR_PROVIDER_TOKEN, MERKLE_DIGEST_LRU_CACHE_PROVIDER_TOKEN,
+   MERKLE_TREE_CALCULATOR, MERKLE_DIGEST_LRU_CACHE_PROVIDER_TOKEN,
    MERKLE_IDENTITY_LRU_CACHE_PROVIDER_TOKEN, MERKLE_LOCATOR_FACTORY_PROVIDER_TOKEN,
    MERKLE_PATH_NAMING_PROVIDER_TOKEN, MerkleModuleId,
 } from './merkle.constants';
@@ -16,7 +16,7 @@ import {
 export const MERKLE_CALCULATOR_PROVIDER:
    IBoundDynamicModuleImport<IMerkleCalculator, typeof MerkleModuleId, any> = {
       style: DynamicProviderBindingStyle.CLASS,
-      provide: MERKLE_CALCULATOR_PROVIDER_TOKEN,
+      provide: MERKLE_TREE_CALCULATOR,
       useClass: MerkleCalculator,
    };
 

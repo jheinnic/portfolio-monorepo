@@ -1,4 +1,4 @@
-import {ConstructorFor} from 'simplytyped';
+import { ConstructorFor } from 'simplytyped';
 import { MetadataMap } from '@loopback/metadata';
 
 import { ConfigPropertyMarker } from '../decorators/config-property-marker.interface';

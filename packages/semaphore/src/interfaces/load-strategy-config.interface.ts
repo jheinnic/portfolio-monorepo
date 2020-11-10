@@ -2,7 +2,7 @@ export enum LoadResourcePoolStrategy
 {
    EAGER_FIXED_ITERABLE = 'EagerFixedIterable',
    EAGER_FIXED_ASYNC_ITERABLE = 'EagerFixedAsyncIterable',
-   EAGER_FIXED_CALL_FACTORY = 'EagerFixedCallFactory'
+   EAGER_FIXED_CALL_FACTORY = 'EagerFixedCallFactory',
 }
 
 export namespace EagerFixedIterableLoadStrategy
@@ -13,7 +13,7 @@ export namespace EagerFixedIterableLoadStrategy
 
    export interface Required<T extends object>
    {
-      readonly loadStrategy: LoadResourcePoolStrategy.EAGER_FIXED_ITERABLE
+      readonly loadStrategy: LoadResourcePoolStrategy.EAGER_FIXED_ITERABLE;
       readonly resources: Iterable<T>;
    }
 
@@ -28,7 +28,7 @@ export namespace EagerFixedAsyncIterableLoadStrategy
 
    export interface Required<T extends object>
    {
-      readonly loadStrategy: LoadResourcePoolStrategy.EAGER_FIXED_ASYNC_ITERABLE
+      readonly loadStrategy: LoadResourcePoolStrategy.EAGER_FIXED_ASYNC_ITERABLE;
       readonly resources: AsyncIterable<T>;
    }
 
@@ -45,12 +45,11 @@ export namespace EagerFixedCallFactoryLoadStrategy
    {
       readonly loadStrategy: LoadResourcePoolStrategy.EAGER_FIXED_CALL_FACTORY;
       readonly factory: () => T;
-      readonly poolSize: number
+      readonly poolSize: number;
    }
 
    export interface Runtime<T extends object> extends Defaults, Required<T> {}
 }
-
 
 /**
  * The remaining portion mixes in a paired hierarchy of variant sub-configurations
@@ -71,5 +70,4 @@ export interface EagerFixedCallProviderLoadStrategy<T extends object>
 export type LoadResourcePoolStrategyConfig<T extends object> =
    EagerFixedIterableLoadStrategy<T>
    | EagerFixedAsyncIterableLoadStrategy<T>
-   | EagerFixedCallProviderLoadStrategy<T>
-
+   | EagerFixedCallProviderLoadStrategy<T>;

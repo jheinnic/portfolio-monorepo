@@ -1,4 +1,4 @@
-import {IResourceSemaphore} from './resource-semaphore.interface';
+import { IResourceSemaphore } from './resource-semaphore.interface';
 
 export interface IResourceSemaphoreFactory
 {

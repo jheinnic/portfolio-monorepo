@@ -1,5 +1,5 @@
 import {
-   makeFunctionReducingConflictHandler, makeReplacingConflictHandler, MixinContent, mixinPlus
+   makeFunctionReducingConflictHandler, makeReplacingConflictHandler, MixinContent, mixinPlus,
 } from '@jchptf/mixins';
 import { call, ICallFeature, reply } from './call-feature.interface';
 import { Omit } from 'simplytyped';

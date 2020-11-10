@@ -39,10 +39,9 @@ export function makeFunctionReducingConflictHandler<T extends AnyFunc>(
          configurable: true,
          writable: desc.writable,
          enumerable: desc.enumerable,
-         value: newReducingFunction
+         value: newReducingFunction,
       };
    }
 
    return reducingHandler;
 }
-

@@ -142,5 +142,5 @@ export interface IConcurrentWorkFactory
       concurrency?: number,
    ): void;
 
-   createMonitor<Msg>( msgSource: Chan<any, Msg> ): IChanMonitor<Msg>;
+   createMonitor<Msg>(msgSource: Chan<any, Msg>): IChanMonitor<Msg>;
 }

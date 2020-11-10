@@ -12,7 +12,7 @@ describe('inheritance.ts', () => {
 
    describe('IfExtends', () => {
       it('Can selectively pass through subclasses', () => {
-         assert<Extends<SubClassOne, ABaseClass>>(true)
+         assert<Extends<SubClassOne, ABaseClass>>(true);
          assert<Not<Extends<SubClassOne, ABaseClass>>>(false);
       });
 
@@ -23,6 +23,6 @@ describe('inheritance.ts', () => {
          assert<IsExactly<TestCase, boolean>>(false);
          assert<IsNever<TestCase>>(false);
          assert<Not<IsExactly<TestCase, SubClassOne>>>(true);
-      })
+      });
    });
 });

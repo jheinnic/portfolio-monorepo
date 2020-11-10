@@ -25,7 +25,7 @@ export function makeValueReducingConflictHandler<T>(reducer: ValueReducer<T>)
          configurable: true,
          writable: desc.writable,
          enumerable: desc.enumerable,
-         value: reducedValue
+         value: reducedValue,
       };
    }
 

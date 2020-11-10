@@ -24,17 +24,17 @@ export class DepthFirstOrder
       const rootBlock = this.calculator.findBlockMappedRootByOffset(0);
       switch (this.orderOptions.visitMode) {
          case DepthFirstVisitMode.PRE_ORDER:
-         {
+            {
             yield* this.doPreOrderDfs(rootBlock);
             break;
          }
          case DepthFirstVisitMode.IN_ORDER:
-         {
+            {
             yield* this.doInOrderDfs(rootBlock);
             break;
          }
          case DepthFirstVisitMode.POST_ORDER:
-         {
+            {
             yield* this.doPostOrderDfs(rootBlock);
             break;
          }
@@ -46,7 +46,7 @@ export class DepthFirstOrder
       yield parent;
 
       if (parent.blockLevel < this.maxLevel) {
-         for (let child of
+         for (const child of
             this.calculator.getChildBlockMappedRoots(parent, this.orderOptions.leftToRight))
          {
             yield* this.doPreOrderDfs(child);
@@ -63,7 +63,7 @@ export class DepthFirstOrder
          if (!firstChild.done) {
             yield* this.doInOrderDfs(firstChild.value);
          }
-         for (let nextChild of childIter) {
+         for (const nextChild of childIter) {
             yield parent;
             yield* this.doInOrderDfs(nextChild);
          }
@@ -75,7 +75,7 @@ export class DepthFirstOrder
    public* doPostOrderDfs(parent: BlockMappedDigestLocator): IterableIterator<BlockMappedDigestLocator>
    {
       if (parent.blockLevel < this.maxLevel) {
-         for (let child of
+         for (const child of
             this.calculator.getChildBlockMappedRoots(parent, this.orderOptions.leftToRight))
          {
             yield* this.doPostOrderDfs(child);

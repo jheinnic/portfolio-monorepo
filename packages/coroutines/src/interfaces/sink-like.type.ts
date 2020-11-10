@@ -64,11 +64,11 @@ export function asGenerator<T>(sink: SinkLike<T>): (arg: T) => IterableIterator<
 }
 */
 
-import {AsyncSink} from 'ix';
-import {Subject} from 'rxjs';
-import {IDirector} from '@jchptf/api';
+import { AsyncSink } from 'ix';
+import { Subject } from 'rxjs';
+import { IDirector } from '@jchptf/api';
 
-export type SinkLike<T> = Subject<T> | AsyncSink<T> | IDirector<T>
+export type SinkLike<T> = Subject<T> | AsyncSink<T> | IDirector<T>;
 
 // export function isChan<T>(sink: SinkLike<T>): sink is Chan<T> {
 //    return sink.hasOwnProperty('close');
@@ -88,9 +88,9 @@ export function isDirector<T>(sink: SinkLike<T>): sink is IDirector<T> {
 
 export function callSink<T>(sink: SinkLike<T>, arg: T): void
 {
-   if(isQueue(sink)) {
+   if (isQueue(sink)) {
       sink.write(arg);
-   } else if(isSubject(sink)) {
+   } else if (isSubject(sink)) {
       sink.next(arg);
    } else {
       sink(arg);
@@ -108,7 +108,7 @@ export function asFunction<T>(sink: SinkLike<T>): IDirector<T>
    } else if (isSubject(sink)) {
       retVal = function (arg: T): void {
          sink.next(arg);
-      }
+      };
    } else {
       retVal = sink;
    }

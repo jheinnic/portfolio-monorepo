@@ -6,12 +6,10 @@ import * as assert from 'assert';
 import * as path from 'path';
 
 import {
-   DynamicProviderBindingStyle, IModule, IBySupplierFactoryCall, IBoundDynamicModuleImport,
+   DynamicProviderBindingStyle, IModule, IBoundDynamicModuleImport,
 } from '@jchptf/nestjs';
 
-import {
-   CONFIG_READER_PROVIDER_TOKEN, CONFIG_LOADER_PROVIDER_TOKEN, ConfigModuleId,
-} from './di';
+import { CONFIG_READER, CONFIG_LOADER } from './di';
 import { IConfigClassFinder, IConfigReader, IConfigLoader } from './interfaces';
 
 /**

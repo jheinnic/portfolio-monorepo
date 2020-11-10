@@ -1,7 +1,7 @@
 import { AsyncSink } from 'ix';
 import { Chan } from 'medium';
 
-import { blessLocalProviderToken, LocalProviderToken, MODULE_ID } from '@jchptf/nestjs';
+import { prepareModule, LocalProviderToken, MODULE_ID } from '@jchptf/nestjs';
 import { IAdapter, IFactoryMethod } from '@jchptf/api';
 
 import { IConcurrentWorkFactory, ILimiter, IChanMonitor } from '../interfaces';
@@ -31,13 +31,14 @@ export class CoroutinesModuleId
    [CHAN_FACTORY]: IFactoryMethod<IAdapter<Chan<any, any>>>;
    [ASYNC_SINK_FACTORY]: IFactoryMethod<AsyncSink<any>>;
 }
+const blessLocal = prepareModule(CoroutinesModuleId);
 
-function blessLocal<Token extends keyof CoroutinesModuleId>(
-   token: Token,
-): LocalProviderToken<CoroutinesModuleId[Token], typeof CoroutinesModuleId, Token>
-{
-   return blessLocalProviderToken(token, CoroutinesModuleId);
-}
+// function blessLocal<Token extends keyof CoroutinesModuleId>(
+//    token: Token,
+// ): LocalProviderToken<CoroutinesModuleId[Token], typeof CoroutinesModuleId, Token>
+// {
+//    return blessLocalProviderToken(token, CoroutinesModuleId);
+// }
 
 export const CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN =
    blessLocal(CONCURRENT_WORK_FACTORY);

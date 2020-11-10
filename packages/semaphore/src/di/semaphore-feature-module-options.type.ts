@@ -1,4 +1,4 @@
-import { DynamicModuleConfigTwo, IBaseConfigProps, IModule } from '@jchptf/nestjs';
+import { DynamicModuleConfig, IBaseConfigProps, IModule } from '@jchptf/nestjs';
 
 import {
    RESERVATION_CHANNEL, RETURN_CHANNEL, SEMAPHORE_RESOURCE_POOL,
@@ -6,7 +6,7 @@ import {
 } from './resource-semaphore.constants';
 
 export type SemaphoreFeatureModuleOptions<T, Consumer extends IModule> =
-   DynamicModuleConfigTwo<
+   DynamicModuleConfig<
       typeof SemaphoreModuleId,
       IBaseConfigProps<Consumer>,
       SemaphoreModuleId & SemaphoreModuleGeneric<T>,

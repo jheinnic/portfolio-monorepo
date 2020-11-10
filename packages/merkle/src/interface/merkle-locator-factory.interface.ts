@@ -1,5 +1,5 @@
 import {
-   BlockMappedDigestLocator, BlockMappedLayerLocator, MerkleDigestLocator, MerkleLayerLocator
+   BlockMappedDigestLocator, BlockMappedLayerLocator, MerkleDigestLocator, MerkleLayerLocator,
 } from '../locator/index';
 
 export interface IMerkleLocatorFactory {
@@ -13,7 +13,7 @@ export interface IMerkleLocatorFactory {
 
    findBlockMappedDigestByOffset(offset: number): BlockMappedDigestLocator;
 
-   findBlockMappedDigestByLayerAndIndex(layer: BlockMappedLayerLocator, index: number): BlockMappedDigestLocator
+   findBlockMappedDigestByLayerAndIndex(layer: BlockMappedLayerLocator, index: number): BlockMappedDigestLocator;
 
    findBlockMappedLayerByLevel(level: number): BlockMappedLayerLocator;
 }

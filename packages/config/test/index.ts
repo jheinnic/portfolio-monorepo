@@ -2,5 +2,5 @@
 // import * as c from "../src/index";
 
 describe('config', () => {
-    it("tests pending");
+   it('tests pending');
 });

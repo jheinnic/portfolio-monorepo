@@ -3,11 +3,11 @@ declare module 'co'
    import 'co';
 
    export interface CoRoutineGenerator<R extends any = any> {
-      (): IterableIterator<R>
+      (): IterableIterator<R>;
    }
 
    export interface WrappableCoRoutineGenerator<R extends any = any, P extends any[] = any[]> {
-      (...args: P): IterableIterator<R>
+      (...args: P): IterableIterator<R>;
    }
 
    export type WrappedCoRoutineGenerator<R extends any = any, P extends any[] = any[]> =
@@ -33,11 +33,11 @@ declare module 'co'
 
    export interface Co<R extends any = any> {
       // (coroutine: () => IterableIterator<any>): Promise<T>
-      (gen: CoRoutineGenerator<R>): Promise<R>
+      (gen: CoRoutineGenerator<R>): Promise<R>;
 
       // wrap: CoWrap<(...args: any[]) => IterableIterator<any>, T>
       wrap<R extends any = any, P extends any[] = any[]>(
-         gen: WrappableCoRoutineGenerator<R, P>): WrappedCoRoutineGenerator<R, P>
+         gen: WrappableCoRoutineGenerator<R, P>): WrappedCoRoutineGenerator<R, P>;
    }
 
    export const co: Co;

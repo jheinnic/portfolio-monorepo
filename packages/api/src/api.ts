@@ -20,7 +20,8 @@ export type Watch<T> = (id: string, oldState: T, newState: T) => void;
 /**
  * Generic interface for reference types (value wrappers).
  */
-export interface IAdapter<T> {
+export interface IAdapter<T>
+{
    /**
     * Returns wrapped value.
     */
@@ -36,20 +37,41 @@ export interface IAdapter<T> {
  * interface method, although other aspects of their operational lifecycle may
  * certainly involve parameter-setting.
  */
-export type IFactoryObject<Type> = {
-   create(): Type;
-} | {
-   create(): Promise<Type>;
-} | {
-   create(): Type | Promise<Type>;
+// export type IFactoryObject<Type> = {
+//    create(): Type;
+// } | {
+//    create(): Promise<Type>;
+// } | {
+//    create(): Type | Promise<Type>;
+// };
+
+export type ISyncFactoryMethod<Type, Args extends any[] = []> =
+  (...args: Args) => Type;
+export type ISyncFactoryObject<Type, Args extends any[] = []> = {
+   create: ISyncFactoryMethod<Type, Args>;
 };
 
-export type IFactoryMethod<Type> =
-   (() => Type) | (() => Promise<Type>) | (() => Type | Promise<Type>);
+export type IAsyncFactoryMethod<Type, Args extends any[] = []> =
+   (...args: Args) => Promise<Type>;
+export type IAsyncFactoryObject<Type, Args extends any[] = []> = {
+   create: IAsyncFactoryMethod<Type, Args>;
+};
 
-export type IFactory<Type> = IFactoryObject<Type> | IFactoryMethod<Type>;
+export type IFactoryMethod<Type, Args extends any[] = []> =
+  (...args: Args) => Type | Promise<Type>;
+export type IFactoryObject<Type, Args extends any[] = []> = {
+   create: IFactoryMethod<Type, Args>;
+};
 
-export async function asyncCreate<Type>(factory: IFactory<Type>): Promise<Type>
+export type ISyncFactory<Type, Args extends any[] = []> =
+   ISyncFactoryObject<Type, Args> | ISyncFactoryMethod<Type, Args>;
+export type IAsyncFactory<Type, Args extends any[] = []> =
+   IAsyncFactoryObject<Type, Args> | IAsyncFactoryMethod<Type, Args>;
+export type IFactory<Type, Args extends any[] = []> =
+   IFactoryObject<Type, Args> | IFactoryMethod<Type, Args>;
+
+export async function asyncCreate<Type>(
+  factory: IAsyncFactory<Type> | IFactory<Type>): Promise<Type>
 {
    if ('function' === typeof factory) {
       return await factory();
@@ -58,7 +80,7 @@ export async function asyncCreate<Type>(factory: IFactory<Type>): Promise<Type>
    return await factory.create();
 }
 
-export function syncCreate<Type>(factory: IFactory<Type>): Type|Promise<Type>
+export function syncCreate<Type>(factory: ISyncFactory<Type>): Type
 {
    if ('function' === typeof factory) {
       return factory();
@@ -70,26 +92,29 @@ export function syncCreate<Type>(factory: IFactory<Type>): Type|Promise<Type>
 /**
  * Generic interface for types with binary backing buffers.
  */
-export interface IBuffered {
-    /**
-     * An implementation's publicly accessible backing array /
-     * ArrayBuffer (usually a typed array instance).
-     */
+export interface IBuffered
+{
+   /**
+    * An implementation's publicly accessible backing array /
+    * ArrayBuffer (usually a typed array instance).
+    */
    buffer: ArrayBufferLike;
-    /**
-     * Returns an Uint8Array view of backing array.
-     */
+
+   /**
+    * Returns an Uint8Array view of backing array.
+    */
    bytes?(): Uint8Array;
 }
 
 /**
  * Generic interface for cloneable types.
  */
-export interface ICopy<T> {
-    /**
-     * Returns a copy of this instance. Shallow or deep copies are
-     * implementation specific.
-     */
+export interface ICopy<T>
+{
+   /**
+    * Returns a copy of this instance. Shallow or deep copies are
+    * implementation specific.
+    */
    copy(): T;
 }
 
@@ -99,23 +124,25 @@ export interface ICopy<T> {
  *
  * @see mixins/IEnable
  */
-export interface IEnable {
+export interface IEnable
+{
    isEnabled(): boolean;
 
-    /**
-     * Disables this entity.
-     */
+   /**
+    * Disables this entity.
+    */
    disable(): void;
 
-    /**
-     * Enables this entity.
-     */
+   /**
+    * Enables this entity.
+    */
    enable(): void;
 
    toggle?(): boolean;
 }
 
-export interface IEvent extends IID<Exclude<PropertyKey, symbol>> {
+export interface IEvent extends IID<Exclude<PropertyKey, symbol>>
+{
    target?: any;
    canceled?: boolean;
    value?: any;
@@ -127,28 +154,33 @@ export interface IEvent extends IID<Exclude<PropertyKey, symbol>> {
  *
  * @see mixins/INotify
  */
-export interface INotify {
+export interface INotify
+{
    addListener(id: string, fn: Listener, scope?: any): boolean;
+
    removeListener(id: string, fn: Listener, scope?: any): boolean;
+
    notify(event: IEvent): void;
 }
 
 /**
  * `id` property declaration.
  */
-export interface IID<T> {
+export interface IID<T extends Exclude<any, symbol>>
+{
    readonly id: T extends symbol ? never : T;
 }
 
 /**
  * Generic plain object with all key values of given type.
  */
-export interface IObjectOf<T> {
+export interface IObjectOf<T>
+{
    [id: string]: T;
 }
 
 export type IBagOf<T, P extends keyof any> = {
-    [K in P]: T;
+   [K in P]: T;
 };
 
 export type IMapTo<T, S extends object, P extends keyof S = keyof S> = {
@@ -162,7 +194,8 @@ export type SymbolEnum<P extends keyof any = keyof any> = IMapTo<symbol, any, P>
 /**
  * Interface for types supported the release of internal resources.
  */
-export interface IRelease {
+export interface IRelease
+{
    release(opt?: any): boolean;
 }
 
@@ -172,9 +205,12 @@ export interface IRelease {
  *
  * @see mixins/iWatch
  */
-export interface IWatch<T> {
+export interface IWatch<T>
+{
    addWatch(id: string, fn: Watch<T>): boolean;
+
    removeWatch(id: string): boolean;
+
    notifyWatches(oldState: T, newState: T): void;
 }
 
@@ -183,9 +219,9 @@ export type IDirector<IBuilder> = (builder: IBuilder) => void;
 export type IAsyncDirector<IBuilder> = (builder: IBuilder) => Promise<void>;
 
 export type IDirectorObj<IBuilder, K extends keyof any = 'apply'> = {
-    [Key in K]: IDirector<IBuilder>;
+   [Key in K]: IDirector<IBuilder>;
 };
 
 export type IAsyncDirectorObj<IBuilder, K extends keyof any = 'apply'> = {
-    [Key in K]: IAsyncDirector<IBuilder>;
+   [Key in K]: IAsyncDirector<IBuilder>;
 };

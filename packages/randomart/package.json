@@ -1,0 +1,88 @@
+{
+    "name": "@jchptf/randomart",
+    "version": "0.0.1",
+    "description": "TODO",
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "typings": "./dist/index.d.ts",
+    "typesVersions": {
+        ">=3.3": {
+            "dist": [
+                "dist/ts3.3/*"
+            ]
+        },
+        ">=3.2": {
+            "dist": [
+                "dist/ts3.2/*"
+            ]
+        },
+        ">=3.1": {
+            "dist": [
+                "dist/ts3.1/*"
+            ]
+        }
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/jheinnic/portfolio-monorepo",
+        "homepage": "https://github.com/jheinnic/portfolio-monorepo/tree/master/packages/randomart"
+    },
+    "author": "John Heinnickel <jheinnic+npm@hotmail.com>",
+    "license": "MIT",
+    "keywords": [
+        "es6",
+        "typescript"
+    ],
+    "engines": {
+        "node": ">=10.13.0"
+    },
+    "publishConfig": {
+        "access": "public",
+        "registry": "http://localhost:4873"
+    },
+    "scripts": {
+        "build": "yarn run clean && tsc -b && echo /Users/jheinnic/Git/JchPtf/monorepo",
+        "clean": "tsc -b --clean && rm -rf .nyc_output coverage doc dist build && mkdir dist && mkdir build ",
+        "cover": "yarn test && nyc report --reporter=lcov",
+        "doc": "node_modules/.bin/typedoc --mode file --module es2015 --target es6 --tsconfig tsconfig.json --externalPattern node_modules --excludeExternals --excludePrivate --out doc --gitRevision feature_bootstrap src typings",
+        "pub": "yarn run build && lerna publish --registry http://localhost:4873",
+        "test": "tsc -b test --clean && rm -rf build && mkdir build && tsc -b test && nyc mocha "
+    },
+    "devDependencies": {
+        "@types/chai": "^4.1.7",
+        "@types/mocha": "^5.2.5",
+        "@types/node": "10.14.2",
+        "@types/sinon": "^7.0.2",
+        "@types/sinon-chai": "^3.2.2",
+        "chai": "^4.2.0",
+        "mocha": "^5.2.0",
+        "mocha-typescript": "^1.1.17",
+        "nyc": "^12.0.2",
+        "sinon": "^7.2.2",
+        "sinon-chai": "^3.3.0",
+        "tslint": "^5.11.0",
+        "typedoc": "^0.14.2",
+        "typescript": "^3.2.2"
+    },
+    "dependencies": {
+        "@jchptf/coroutines": "^0.0.48",
+        "@thi.ng/errors": "^0.1.12",
+        "@thi.ng/fsm": "^2.4.26",
+        "@thi.ng/rstream": "^5.0.7",
+        "@thi.ng/transducers-binary": "^0.5.30",
+        "@thi.ng/transducers-stats": "^1.1.40",
+        "@types/mathjs": "^6.0.7",
+        "binary-search": "^1.3.6",
+        "canvas": "^2.6.1",
+        "co": "^4.6.0",
+        "co-stream": "^0.3.2",
+        "hmac-drbg": "^1.0.1",
+        "mathjs": "^8.0.0",
+        "medium": "^1.1.0",
+        "randombytes": "^2.1.0",
+        "rxjs": "^6.6.3",
+        "simplytyped": "^1.6.0",
+        "tslib": "^1.9.3"
+    }
+}

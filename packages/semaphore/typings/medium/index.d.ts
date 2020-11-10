@@ -1,8 +1,8 @@
 declare module 'medium'
 {
   import 'medium';
-  import {Transducer} from 'transducers-js';
-  import {AnyFunc} from 'simplytyped';
+  import { Transducer } from 'transducers-js';
+  import { AnyFunc } from 'simplytyped';
 
   export interface Chan<S = any, T = S> extends Promise<T|symbol> {}
 
@@ -10,10 +10,10 @@ declare module 'medium'
 
   export interface BufferFactories
   {
-    unbuffered(): ChanBuffer;
-    fixed(num: number): ChanBuffer;
-    sliding(num: number): ChanBuffer;
-    dropping(num: number): ChanBuffer;
+     unbuffered(): ChanBuffer;
+     fixed(num: number): ChanBuffer;
+     sliding(num: number): ChanBuffer;
+     dropping(num: number): ChanBuffer;
   }
 
   export const buffers: BufferFactories;
@@ -25,19 +25,19 @@ declare module 'medium'
    * numOfBuffer - Any number or buffer. A number is a shortcut for buffers.fixed(number).
    * xducer - a transducer to process/filter values with.
    */
-  export function chan<S = any, T = S>(numOrBuffer?: ChanBufferLike, xducer?: Transducer<S, T>): Chan<T>
+  export function chan<S = any, T = S>(numOrBuffer?: ChanBufferLike, xducer?: Transducer<S, T>): Chan<T>;
 
   /** Puts a value onto a channel. Returned promise resolves to true if successful, or false if the channel is closed. */
-  export function put<S = any, T = S>(ch: Chan<S, T>, val: S): Promise<boolean>
+  export function put<S = any, T = S>(ch: Chan<S, T>, val: S): Promise<boolean>;
 
   /** Takes a value from a channel. Returned Promise resolves to taken value or CLOSED constant if the channel is closed. */
   export function take<T = any>(ch: Chan<any, T>): Promise<T | typeof CLOSED>;
 
   /** Immediately invokes (and returns) given async function. */
-  export function go<T>( func: AnyFunc<Promise<T>>): Promise<T>;
+  export function go<T>(func: AnyFunc<Promise<T>>): Promise<T>;
 
   /** Creates a promise that will resolve successfully after ms milliseconds. */
-  export function sleep(ms: number): Promise<void>
+  export function sleep(ms: number): Promise<void>;
 
   /** A constant, which all takes on a closed channel receive instead of a value.*/
   const CLOSED: symbol;
@@ -73,13 +73,13 @@ declare module 'medium'
    * All non-winning actions will be canceled so that their data does not go missing.
    export function any(...ports) -> Promise -> [theResolvedValue, theSourceChannelOrPromise]
    */
-  export function any<S1 = any>(...port: Alt<S1>[]): AnyAlt<S1>
-  export function any<S1 = any, S2 = any>(port1: Alt<S1>, port2: Alt<S2>): AnyAlt<S1|S2>
-  export function any<S1 = any, S2 = any, S3 = any>(port1: Alt<S1>, port2: Alt<S2>, port3: Alt<S3>): AnyAlt<S1|S2|S3>
-  export function any<S1 = any, S2 = any, S3 = any, S4 = any>(port1: Alt<S1>, port2: Alt<S2>, port3: Alt<S3>, port4: Alt<S4>): AnyAlt<S1|S2|S3|S4>
-  export function any<S1 = any, S2 = any, S3 = any, S4 = any, S5 = any>(port1: Alt<S1>, port2: Alt<S2>, port3: Alt<S3>, port4: Alt<S4>, ...ports: Alt<S5>[]): AnyAlt<S1|S2|S3|S4|S5>
+  export function any<S1 = any>(...port: Alt<S1>[]): AnyAlt<S1>;
+  export function any<S1 = any, S2 = any>(port1: Alt<S1>, port2: Alt<S2>): AnyAlt<S1|S2>;
+  export function any<S1 = any, S2 = any, S3 = any>(port1: Alt<S1>, port2: Alt<S2>, port3: Alt<S3>): AnyAlt<S1|S2|S3>;
+  export function any<S1 = any, S2 = any, S3 = any, S4 = any>(port1: Alt<S1>, port2: Alt<S2>, port3: Alt<S3>, port4: Alt<S4>): AnyAlt<S1|S2|S3|S4>;
+  export function any<S1 = any, S2 = any, S3 = any, S4 = any, S5 = any>(port1: Alt<S1>, port2: Alt<S2>, port3: Alt<S3>, port4: Alt<S4>, ...ports: Alt<S5>[]): AnyAlt<S1|S2|S3|S4|S5>;
 
-  type SyncOrAsync<T> = T | Promise<T>
+  type SyncOrAsync<T> = T | Promise<T>;
 
   export type RepeatFn = () => SyncOrAsync<void|false>;
 

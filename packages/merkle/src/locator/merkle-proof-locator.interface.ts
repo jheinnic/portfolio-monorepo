@@ -1,5 +1,5 @@
-import {MerkleDigestLocator} from './merkle-digest-locator.value';
-import {BlockMappedDigestLocator} from './block-mapped-digest-locator.value';
+import { MerkleDigestLocator } from './merkle-digest-locator.value';
+import { BlockMappedDigestLocator } from './block-mapped-digest-locator.value';
 
 export interface IMerkleProofLocator {
    /**
@@ -23,11 +23,11 @@ export interface IMerkleProofLocator {
     * Digest locators for every block root whose block is required to retrieve a hash from
     * every ancestor digest and every non-block-mapped ancestor's sibling.
     */
-   readonly ancestorBlocks: ReadonlyArray<BlockMappedDigestLocator>
+   readonly ancestorBlocks: ReadonlyArray<BlockMappedDigestLocator>;
 
    /**
     * Digest locators for every block root whose block is required to retrieve a hash from
     * every block-mapped ancestor digest's sibling.
     */
-   readonly siblingBlocks: ReadonlyArray<BlockMappedDigestLocator>
+   readonly siblingBlocks: ReadonlyArray<BlockMappedDigestLocator>;
 }

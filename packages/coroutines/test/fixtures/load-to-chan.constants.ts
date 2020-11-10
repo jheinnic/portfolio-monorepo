@@ -9,7 +9,6 @@ export namespace LoadToChan {
    export const realTimeDelta = 2;
    export const halfRealTimeDelta = 1;
 
-
    export enum StepType {
       advanceClock = 0,
       yieldFlow = 1,
@@ -17,7 +16,7 @@ export namespace LoadToChan {
       yieldThenAdvance = 3,
       flushEvents = 4,
       checkNextCallCount = 5,
-      readFromChan = 6
+      readFromChan = 6,
    }
 
    export interface AdvanceStep {
@@ -45,7 +44,7 @@ export namespace LoadToChan {
 
    export interface CountNextCallsStep {
       readonly stepType: StepType.checkNextCallCount;
-      readonly expectedCount: number
+      readonly expectedCount: number;
    }
 
    export interface ReadFromChanStep {
@@ -56,7 +55,7 @@ export namespace LoadToChan {
    function advance(tickTo: number): AdvanceStep {
       return {
          stepType: StepType.advanceClock,
-         tickTo
+         tickTo,
       };
    }
 
@@ -85,14 +84,14 @@ export namespace LoadToChan {
    function countNextCalls(expectedCount: number): CountNextCallsStep {
       return {
          stepType: StepType.checkNextCallCount,
-         expectedCount
+         expectedCount,
       };
    }
 
    function readFromChan(expectedValue: number): ReadFromChanStep {
       return {
          stepType: StepType.readFromChan,
-         expectedValue
+         expectedValue,
       };
    }
 
@@ -129,6 +128,6 @@ export namespace LoadToChan {
       countNextCalls(4),
       advance(80),
       yieldFlow(),
-      countNextCalls(6)
-   ]
+      countNextCalls(6),
+   ];
 }

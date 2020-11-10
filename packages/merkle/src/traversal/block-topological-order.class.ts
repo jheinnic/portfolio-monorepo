@@ -1,6 +1,6 @@
-import {BlockMappedDigestLocator, BlockMappedLayerLocator, MerkleTreeDescription} from '../locator';
-import {IMerkleCalculator} from '../interface';
-import {TopoOrderOptions, TopologicalOrder} from '.';
+import { BlockMappedDigestLocator, BlockMappedLayerLocator, MerkleTreeDescription } from '../locator';
+import { IMerkleCalculator } from '../interface';
+import { TopoOrderOptions, TopologicalOrder } from '.';
 // import {MERKLE_TYPES} from '../di';
 
 // import '@jchptf/reflection';

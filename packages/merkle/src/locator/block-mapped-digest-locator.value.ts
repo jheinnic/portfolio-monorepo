@@ -1,7 +1,7 @@
-import {MerkleDigestLocator} from './merkle-digest-locator.value';
-import {BlockMappedLayerLocator} from './block-mapped-layer-locator.value';
-import {MerkleLayerLocator} from './merkle-layer-locator.value';
-import Optional from 'typescript-optional';
+import { MerkleDigestLocator } from './merkle-digest-locator.value';
+import { BlockMappedLayerLocator } from './block-mapped-layer-locator.value';
+import { MerkleLayerLocator } from './merkle-layer-locator.value';
+import typescriptOptional from 'typescript-optional';
 
 export class BlockMappedDigestLocator extends MerkleDigestLocator
 {

@@ -1,4 +1,4 @@
-import {AbstractFeature} from './index';
+import { AbstractFeature } from './index';
 
 export class SimpleFeature extends AbstractFeature {
    init() {

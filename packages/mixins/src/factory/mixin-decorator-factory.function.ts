@@ -51,7 +51,7 @@ function defineMixinProperty<ScopeSignature extends object, Key extends Keys<Sco
          value: mixinValue,
          writable: Object.getOwnPropertyDescriptor(mixinDef.implementation, key)!.writable,
          configurable: true,
-         enumerable: mixinDef.implementation.propertyIsEnumerable(key)
+         enumerable: mixinDef.implementation.propertyIsEnumerable(key),
       };
 
       if (mixinValue instanceof Function) {
@@ -147,32 +147,32 @@ export function mixinPlus<InstanceMixin extends object, StaticMixin extends obje
       if (!!mixinContent.instanceContext) {
          const targetContext = {
             stateObject: instanceDefaults,
-            behaviorObject: MixinTarget.prototype
+            behaviorObject: MixinTarget.prototype,
          };
          const baseContext = {
             stateObject: Target.prototype,
-            behaviorObject: Target.prototype
+            behaviorObject: Target.prototype,
          };
-         mixinContentBlock( targetContext, baseContext, mixinContent.instanceContext );
+         mixinContentBlock(targetContext, baseContext, mixinContent.instanceContext);
       }
 
       if (!!mixinContent.staticContext) {
          const targetContext = {
             stateObject: MixinTarget as unknown as ValueProperties<StaticMixin>,
-            behaviorObject: MixinTarget as unknown as FunctionProperties<StaticMixin>
+            behaviorObject: MixinTarget as unknown as FunctionProperties<StaticMixin>,
          };
          const baseContext = {
             stateObject: Target as unknown as ValueProperties<StaticMixin>,
             behaviorObject: Target as unknown as FunctionProperties<StaticMixin>,
          };
-         mixinContentBlock( targetContext, baseContext, mixinContent.staticContext );
+         mixinContentBlock(targetContext, baseContext, mixinContent.staticContext);
       }
 
-      Object.defineProperty(MixinTarget.prototype, typeTag, {value: true});
+      Object.defineProperty(MixinTarget.prototype, typeTag, { value: true });
       Object.defineProperty(
          MixinTarget.prototype.constructor,
          Symbol.hasInstance,
-         {value: (x: any) => !!x[typeTag]}
+         { value: (x: any) => !!x[typeTag] },
       );
 
       return MixinTarget.prototype.constructor;
