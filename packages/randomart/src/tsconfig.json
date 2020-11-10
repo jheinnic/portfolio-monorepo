@@ -1,0 +1,23 @@
+{
+    "extends": "../../../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../dist",
+        "baseUrl": ".",
+        "rootDir": ".",
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "paths": {
+            "@jchptf/coroutines": ["../node_modules/@jchptf/coroutines/src"],
+            "@jchptf/randomart": ["../src"]
+        }
+    },
+    "references": [
+        { "path": "../src" },
+        { "path": "../node_modules/@jchptf/coroutines/src" }
+    ],
+    "include": [
+        "./**/*.ts",
+        "../typings/**/*.d.ts"
+    ]
+}

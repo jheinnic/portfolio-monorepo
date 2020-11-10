@@ -7,15 +7,15 @@
         "declaration": true,
         "declarationMap": true,
         "paths": {
-            "@jchptf/mixins": ["../../mixins/src"],
-            "@jchptf/objecttypes": ["../../objecttypes/src"],
-            "@jchptf/reflection": ["../../reflection/src"]
+            "@jchptf/mixins": ["../node_modules/@jchptf/mixins/src"],
+            "@jchptf/objecttypes": ["../node_modules/@jchptf/objecttypes/src"],
+            "@jchptf/reflection": ["../node_modules/@jchptf/reflection/src"]
         }
     },
     "references": [
-        { "path": "../../mixins/src" },
-        { "path": "../../objecttypes/src" },
-        { "path": "../../reflection/src" }
+        { "path": "../node_modules/@jchptf/mixins/src" },
+        { "path": "../node_modules/@jchptf/objecttypes/src" },
+        { "path": "../node_modules/@jchptf/reflection/src" }
     ],
     "include": [ "./**/*.ts" ]
 }

@@ -3,8 +3,7 @@
    "compilerOptions": {
    },
    "references": [
-      { "path": "./src" },
-      { "path": "./test" }
+      { "path": "./src" }
    ],
    "files": [ ]
 }

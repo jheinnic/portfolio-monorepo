@@ -1,0 +1,35 @@
+{
+    "extends": "../../../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../dist",
+        "baseUrl": ".",
+        "rootDir": ".",
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "paths": {
+            "@jchptf/api": ["../../api/src"],
+            "@jchptf/config": ["../../config/src"],
+            "@jchptf/consul": ["../../consul/src"],
+            "@jchptf/coroutines": ["../../coroutines/src"],
+            "@jchptf/demoapp": ["../src"],
+            "@jchptf/merkle": ["../../merkle/src"]
+            "@jchptf/mixins": ["../../mixins/src"]
+            "@jchptf/nestjs": ["../../nestjs/src"],
+            "@jchptf/objecttypes": ["../../objecttypes/src"],
+            "@jchptf/randomart": ["../../randomart/src"],
+            "@jchptf/reflection": ["../../reflection/src"],
+            "@jchptf/semaphore": ["../../semaphore/src"],
+            "@jchptf/tupletypes": ["../../tupletypes/src"],
+            "@jchptf/txtypes": ["../../txtypes/src"],
+        }
+    },
+    "references": [
+        { "path": "../src" },
+        { "path": "../../coroutines/src" }
+    ],
+    "include": [
+        "./**/*.ts",
+        "../typings/**/*.d.ts"
+    ]
+}

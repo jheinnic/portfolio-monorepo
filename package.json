@@ -4,15 +4,17 @@
         "packages/*"
     ],
     "devDependencies": {
+        "@thi.ng/dgraph": "^1.2.28",
+        "@thi.ng/transducers": "^7.4.0",
         "@types/chai": "^4.1.7",
         "@types/lolex": "^2.1.3",
         "@types/mocha": "^5.2.5",
-        "@types/node": "^10.12.18",
+        "@types/node": "10.14.2",
         "@types/sinon": "^7.0.2",
         "@types/sinon-chai": "^3.2.2",
         "benchmark": "^2.1.4",
         "chai": "^4.2.0",
-        "dtslint": "^0.4.2",
+        "dtslint": "^4.0.5",
         "lerna": "^3.13.1",
         "lolex": "^3.0.0",
         "mocha": "^5.2.0",
@@ -21,8 +23,6 @@
         "simplytyped": "^1.6.0",
         "sinon": "^7.2.2",
         "sinon-chai": "^3.3.0",
-        "ts-node": "^8.0.3",
-        "ts-sinon": "^1.0.12",
         "tslint": "^5.11.0",
         "tslint-config-airbnb": "^5.11.1",
         "typedoc": "^0.14.2",
@@ -39,5 +39,8 @@
         "test": "yarn build && lerna run test --sort"
     },
     "name": "monorepo",
-    "dependencies": {}
+    "dependencies": {},
+    "engines": {
+        "node": ">=10.13.0"
+    }
 }

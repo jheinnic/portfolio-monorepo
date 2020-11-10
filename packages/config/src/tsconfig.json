@@ -7,15 +7,15 @@
         "declaration": true,
         "declarationMap": true,
         "paths": {
-            "@jchptf/api": [ "../../api/src" ],
-            "@jchptf/nestjs": [ "../../nestjs/src" ],
-            "@jchptf/reflection": [ "../../reflection/src" ]
+            "@jchptf/api": [ "../node_modules/@jchptf/api/src" ],
+            "@jchptf/nestjs": [ "../node_modules/@jchptf/nestjs/src" ],
+            "@jchptf/reflection": [ "../node_modules/@jchptf/reflection/src" ]
         }
     },
     "references": [
-        { "path": "../../api/src" },
-        { "path": "../../nestjs/src" },
-        { "path": "../../reflection/src" }
+        { "path": "../node_modules/@jchptf/api/src" },
+        { "path": "../node_modules/@jchptf/nestjs/src" },
+        { "path": "../node_modules/@jchptf/reflection/src" }
     ],
     "include": [ "./**/*.ts" ]
 }

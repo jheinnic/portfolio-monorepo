@@ -7,17 +7,21 @@
         "declaration": true,
         "declarationMap": true,
         "paths": {
-            "@jchptf/api": ["../../api/src"],
-            "@jchptf/objecttypes": ["../../objecttypes/src"],
-            "@jchptf/tupletypes": ["../../tupletypes/src"],
-            "@jchptf/txtypes": ["../../txtypes/src"]
+            "@jchptf/api": ["../node_modules/@jchptf/api/src"],
+            "@jchptf/mixins": ["../node_modules/@jchptf/mixins/src"],
+            "@jchptf/objecttypes": ["../node_modules/@jchptf/objecttypes/src"],
+            "@jchptf/reflection": ["../node_modules/@jchptf/reflection/src"],
+            "@jchptf/tupletypes": ["../node_modules/@jchptf/tupletypes/src"],
+            "@jchptf/txtypes": ["../node_modules/@jchptf/txtypes/src"]
         }
     },
     "references": [
-        { "path": "../../api/src" },
-        { "path": "../../objecttypes/src" },
-        { "path": "../../tupletypes/src" },
-        { "path": "../../txtypes/src" }
+        { "path": "../node_modules/@jchptf/api/src" },
+        { "path": "../node_modules/@jchptf/mixins/src" },
+        { "path": "../node_modules/@jchptf/objecttypes/src" },
+        { "path": "../node_modules/@jchptf/reflection/src" },
+        { "path": "../node_modules/@jchptf/tupletypes/src" },
+        { "path": "../node_modules/@jchptf/txtypes/src" }
     ],
     "include": [ "./**/*.ts" ]
 }

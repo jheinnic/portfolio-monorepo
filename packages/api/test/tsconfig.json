@@ -12,7 +12,7 @@
             "@jchptf/reflection": ["../../reflection/src"],
             "@jchptf/api": ["../src"]
         }
-    }
+    },
     "references": [
         { "path": "../../mixins/src" },
         { "path": "../../objecttypes/src" },
