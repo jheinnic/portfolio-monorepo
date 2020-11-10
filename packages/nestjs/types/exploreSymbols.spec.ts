@@ -153,10 +153,7 @@ s = TypeD2;
 s = az2;
 s = TypeZ4;
 
-let ac1: TypeC1 = TypeC1;
-let ac2: TypeC2 = TypeC2;
-let ad1: TypeD1 = TypeD1;
-let ad2: TypeD2 = TypeD2;
-
-
-
+const ac1: TypeC1 = TypeC1;
+const ac2: TypeC2 = TypeC2;
+const ad1: TypeD1 = TypeD1;
+const ad2: TypeD2 = TypeD2;

@@ -1,4 +1,4 @@
-import { LocalProviderToken, MODULE_ID } from '@jchptf/nestjs';
+import { LocalProviderToken } from '@jchptf/nestjs';
 export declare const AKey: unique symbol;
 export declare type AKey = typeof AKey;
 export declare const BKey: unique symbol;
@@ -28,12 +28,10 @@ export interface ITypeTwo {
     b: number | boolean;
 }
 export declare class Foo {
-    static readonly [MODULE_ID]: symbol;
     [ThingOne]: ITypeOne[];
     [ThingTwo]: ITypeTwo;
 }
 export declare class Zoo {
-    static readonly [MODULE_ID]: symbol;
     [ThingOne]: number;
     [ThingTwo]: ITypeOne[];
     [ThingThree]: ITypeTwo;
@@ -44,9 +42,9 @@ export declare function press<Token extends keyof Foo>(token: Token): LocalProvi
 export declare function zuress<Token extends keyof Zoo>(token: Token): LocalProviderToken<Zoo[Token], typeof Zoo, symbol>;
 export declare type TypeA1 = LocalProviderToken<Array<{}>, typeof Foo, ThingOne>;
 export declare type TypeB1 = LocalProviderToken<Array<{}>, typeof Foo, ThingTwo>;
-export declare const TypeA2: LocalProviderToken<ITypeOne[], typeof Foo, typeof ThingOne>;
+export declare const TypeA2: any;
 export declare type TypeA2 = typeof TypeA2;
-export declare const TypeB2: LocalProviderToken<ITypeTwo, typeof Foo, typeof ThingTwo>;
+export declare const TypeB2: any;
 export declare type TypeB2 = typeof TypeB2;
 export declare type TypeA3 = LocalProviderToken<string, typeof Foo, ThingOne>;
 export declare type TypeB3 = LocalProviderToken<string, typeof Foo, ThingTwo>;
@@ -54,18 +52,18 @@ export declare type TypeA4 = LocalProviderToken<ITypeTwo[], typeof Foo, ThingOne
 export declare type TypeB4 = LocalProviderToken<ITypeTwo[], typeof Foo, ThingTwo>;
 export declare type TypeC1 = LocalProviderToken<Array<{}>, typeof Foo, ThingOneS>;
 export declare type TypeD1 = LocalProviderToken<Array<{}>, typeof Foo, ThingTwoS>;
-export declare const TypeC2: LocalProviderToken<ITypeOne[], typeof Foo, symbol>;
+export declare const TypeC2: any;
 export declare type TypeC2 = typeof TypeC2;
-export declare const TypeD2: LocalProviderToken<ITypeTwo, typeof Foo, symbol>;
+export declare const TypeD2: any;
 export declare type TypeD2 = typeof TypeD2;
 export declare type TypeC3 = LocalProviderToken<string, typeof Foo, ThingOneS>;
 export declare type TypeD3 = LocalProviderToken<string, typeof Foo, ThingTwoS>;
 export declare type TypeC4 = LocalProviderToken<ITypeTwo[], typeof Foo, ThingOneS>;
 export declare type TypeD4 = LocalProviderToken<ITypeTwo[], typeof Foo, ThingTwoS>;
-export declare const TypeZ1: LocalProviderToken<number, typeof Zoo, symbol>;
-export declare const TypeZ2: LocalProviderToken<ITypeOne[], typeof Foo, symbol>;
-export declare const TypeZ3: LocalProviderToken<ITypeTwo, typeof Foo, symbol>;
-export declare const TypeZ4: LocalProviderToken<ITypeOne[], typeof Foo, symbol>;
+export declare const TypeZ1: any;
+export declare const TypeZ2: any;
+export declare const TypeZ3: any;
+export declare const TypeZ4: any;
 export declare type TypeZ1 = typeof TypeZ1;
 export declare type TypeZ2 = typeof TypeZ2;
 export declare type TypeZ3 = typeof TypeZ3;
