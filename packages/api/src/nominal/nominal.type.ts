@@ -81,7 +81,7 @@ export function bless<
    return value;
 }
 
-export type Foo<T> = Nominal<string, 'cats', T>;
+/*export type Foo<T> = Nominal<string, 'cats', T>;
 export let aa: Foo<number>;
 export let val = 'aa';
-aa = bless<'a', number, Foo<number>>(val);)
+aa = bless<'a', number, Foo<number>>(val);)*/
