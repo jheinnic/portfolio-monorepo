@@ -3,7 +3,6 @@
     "compilerOptions": {
         "outDir": "../dist",
         "baseUrl": ".",
-        "rootDir": ".",
         "composite": true,
         "declaration": true,
         "declarationMap": true,
@@ -12,21 +11,32 @@
             "@jchptf/config": ["../../config/src"],
             "@jchptf/consul": ["../../consul/src"],
             "@jchptf/coroutines": ["../../coroutines/src"],
-            "@jchptf/demoapp": ["../src"],
-            "@jchptf/merkle": ["../../merkle/src"]
-            "@jchptf/mixins": ["../../mixins/src"]
+            "@jchptf/demoapp": ["."],
+            "@jchptf/merkle": ["../../merkle/src"],
+            "@jchptf/mixins": ["../../mixins/src"],
             "@jchptf/nestjs": ["../../nestjs/src"],
             "@jchptf/objecttypes": ["../../objecttypes/src"],
             "@jchptf/randomart": ["../../randomart/src"],
             "@jchptf/reflection": ["../../reflection/src"],
             "@jchptf/semaphore": ["../../semaphore/src"],
             "@jchptf/tupletypes": ["../../tupletypes/src"],
-            "@jchptf/txtypes": ["../../txtypes/src"],
+            "@jchptf/txtypes": ["../../txtypes/src"]
         }
     },
     "references": [
-        { "path": "../src" },
-        { "path": "../../coroutines/src" }
+        { "path": "../../api/src" },
+        { "path": "../../config/src" },
+        { "path": "../../consul/src" },
+        { "path": "../../coroutines/src" },
+        { "path": "../../merkle/src" },
+        { "path": "../../mixins/src" },
+        { "path": "../../nestjs/src" },
+        { "path": "../../objecttypes/src" },
+        { "path": "../../randomart/src" },
+        { "path": "../../reflection/src" },
+        { "path": "../../semaphore/src" },
+        { "path": "../../tupletypes/src" },
+        { "path": "../../txtypes/src" }
     ],
     "include": [
         "./**/*.ts",
