@@ -3,12 +3,12 @@
     "compilerOptions": {
         "outDir": "../dist",
         "baseUrl": ".",
-        "rootDir": ".",
         "composite": true,
         "declaration": true,
         "declarationMap": true,
         "paths": {
             "@jchptf/api": [ "../../api/src" ],
+            "@jchptf/coroutines": [ "." ],
             "@jchptf/nestjs": [ "../../nestjs/src" ],
             "@jchptf/reflection": [ "../../reflection/src" ],
             "@jchptf/txtypes": [ "../../txtypes/src" ]

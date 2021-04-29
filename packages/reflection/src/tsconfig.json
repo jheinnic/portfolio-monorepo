@@ -2,10 +2,14 @@
     "extends": "../../../tsconfig.json",
     "compilerOptions": {
         "outDir": "../dist",
+	"baseUrl": ".",
         "composite": true,
         "declaration": true,
-        "declarationMap": true
+        "declarationMap": true,
+        "paths": {
+	    "@jchptf/reflection": ["."]
+        }
     },
-    "include": [ "./**/*.ts" ],
-    "exclude": [ "../../../node_modules" ]
+    "references": [ ],
+    "include": [ "./**/*.ts" ]
 }

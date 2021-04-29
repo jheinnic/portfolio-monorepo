@@ -8,6 +8,7 @@
         "declarationMap": true,
         "paths": {
             "@jchptf/api": [ "../../api/src" ],
+            "@jchptf/merkle": [ "." ],
             "@jchptf/nestjs": [ "../../nestjs/src" ],
             "@jchptf/reflection": [ "../../reflection/src" ]
         }

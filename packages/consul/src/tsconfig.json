@@ -7,11 +7,12 @@
         "declaration": true,
         "declarationMap": true,
         "paths": {
-            "@jchptf/nestjs": [ "../node_modules/@jchptf/nestjs/src" ]
+            "@jchptf/consul": [ "." ],
+            "@jchptf/nestjs": [ "../../nestjs/src" ]
         }
     },
     "references": [
-        { "path": "../node_modules/@jchptf/nestjs/src" }
+        { "path": "../../nestjs/src" }
     ],
     "include": [ "./**/*.ts" ]
 }

@@ -7,6 +7,7 @@
         "declaration": true,
         "declarationMap": true,
         "paths": {
+            "@jchptf/mixins": ["."],
             "@jchptf/objecttypes": ["../../objecttypes/src"],
             "@jchptf/reflection": ["../../reflection/src"]
         }
@@ -14,6 +15,6 @@
     "references": [
         { "path": "../../objecttypes/src" },
         { "path": "../../reflection/src" }
-    ]
+    ],
     "include": [ "./**/*.ts" ]
 }

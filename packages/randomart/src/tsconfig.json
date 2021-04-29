@@ -3,18 +3,20 @@
     "compilerOptions": {
         "outDir": "../dist",
         "baseUrl": ".",
-        "rootDir": ".",
         "composite": true,
         "declaration": true,
         "declarationMap": true,
         "paths": {
-            "@jchptf/coroutines": ["../node_modules/@jchptf/coroutines/src"],
-            "@jchptf/randomart": ["../src"]
+            "@jchptf/config": ["../../config/src"],
+            "@jchptf/coroutines": ["../../coroutines/src"],
+            "@jchptf/nestjs": ["../../nestjs/src"],
+            "@jchptf/randomart": ["."]
         }
     },
     "references": [
-        { "path": "../src" },
-        { "path": "../node_modules/@jchptf/coroutines/src" }
+        { "path": "../../config/src" },
+        { "path": "../../coroutines/src" },
+        { "path": "../../nestjs/src" }
     ],
     "include": [
         "./**/*.ts",

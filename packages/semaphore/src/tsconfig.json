@@ -8,14 +8,17 @@
         "declarationMap": true,
         "paths": {
             "@jchptf/api": [ "../../api/src" ],
-            "@jchptf/nestjs": [ "../../nestjs/src" ],
+            "@jchptf/config": [ "../../config/src" ],
             "@jchptf/coroutines": [ "../../coroutines/src" ],
+            "@jchptf/nestjs": [ "../../nestjs/src" ],
             "@jchptf/reflection": [ "../../reflection/src" ],
+            "@jchptf/semaphore": [ "." ],
             "@jchptf/txtypes": [ "../../txtypes/src" ]
         }
     },
     "references": [
         { "path": "../../api/src" },
+        { "path": "../../config/src" },
         { "path": "../../nestjs/src" },
         { "path": "../../coroutines/src" },
         { "path": "../../reflection/src" },

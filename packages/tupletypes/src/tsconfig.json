@@ -6,7 +6,9 @@
         "composite": true,
         "declaration": true,
         "declarationMap": true,
-        "paths": { }
+        "paths": {
+	    "@jchptf/tupletypes": ["."]
+	}
     },
     "references": [ ],
     "include": [ "./**/*.ts" ]
