@@ -1,0 +1,1 @@
+{"version":3,"file":"thumb-artwork-file-path.interface.d.ts","sourceRoot":"","sources":["thumb-artwork-file-path.interface.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,oBAAoB,EAAC,MAAM,qCAAqC,CAAC;AAEzE,MAAM,WAAW,oBAAoB;IAElC,QAAQ,CAAC,IAAI,EAAE,oBAAoB,CAAC;IACpC,QAAQ,CAAC,OAAO,EAAE,oBAAoB,CAAC;IACvC,QAAQ,CAAC,cAAc,EAAE,MAAM,CAAC;CAClC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"private-key-file-path.interface.d.ts","sourceRoot":"","sources":["private-key-file-path.interface.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,cAAc,EAAC,MAAM,+BAA+B,CAAC;AAC7D,OAAO,EAAC,IAAI,EAAC,MAAM,0CAA0C,CAAC;AAE9D,MAAM,WAAW,kBAAkB;IAEhC,QAAQ,CAAC,IAAI,EAAE,kBAAkB,CAAC;IAClC,QAAQ,CAAC,OAAO,EAAE,cAAc,CAAC;IACjC,QAAQ,CAAC,cAAc,EAAE,IAAI,CAAC;CAChC"}

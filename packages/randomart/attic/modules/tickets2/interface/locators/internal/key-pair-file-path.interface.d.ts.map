@@ -1,0 +1,1 @@
+{"version":3,"file":"key-pair-file-path.interface.d.ts","sourceRoot":"","sources":["key-pair-file-path.interface.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,cAAc,EAAC,MAAM,+BAA+B,CAAC;AAE7D,MAAM,WAAW,WAAW;IAEzB,QAAQ,CAAC,IAAI,EAAE,gBAAgB,CAAC;IAChC,QAAQ,CAAC,OAAO,EAAE,cAAc,CAAC;IACjC,QAAQ,CAAC,aAAa,EAAE,MAAM,CAAC;IAC/B,QAAQ,CAAC,cAAc,EAAE,MAAM,CAAC;CAClC"}
