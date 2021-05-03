@@ -3,6 +3,19 @@ export const EVENT_ENABLE = 'enable';
 export const EVENT_DISABLE = 'disable';
 
 /**
+ * `id` property declaration.
+ */
+export interface IID<T extends Exclude<any, symbol>> {
+   readonly id: T extends symbol ? never : T;
+}
+
+export interface IEvent extends IID<Exclude<PropertyKey, symbol>> {
+   target?: any;
+   canceled?: boolean;
+   value?: any;
+}
+
+/**
  * Event listener.
  */
 export type Listener = (e: IEvent) => void;
@@ -20,8 +33,7 @@ export type Watch<T> = (id: string, oldState: T, newState: T) => void;
 /**
  * Generic interface for reference types (value wrappers).
  */
-export interface IAdapter<T>
-{
+export interface IAdapter<T> {
    /**
     * Returns wrapped value.
     */
@@ -71,18 +83,16 @@ export type IFactory<Type, Args extends any[] = []> =
    IFactoryObject<Type, Args> | IFactoryMethod<Type, Args>;
 
 export async function asyncCreate<Type>(
-  factory: IAsyncFactory<Type> | IFactory<Type>): Promise<Type>
-{
-   if ('function' === typeof factory) {
-      return await factory();
+   factory: IAsyncFactory<Type> | IFactory<Type>): Promise<Type> {
+   if (typeof factory === 'function') {
+      return factory();
    }
 
-   return await factory.create();
+   return factory.create();
 }
 
-export function syncCreate<Type>(factory: ISyncFactory<Type>): Type
-{
-   if ('function' === typeof factory) {
+export function syncCreate<Type>(factory: ISyncFactory<Type>): Type {
+   if (typeof factory === 'function') {
       return factory();
    }
 
@@ -92,8 +102,7 @@ export function syncCreate<Type>(factory: ISyncFactory<Type>): Type
 /**
  * Generic interface for types with binary backing buffers.
  */
-export interface IBuffered
-{
+export interface IBuffered {
    /**
     * An implementation's publicly accessible backing array /
     * ArrayBuffer (usually a typed array instance).
@@ -109,8 +118,7 @@ export interface IBuffered
 /**
  * Generic interface for cloneable types.
  */
-export interface ICopy<T>
-{
+export interface ICopy<T> {
    /**
     * Returns a copy of this instance. Shallow or deep copies are
     * implementation specific.
@@ -124,8 +132,7 @@ export interface ICopy<T>
  *
  * @see mixins/IEnable
  */
-export interface IEnable
-{
+export interface IEnable {
    isEnabled(): boolean;
 
    /**
@@ -141,21 +148,13 @@ export interface IEnable
    toggle?(): boolean;
 }
 
-export interface IEvent extends IID<Exclude<PropertyKey, symbol>>
-{
-   target?: any;
-   canceled?: boolean;
-   value?: any;
-}
-
 /**
  * Interface to provide event emitter functionality. Also see `@mixins.INotify`
  * decorator mixin
  *
  * @see mixins/INotify
  */
-export interface INotify
-{
+export interface INotify {
    addListener(id: string, fn: Listener, scope?: any): boolean;
 
    removeListener(id: string, fn: Listener, scope?: any): boolean;
@@ -164,18 +163,9 @@ export interface INotify
 }
 
 /**
- * `id` property declaration.
- */
-export interface IID<T extends Exclude<any, symbol>>
-{
-   readonly id: T extends symbol ? never : T;
-}
-
-/**
  * Generic plain object with all key values of given type.
  */
-export interface IObjectOf<T>
-{
+export interface IObjectOf<T> {
    [id: string]: T;
 }
 
@@ -183,7 +173,7 @@ export type IBagOf<T, P extends keyof any> = {
    [K in P]: T;
 };
 
-export type IMapTo<T, S extends object, P extends keyof S = keyof S> = {
+export type IMapTo<T, S extends Record<string, unknown>, P extends keyof S = keyof S> = {
    [K in P]: T;
 };
 
@@ -194,8 +184,7 @@ export type SymbolEnum<P extends keyof any = keyof any> = IMapTo<symbol, any, P>
 /**
  * Interface for types supported the release of internal resources.
  */
-export interface IRelease
-{
+export interface IRelease {
    release(opt?: any): boolean;
 }
 
@@ -205,8 +194,7 @@ export interface IRelease
  *
  * @see mixins/iWatch
  */
-export interface IWatch<T>
-{
+export interface IWatch<T> {
    addWatch(id: string, fn: Watch<T>): boolean;
 
    removeWatch(id: string): boolean;

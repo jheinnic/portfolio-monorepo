@@ -1,5 +1,6 @@
-import { ImpliedType, Nominal } from '.';
 import { IsExactly } from '@jchptf/objecttypes';
+import { ImpliedType } from './implied-type.type';
+import { Nominal } from './nominal.type';
 
 // export type IsImpliedType<Type, TokenType extends ProviderToken<any>> =
 //    IsExactly<Type, ImpliedType<TokenType>>;

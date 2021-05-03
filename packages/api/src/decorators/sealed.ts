@@ -3,7 +3,7 @@
  *
  * @param constructor
  */
-export function sealed(constructor: Function) {
+export function sealed(constructor: NewableFunction): void {
    Object.seal(constructor);
    Object.seal(constructor.prototype);
 }

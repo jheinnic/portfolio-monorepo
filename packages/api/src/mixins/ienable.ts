@@ -1,8 +1,7 @@
-import * as api from '../api';
 import { mixin } from '@jchptf/mixins';
+import * as api from '../api';
 
-interface IEnableImpl extends api.IEnable
-{
+interface IEnableImpl extends api.IEnable {
    _enabled: boolean;
    notify?: any;
 }
@@ -13,41 +12,41 @@ interface IEnableImpl extends api.IEnable
  * interface, `enable()` and `disable()` will automatically emit the
  * respective events.
  */
-export const iEnable = function () {
+export function iEnable (): ClassDecorator {
    return mixin<IEnableImpl>({
       _enabled: true,
 
-      isEnabled(): boolean
-      {
+      isEnabled(this: IEnableImpl): boolean {
          return this._enabled;
       },
 
-      enable()
-      {
+      enable(this: IEnableImpl) {
          this._enabled = true;
          if (this.notify) {
+            /* eslint-disable @typescript-eslint/no-unsafe-call */
             this.notify(<api.IEvent>{
                id: api.EVENT_ENABLE,
                target: this,
             });
+            /* eslint-enable @typescript-eslint/no-unsafe-call */
          }
       },
 
-      disable()
-      {
+      disable(this: IEnableImpl) {
          this._enabled = false;
          if (this.notify) {
+            /* eslint-disable @typescript-eslint/no-unsafe-call */
             this.notify(<api.IEvent>{
                id: api.EVENT_DISABLE,
                target: this,
             });
+            /* eslint-enable @typescript-eslint/no-unsafe-call */
          }
       },
 
-      toggle(this: IEnableImpl)
-      {
-         this._enabled ? this.disable() : this.enable();
+      toggle(this: IEnableImpl) {
+         if (this._enabled) { this.disable(); } else { this.enable(); }
          return this._enabled;
       },
    });
-};
+}

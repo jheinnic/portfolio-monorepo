@@ -1,8 +1,7 @@
 const nameTag = Symbol('nameTag');
 const typeTag = Symbol('typeTag');
 
-class NominalTag<Name extends string, Type>
-{
+class NominalTag<Name extends string, Type> {
    public [nameTag]: Name;
 
    public [typeTag]: Type;
@@ -52,36 +51,23 @@ class NominalTag<Name extends string, Type>
  */
 export type Nominal<Value, Name extends string, Type = any> = Value & NominalTag<Name, Type>;
 
-export type BlessFunction<
-  Value extends any,
-  N extends Nominal<Value, string>
-> =
-  N extends Nominal<infer Value2, string> ?
-    Value extends Value2 ?
-         (v: Value) => v is N : never : never;
+export type BlessFunction<Value, Name extends string> =
+    (v: Value) => v is Nominal<Value, Name>
 
 export type BlessFunction2<
-  Value extends any,
-  Name extends string,
-  N extends Nominal<Value, Name>,
-> =
-  N extends Nominal<infer Value2, infer Name2> ?
-    Value extends Value2 ?
-      Name extends Name2 ?
-        (v: Value) => v is N : never : never : never;
+   Value, Name extends string, N extends Nominal<Value, Name>
+> = (v: Value) => v is N;
 
 export type ValuesForNominal<N extends Nominal<any, string>> =
    N extends Nominal<infer Value, string> ? Value : never;
 
-export function bless<
-  Name extends string,
-  Type extends any,
-  N extends Nominal<any, Name, Type>
->(value: ValuesForNominal<N>): N {
-   return value;
+export function bless<Value, Name extends string, Type>(value: Value): Nominal<Value, Name, Type> {
+   return value as Nominal<Value, Name, Type>;
 }
 
-/*export type Foo<T> = Nominal<string, 'cats', T>;
+/*
+export type Foo<T> = Nominal<string, 'cats', T>;
 export let aa: Foo<number>;
 export let val = 'aa';
-aa = bless<'a', number, Foo<number>>(val);)*/
+aa = bless<'a', number, Foo<number>>(val);)
+*/
