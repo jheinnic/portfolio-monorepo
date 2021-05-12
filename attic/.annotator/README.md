@@ -10,7 +10,7 @@ This project is part of the
 ## Installation
 
 ```
-yarn add @thi.ng/api
+yarn add @jchptf/annotator
 ```
 
 ## Dependencies
