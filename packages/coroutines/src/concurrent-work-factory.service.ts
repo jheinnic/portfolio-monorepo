@@ -50,9 +50,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
    //    return new Queue<M>();
    // }
 
-   createChan<T = any>(
-      bufSize?: number, bufType?: ChanBufferType,
-   ): IAdapter<Chan<T, T>>
+   createChan<T = any>(bufSize?: number, bufType?: ChanBufferType): IAdapter<Chan<T, T>>
    {
       return this.createTxChan<T, T>(identity, bufSize, bufType);
    }
@@ -306,7 +304,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
          (isIterable(iterable)) ? iterable[Symbol.iterator]() : iterable[Symbol.asyncIterator]();
 
       async function queueFromIterator(
-         localIterResult: IteratorResult<T> | Promise<IteratorResult<T>>,
+         localIterResult: IteratorResult<T, any> | Promise<IteratorResult<T, any>>,
       ): Promise<IteratorResult<T> | false>
       {
          const thisResult: IteratorResult<T> = await localIterResult;

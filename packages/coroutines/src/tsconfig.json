@@ -9,14 +9,12 @@
         "paths": {
             "@jchptf/api": [ "../../api/src" ],
             "@jchptf/coroutines": [ "." ],
-            "@jchptf/nestjs": [ "../../nestjs/src" ],
             "@jchptf/reflection": [ "../../reflection/src" ],
             "@jchptf/txtypes": [ "../../txtypes/src" ]
         }
     },
     "references": [
         { "path": "../../api/src" },
-        { "path": "../../nestjs/src" },
         { "path": "../../reflection/src" },
         { "path": "../../txtypes/src" }
     ],
