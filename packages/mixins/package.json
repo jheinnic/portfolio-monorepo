@@ -35,14 +35,14 @@
         "typescript"
     ],
     "engines": {
-        "node": ">=10.13.0"
+        "node": ">=12.20.11"
     },
     "publishConfig": {
         "access": "public",
         "registry": "http://localhost:4873"
     },
     "scripts": {
-        "build": "yarn run clean && tsc -b",
+	"build": "lerna -v && tsc -b --clean && lerna clean && lerna bootstrap && lerna run build --sort",
         "clean": "tsc -b --clean && rm -rf dist build .nyc_output coverage doc && mkdir dist && mkdir build",
         "cover": "yarn test && nyc report --reporter=lcov",
         "doc": "node_modules/.bin/typedoc --mode file --module es2015 --target es6 --tsconfig tsconfig.json --externalPattern node_modules --excludeExternals --excludePrivate --out doc --gitRevision feature_bootstrap src typings",
@@ -52,18 +52,19 @@
     "devDependencies": {
         "@types/chai": "^4.1.7",
         "@types/mocha": "^5.2.5",
-        "@types/node": "10.14.2",
+        "@types/node": "12.20.11",
         "@types/sinon": "^7.0.2",
         "@types/sinon-chai": "^3.2.2",
         "chai": "^4.2.0",
+        "dtslint": "^4.0.9",
         "mocha": "^5.2.0",
         "mocha-typescript": "^1.1.17",
         "nyc": "^12.0.2",
         "sinon": "^7.2.2",
         "sinon-chai": "^3.3.0",
         "tslint": "^5.11.0",
-        "typedoc": "^0.14.2",
-        "typescript": "3.2.2"
+        "typedoc": "0.18.0",
+        "typescript": "3.8.3"
     },
     "dependencies": {
         "@jchptf/objecttypes": "^0.0.12",

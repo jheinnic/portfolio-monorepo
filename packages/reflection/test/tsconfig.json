@@ -9,10 +9,8 @@
         "paths": {
             "@jchptf/reflection": ["../src"]
         }
-    }
-    "include": [
-        "./**/*.ts",
-    ],
+    },
+    "include": [ "./**/*.ts" ],
     "references": [
         { "path": "../src" }
     ]

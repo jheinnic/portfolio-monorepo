@@ -14,5 +14,5 @@
     "references": [
         { "path": "../../tupletypes/src" }
     ],
-    "include": [ "./**/*.ts" ]
+    "include": [ "./*.ts", "./**/*.ts" ]
 }

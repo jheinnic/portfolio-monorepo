@@ -1,0 +1,13 @@
+{
+   "extends": "../../tsconfig.json",
+   "compilerOptions": {
+      "paths": {
+         "@jchptf/consul": [ "src" ],
+         "@jchptf/nestjs": [ "../nestjs/src" ]
+      }
+   },
+   "references": [
+      { "path": "../nestjs/src" }
+   ],
+   "include": [ "src/**/*.ts", "test/**/*.ts", "types/**/*.ts" ]
+}

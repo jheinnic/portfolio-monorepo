@@ -7,19 +7,20 @@
         "declaration": true,
         "declarationMap": true,
         "paths": {
+            "@jchptf/api": ["../../api/src"],
             "@jchptf/config": ["../../config/src"],
             "@jchptf/coroutines": ["../../coroutines/src"],
-            "@jchptf/nestjs": ["../../nestjs/src"],
             "@jchptf/randomart": ["."]
         }
     },
     "references": [
+        { "path": "../../api/src" },
         { "path": "../../config/src" },
-        { "path": "../../coroutines/src" },
-        { "path": "../../nestjs/src" }
+        { "path": "../../coroutines/src" }
     ],
     "include": [
         "./**/*.ts",
-        "../typings/**/*.d.ts"
+        "../typings/**/*.d.ts",
+        "../../coroutines/typings/**/*.d.ts"
     ]
 }

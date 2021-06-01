@@ -35,7 +35,7 @@
         "typescript"
     ],
     "engines": {
-        "node": ">=10.13.0"
+        "node": ">=12.20.11"
     },
     "publishConfig": {
         "access": "public",
@@ -51,39 +51,55 @@
     },
     "devDependencies": {
         "@types/chai": "^4.1.7",
+        "@types/chance": "^1.1.2",
+        "@types/line-reader": "^0.0.33",
+        "@types/mathjs": "^9.3.1",
         "@types/mocha": "^5.2.5",
-        "@types/node": "10.14.2",
+        "@types/ndarray": "^1.0.9",
+        "@types/node": "12.20.11",
         "@types/sinon": "^7.0.2",
         "@types/sinon-chai": "^3.2.2",
+        "@typescript-eslint/eslint-plugin": "^4.22.0",
+        "@typescript-eslint/parser": "^4.22.0",
         "chai": "^4.2.0",
+        "eslint": "^7.25.0",
+        "eslint-config-airbnb-base-typescript": "^1.0.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-import": "^2.22.1",
+        "eslint-plugin-prettier": "^3.4.0",
         "mocha": "^5.2.0",
         "mocha-typescript": "^1.1.17",
         "nyc": "^12.0.2",
+        "prettier": "2.2.1",
         "sinon": "^7.2.2",
         "sinon-chai": "^3.3.0",
-        "tslint": "^5.11.0",
-        "typedoc": "^0.14.2",
-        "typescript": "^3.2.2"
+        "ts-node": "8.10.2",
+        "typedoc": "0.18.0",
+        "typescript": "3.8.3"
     },
     "dependencies": {
         "@jchptf/coroutines": "^0.0.48",
+        "@thi.ng/bitstream": "^1.1.38",
         "@thi.ng/errors": "^0.1.12",
         "@thi.ng/fsm": "^2.4.26",
         "@thi.ng/rstream": "^5.0.7",
         "@thi.ng/transducers-binary": "^0.5.30",
         "@thi.ng/transducers-stats": "^1.1.40",
-        "@types/mathjs": "^6.0.7",
         "binary-search": "^1.3.6",
         "canvas": "^2.6.1",
-        "co": "^4.6.0",
-        "co-stream": "^0.3.2",
+        "chance": "^1.1.7",
+        "elliptic": "^6.5.4",
+        "hash.js": "^1.1.7",
+        "hashring": "^3.2.0",
         "hmac-drbg": "^1.0.1",
-        "mathjs": "^8.0.0",
-        "medium": "^1.1.0",
+        "line-reader": "^0.4.0",
+        "mathjs": "^9.4.0",
+        "medium": "^1.1.1",
+        "ndarray": "^1.0.19",
         "randombytes": "^2.1.0",
-        "rokujs": "^1.2.0",
         "rxjs": "^6.6.3",
-        "simplytyped": "^1.6.0",
-        "tslib": "^1.9.3"
+        "simplytyped": "3.3.0",
+        "tslib": "^1",
+        "ulid": "^2.3.0"
     }
 }
