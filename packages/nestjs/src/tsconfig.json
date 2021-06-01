@@ -8,19 +8,14 @@
         "declarationMap": true,
         "paths": {
             "@jchptf/api": ["../../api/src"],
-            "@jchptf/mixins": ["../../mixins/src"],
-            "@jchptf/nestjs": ["../../nestjs/src"],
             "@jchptf/objecttypes": ["../../objecttypes/src"],
-            "@jchptf/reflection": ["../../reflection/src"],
             "@jchptf/tupletypes": ["../../tupletypes/src"],
             "@jchptf/txtypes": ["../../txtypes/src"]
         }
     },
     "references": [
         { "path": "../../api/src" },
-        { "path": "../../mixins/src" },
         { "path": "../../objecttypes/src" },
-        { "path": "../../reflection/src" },
         { "path": "../../tupletypes/src" },
         { "path": "../../txtypes/src" }
     ],

@@ -1,9 +1,0 @@
-build
-coverage
-dev
-doc
-src*
-test
-.nyc_output
-*.tgz
-*.html
