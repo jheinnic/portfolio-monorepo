@@ -1,8 +1,8 @@
-export * from '../values/model-seed.interface';
+export * from '../if3/model-seed.interface';
 export * from './completion-signal.interface';
-export * from '../values/artwork-locator.interface';
-export * from '../values/canvas-dimensions.interface';
-export * from '../values/render-scale.interface';
+export * from '../if3/artwork-locator.interface';
+export * from '../if3/canvas-dimensions.interface';
+export * from '../if3/render-scale.interface';
 
 export * from './lifecycle-stop-message.value';
 export * from './paint-to-canvas-request.value';
@@ -15,7 +15,7 @@ export * from './canvas-assigned-reply.value';
 export * from './render-and-store-reply.value';
 export * from './artwork-stored-reply.value';
 
-export * from '../values/fit-or-fill.type';
+export * from '../if3/fit-or-fill.type';
 export * from './message-type.enum';
 export * from './status-code.enum';
 export * from './reply-message.value';

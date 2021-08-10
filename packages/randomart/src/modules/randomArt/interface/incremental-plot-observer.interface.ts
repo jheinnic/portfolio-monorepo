@@ -1,3 +1,6 @@
+import {MappedPoint} from "./mapped-point.interface";
+import { Observer } from 'rxjs';
+
 /**
  * Strategy extension interfaces for implementing side effects to trigger during a walk of a RandomArt
  * model's rectangular region of interest, mapping each discrete pixel point from that region's
@@ -10,10 +13,5 @@
  * Aside from the "workhorse" plot method, there are two methods used to signal the end of a call
  * sequence--one for completion with error, the other for normal end-of-data completion.
  */
-export interface IncrementalPlotObserver {
-   plot(canvasX: number, canvasY: number, modelX: number, modelY: number): void;
-
-   onError(error: any): void;
-
-   onComplete(): void;
+export interface IncrementalPlotObserver extends Observer<MappedPoint> {
 }

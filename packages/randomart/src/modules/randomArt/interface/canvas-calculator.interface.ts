@@ -1,5 +1,5 @@
 import { IncrementalPlotterFactory } from './incremental-plotter-factory.interface';
-import { CanvasDimensions, RenderScale } from '../values';
+import { CanvasDimensions, RenderScale } from '../if3';
 
 export interface ICanvasCalculator
 {

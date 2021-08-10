@@ -1,6 +1,6 @@
 import {IModelSeed} from "./model-seed.interface";
 
-export interface IRenderTask {
+export interface IPaintingTask {
     taskUlid: string;
     plotPolicyRef: string;
     modelSeed: IModelSeed;

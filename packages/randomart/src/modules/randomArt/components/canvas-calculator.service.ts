@@ -1,16 +1,17 @@
 // import {injectable} from 'inversify';
 import { Iterable } from 'ix';
 import { generate, IterableX } from 'ix/iterable';
-import { flatMap } from 'ix/iterable/pipe/flatmap';
-import { memoize } from 'ix/iterable/pipe/memoize';
-import { map } from 'ix/iterable/pipe/map';
-import ndarray from 'ndarray';
-import mathjs from 'mathjs';
+import { flatMap, map, memoize } from 'ix/iterable/pipe/index';
+import { create, all, BigNumber, MathJsStatic } from 'mathjs'
+// import ndarray from 'ndarray';
 
-import {
-   MappedPoint, ICanvasCalculator, IncrementalPlotterFactory, CanvasDimensions, RenderScale,
-} from '../interface';
+const config = { }
+const mathjs: Partial<MathJsStatic> = create(all, config)
+
+
+import { MappedPoint, ICanvasCalculator, IncrementalPlotterFactory } from '../interface';
 import { PointMapping } from './point-mapping.class';
+import { CanvasDimensions, RenderScale } from "../if3";
 
 // @injectable()
 export class CanvasCalculator implements ICanvasCalculator
@@ -81,21 +82,25 @@ export class CanvasCalculator implements ICanvasCalculator
       }
    }
 
-   private static computeAffinePixelPoints(pointCount: number, minValue: number, maxValue: number): Iterable<number>
-   {
-      const one = math.bignumber(1);
-      const translate = math.bignumber(minValue);
-      const pRange = math.bignumber(maxValue - minValue);
-      const numPts = math.bignumber(pointCount);
+   private static computeAffinePixelPoints(
+       pointCount: number, pixelMulti: number, minValue: number, maxValue: number
+   ): Iterable<[number, number]> {
+      const halfStep: BigNumber = mathjs.bignumber!((pixelMulti - 1) / 2);
+      const step: BigNumber = mathjs.bignumber!(pixelMulti);
+      const translate: BigNumber = mathjs.bignumber!(minValue);
+      const pRange: BigNumber = mathjs.bignumber!(maxValue - minValue);
+      const maxX: BigNumber = mathjs.bignumber!(pointCount);
 
+      // Coordinates in paint space are valued at the center of the painted region a pixel paints.
+      // Coordinates in plot space are values at the top-left corner of each painted pixel.
       return generate(
-         math.bignumber(0),
-         (x: math.BigNumber) => x.lt(numPts),
-         (x: math.BigNumber) => x.add(one),
-         (x: math.BigNumber) => translate.add(
-            pRange.mul(x)
-               .div(numPts),
-         ).toNumber());
+         halfStep,
+         (x: BigNumber) => x.lt(maxX),
+         (x: BigNumber) => x.add(step),
+         (x: BigNumber) => [translate.add(
+            pRange.mul(x.div(maxX))
+         ).toNumber(), x.sub(halfStep).toNumber()]
+      );
    }
 
    public create(
@@ -140,28 +145,29 @@ export class CanvasCalculator implements ICanvasCalculator
       } else {
          xScale *= xCount / yCount;
       }
-      const widthPoints: IterableX<number> =
-         CanvasCalculator.computeAffinePixelPoints(xCount, 0.0 - xScale, xScale);
-      const heightPoints: IterableX<number> =
-         CanvasCalculator.computeAffinePixelPoints(yCount, 0.0 - yScale, yScale);
-
-      const mappedPoints = widthPoints.pipe<[number, number], MappedPoint, MappedPoint>(
-         map((xModel: number, xCanvas: number) => [xCanvas, xModel] as [number, number]),
-         flatMap((xPair: [number, number]): Iterable<MappedPoint> =>
-            heightPoints.pipe(
-               map((yModel: number, yCanvas: number) =>
-                  [xPair[0], yCanvas, xPair[1], yModel] as MappedPoint),
-            ),
-         ),
-         memoize(xCount * yCount),
-      );
-
+      const widthPoints: IterableX<[number, number]> =
+         CanvasCalculator.computeAffinePixelPoints(xCount, pixelMulti, 0.0 - xScale, xScale).pipe(
+             memoize(xCount / pixelMulti)
+         );
+      const heightPoints: IterableX<[number, number]> =
+         CanvasCalculator.computeAffinePixelPoints(yCount, pixelMulti, 0.0 - yScale, yScale);
       const pointCount = xCount * yCount / pixelMulti / pixelMulti;
+      const mappedPoints =
+          heightPoints.pipe(
+              flatMap((yPair: [number,number]) =>
+                  widthPoints.pipe(
+                     map((xPair: [number,number]) => [xPair[1], yPair[1], xPair[0], yPair[0]] as MappedPoint),
+                  )
+              ),
+              // memoize(pointCount)
+         );
+
+      const runSize = CanvasCalculator.findOptimalDivisor(pointCount, maxPointsPerSlice);
+
+      /*
       const dataArray = new Float64Array(2 * pointCount);
       const dataView = ndarray(dataArray, [xCount / pixelMulti, yCount / pixelMulti, 2]);
       let pointTuple: MappedPoint;
-
-      const runSize = CanvasCalculator.findOptimalDivisor(pointCount, maxPointsPerSlice);
 
       let xIndex = 0;
       let xCanvas = 0;
@@ -196,9 +202,10 @@ export class CanvasCalculator implements ICanvasCalculator
             }
          }
       }
+       */
 
-      return new PointMapping(
-         { xCount, yCount, pixelMulti, dataArray }, pointCount / runSize, runSize);
+      return new PointMapping(mappedPoints, pointCount, runSize);
+         // { xCount, yCount, pixelMulti, dataArray }, pointCount / runSize, runSize);
    }
 
    // public create(...args: [number, number, number, ("fit" | "fill" | "square"), number, number]): IncrementalPlotterFactory

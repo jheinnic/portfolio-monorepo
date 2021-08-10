@@ -1,9 +1,7 @@
-import { ArtworkLocator } from '../values/artwork-locator.interface';
-import { ModelSeed } from '../values/model-seed.interface';
 import { MessageType } from './message-type.enum';
 import { CompletionSignal } from './completion-signal.interface';
-import { Path } from '../../../../../src/infrastructure/validation';
 import { CanvasAssignedReply } from './canvas-assigned-reply.value';
+import {ArtworkLocator, ModelSeed} from "../if3";
 
 export class AssignCanvasRequest
 {
@@ -12,7 +10,7 @@ export class AssignCanvasRequest
    constructor(
       public readonly taskIdentity: ArtworkLocator,
       public readonly modelSeed: ModelSeed,
-      public readonly relativeOutputPath: Path,
+      // public readonly relativeOutputPath: Path,
       public readonly completeSignal: CompletionSignal<CanvasAssignedReply>,
    ) { }
 }

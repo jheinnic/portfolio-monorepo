@@ -2,7 +2,7 @@ import { Canvas, PNGStream } from 'canvas';
 import { AsyncSink } from 'ix/asyncsink';
 
 import { UUID } from 'infrastructure/validation';
-import { ICanvasManager } from '../../interface';
+import { ICanvasManager } from '../interface';
 import { CanvasDimensions } from '../messages';
 
 export class CanvasManager implements ICanvasManager

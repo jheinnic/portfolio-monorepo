@@ -1,6 +1,5 @@
 export * from './canvas-calculator.service';
 export * from './canvas-writer.class';
-export * from './plotting-partial-observer.class';
 export * from './point-mapping.class';
 // export * from './v2/random-art-generator.service';
 export * from './random-art-model.class';

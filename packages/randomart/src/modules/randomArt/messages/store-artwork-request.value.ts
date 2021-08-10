@@ -1,6 +1,6 @@
 import { ICanvasManager } from '../interface';
 import { ArtworkLocator, ArtworkStoredReply, CompletionSignal, MessageType } from '.';
-import { Chan, put, sleep } from 'medium';
+import {Chan, put, sleep} from 'medium';
 
 export class StoreArtworkRequest
 {
@@ -13,15 +13,15 @@ export class StoreArtworkRequest
    ) { }
 }
 
-class CanvasStoreTask
+export class CanvasStoreTask
 {
    constructor(
-      public readonly canvasId: CanvasId,
-      public readonly sourceId: TaskDef,
+      public readonly canvasId: number,  // CanvasId,
+      // public readonly sourceId: TaskDef,
       private readonly onReturn: Chan<number, any>,
    )
    {
-      console.log('Created storage task for ' + this.sourceId + ' on ' + this.canvasId);
+      // console.log('Created storage task for ' + this.sourceId + ' on ' + this.canvasId);
    }
 
    async save(): Promise<void>

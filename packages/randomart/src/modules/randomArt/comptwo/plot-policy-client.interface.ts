@@ -1,5 +1,5 @@
-import {IDimensionPoint} from "./dimension-point";
+import {IPlotPolicy} from "./plot-policy.interface";
 
-export interface IPolicyClient {
-    plotPolicy(ulid: string): [Iterable<IDimensionPoint>, Iterable<IDimensionPoint>];
+export interface IPlotPolicyClient {
+    lookupPlotPolicy(plotPolicyUlid: string): IPlotPolicy
 }

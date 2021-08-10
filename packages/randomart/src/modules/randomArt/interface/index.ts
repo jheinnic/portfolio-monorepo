@@ -6,6 +6,7 @@ export * from './incremental-plotter.interface';
 export * from './incremental-plotter-factory.interface';
 export * from './incremental-plot-observer.interface';
 export * from './incremental-plot-progress.interface';
+export * from './plot-grid-data.interface';
 export * from './random-art-generator.interface';
 export * from './task-content-adapter.interface';
-export * from '../values';
+// export * from '../values';

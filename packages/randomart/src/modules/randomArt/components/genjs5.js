@@ -8048,6 +8048,9 @@ window.XMLHttpRequest = function() { return new ActiveXObject('Microsoft.XMLHTTP
                   });
                });*/
 
+              /*
+              Original algorithm with some logging tweaks
+               */
             const random_picture$90 =
               _f(function (str$91) {
                 const match$141 = _(oc$Util$[8], [str$91]);
@@ -8088,6 +8091,9 @@ window.XMLHttpRequest = function() { return new ActiveXObject('Microsoft.XMLHTTP
                 });
               });
 
+              /*
+              Original algorithm with alternate inputs
+               */
             const random_picture$2 =
               _f(function (na$91, na$92) {
                 const r$122 = new oc$$ms(na$92);
@@ -8135,6 +8141,9 @@ window.XMLHttpRequest = function() { return new ActiveXObject('Microsoft.XMLHTTP
                 });
               });
 
+            /*
+            Original algorithm, tuned settings, alt input
+             */
             const random_picture$3 =
               _f(function (na$91, na$92) {
                 const r$122 = new oc$$ms(na$92);
@@ -8247,12 +8256,12 @@ window.XMLHttpRequest = function() { return new ActiveXObject('Microsoft.XMLHTTP
                 return caml_callback(callable, param);
               }), [oc$Util$[8]])), (
               ocaml_register(
-                'new_new_picture',
+                'new_picture',
                 _(_f(function (callable, array$1, array$2) {
                   return caml_callback2(callable, array$1, array$2);
                 }), [oc$Compute$[8]])), (
                 ocaml_register(
-                  'new_picture',
+                  'new_new_picture',
                   _(_f(function (prim$72, array$71, array$70) {
                     return caml_callback2(prim$72, array$71, array$70);
                   }), [oc$Compute$[9]])), (
