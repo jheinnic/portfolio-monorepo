@@ -5,8 +5,13 @@ import * as fs from 'fs';
 
 import '@jchptf/reflection';
 import {
-   CanvasCalculator, ICanvasCalculator, IncrementalPlotProgress, IncrementalPlotterFactory, ModelSeed,
-   RandomArtModel, CanvasDimensions, RenderScale,
+   CanvasCalculator, CanvasDimensions,
+   ICanvasCalculator,
+   IncrementalPlotProgress,
+   IncrementalPlotterFactory,
+   ModelSeed,
+   RandomArtModel,
+   RenderScale,
 } from '../modules/randomArt';
 
 const modelSeedOne: ModelSeed = {

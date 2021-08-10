@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 const bs = require('binary-search');
 // @ts-ignore
-import { cs } from 'co-stream';
+import { LineReader } from 'co-stream';
 import { co } from 'co';
 
 import { IsaacCSPRNG } from '../infrastructure/randomize';
@@ -14,16 +14,14 @@ function naturalOrder(element: number, needle: number) { return element - needle
 
 co(function* () {
    const input = fs.createReadStream('../../english_trigrams.txt');
-   const reader = new cs.LineReader(input);
+   const reader = new LineReader(input);
    const start = Date.now();
-   let txt;
+   let txt: string | undefined;
 
-   while (typeof (
-     txt = yield reader.read()
-   ) === 'string')
+   while (!!(txt = yield reader.read()))
    {
-      console.log('line', txt);
-      const tokens = txt.split(/ /);
+      // console.log('line', txt);
+      const tokens = (txt as string).split(/ /);
       trigrams.push(tokens[0]);
       prefixSum += parseInt(tokens[1], 10);
       freqSum.push(prefixSum);
@@ -73,6 +71,8 @@ co(function* () {
            prefix = prefix + trigrams[pIdx];
            suffix = suffix + trigrams[sIdx];
         }
+        prefix = prefix.toLocaleLowerCase();
+        suffix = suffix.toLocaleLowerCase();
         console.log(`${prefix} ${suffix}`);
      }
 

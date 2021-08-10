@@ -2,7 +2,7 @@ import { Observable, OperatorFunction, queueScheduler } from 'rxjs';
 import { map, observeOn, withLatestFrom } from 'rxjs/operators';
 import { BitInputStream, BitOutputStream } from '@thi.ng/bitstream';
 
-import { PseudoRandomSource } from '../randomize/interface/pseudo-random-source.interface';
+// import { PseudoRandomSource } from '../randomize/interface/pseudo-random-source.interface';
 import { IsaacCSPRNG } from '../randomize/sources/isaac-csprng.class';
 
 // interface ByteGeneratorState {
@@ -26,7 +26,7 @@ export class IsaacRxjsService
       return function (source: Observable<T>): Observable<[T, Buffer]> {
          return source.pipe(
             // observeOn(queueScheduler),
-            withLatestFrom<T, IsaacCSPRNG>(
+            withLatestFrom<T, [T, IsaacCSPRNG]>(
                seedSource.pipe(
                   map<Buffer, IsaacCSPRNG>(
                      // Transform each seed Buffer into an ISAAC PRNG.
@@ -132,7 +132,7 @@ export class IsaacRxjsService
       return function (source: Observable<T>): Observable<[T, number]> {
          return source.pipe(
             observeOn(queueScheduler),
-            withLatestFrom<T, IsaacCSPRNG>(
+            withLatestFrom<T, [T, IsaacCSPRNG]>(
                seedSource.pipe(
                   map<Buffer, IsaacCSPRNG>(
                      // Transform each seed Buffer into an ISAAC PRNG.

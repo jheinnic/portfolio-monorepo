@@ -1,11 +1,11 @@
 export interface IWordGenerator {
    getWord(): string;
 
-   getWordOfLength(length: number): string;
+   // getWordOfLength(length: number): string;
 
-   getNormalWord(lengthMean: number, lengthDev: number): string;
+   // getNormalWord(lengthMean: number, lengthDev: number): string;
 
-   // getNWords(count: number): string[]
+   getNWords(count: number): Generator<string>;
 
    // getNWordsOfLength(count: number, length: number): string[];
 

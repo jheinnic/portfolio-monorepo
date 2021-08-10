@@ -5,7 +5,7 @@ import { IPseudoRandomSeedFactory, IPseudoRandomSource } from '../interface';
 import { HmacDrbgPseudoRandomSource } from './hmac-drbg-pseudo-random-source.class';
 import { ConstructorFor } from 'simplytyped';
 import * as crypto from 'crypto';
-import { hash }  from 'hash.js';
+import hash from 'hash.js';
 // import HashJs = require('../../../../typings/hash.js');
 // import HashJs = require('hash.js');
 
@@ -22,7 +22,7 @@ export class HmacDrbgPseudoRandomSourceFactory implements IPseudoRandomSeedFacto
    {
       this.seedSource = seedSource;
       return new HmacDrbgPseudoRandomSource({
-         hash: hash.sha256 as unknown as ConstructorFor<hash.Sha256>,
+         hash: hash.sha256 as unknown as ConstructorFor<Sha256>,
          entropy: this.seedSource.entropyWord.toString('hex'),
          nonce: this.seedSource.nonceWord.toString('hex'),
          minEntropy: 256,
@@ -35,7 +35,7 @@ export class HmacDrbgPseudoRandomSourceFactory implements IPseudoRandomSeedFacto
    public async seedNextSource(): Promise<IPseudoRandomSource>
    {
       return new HmacDrbgPseudoRandomSource<Sha256>({
-         hash: HashJs.sha256 as unknown as ConstructorFor<Sha256>,
+         hash: hash.sha256 as unknown as ConstructorFor<Sha256>,
          entropy: this.seedSource.entropyWord.toString('hex'),
          nonce: this.seedSource.nonceWord.toString('hex'),
          minEntropy: 256,

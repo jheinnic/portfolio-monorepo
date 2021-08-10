@@ -1,4 +1,6 @@
 /// <reference path="../../../../typings/hash.js"
+/// <reference path="./hmac-drbg.d.ts">
+// @ts-ignore
 import { HmacDrbgOptions, HmacDrbg } from 'hmac-drbg';
 
 // import { BlockHash, MessageDigest } from 'hash.js';

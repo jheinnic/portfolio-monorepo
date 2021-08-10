@@ -1,0 +1,28 @@
+{
+    "extends": "../../../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../dist",
+        "baseUrl": ".",
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "esModuleInterop": true,
+        "paths": {
+            "@jchptf/api": ["../../api/src"],
+            "@jchptf/config": ["../../config/src"],
+            "@jchptf/coroutines": ["../../coroutines/src"],
+            "@jchptf/ngrams": ["."]
+        }
+    },
+    "references": [
+        { "path": "../../api/src" },
+        { "path": "../../config/src" },
+        { "path": "../../coroutines/src" }
+    ],
+    "include": [
+        "./*.ts",
+        "./**/*.ts",
+        "../typings/**/*.d.ts",
+        "../../coroutines/typings/**/*.d.ts"
+    ]
+}

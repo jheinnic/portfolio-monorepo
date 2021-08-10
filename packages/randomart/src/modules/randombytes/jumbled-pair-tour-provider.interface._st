@@ -1,0 +1,3 @@
+interface IJumbledPairTourProvider {
+    jumble<T>( candidates: T[] ): Iterator<[T, T]>;
+}

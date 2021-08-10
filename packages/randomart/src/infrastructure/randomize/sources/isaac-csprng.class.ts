@@ -13,7 +13,8 @@ Original work copyright (c) 2012 Yves-Marie K. Rinquin, under MIT license.
 https://github.com/rubycon/isaac.js
 ///////////////////////////////////////////////////////////////////////////////////////////////////*/
 
-import { randombytes } from 'randombytes';
+// import { randombytes } from 'randombytes';
+// import {* as crypto} from 'crypto';
 
 export class IsaacCSPRNG
 {
@@ -35,12 +36,12 @@ export class IsaacCSPRNG
    {
       ////////////////////////////////////////////////////
       /* initial random seed */
-      let internalSeed = userSeed;
+      let internalSeed: number[]|string|number;
       if (! userSeed) {
-         const uInt_a = randombytes(8);
-         internalSeed = new Array(2);
-         internalSeed[0] = uInt_a.readUInt32BE(0);
-         internalSeed[1] = uInt_a.readUInt32BE(4);
+         const uInt_a: Uint32Array = crypto.getRandomValues(new Uint32Array(2));
+         internalSeed = [uInt_a[0], uInt_a[1]];
+      } else {
+         internalSeed = userSeed;
       }
 
       this.acc = this.brs = this.cnt = this.gnt = 0;
