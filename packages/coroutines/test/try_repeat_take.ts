@@ -42,7 +42,7 @@ function tryIt(value: number[], seed: number): number|Promise<number>|false {
 
 // @ts-ignore
 repeatTake<number[], number>(
-   ctrl, tryIt, makePromise(-1),
+   ctrl, tryIt, -1,
 ).then(
    function () {
       console.log('repeatTake ends');

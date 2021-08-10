@@ -83,10 +83,7 @@ declare module 'medium'
 
   export type RepeatFn = () => SyncOrAsync<void|false>;
 
-  export type SeededRepeatFn<Seed extends object|string|number|symbol|AnyFunc|true> =
-     Seed extends Promise<infer T>
-        ? (seed: T|Promise<T>) => SyncOrAsync<T|false>
-        : (seed: Seed) => SyncOrAsync<Seed|false>;
+  export type SeededRepeat<Seed = unknown> = (seed: Seed) => SyncOrAsync<Seed|false>;
 
   /**
    * I don't love while loops, so I use this instead.
@@ -94,8 +91,8 @@ declare module 'medium'
    * As a bonus, you can track state without mutations! Return a value other than false, and it will be available as the argument to your callback async function.
    * Pass in a seed value as the second argument to repeat.
    */
-  export function repeat(func: RepeatFn): Promise<void>;
-  export function repeat<Seed>(func: SeededRepeatFn<Seed>, seed: SyncOrAsync<Seed>): Promise<void>;
+  export function repeat(func: RepeatFn): Promise<undefined>;
+  export function repeat<Seed = unknown>(func: SeededRepeatFn<Seed>, seed: Seed): Promise<undefined>;
 
   /**
    * RepeatTakeFn are used as an argument to repeatTake, alongside a Chan that
@@ -106,15 +103,12 @@ declare module 'medium'
    * Chan.  If RepeatTake returns false instead, asynchronous loop ends and Promise
    * returned to repeatTake()'s caller resolves.
    */
-  export type RepeatTakeFn<Take> = (value: Take) => SyncOrAsync<void|false>;
+  export type RepeatTakeFn<Take = unknown> = (value: Take) => SyncOrAsync<void|false>;
 
   /**
    * SeededRepeatFn is like RepeatTakeFn except to continue the loop a value of
    */
-  export type SeededRepeatTakeFn<Take, Seed extends object|string|number|symbol|AnyFunc|true> =
-     Seed extends Promise<infer T>
-        ? (take: Take, seed: T|Promise<T>) => SyncOrAsync<T|false>
-        : (take: Take, seed: Seed) => SyncOrAsync<Seed|false>;
+  export type SeededRepeatTakeFn<Take = unknown, Seed = unknown> = (take: Take, seed: Seed) => SyncOrAsync<Seed|false>;
 
   /**
    * This is just like repeat above, except that before it repeats, it waits for a successful take on the given channel.
@@ -122,14 +116,14 @@ declare module 'medium'
    *
    * See the ping/pong example above to see this in action.
    */
-  export function repeatTake<T = any>(ch: Chan<any, T>, fn: RepeatTakeFn<T>): Promise<void>;
-  export function repeatTake<T = any, S = any>(ch: Chan<any, T>, fn: SeededRepeatTakeFn<T, S>, seed: SyncOrAsync<S>): Promise<void>;
+  export function repeatTake<T = unknown>(ch: Chan<unknown, T>, fn: RepeatTakeFn<T>): Promise<undefined>;
+  export function repeatTake<T = unknown, S = unknown>(ch: Chan<unknown, T>, fn: SeededRepeatTakeFn<T, S>, seed: S): Promise<undefined>;
 
   /**
    * Creates a new channel that will receive all puts to the received channels.
    */
-  export function merge<T1 = any, T2 = T1>(ch1: Chan<any, T1>, ch2: Chan<any, T2>): Chan<any, T1|T2>;
-  export function merge<T1 = any, T2 = T1, T3 = T2>(ch1: Chan<any, T1>, ch2: Chan<any, T2>, ch3: Chan<any, T3>): Chan<any, T1|T2|T3>;
-  export function merge<T1 = any, T2 = T1, T3 = T2, T4 = T3>(ch1: Chan<any, T1>, ch2: Chan<any, T2>, ch3: Chan<any, T3>, ch4: Chan<any, T4>): Chan<any, T1|T2|T3|T4>;
-  export function merge<T1 = any, T2 = T1, T3 = T2, T4 = T3, T5 = T4>(ch1: Chan<any, T1>, ch2: Chan<any, T2>, ch3: Chan<any, T3>, ch4: Chan<any, T4>, ...chs: Chan<any, T5>[]): Chan<any, T1|T2|T3|T4|T5>;
+  export function merge<T1 = unknown, T2 = T1>(ch1: Chan<unknown, T1>, ch2: Chan<unknown, T2>): Chan<unknown, T1|T2>;
+  export function merge<T1 = unknown, T2 = T1, T3 = T2>(ch1: Chan<unknown, T1>, ch2: Chan<unknown, T2>, ch3: Chan<unknown, T3>): Chan<unknown, T1|T2|T3>;
+  export function merge<T1 = unknown, T2 = T1, T3 = T2, T4 = T3>(ch1: Chan<unknown, T1>, ch2: Chan<unknown, T2>, ch3: Chan<unknown, T3>, ch4: Chan<unknown, T4>): Chan<unknown, T1|T2|T3|T4>;
+  export function merge<T1 = unknown, T2 = T1, T3 = T2, T4 = T3, T5 = T4>(ch1: Chan<unknown, T1>, ch2: Chan<unknown, T2>, ch3: Chan<unknown, T3>, ch4: Chan<unknown, T4>, ...chs: Chan<unknown, T5>[]): Chan<unknown, T1|T2|T3|T4|T5>;
 }

@@ -1,6 +1,5 @@
 /// <reference file="../typings/medium/index.d.ts">
-// @ts-ignore
-import { Chan, close, sleep, take } from 'medium';
+import { Chan, close, take } from 'medium';
 
 import * as chai from 'chai';
 import lolex, { Clock } from 'lolex';

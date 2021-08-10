@@ -71,17 +71,17 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
             case ChanBufferType.default:
             case ChanBufferType.fixed:
                {
-                  retVal = chan(buffers.fixed(bufSize), tx);
+                  retVal = chan<T, M>(buffers.fixed(bufSize), tx);
                   break;
                }
             case ChanBufferType.dropping:
                {
-                  retVal = chan(buffers.dropping(bufSize), tx);
+                  retVal = chan<T, M>(buffers.dropping(bufSize), tx);
                   break;
                }
             case ChanBufferType.sliding:
                {
-                  retVal = chan(buffers.sliding(bufSize), tx);
+                  retVal = chan<T, M>(buffers.sliding(bufSize), tx);
                   break;
                }
             default:
@@ -95,7 +95,7 @@ export class ConcurrentWorkFactory implements IConcurrentWorkFactory
          };
       }
 
-      retVal = chan(undefined, tx);
+      retVal = chan<T, M>(undefined, tx);
 
       return {
          unwrap: () => retVal,
