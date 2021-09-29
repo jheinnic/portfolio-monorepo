@@ -1,16 +1,18 @@
-import { IEnable, iEnable } from '@jchptf/api';
+import { iEnable } from '@jchptf/api';
 
-@iEnable()
-export class ToggleThing implements IEnable
+@iEnable
+export class ToggleThing // implements IEnable
 {
-   constructor(public readonly flags: number[]) { }
+   constructor(public readonly flags: number[]) {
+   }
+}
 
    // public readonly isEnabled: boolean = false;
-   public isEnabled(): boolean { return false; }
+   // public isEnabled(): boolean { return false; }
 
-   public disable(): void { }
+   // public disable(): void { }
 
-   public enable(): void { }
+   // public enable(): void { }
 
-   public toggle(): boolean { return false; }
-}
+   // public toggle(): boolean { return false; }
+// }

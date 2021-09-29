@@ -145,7 +145,7 @@ export interface IEnable {
     */
    enable(): void;
 
-   toggle?(): boolean;
+   toggle(): boolean;
 }
 
 /**

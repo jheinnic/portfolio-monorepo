@@ -1,15 +1,17 @@
 import { mixin } from '@jchptf/mixins';
 import * as api from '../api';
+import {iNotify} from "./inotify";
 
 interface IWatchImpl<T extends unknown> extends api.IWatch<T> {
    _watches: api.IObjectOf<api.Watch<T>>;
 }
 
-export function iWatch<T extends unknown>(): ClassDecorator {
-   return mixin<IWatchImpl<T>>({
+// export function iWatch<T extends unknown>(): ClassDecorator {
+export const iWatch: ClassDecorator =
+   mixin<IWatchImpl<{}>>({
       _watches: {},
 
-      addWatch(id: string, fn: api.Watch<T>): boolean {
+      addWatch(id: string, fn: api.Watch<{}>): boolean {
          this._watches = this._watches || {};
          if (this._watches[id]) {
             return false;
@@ -27,7 +29,7 @@ export function iWatch<T extends unknown>(): ClassDecorator {
          return false;
       },
 
-      notifyWatches(oldState: T, newState: T) {
+      notifyWatches(oldState: {}, newState: {}) {
          if (!this._watches) return;
          const w = this._watches;
          /* eslint-disable no-restricted-syntax */
@@ -37,4 +39,8 @@ export function iWatch<T extends unknown>(): ClassDecorator {
          /* eslint-enable no-restricted-syntax */
       },
    });
+
+export function hasIWatch<T>(t: object): t is api.IWatch<T> {
+    return t instanceof iNotify;
 }
+

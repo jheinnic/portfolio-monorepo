@@ -30,8 +30,8 @@ interface INotifyImpl extends api.INotify {
  * a lazily instantiated `_listeners` property object, storing
  * registered listeners.
  */
-export function iNotify(): ClassDecorator {
-   return mixin<INotifyImpl>({
+export const iNotify: ClassDecorator =
+   mixin<INotifyImpl>({
       _listeners: {},
 
       addListener(this:INotifyImpl, id: Exclude<PropertyKey, symbol>, fn: api.Listener, scope?: any) {
@@ -72,7 +72,7 @@ export function iNotify(): ClassDecorator {
 
       __listener(this: INotifyImpl, listeners: any[][], f: api.Listener, scope: any) {
          let ii;
-         for (ii = listeners.length; ii >= 0; ii -= 1) {
+         for (ii = listeners.length - 1; ii >= 0; ii -= 1) {
             const l = listeners[ii];
             if (l[0] === f && l[1] === scope) {
                break;
@@ -81,6 +81,10 @@ export function iNotify(): ClassDecorator {
          return ii;
       },
    });
+
+
+export function hasINotify(t: object): t is api.INotify {
+   return t instanceof iNotify;
 }
 
 /**

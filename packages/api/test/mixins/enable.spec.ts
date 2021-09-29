@@ -3,16 +3,30 @@ import sinon from 'sinon';
 import { ToggleThing, ToggleTalker } from '../fixtures';
 
 import * as api from '@jchptf/api';
+import {hasIEnable, IEnable, INotify} from "@jchptf/api";
 
 describe('iEnable', () => {
-   let sut: ToggleThing;
+   describe('hasIEnable guard', () => {
+      it('selects instances of classes annotated by @iEnable', () => {
+         let sut: ToggleThing = new ToggleThing([1,2,3]);
+         expect(hasIEnable(sut)).is.true;
+      })
 
-   beforeEach(() => {
-      sut = new ToggleThing([1, 4, 4]);
+      it('rejects instances of classes not annotated by @iEnable', () => {
+         let sut: any = { fakeId: "I have iEnabled" };
+         expect(hasIEnable(sut)).is.false;
+      })
    });
 
+   let sut: api.IEnable;
+
+   beforeEach(() => {
+      sut = new ToggleThing([1, 4, 4]) as unknown as api.IEnable;
+   });
+
+
    it('Begins enabled', () => {
-      expect(sut.isEnabled()).is.true;
+       expect(sut.isEnabled()).is.true;
    });
 
    it('Toggles once to disabled', () => {
@@ -39,10 +53,10 @@ describe('iEnable', () => {
    });
 
    describe('with iNotify', () => {
-      let notifySut: ToggleTalker;
+      let notifySut: INotify & IEnable;
 
       beforeEach(() => {
-         notifySut = new ToggleTalker([7, 2, 2]);
+         notifySut = new ToggleTalker([7, 2, 2]) as unknown as INotify & IEnable;
       });
 
       it('Notifies on enable', () => {

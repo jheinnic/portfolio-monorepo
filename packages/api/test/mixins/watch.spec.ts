@@ -1,25 +1,9 @@
 import * as api from '@jchptf/api';
+import {hasIWatch} from "@jchptf/api";
 
-@api.iWatch<WatchedThing>()
-export class WatchedThing implements api.IWatch<WatchedThing> {
+@api.iWatch
+export class WatchedThing {
    constructor(public readonly flags: number[]) { }
-
-   public addWatch(id: string, fn: api.Watch<WatchedThing>): boolean
-   {
-      fn(id, this, this);
-      return false;
-   }
-
-   public notifyWatches(oldState: WatchedThing, newState: WatchedThing): void
-   {
-      console.log(oldState, newState);
-   }
-
-   public removeWatch(id: string): boolean
-   {
-      return id === 'id';
-   }
-
 }
 
 export const foo: WatchedThing = new WatchedThing([1, 4, 4]);
@@ -29,6 +13,8 @@ export function zib(id: string, old: WatchedThing, inew: WatchedThing): void {
    console.log('callback for ', id, old, inew);
 }
 
-console.log(foo.addWatch('zib', zib));
-foo.notifyWatches(foo, bar);
-console.log(foo.removeWatch('zib'));
+if (hasIWatch<WatchedThing>(foo)) {
+   console.log(foo.addWatch('zib', zib));
+   foo.notifyWatches(foo, bar);
+   console.log(foo.removeWatch('zib'));
+}
