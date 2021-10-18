@@ -1,6 +1,5 @@
 import { mixin } from '@jchptf/mixins';
 import * as api from '../api';
-import {iNotify} from "./inotify";
 
 interface IWatchImpl<T extends unknown> extends api.IWatch<T> {
    _watches: api.IObjectOf<api.Watch<T>>;
@@ -41,6 +40,6 @@ export const iWatch: ClassDecorator =
    });
 
 export function hasIWatch<T>(t: object): t is api.IWatch<T> {
-    return t instanceof iNotify;
+    return t instanceof iWatch;
 }
 

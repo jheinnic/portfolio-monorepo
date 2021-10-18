@@ -5,8 +5,8 @@ export const EVENT_DISABLE = 'disable';
 /**
  * `id` property declaration.
  */
-export interface IID<T extends Exclude<any, symbol>> {
-   readonly id: T extends symbol ? never : T;
+export interface IID<T extends string|number> {
+   readonly id: T;
 }
 
 export interface IEvent extends IID<Exclude<PropertyKey, symbol>> {
@@ -169,7 +169,7 @@ export interface IObjectOf<T> {
    [id: string]: T;
 }
 
-export type IBagOf<T, P extends keyof any> = {
+export type IBagOf<T, P extends keyof any = keyof any> = {
    [K in P]: T;
 };
 
@@ -212,4 +212,16 @@ export type IDirectorObj<IBuilder, K extends keyof any = 'apply'> = {
 
 export type IAsyncDirectorObj<IBuilder, K extends keyof any = 'apply'> = {
    [Key in K]: IAsyncDirector<IBuilder>;
+};
+
+export type ITx<I, O> = {
+   (input: I): O;
+};
+
+export type ITx2<I1, I2, O> = {
+   (input: I1|I2): O;
+};
+
+export type ITx3<I1, I2, I3, O> = {
+   (input: I1|I2|I3): O;
 };
