@@ -109,3 +109,10 @@ export type Intersects<T, U, Then = true, Else = false> =
 export type HasAll<T, U> = StronglyExtends<U, T>;
 
 export type HasAny<T, U> = Intersects<T, U>;
+
+export type Syncular<T> =
+    T extends Promise<unknown> ? never : (
+        T extends Generator<unknown> ? never : (
+            T extends AsyncGenerator<unknown> ? never : T
+            )
+        );
