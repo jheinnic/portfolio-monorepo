@@ -1,7 +1,7 @@
 import { Prev, MMinusN } from './math';
-import { LengthOf, LengthThatFits, NthOf } from './length';
+import { LengthOf, InsertIndicesFor, NthOf } from './length';
 
-export type LastNOf<T extends any[], N extends LengthThatFits<T>> =
+export type LastNOf<T extends any[], N extends InsertIndicesFor<T>> =
    [
       [
          T
@@ -111,9 +111,12 @@ export type LastNOf<T extends any[], N extends LengthThatFits<T>> =
       ]
    ][LengthOf<T>][N];
 
-export type ExceptFirstN<T extends any[], N extends LengthThatFits<T>> =
-   LastNOf<T, MMinusN<LengthOf<T>, N>>;
+export type ExceptFirstN<T extends any[], N extends InsertIndicesFor<T>> =
+    MMinusN<LengthOf<T>, N> extends InsertIndicesFor<T> ?
+        LastNOf<T, MMinusN<LengthOf<T>, N>> : never;
 
-export type ExceptFirst<T extends any[]> = LastNOf<T, Prev<LengthOf<T>>>;
+export type ExceptFirst<T extends any[]> =
+   Prev<LengthOf<T>> extends InsertIndicesFor<T> ?
+       LastNOf<T, Prev<LengthOf<T>>> : never;
 
 export type LastOf<T extends any[]> = NthOf<T, Prev<LengthOf<T>>>;

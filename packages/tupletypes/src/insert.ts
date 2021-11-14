@@ -1,6 +1,6 @@
-import { LengthOf, LengthThatFits } from './length';
+import {LengthOf, InsertIndicesFor } from './length';
 
-export type Insert<T extends any[], N extends LengthThatFits<T>, S> =
+export type Insert<T extends any[], N extends InsertIndicesFor<T>, S> =
 [
    [
       [S]
@@ -109,6 +109,9 @@ export type Insert<T extends any[], N extends LengthThatFits<T>, S> =
    ]
 ][LengthOf<T>][N];
 
-export type Prepend<T extends any[], S> = Insert<T, 0, S>;
+export type Prepend<T extends any[], S> =
+    0 extends InsertIndicesFor<T> ? Insert<T, 0, S> : never;
 
-export type Append<T extends any[], S> = Insert<T, LengthOf<T>, S>;
+export type Append<T extends any[], S> =
+    LengthOf<T> extends InsertIndicesFor<T>
+        ? Insert<T, LengthOf<T>, S> : never;
