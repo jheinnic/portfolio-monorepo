@@ -53,7 +53,7 @@ export type IByFactoryCall<Supplier extends IModule<IModuleRegistry>,
   Token extends IToken<Supplier>, Origins extends IModule<IModuleRegistry>> =
 {
    style: DynamicProviderBindingStyle.INJECTED_FACTORY;
-   useFactory: IFactoryMethod<ITokenType<Supplier, Token>, any>;
+   useFactory: IFactoryMethod<ITokenType<Supplier, Token>, any[]>;
    inject: IToken<Origins>[];
 };
 
