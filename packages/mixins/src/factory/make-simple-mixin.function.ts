@@ -12,9 +12,9 @@
  */
 import { isKeyOf } from 'simplytyped';
 
-export type MixableConstructor<T extends any = object> = new (...args: any[]) => T;
+export type MixableConstructor<T> = new (...args: any[]) => T;
 
-export function mixin<I extends object, S extends object = {}>(behaviour: I, sharedBehaviour?: S)
+export function mixin<I extends object>(behaviour: I, sharedBehaviour?: any)
 {
    const instanceKeys: PropertyKey[] = !!behaviour ? Reflect.ownKeys(behaviour) : [];
    const sharedKeys: PropertyKey[] = !!sharedBehaviour ? Reflect.ownKeys(sharedBehaviour) : [];

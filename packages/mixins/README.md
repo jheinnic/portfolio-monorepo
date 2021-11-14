@@ -2,7 +2,7 @@
 
 [![npm (scoped)](https://img.shields.io/npm/v/@jchptf/mixins.svg)](https://www.npmjs.com/package/@jchptf/mixins)
 ![npm downloads](https://img.shields.io/npm/dm/@jchptf/mixins.svg)
-[![Twitter Follow](https://img.shields.io/twitter/follow/jchptf_monorepo.svg?style=flat-square&label=twitter)](https://twitter.com/jchptf_monorepo)
+[![Twitter Follow](https://img.shields.io/twitter/follow/jheinnic.svg?style=flat-square&label=twitter)](https://twitter.com/jheinnic)
 
 
 This project is part of the
@@ -14,23 +14,19 @@ This project is part of the
 
 ## About
 
-TODO...
+Deprecated.  Do not reuse.
 
 ## Installation
 
-```bash
-yarn add @jchptf/mixins
-```
+Deprecated.  Do not reuse.
 
 ## Dependencies
 
-- TODO...
+  Deprecated.  Do not reuse.
 
 ## Usage examples
 
-```typescript
-import * as m from "@jchptf/mixins";
-```
+- Deprecated.  Do not reuse.
 
 ## Authors
 
