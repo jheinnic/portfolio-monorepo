@@ -9,7 +9,7 @@
         "paths": {
             "@jchptf/tupletypes": ["../src"]
         }
-    }
+    },
     "references": [
         { "path": "../src" }
     ],
