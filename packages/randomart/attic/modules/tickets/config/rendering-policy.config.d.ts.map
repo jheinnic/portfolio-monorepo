@@ -1,1 +1,0 @@
-{"version":3,"file":"rendering-policy.config.d.ts","sourceRoot":"","sources":["rendering-policy.config.ts"],"names":[],"mappings":"AAEA,OAAO,oBAAoB,CAAC;AAC5B,OAAO,EAAC,IAAI,EAAC,MAAM,oCAAoC,CAAC;AAGxD,qBACa,eAAe;IAEzB,SAGgB,IAAI,EAAE,IAAI,CAAc;IAExC,SAGgB,oBAAoB,EAAE,IAAI,CAAc;IAExD,SAGgB,mBAAmB,EAAE,IAAI,CAAc;CACzD"}

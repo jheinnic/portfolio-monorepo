@@ -1,1 +1,0 @@
-{"version":3,"file":"directory-path.interface.d.ts","sourceRoot":"","sources":["directory-path.interface.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,YAAY,EAAC,MAAM,sBAAsB,CAAC;AAClD,OAAO,EAAC,IAAI,EAAC,MAAM,oDAAoD,CAAC;AAExE,MAAM,WAAW,aAAa;IAC3B,IAAI,EAAE,gBAAgB,CAAC;IACvB,IAAI,EAAE,YAAY,CAAC;IACnB,IAAI,EAAE,IAAI,CAAC;CACb"}

@@ -1,1 +1,0 @@
-{"version":3,"file":"artwork-pair-file-paths.interface.d.ts","sourceRoot":"","sources":["artwork-pair-file-paths.interface.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,oBAAoB,EAAC,MAAM,qCAAqC,CAAC;AAEzE,MAAM,WAAW,oBAAoB;IAElC,QAAQ,CAAC,IAAI,EAAE,oBAAoB,CAAC;IACpC,QAAQ,CAAC,cAAc,EAAE,oBAAoB,CAAC;IAC9C,QAAQ,CAAC,aAAa,EAAE,MAAM,CAAC;IAC/B,QAAQ,CAAC,cAAc,EAAE,MAAM,CAAC;CAClC"}

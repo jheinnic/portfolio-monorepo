@@ -1,1 +1,0 @@
-{"version":3,"file":"artwork-pair-content.value.d.ts","sourceRoot":"","sources":["artwork-pair-content.value.ts"],"names":[],"mappings":"AACA,OAAO,EAAC,oBAAoB,EAAC,MAAM,uBAAuB,CAAC;AAE3D,qBAAa,kBAAkB;IAC5B,SACgB,OAAO,EAAE,oBAAoB,CAAC;IAE9C,SAEgB,aAAa,EAAE,MAAM,CAAC;IAEtC,SAEgB,cAAc,EAAE,MAAM,CAAC;gBAE3B,QAAQ,EAAE,QAAQ,CAAC,kBAAkB,CAAC;CAOpD"}

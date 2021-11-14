@@ -1,1 +1,0 @@
-{"version":3,"file":"full-artwork-file-path.interface.d.ts","sourceRoot":"","sources":["full-artwork-file-path.interface.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,oBAAoB,EAAC,MAAM,qCAAqC,CAAC;AACzE,OAAO,EAAC,IAAI,EAAC,MAAM,0CAA0C,CAAC;AAE9D,MAAM,WAAW,mBAAmB;IAEjC,QAAQ,CAAC,IAAI,EAAE,mBAAmB,CAAC;IACnC,QAAQ,CAAC,OAAO,EAAE,oBAAoB,CAAC;IACvC,QAAQ,CAAC,aAAa,EAAE,IAAI,CAAC;CAC/B"}
