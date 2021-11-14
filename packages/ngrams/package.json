@@ -6,23 +6,6 @@
     "module": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "typings": "./dist/index.d.ts",
-    "typesVersions": {
-        ">=3.3": {
-            "dist": [
-                "dist/ts3.3/*"
-            ]
-        },
-        ">=3.2": {
-            "dist": [
-                "dist/ts3.2/*"
-            ]
-        },
-        ">=3.1": {
-            "dist": [
-                "dist/ts3.1/*"
-            ]
-        }
-    },
     "repository": {
         "type": "git",
         "url": "https://github.com/jheinnic/portfolio-monorepo",
@@ -35,7 +18,7 @@
         "typescript"
     ],
     "engines": {
-        "node": ">=10.13.0"
+        "node": ">=14.16.1"
     },
     "publishConfig": {
         "access": "public",

@@ -10,13 +10,15 @@
             "@jchptf/api": ["../../api/src"],
             "@jchptf/config": ["../../config/src"],
             "@jchptf/coroutines": ["../../coroutines/src"],
+            "@jchptf/isaac": ["../../isaac/src"],
             "@jchptf/randomart": ["."]
         }
     },
     "references": [
         { "path": "../../api/src" },
         { "path": "../../config/src" },
-        { "path": "../../coroutines/src" }
+        { "path": "../../coroutines/src" },
+        { "path": "../../isaac/src" }
     ],
     "include": [
         "./**/*.ts",
