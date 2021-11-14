@@ -9,7 +9,5 @@ doc/
 bundle.*
 *.swp
 *.swo
-*.html
 *.log
 *.tgz
-*.js
