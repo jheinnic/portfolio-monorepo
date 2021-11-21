@@ -1,6 +1,6 @@
 import {LengthOf, InsertIndicesFor } from './length';
 
-export type Insert<T extends any[], N extends InsertIndicesFor<T>, S> =
+export type Insert<T extends [...any[]], N extends InsertIndicesFor<T>, S> =
 [
    [
       [S]
