@@ -4,14 +4,12 @@ import { Builder, Ctor } from 'fluent-interface-builder';
 import { IFactoryMethod } from '@jchptf/api';
 
 import {
-   IModule, IModuleRegistry, IModuleTupleTypes, IToken, ITokenProviding, ITokenRequiring,
+    IHasRegistry, IModule, IModuleRegistry, IModuleTupleTypes, ITokenProviding, ITokenRequiring,
 } from './module';
 import { ArgsAsInjectableKeys } from './injectable-key';
 import { IDynamicModuleBuilder } from './dynamic-module-builder.interface';
-import {
-   DynamicProviderBindingStyle, IBoundDynamicModuleImport,
-} from './dynamic-module-config.type';
 import { UnionizeTuple } from 'simplytyped';
+import {Insert} from "@jchptf/tupletypes";
 
 /**
  * Internal implementation detail interface extending IDynamicModuleBuilder from public API
@@ -20,7 +18,7 @@ import { UnionizeTuple } from 'simplytyped';
  */
 export interface IDynamicModuleBuilderImpl<
   Supplier extends IModule<IModuleRegistry>,
-  Origins extends IModule<IModuleRegistry>[],
+  Origins extends IHasRegistry[],
   Consumer extends IModule<IModuleRegistry>
 >
   extends IDynamicModuleBuilder<Supplier, Origins, Consumer>
@@ -31,11 +29,17 @@ export interface IDynamicModuleBuilderImpl<
 }
 
 export function getBuilder<Supplier extends IModule<IModuleRegistry>,
-  Origins extends IModule<IModuleRegistry>[],
+  Origins extends IHasRegistry[],
   Consumer extends IModule<IModuleRegistry>>(
-  supplier: Type<Supplier>, origins: IModuleTupleTypes<Origins>,
+  supplier: Type<Supplier>, consumer: Type<Consumer>, origins: IModuleTupleTypes<Origins>
 ): IDynamicModuleBuilderImpl<Supplier, Origins, Consumer>
 {
+    const new_origins: Type<IHasRegistry>[] = [consumer];
+    let index = 0;
+    while (index < origins.length) {
+        new_origins.push(origins[index]);
+        index = index + 1;
+    }
    const BUILDER_CTOR: Ctor<DynamicModule, IDynamicModuleBuilderImpl<Supplier, Origins, Consumer>> =
      new Builder<DynamicModule, IDynamicModuleBuilderImpl<Supplier, Origins, Consumer>>()
        .chain(
@@ -79,8 +83,7 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
            {
               return provideExisting(ctx, provide, existing);
            },
-       )
-       //   .chain(
+       // ).chain(
        //     'selectFromConsumer',
        //     <Component>
        //     (
@@ -104,41 +107,30 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
        //     {
        //        return selectFromOther(ctx, provide, fromModule, useExisting);
        //     },
-       // )
-       // .chain(
-       //   'applyFactoryFromConsumer',
-       //   <Component, Source extends IModule<IModuleRegistry>>
-       //   (
-       //     provide: ITokenProviding<Supplier, Component>,
-       //     useExisting: ITokenProviding<Source, IFactory<Component, any>>,
-       //     inject: ArgsAsInjectableKeys<IFactory<Component, any>, Source>
-       //   ) =>
-       //     (ctx: DynamicModule): DynamicModule =>
-       //     {
-       //        return applyFactoryFromConsumer(ctx, provide, useExisting);
-       //     },
-       // )
-       // .chain(
-       //   'callFactoryMethod',
-       //   <Component extends {}>
-       //   (
-       //     provide: ITokenProviding<Supplier, Component>,
-       //     useFactory: IFactory<Component>,
-       //   ) =>
-       //     (ctx: DynamicModule): DynamicModule =>
-       //     {
-       //        return callFactoryMethod(ctx, provide, useFactory);
-       //     },
-       // )
+       )
        .chain(
-         'provideByFactoryCall',
-         <Component, Factory extends IFactoryMethod<Component, any[]>>
-         (provide: ITokenProviding<Supplier, Component>, useFactory: Factory,
-          inject: ArgsAsInjectableKeys<Factory, Origins>) =>
+         'applyFactoryFromConsumer',
+           <Component, Factory extends IFactoryMethod<Component, any[]>>
+           (provide: ITokenProviding<Supplier, Component>, useFactory: Factory,
+            inject: ArgsAsInjectableKeys<Factory, Insert<Origins, 0, Consumer>>) =>
+               (ctx: DynamicModule): DynamicModule => {
+                   return applyFactoryFromConsumer<Component, Supplier, Consumer, Origins, Factory>(
+                       ctx, provide, useFactory, inject);
+               },
+       )
+       .chain(
+         'callFactoryMethod',
+         <Component, Factory extends IFactoryMethod<Component, any[]>>(
+           provide: ITokenProviding<Supplier, Component>,
+           useFactory: Factory,
+           inject: ArgsAsInjectableKeys<Factory, [Supplier]>
+       ) =>
            (ctx: DynamicModule): DynamicModule => {
               return provideByFactoryCall(ctx, provide, useFactory, inject);
-           },
-       )
+           }
+       // ).chain(
+       //   'provideByFactoryCall',
+       // )
        // .chain(
        //   'callConsumerFactoryMethod',
        //   <Component, Supplier extends IModule<IModuleRegistry>,
@@ -166,10 +158,9 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
        //        return callImportableFactoryMethod(ctx, provide, fromSource, useFactory, inject);
        //     },
        // )
-       .chain(
+       ).chain(
          'exportFromSupplier',
-         <Component extends {}>
-         (
+         <Component> (
            provide: ITokenRequiring<Consumer, Component>,
            existing: ITokenProviding<Supplier, Component>,
          ) =>
@@ -240,97 +231,97 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
                 controllers: [...ctx.controllers!, ...source],
              }
            ),
-       )
-       .chain(
-         'addImportFromConfig',
-         <Token extends IToken<Supplier>>
-         (importKey: Token, importItem: IBoundDynamicModuleImport<Supplier, Token, Origins>,
-          andExport: boolean = false) =>
-           (ctx: DynamicModule): DynamicModule => {
-              let retVal: DynamicModule;
-              switch (importItem.style) {
-                 case DynamicProviderBindingStyle.VALUE:
-                 {
-                    retVal = BuilderUtilityFacade.appendSupplierImportProvider(
-                      ctx, {
-                         provide: importKey,
-                         useValue: importItem.useValue,
-                      });
-                    break;
-                 }
-                 case DynamicProviderBindingStyle.CLASS:
-                 {
-                    retVal = BuilderUtilityFacade.appendSupplierImportProvider(
-                      ctx, {
-                         provide: importKey,
-                         useClass: importItem.useClass,
-                      });
-                    break;
-                 }
-                 case DynamicProviderBindingStyle.EXISTING:
-                 {
-                    retVal = BuilderUtilityFacade.appendSupplierImportProvider(
-                      ctx, {
-                         provide: importKey,
-                         useExisting: importItem.useExisting,
-                      });
-                    break;
-                 }
-                // case DynamicProviderBindingStyle.CONSUMER_PROVIDED_FACTORY:
-                // {
-                //    retVal = applyFactoryFromConsumer(ctx, param.provide, param.useExisting);
-                //    break;
-                // }
-                // case DynamicProviderBindingStyle.SUPPLIER_PROVIDED:
-                // {
-                //    retVal = selectFromSupplier(ctx, param.provide, param.useExisting);
-                //    break;
-                // }
-                // case DynamicProviderBindingStyle.SUPPLIER_PROVIDED_FACTORY:
-                // {
-                //    retVal = applyFactoryFromSupplier(ctx, param.provide, param.useExisting);
-                //    break;
-                // }
-                // case DynamicProviderBindingStyle.FACTORY_METHOD_CALL:
-                // {
-                //    retVal = callFactoryMethod(ctx, param.provide, param.useFactory);
-                //    break;
-                // }
-                 case DynamicProviderBindingStyle.INJECTED_FACTORY:
-                 {
-                    retVal = BuilderUtilityFacade.appendSupplierImportProvider(
-                      ctx, {
-                         provide: importKey,
-                         useFactory: importItem.useFactory,
-                         inject: importItem.inject,
-                      },
-                    );
-                    break;
-                 }
-                // case DynamicProviderBindingStyle.SUPPLIER_INJECTED_FUNCTION:
-                // {
-                //    retVal = callSupplierFactoryMethod(
-                //      ctx,
-                //      param.provide,
-                //      param.useFactory,
-                //      param.inject as ArgsAsInjectableKeys<typeof param.useFactory, Supplier>);
-                //    break;
-                // }
-                 default:
-                 {
-                    return undefined as never;
-                 }
-              }
-
-              if (!andExport) {
-                 return retVal;
-              }
-
-              return {
-                 ...retVal,
-                 exports: [...retVal.exports!, importKey],
-              };
-           },
+       // )
+       // .chain(
+       //   'addImportFromConfig',
+       //   <Token extends IToken<Supplier>>
+       //   (importKey: Token, importItem: IBoundDynamicModuleImport<Supplier, Token, Origins>,
+       //    andExport: boolean = false) =>
+       //     (ctx: DynamicModule): DynamicModule => {
+       //        let retVal: DynamicModule;
+       //        switch (importItem.style) {
+       //           case DynamicProviderBindingStyle.VALUE:
+       //           {
+       //              retVal = BuilderUtilityFacade.appendSupplierImportProvider(
+       //                ctx, {
+       //                   provide: importKey,
+       //                   useValue: importItem.useValue,
+       //                });
+       //              break;
+       //           }
+       //           case DynamicProviderBindingStyle.CLASS:
+       //           {
+           //          retVal = BuilderUtilityFacade.appendSupplierImportProvider(
+           //            ctx, {
+           //               provide: importKey,
+           //               useClass: importItem.useClass,
+           //            });
+           //          break;
+           //       }
+           //       case DynamicProviderBindingStyle.EXISTING:
+           //       {
+           //          retVal = BuilderUtilityFacade.appendSupplierImportProvider(
+           //            ctx, {
+           //               provide: importKey,
+           //               useExisting: importItem.useExisting,
+           //            });
+           //          break;
+           //       }
+           //      // case DynamicProviderBindingStyle.CONSUMER_PROVIDED_FACTORY:
+           //      // {
+           //      //    retVal = applyFactoryFromConsumer(ctx, param.provide, param.useExisting);
+           //      //    break;
+           //      // }
+           //      // case DynamicProviderBindingStyle.SUPPLIER_PROVIDED:
+           //      // {
+           //      //    retVal = selectFromSupplier(ctx, param.provide, param.useExisting);
+           //      //    break;
+           //      // }
+           //      // case DynamicProviderBindingStyle.SUPPLIER_PROVIDED_FACTORY:
+           //      // {
+           //      //    retVal = applyFactoryFromSupplier(ctx, param.provide, param.useExisting);
+           //      //    break;
+           //      // }
+           //      // case DynamicProviderBindingStyle.FACTORY_METHOD_CALL:
+           //      // {
+           //      //    retVal = callFactoryMethod(ctx, param.provide, param.useFactory);
+           //      //    break;
+           //      // }
+           //       case DynamicProviderBindingStyle.INJECTED_FACTORY:
+           //       {
+           //          retVal = BuilderUtilityFacade.appendSupplierImportProvider(
+           //            ctx, {
+           //               provide: importKey,
+           //               useFactory: importItem.useFactory,
+           //               inject: importItem.inject,
+           //            },
+           //          );
+           //          break;
+           //       }
+           //      // case DynamicProviderBindingStyle.SUPPLIER_INJECTED_FUNCTION:
+           //      // {
+           //      //    retVal = callSupplierFactoryMethod(
+           //      //      ctx,
+           //      //      param.provide,
+           //      //      param.useFactory,
+           //      //      param.inject as ArgsAsInjectableKeys<typeof param.useFactory, Supplier>);
+           //      //    break;
+           //      // }
+           //       default:
+           //       {
+           //          return undefined as never;
+           //       }
+           //    }
+           //
+           //    if (!andExport) {
+           //       return retVal;
+           //    }
+           //
+           //    return {
+           //       ...retVal,
+           //       exports: [...retVal.exports!, importKey],
+           //    };
+           // },
        ).unwrap<DynamicModule>(
          'build', () => (ctx: DynamicModule): DynamicModule => {
             // const consumer = ctx.consumer;
@@ -345,7 +336,7 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
    return new BUILDER_CTOR(
       {
          module: supplier,
-         imports: [...origins],
+         imports: [...new_origins],
          controllers: [],
          providers: [],
          exports: [],
@@ -388,13 +379,13 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
 //       },
 //    );
 // }
-//
+
 function provideByFactoryCall<Component,
   Supplier extends IModule<IModuleRegistry>,
   Factory extends IFactoryMethod<Component, any[]>
 >(
   ctx: DynamicModule, provide: ITokenProviding<Supplier, Component>,
-  useFactory: Factory, inject: ArgsAsInjectableKeys<Factory, Supplier>)
+  useFactory: Factory, inject: ArgsAsInjectableKeys<Factory, [Supplier]>)
 {
    return BuilderUtilityFacade.appendSupplierImportProvider(
       ctx,
@@ -406,22 +397,26 @@ function provideByFactoryCall<Component,
    );
 }
 
-// function applyFactoryFromConsumer<Component,
-//   Supplier extends IModule<IModuleRegistry>,
-//   Consumer extends IModule<IModuleRegistry>>(
-//   ctx: DynamicModule,
-//   provide: ITokenProviding<Supplier, Component>,
-//   useExisting: InjectableKey<IFactory<Component>, Consumer>
-// )
-// {
-//    const newProvider: Provider = {
-//       provide,
-//       useFactory: component => component.create(),
-//       inject: [existing],
-//    };
-//
-//    return BuilderUtilityFacade.appendImportableImportProvider(ctx, newProvider, provide);
-// }
+function applyFactoryFromConsumer<Component,
+  Supplier extends IModule<IModuleRegistry>,
+  Consumer extends IModule<IModuleRegistry>,
+  Origins extends [...IHasRegistry[]],
+  Factory extends IFactoryMethod<Component, any[]>
+>(
+  ctx: DynamicModule,
+  provide: ITokenProviding<Supplier, Component>,
+  useFactory: Factory,
+  inject: ArgsAsInjectableKeys<Factory, Insert<Origins, 0, Consumer>>
+)
+{
+   const newProvider: Provider = {
+      provide,
+      useFactory,
+      inject
+   };
+
+   return BuilderUtilityFacade.appendConsumerImportProvider(ctx, newProvider);
+}
 
 // function selectFromConsumer<Component, Supplier extends IModule<IModuleRegistry>,
 //   Consumer extends IModule<IModuleRegistry>>(

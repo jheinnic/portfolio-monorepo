@@ -13,3 +13,6 @@ export const MY_MODULE_ID = Symbol('ItsMine');
 export const A_SYMBOL_TOKEN = Symbol('ASymbol');
 export const B_SYMBOL_TOKEN = Symbol('BSymbol');
 export const B4_SYMBOL_TOKEN = Symbol('ASymbol');
+
+export const A_SUBJECT = "WhereItsAt";
+export const B_SUBJECT = Symbol.for("AlphabetSoup");

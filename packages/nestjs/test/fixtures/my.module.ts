@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
-import { MODULE_ID } from '@jchptf/nestjs';
-import { MY_MODULE_ID } from './names.constants';
+import { REGISTRY } from '@jchptf/nestjs';
+
+export class MyModuleRegistry {
+   public static readonly [REGISTRY] = MyModuleRegistry;
+}
 
 @Module({
    providers: [
@@ -8,5 +11,5 @@ import { MY_MODULE_ID } from './names.constants';
 })
 export class MyModule
 {
-   public static readonly [MODULE_ID] = MY_MODULE_ID; // Symbol('MY_MODULE_ID');
+   public static readonly [REGISTRY] =  MyModuleRegistry;
 }

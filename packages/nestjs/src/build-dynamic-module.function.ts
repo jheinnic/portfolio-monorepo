@@ -2,22 +2,23 @@ import { DynamicModule, Type } from '@nestjs/common';
 
 import { IDirector, IAsyncDirector } from '@jchptf/api';
 
-import {IModule, IModuleLike, IModuleRegistry, IModuleTupleTypes} from './module';
+import {IHasRegistry, IModule, IModuleRegistry, IModuleTupleTypes} from './module';
 import { IDynamicModuleBuilder } from './dynamic-module-builder.interface';
 import { getBuilder, IDynamicModuleBuilderImpl } from './dynamic-module-builder.function';
 
 export function buildDynamicModule<
    Supplier extends IModule<IModuleRegistry>,
-   Origin extends IModule<IModuleRegistry>[],
+   Origin extends [...IHasRegistry[]],
    Consumer extends IModule<IModuleRegistry>
 >(
   supplier: Type<Supplier>,
+  consumer: Type<Consumer>,
   origin: IModuleTupleTypes<Origin>,
   director: IDirector<IDynamicModuleBuilder<Supplier, Origin, Consumer>>,
 ): DynamicModule
 {
    const builder: IDynamicModuleBuilderImpl<Supplier, Origin, Consumer> =
-      getBuilder(supplier, origin);
+      getBuilder(supplier, consumer, origin);
 
    director(builder);
 
@@ -26,17 +27,17 @@ export function buildDynamicModule<
 
 export async function asyncBuildDynamicModule<
   Supplier extends IModule<IModuleRegistry>,
-  Origin extends IModule<IModuleRegistry>[],
+  Origin extends [...IHasRegistry[]],
   Consumer extends IModule<IModuleRegistry>
   >(
   supplier: Type<Supplier>,
-  origin: IModuleTupleTypes<Origin>,
   consumer: Type<Consumer>,
+  origin: IModuleTupleTypes<Origin>,
   director: IAsyncDirector<IDynamicModuleBuilder<Supplier, Origin, Consumer>>,
 ): Promise<DynamicModule>
 {
    const builder: IDynamicModuleBuilderImpl<Supplier, Origin, Consumer> =
-     getBuilder(supplier, origin, consumer);
+     getBuilder(supplier, consumer, origin);
 
    await director(builder);
 

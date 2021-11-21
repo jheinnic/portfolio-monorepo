@@ -3,13 +3,13 @@ import { UnionizeTuple } from 'simplytyped';
 
 import { IFactoryMethod } from '@jchptf/api';
 
-import { IModule, IModuleRegistry, ITokenProviding, ITokenRequiring } from './module';
+import {IHasRegistry, IModule, IModuleRegistry, ITokenProviding, ITokenRequiring} from './module';
 import { ArgsAsInjectableKeys } from './injectable-key';
-import { IBoundDynamicModuleImport } from '@jchptf/nestjs';
+import {Insert} from "@jchptf/tupletypes";
 
 export interface IDynamicModuleBuilder<
    Supplier extends IModule<IModuleRegistry>,
-   Origins extends IModule<IModuleRegistry>[],
+   Origins extends [...IHasRegistry[]],
    Consumer extends IModule<IModuleRegistry>>
 {
    /*
@@ -43,7 +43,7 @@ export interface IDynamicModuleBuilder<
      Factory extends IFactoryMethod<Component, Args>>(
       provide: ITokenRequiring<Supplier, Component>,
       useFactory: Factory,
-      inject: ArgsAsInjectableKeys<Factory, UnionizeTuple<Origins>>,
+      inject: ArgsAsInjectableKeys<Factory, Insert<Origins, 0, Consumer>>,
    ): IDynamicModuleBuilder<Supplier, Origins, Consumer>;
 
    // callImportableFactoryMethod<
@@ -62,13 +62,13 @@ export interface IDynamicModuleBuilder<
    //    inject: ArgsAsInjectableKeys<Factory, Supplier>,
    // ): IDynamicModuleBuilder<Supplier, Origins, Consumer>;
    //
-   // callConsumerFactoryMethod<
-   //    Component, Factory extends IFactoryMethod<Component, any>>
-   // (
-   //    provide: ITokenProviding<Supplier, Component>,
-   //    useFactory: Factory,
-   //    inject: ArgsAsInjectableKeys<Factory, Consumer>,
-   // ): IDynamicModuleBuilder<Supplier, Origins, Consumer>;
+   callConsumerFactoryMethod<
+      Component, Factory extends IFactoryMethod<Component, any>>
+   (
+      provide: ITokenProviding<Supplier, Component>,
+      useFactory: Factory,
+      inject: ArgsAsInjectableKeys<Factory, Insert<Origins, 0, Consumer>>,
+   ): IDynamicModuleBuilder<Supplier, Origins, Consumer>;
 
    exportFromSupplier<Component>(
       provide: ITokenRequiring<Consumer, Component>,
@@ -105,11 +105,11 @@ export interface IDynamicModuleBuilder<
    //    existing: InjectableKey<IFactory<Component>, Consumer>,
    // ): IDynamicModuleBuilder<Supplier, Origins, Consumer>;
 
-   acceptBoundImport<Component>(
-      importKey: ITokenRequiring<Supplier, Component>,
-      boundParam: IBoundDynamicModuleImport<Component, Supplier, UnionizeTuple<Origins>>,
-      andExport?: boolean,
-   ): IDynamicModuleBuilder<Supplier, Origins, Consumer>;
+   // acceptBoundImport<Component>(
+   //    importKey: ITokenRequiring<Supplier, Component>,
+   //    boundParam: IBoundDynamicModuleImport<Component, Supplier, UnionizeTuple<Origins>>,
+   //    andExport?: boolean,
+   // ): IDynamicModuleBuilder<Supplier, Origins, Consumer>;
 
    /*
     * Adds a provider with dependencies from context of the Dynamic Module or its extended module

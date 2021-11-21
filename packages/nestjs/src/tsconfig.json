@@ -8,6 +8,7 @@
         "declarationMap": true,
         "paths": {
             "@jchptf/api": ["../../api/src"],
+	    "@jchptf/nestjs": ["."],
             "@jchptf/objecttypes": ["../../objecttypes/src"],
             "@jchptf/tupletypes": ["../../tupletypes/src"],
             "@jchptf/txtypes": ["../../txtypes/src"]

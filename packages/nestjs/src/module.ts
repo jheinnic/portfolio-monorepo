@@ -1,5 +1,6 @@
 import { KeysExtendedBy, KeysExtending } from '@jchptf/objecttypes';
 import {Type} from '@nestjs/common';
+import {UnionizeTuple} from "simplytyped";
 
 // export const GLOBAL_MODULE_ID: unique symbol = Symbol('global scope');
 
@@ -14,32 +15,28 @@ export interface IModule<M extends IModuleRegistry> {
    readonly [REGISTRY]: M;
 }
 
-export type IModuleLike = IModuleRegistry | IModule<IModuleRegistry>;
+export type IHasRegistry<R extends IModuleRegistry = IModuleRegistry> = R | IModule<R>;
+export type IRegistryOf<M extends IHasRegistry<any>> = M extends IModule<infer R> ? R : M;
 
-export type IModuleTypes<M extends IModuleLike> = M extends IModule<infer R> ? R : M;
+export type IToken<M extends IHasRegistry> = Exclude<keyof IRegistryOf<M>, string|number>;
+export type ITokenType<M extends IHasRegistry, T extends IToken<M>> = IRegistryOf<M>[T];
 
-export type IToken<M extends IModuleLike> = M extends IModule<infer R>
-  ? Exclude<keyof R, string|number>
-  : Exclude<keyof M, string|number>;
-export type ITokenType<M extends IModuleLike, T extends IToken<M>> =
-  M extends IModule<infer R> ? R[T] : M[T];
+export type ITokenProviding<M extends IHasRegistry, T> =
+  Exclude<KeysExtending<IRegistryOf<M>, T>, string|number>;
 
-export type ITokenProviding<M extends IModuleLike, T> = M extends IModule<infer R>
-  ? Exclude<KeysExtending<R, T>, string|number>
-  : Exclude<KeysExtending<M, T>, string|number>;
-
-export type ITokenRequiring<M extends IModuleLike, T> = M extends IModule<infer R>
-  ? Exclude<KeysExtendedBy<R, T>, string|number>
-  : Exclude<KeysExtendedBy<M, T>, string|number>;
+export type ITokenRequiring<M extends IHasRegistry, T> =
+  Exclude<KeysExtendedBy<IRegistryOf<M>, T>, string|number>;
 
 export type ITokenImportExportable<
-  Importer extends IModuleLike, T extends IToken<Importer>, Exporter extends IModuleLike> =
-  ITokenProviding<Exporter, ITokenType<Importer, T>>;
+  Importer extends IHasRegistry, T extends IToken<Importer>, Exporters extends [...IHasRegistry[]]> =
+   UnionizeTuple<{
+      [index in Exclude<keyof Exporters, string|symbol>]: ITokenProviding<Exporters[index], ITokenType<Importer, T>>;
+   } & {length: Exporters["length"]}>
 
 export type ITokenExportImportable<
-  Exporter extends IModuleLike, T extends IToken<Exporter>, Importer extends IModuleLike> =
+  Exporter extends IHasRegistry, T extends IToken<Exporter>, Importer extends IHasRegistry> =
   ITokenRequiring<Importer, ITokenType<Exporter, T>>;
 
-export type IModuleTupleTypes<Tuple extends [...IModule<IModuleRegistry>[]]> = {
-   [Index in keyof Tuple]: Type<Tuple[Index]>;
-} & {length: Tuple['length']}
+export type IModuleTupleTypes<Tuple extends IHasRegistry[]> = {
+    [Index in Exclude<keyof Tuple, string | symbol>]: Type<Tuple[Index]>;
+} & {length: Tuple["length"]};
