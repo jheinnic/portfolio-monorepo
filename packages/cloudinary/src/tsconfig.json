@@ -1,0 +1,29 @@
+{
+    "extends": "../../../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../dist",
+        "baseUrl": ".",
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "esModuleInterop": true,
+        "paths": {
+            "@jchptf/api": ["../../api/src"],
+            "@jchptf/cloudinary": ["."],
+            "@jchptf/nestjs": ["../../nestjs/src"],
+            "@jchptf/reflection": ["../../reflection/src"],
+            "@jchptf/txtypes": ["../../txtypes/src"],
+        }
+    },
+    "references": [
+        { "path": "../../api/src" },
+        { "path": "../../nestjs/src" },
+        { "path": "../../reflection/src" },
+        { "path": "../../txtypes/src" }
+    ],
+    "include": [
+        "./*.ts",
+        "./**/*.ts",
+        "../typings/**/*.d.ts"
+    ]
+}
