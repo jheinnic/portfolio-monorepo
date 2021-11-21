@@ -1,16 +1,21 @@
 {
     "extends": "../../../tsconfig.json",
     "compilerOptions": {
-        "outDir": "../build"
+        "outDir": "../build",
+        "baseUrl": ".",
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "paths": {
+            "@jchptf/nestjs": ["../../nestjs/src"],
+            "@jchptf/reflection": ["../../reflection/src"],
+            "@jchptf/isaac": ["../src"]
+        }
     },
-    "include": [
-        "./**/*.ts",
-        "../src/**/*.ts",
-        "../typings/**/*.d.ts"
+    "references": [
+        { "path": "../../nestjs/src" },
+        { "path": "../../reflection/src" },
+        { "path": "../src" }
     ],
-    "exclude": [
-        "../dist",
-        "../build",
-        "../node_modules"
-    ]
+    "include": [ "./**/*.ts", "../typings/**/*.d.ts" ]
 }

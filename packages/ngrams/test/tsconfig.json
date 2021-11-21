@@ -9,14 +9,14 @@
         "declarationMap": true,
         "paths": {
             "@jchptf/api": ["../../api/src"],
-            "@jchptf/coroutines": ["../../coroutines/src"],
+            "@jchptf/nestjs": ["../../nestjs/src"],
             "@jchptf/ngrams": ["../src"]
         }
     },
     "references": [
         { "path": "../src" },
         { "path": "../../api/src" },
-        { "path": "../../coroutines/src" }
+        { "path": "../../nestjs/src" }
     ],
     "include": [ "./**/*.ts" ]
 }

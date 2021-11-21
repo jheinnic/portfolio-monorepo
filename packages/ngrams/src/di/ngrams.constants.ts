@@ -1,7 +1,7 @@
 import { NgramAlphabetMapper, TrigramAlphabetMapper } from '../components';
 import { blessLocalProviderToken, LocalProviderToken, MODULE_ID } from '@jchptf/nestjs';
 
-export const NGRAM_MODULE = Symbol('@jchptf/trigrams');
+export const NGRAM_MODULE = Symbol('@jchptf/ngrams');
 export type NGRAM_MODULE = typeof NGRAM_MODULE;
 
 export const TRIGRAM_ALPHABET_MAPPER = 'TrigramAlphabetMapper';
