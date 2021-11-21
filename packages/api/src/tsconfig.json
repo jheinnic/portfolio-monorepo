@@ -8,13 +8,11 @@
         "declarationMap": true,
         "paths": {
             "@jchptf/api": ["."],
-            "@jchptf/mixins": ["../../mixins/src"],
             "@jchptf/objecttypes": ["../../objecttypes/src"],
             "@jchptf/reflection": ["../../reflection/src"]
         }
     },
     "references": [
-        { "path": "../../mixins/src" },
         { "path": "../../objecttypes/src" },
         { "path": "../../reflection/src" }
     ],
