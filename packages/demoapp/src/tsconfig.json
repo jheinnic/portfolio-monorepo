@@ -12,14 +12,12 @@
             "@jchptf/consul": ["../../consul/src"],
             "@jchptf/coroutines": ["../../coroutines/src"],
             "@jchptf/demoapp": ["."],
+            "@jchptf/isaac": ["../../isaac/src"],
             "@jchptf/merkle": ["../../merkle/src"],
-            "@jchptf/mixins": ["../../mixins/src"],
             "@jchptf/nestjs": ["../../nestjs/src"],
-            "@jchptf/objecttypes": ["../../objecttypes/src"],
             "@jchptf/randomart": ["../../randomart/src"],
             "@jchptf/reflection": ["../../reflection/src"],
             "@jchptf/semaphore": ["../../semaphore/src"],
-            "@jchptf/tupletypes": ["../../tupletypes/src"],
             "@jchptf/txtypes": ["../../txtypes/src"]
         }
     },
@@ -28,14 +26,12 @@
         { "path": "../../config/src" },
         { "path": "../../consul/src" },
         { "path": "../../coroutines/src" },
+        { "path": "../../isaac/src" },
         { "path": "../../merkle/src" },
-        { "path": "../../mixins/src" },
         { "path": "../../nestjs/src" },
-        { "path": "../../objecttypes/src" },
         { "path": "../../randomart/src" },
         { "path": "../../reflection/src" },
         { "path": "../../semaphore/src" },
-        { "path": "../../tupletypes/src" },
         { "path": "../../txtypes/src" }
     ],
     "include": [
