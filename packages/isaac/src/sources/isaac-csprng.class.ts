@@ -14,7 +14,7 @@ https://github.com/rubycon/isaac.js
 ///////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 // import { randombytes } from 'randombytes';
-// import {* as crypto} from 'crypto';
+import * as crypto from 'crypto';
 
 export class IsaacCSPRNG
 {
@@ -38,8 +38,8 @@ export class IsaacCSPRNG
       /* initial random seed */
       let internalSeed: number[]|string|number;
       if (! userSeed) {
-         const uInt_a: Uint32Array = crypto.getRandomValues(new Uint32Array(2));
-         internalSeed = [uInt_a[0], uInt_a[1]];
+         const uInt_a: Buffer = crypto.randomBytes(8)
+         internalSeed = [uInt_a.readUInt32LE(0), uInt_a.readUInt32LE(1)];
       } else {
          internalSeed = userSeed;
       }
@@ -97,9 +97,9 @@ export class IsaacCSPRNG
    {
       if (typeof n === 'string') {
          return false;
-      } 
-         return Math.ceil(n) === n;
-      
+      } else {
+         return Math.floor(n) === Math.ceil(n);
+      }
    }
 
    /* private: convert string to integer array */
@@ -157,16 +157,16 @@ export class IsaacCSPRNG
          /* _add integer (four utf-8 value) to array */
          if (r4.length > 3) {
             // little endian
-            const r4a: number|undefined = r4.shift();
-            const r4b: number|undefined = r4.shift();
-            const r4c: number|undefined = r4.shift();
-            const r4d: number|undefined = r4.shift();
+            const r4a: number = r4.shift() || 0;
+            const r4b: number = r4.shift() || 0;
+            const r4c: number = r4.shift() || 0;
+            const r4d: number = r4.shift() || 0;
 
             r.push(
-               (!!r4a ? r4a << 0 : 0) |
-               (!!r4b ? r4b << 8 : 0) |
-               (!!r4c ? r4c << 16 : 0) |
-               (!!r4d ? r4d << 24 : 0),
+               (!!r4a ? (r4a << 0) : 0) |
+               (!!r4b ? (r4b << 8) : 0) |
+               (!!r4c ? (r4c << 16) : 0) |
+               (!!r4d ? (r4d << 24) : 0),
             );
          }
       }

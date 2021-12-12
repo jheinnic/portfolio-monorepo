@@ -1,7 +1,7 @@
 /// <reference path="../../../../typings/hash.js"
 /// <reference path="./hmac-drbg.d.ts">
 // @ts-ignore
-import { HmacDrbgOptions, HmacDrbg } from 'hmac-drbg';
+import { HmacDrbgOptions, HmacDrbg } from 'sources/hmac-drbg';
 
 // import { BlockHash, MessageDigest } from 'hash.js';
 import { IPseudoRandomSource } from '../interface';
@@ -18,7 +18,7 @@ export class HmacDrbgPseudoRandomSource<T extends (BlockHash<T> & MessageDigest<
       // @inject(RANDOMIZE_TYPES.SeedBytes) @tagged(
       //    RANDOMIZE_TAGS.PRNGAlgorithm, PRNG_ALGORITHM_KINDS['HMAC-DRBG']) seedBytes:
       // HmacDrbgOptions<T>
-      seedBytes: HmacDrbgOptions<T>,
+      seedBytes: HmacDrbgOptions,
    )
    {
       this.hmacDrbg = new HmacDrbg(seedBytes);

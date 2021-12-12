@@ -1,4 +1,4 @@
-declare module 'hmac-drbg';
+declare module 'sources/hmac-drbg';
 
 export interface HmacDrbgOptions {
 

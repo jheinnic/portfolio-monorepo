@@ -2,7 +2,7 @@ import { DynamicModuleConfigTwo, IBaseConfigProps, IModule } from '@jchptf/nestj
 
 import {
    IsaacModuleType, IsaacModuleId, ISAAC_SEED_BUFFER, ISAAC_GENERATOR,
-} from './isaac.constants';
+} from './di/isaac.constants';
 
 export type IsaacGeneratorFeatureOptions<Consumer extends IModule> =
    DynamicModuleConfigTwo<

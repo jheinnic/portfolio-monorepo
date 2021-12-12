@@ -3,7 +3,7 @@ import { map, observeOn, withLatestFrom } from 'rxjs/operators';
 import { BitInputStream, BitOutputStream } from '@thi.ng/bitstream';
 
 // import { PseudoRandomSource } from '../randomize/interface/pseudo-random-source.interface';
-import { IsaacCSPRNG } from '../randomize/sources/isaac-csprng.class';
+import { IsaacCSPRNG } from '../sources/isaac-csprng.class';
 
 // interface ByteGeneratorState {
 //    readonly generator: IsaacCSPRNG,
@@ -31,9 +31,12 @@ export class IsaacRxjsService
                   map<Buffer, IsaacCSPRNG>(
                      // Transform each seed Buffer into an ISAAC PRNG.
                      function (seedBytes: Buffer): IsaacCSPRNG {
-                        const wordCount: number = (seedBytes.length - seedBytes.length % 4) / 4;
                         const writeBuf: BitOutputStream = new BitOutputStream();
                         writeBuf.writeWords(seedBytes, 8);
+                        writeBuf.writeBit(0);
+                        writeBuf.writeBit(0);
+                        writeBuf.writeBit(0);
+                        const wordCount: number = (seedBytes.length + 3) / 4;
                         const readBuf: BitInputStream = writeBuf.reader();
                         const words: number[] = readBuf.readWords(wordCount, 32);
                         return new IsaacCSPRNG(words);

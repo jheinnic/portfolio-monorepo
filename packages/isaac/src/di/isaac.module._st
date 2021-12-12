@@ -1,12 +1,12 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { buildDynamicModule, IDynamicModuleBuilder, IModule } from '@jchptf/nestjs';
 
-import { ISAAC_GENERATOR_FACTORY_PROVIDER } from './isaac-generator-factory.provider';
+import { ISAAC_GENERATOR_FACTORY_PROVIDER } from '../isaac-generator-factory.provider';
 import {
    ISAAC_GENERATOR, ISAAC_GENERATOR_PROVIDER_TOKEN, ISAAC_SEED_BUFFER,
    IsaacModuleId, IsaacModuleType,
 } from './isaac.constants';
-import { IsaacGeneratorFeatureOptions } from './isaac-generator-feature-options.type';
+import { IsaacGeneratorFeatureOptions } from '../isaac-generator-feature-options.type';
 
 @Module({
    imports: [],

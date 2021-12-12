@@ -5,10 +5,10 @@ import Unbind = interfaces.Unbind;
 import Rebind = interfaces.Rebind;
 import IsBound = interfaces.IsBound;
 
-import { diModule, ModuleRegistry } from '../../../attic/toys/fail01/di';
-import { AbstractDIModule } from '../../../attic/toys/fail01/di/abstract-di-module.class';
-import '../../../infrastructure/reflection/index';
-import { diTemplate } from '../../../attic/toys/fail01/di/decorators/di-template.decorator';
+// import { diModule, ModuleRegistry } from '../../../attic/toys/fail01/di';
+// import { AbstractDIModule } from '../../../attic/toys/fail01/di/abstract-di-module.class';
+// import '../../../infrastructure/reflection/index';
+// import { diTemplate } from '../../../attic/toys/fail01/di/decorators/di-template.decorator';
 
 const program = new Command();
 
