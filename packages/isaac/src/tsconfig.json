@@ -7,12 +7,14 @@
         "declaration": true,
         "declarationMap": true,
         "paths": {
+            "@jchptf/api": [ "../../api/src" ],
             "@jchptf/isaac": [ "." ],
             "@jchptf/nestjs": [ "../../nestjs/src" ],
             "@jchptf/reflection": [ "../../reflection/src" ]
         }
     },
     "references": [
+        { "path": "../../api/src" },
         { "path": "../../nestjs/src" },
         { "path": "../../reflection/src" }
     ],

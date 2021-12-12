@@ -1,10 +1,10 @@
 import { SymbolEnum } from '@jchptf/api';
 
-type RecordListTags = 'PRNGAlgorithm' | 'EntropyOrigin';
+type RecordListTags = 'PRNGAlgorithm' | 'EntropySource';
 
 export const RANDOMIZE_TAGS: SymbolEnum<RecordListTags> = {
-   PRNGAlgorithm: Symbol.for('BackingStorage'),
-   EntropyOrigin: Symbol.for('RecordSetCurator'),
+   PRNGAlgorithm: Symbol.for('PRNGAlgorithm'),
+   EntropySource: Symbol.for('EntropySource'),
 };
 
 type AlgorithmKinds = 'ISAAC' | 'HMAC-DRBG' | 'NodeCrypto';
