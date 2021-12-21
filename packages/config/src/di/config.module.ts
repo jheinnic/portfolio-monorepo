@@ -124,7 +124,7 @@ export class ConfigModule
    }
 }
 
-const STANDARD_PROVIDERS: IBoundDynamicModuleImport<, ConfigModule, any>[] = [
+const STANDARD_PROVIDERS: IBoundDynamicModuleImport<ConfigModule, any>[] = [
    {
       style: DynamicProviderBindingStyle.VALUE,
       provide: CONFIG_METADATA_HELPER,
