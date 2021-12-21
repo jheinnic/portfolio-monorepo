@@ -2,7 +2,8 @@ import { Module } from '@nestjs/common';
 import { REGISTRY } from '@jchptf/nestjs';
 
 export class MyModuleRegistry {
-   public static readonly [REGISTRY] = MyModuleRegistry;
+   static readonly [REGISTRY] = MyModuleRegistry;
+   readonly [REGISTRY] = MyModuleRegistry;
 }
 
 @Module({
@@ -11,5 +12,5 @@ export class MyModuleRegistry {
 })
 export class MyModule
 {
-   public static readonly [REGISTRY] =  MyModuleRegistry;
+   readonly [REGISTRY]: () => MyModuleRegistry;
 }

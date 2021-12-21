@@ -4,8 +4,9 @@ import {A_STRING_TOKEN, B_SYMBOL_TOKEN, A_SUBJECT, B_SUBJECT} from "./names.cons
 
 export class OneModuleRegistry {
    [REGISTRY] = OneModuleRegistry;
+   static [REGISTRY] = OneModuleRegistry;
    [A_STRING_TOKEN] = A_SUBJECT;
-   [B_SYMBOL_TOKEN] = B_SUBJECT;
+   static [B_SYMBOL_TOKEN] = B_SUBJECT;
 }
 
 @Module({
@@ -22,5 +23,5 @@ export class OneModuleRegistry {
 })
 export class OneModule
 {
-   [REGISTRY] = OneModuleRegistry;
+   [REGISTRY]: () => OneModuleRegistry;
 }

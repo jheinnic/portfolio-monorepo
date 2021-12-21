@@ -1,8 +1,27 @@
 // import chai from 'chai';
 import { assert, HasType, IsExactType, IsNeverType, NotHasType } from 'conditional-type-checks';
 
-import { BindableProviderTokens, IModule, InjectableProviderTokens, IsIModule } from '@jchptf/nestjs';
-import { A_SYMBOL, B_SYMBOL, Class, ISomething, MyModule } from './fixtures';
+import {
+   IModule,
+   IModuleRegistry,
+   ITokenProviding,
+   ITokenRequiring,
+   IToken,
+   ITokenType,
+   IRegistryOf
+} from '@jchptf/nestjs';
+import {
+   A_STRING_TOKEN,
+   A_SYMBOL_TOKEN,
+   B_SUBJECT,
+   B_SYMBOL_TOKEN,
+   Class,
+   ISomething,
+   MyModule,
+   MyModuleRegistry,
+   OneModule,
+   OneModuleRegistry
+} from './fixtures';
 
 // chai.use(sinonChai);
 // const expect = chai.expect;
@@ -33,47 +52,48 @@ describe('ModuleTypes', () => {
    });
 
    it('Discriminates module classes by structure without explicit subclassing', () => {
-      assert<IsExactType<IsIModule<MyModule>, MyModule>>(true);
-      assert<IsExactType<IsIModule<Class>, never>>(true);
-      assert<HasType<IsIModule<MyModule>, MyModule>>(true);
-      assert<HasType<MyModule, IModule>>(true);
-      assert<IsExactType<IsIModule<Class>, never>>(true);
-      assert<NotHasType<Class, IModule>>(true);
+      assert<IsExactType<MyModule, MyModule>>(true);
+      assert<HasType<Class, IModule<any>>>(false);
+      assert<HasType<MyModule, IModule<MyModuleRegistry>>>(true);
+      assert<HasType<MyModule, IModule<OneModuleRegistry>>>(false);
+      assert<HasType<MyModule, IModuleRegistry>>(false);
+      assert<HasType<MyModuleRegistry, IModuleRegistry>>(true);
+      assert<NotHasType<Class, IModule<any>>>(true);
    });
 
    it('Contributes ProviderTokens', () => {
-      assert<HasType<
-        typeof A_SYMBOL,
-        BindableProviderTokens<MyModule, Class>
-      >>(true);
-      assert<IsNeverType<
-        BindableProviderTokens<MyModule, ISomething>
-      >>(true);
-      assert<HasType<
-        BindableProviderTokens<MyModule, Class>,
-        typeof A_SYMBOL
-      >>(true);
-      assert<HasType<
-        BindableProviderTokens<MyModule, Class>, BindableProviderTokens<MyModule>
-      >>(true);
-      assert<HasType<
-        InjectableProviderTokens<Class, MyModule>,
-        typeof A_SYMBOL
-      >>(true);
-      assert<HasType<
-        typeof A_SYMBOL,
-        InjectableProviderTokens<Class, MyModule>
-      >>(true);
-      assert<HasType<
-        InjectableProviderTokens<Class, MyModule>,
-        BindableProviderTokens<MyModule, Class>
-      >>(false);
-      assert<HasType<
-        BindableProviderTokens<MyModule, Class>,
-        InjectableProviderTokens<Class, MyModule>
-      >>(true);
+      assert<IsExactType<IRegistryOf<OneModule>, OneModuleRegistry>>(true);
+      assert<HasType<IToken<OneModule>, typeof A_STRING_TOKEN>>(true);
+      // assert<IsNeverType<
+      //   BindableProviderTokens<MyModule, ISomething>
+      // >>(true);
+      // assert<HasType<
+      //   BindableProviderTokens<MyModule, Class>,
+      //   typeof A_SYMBOL
+      // >>(true);
+      // assert<HasType<
+      //   BindableProviderTokens<MyModule, Class>, BindableProviderTokens<MyModule>
+      // >>(true);
+      // assert<HasType<
+      //   InjectableProviderTokens<Class, MyModule>,
+      //   typeof A_SYMBOL
+      // >>(true);
+      // assert<HasType<
+      //   typeof A_SYMBOL,
+      //   InjectableProviderTokens<Class, MyModule>
+      // >>(true);
+      // assert<HasType<
+      //   InjectableProviderTokens<Class, MyModule>,
+      //   BindableProviderTokens<MyModule, Class>
+      // >>(false);
+      // assert<HasType<
+      //   BindableProviderTokens<MyModule, Class>,
+      //   InjectableProviderTokens<Class, MyModule>
+      // >>(true);
    });
 });
 
-const foo: BindableProviderTokens<MyModule, ISomething> = typeof B_SYMBOL;
+const foo: ITokenProviding<OneModule, typeof B_SUBJECT> = B_SYMBOL_TOKEN;
+const goo: ITokenRequiring<OneModule, typeof B_SUBJECT> = B_SYMBOL_TOKEN;
+const hoo: IToken<OneModule> = B_SYMBOL_TOKEN;
 console.log(foo);

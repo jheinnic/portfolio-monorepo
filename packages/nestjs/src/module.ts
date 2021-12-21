@@ -12,11 +12,11 @@ export interface IModuleRegistry {
 }
 
 export interface IModule<M extends IModuleRegistry> {
-   readonly [REGISTRY]: M;
+   readonly [REGISTRY]: () => M;
 }
 
-export type IHasRegistry<R extends IModuleRegistry = IModuleRegistry> = R | IModule<R>;
-export type IRegistryOf<M extends IHasRegistry<any>> = M extends IModule<infer R> ? R : M;
+export type IHasRegistry = IModuleRegistry | IModule<any>;
+export type IRegistryOf<M extends IHasRegistry> = M extends IModule<infer R> ? R : M;
 
 export type IToken<M extends IHasRegistry> = Exclude<keyof IRegistryOf<M>, string|number>;
 export type ITokenType<M extends IHasRegistry, T extends IToken<M>> = IRegistryOf<M>[T];

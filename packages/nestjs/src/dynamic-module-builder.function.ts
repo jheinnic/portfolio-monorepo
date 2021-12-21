@@ -77,11 +77,14 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
          'provideExisting',
          <Component>
          (
-           provide: ITokenProviding<Supplier, Component>,
-           existing: ITokenProviding<UnionizeTuple<Origins>, Component>) =>
+           _provide: ITokenRequiring<Supplier, Component>,
+           _existing: ITokenProviding<UnionizeTuple<Insert<Origins, 0, Consumer>>, Component>
+         ) =>
            (ctx: DynamicModule): DynamicModule =>
            {
-              return provideExisting(ctx, provide, existing);
+               // return provideExisting(ctx, provide, existing);
+               // TODO: Fix the third argument in this important function call above!
+               return ctx
            },
        // ).chain(
        //     'selectFromConsumer',
@@ -461,11 +464,12 @@ function applyFactoryFromConsumer<Component,
 //    return BuilderUtilityFacade.appendSupplierImportProvider(ctx, newProvider);
 // }
 
+// @ts-ignore
 function provideExisting<
   Component, Supplier extends IModule<IModuleRegistry>, Origin extends IModule<IModuleRegistry>
 >(
   ctx: DynamicModule,
-  provide: ITokenProviding<Supplier, Component>,
+  provide: ITokenRequiring<Supplier, Component>,
   useExisting: ITokenProviding<Origin, Component>)
 {
    const newProvider: Provider = {
@@ -473,7 +477,7 @@ function provideExisting<
       useExisting,
    };
 
-   return BuilderUtilityFacade.appendSupplierImportProvider(ctx, newProvider);
+   return BuilderUtilityFacade.appendConsumerImportProvider(ctx, newProvider);
 }
 
 // function provideWithFactoryClass<Component, Supplier extends IModule<IModuleRegistry>>(
