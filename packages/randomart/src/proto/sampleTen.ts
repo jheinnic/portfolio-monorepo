@@ -34,7 +34,8 @@ let ii = 0;
 let word;
 // const names = ["Thandowasrelhen", "ganwitatinowsai", "Herminstewiting", "tobterprocenthi", "Sinmetandtininc",
 //     "plaeprtheresren", "Wilsinainaliver", "ionworblesanwhe", "Ontonsontlarthi", "hemoftosecalnto"];
-const names = ["econight", "lectseor", "alarirec", "compinan", "putiecti", "guitears", "nandergo", "lyhevilo", "ineulpro", "thoungin"];
+// const names = ["econight", "lectseor", "alarirec", "compinan", "putiecti", "guitears", "nandergo", "lyhevilo", "ineulpro", "thoungin"];
+const names = ["pepsicola", "outdoor", "zippy", "csd-dl-", "rofly"];
 for(word of names) {
     const len = word.length;
     const term = new Uint8ClampedArray(len);
@@ -53,10 +54,10 @@ const canvasCalculator: ICanvasCalculator = new CanvasCalculator();
 async function main()
 {
     console.log('MAIN');
-    const width = 480;
-    const height = 480;
+    const width = 500;
+    const height = 50;
     const myDimensions: CanvasDimensions = { pixelHeight: height, pixelWidth: width };
-    const myRenderScale: RenderScale = { unitScale: 1, pixelSize: 1, fitOrFill: 'square' };
+    const myRenderScale: RenderScale = { unitScale: 1, pixelSize: 1, fitOrFill: 'fit' };
     let idx = 0;
     const termCount = terms.length;
     const pairCount = termCount * termCount;
