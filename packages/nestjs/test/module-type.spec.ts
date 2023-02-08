@@ -1,22 +1,22 @@
 // import chai from 'chai';
-import { assert, HasType, IsExactType, IsNeverType, NotHasType } from 'conditional-type-checks';
+import { assert, HasType, IsExactType, NotHasType } from 'conditional-type-checks';
 
 import {
    IModule,
    IModuleRegistry,
    ITokenProviding,
-   ITokenRequiring,
+   ITokenConsuming,
    IToken,
    ITokenType,
    IRegistryOf
 } from '@jchptf/nestjs';
 import {
    A_STRING_TOKEN,
-   A_SYMBOL_TOKEN,
+   // A_SYMBOL_TOKEN,
    B_SUBJECT,
    B_SYMBOL_TOKEN,
    Class,
-   ISomething,
+   // ISomething,
    MyModule,
    MyModuleRegistry,
    OneModule,
@@ -94,6 +94,6 @@ describe('ModuleTypes', () => {
 });
 
 const foo: ITokenProviding<OneModule, typeof B_SUBJECT> = B_SYMBOL_TOKEN;
-const goo: ITokenRequiring<OneModule, typeof B_SUBJECT> = B_SYMBOL_TOKEN;
+const goo: ITokenConsuming<OneModule, typeof B_SUBJECT> = B_SYMBOL_TOKEN;
 const hoo: IToken<OneModule> = B_SYMBOL_TOKEN;
 console.log(foo);

@@ -4,7 +4,15 @@ import { Builder, Ctor } from 'fluent-interface-builder';
 import { IFactoryMethod } from '@jchptf/api';
 
 import {
-    IHasRegistry, IModule, IModuleRegistry, IModuleTupleTypes, ITokenProviding, ITokenRequiring,
+    IHasRegistry,
+    IModule,
+    IModuleRegistry,
+    IHaveRegistries,
+    ITokenProviding,
+    ITokenConsuming,
+    ITokenType,
+    IToken,
+    ITokenProvidingToken,
 } from './module';
 import { ArgsAsInjectableKeys } from './injectable-key';
 import { IDynamicModuleBuilder } from './dynamic-module-builder.interface';
@@ -17,35 +25,33 @@ import {Insert} from "@jchptf/tupletypes";
  * easy access after a consumer has finished configuring their module.
  */
 export interface IDynamicModuleBuilderImpl<
-  Supplier extends IModule<IModuleRegistry>,
-  Origins extends IHasRegistry[],
-  Consumer extends IModule<IModuleRegistry>
+  Supplier extends IModule<never>, Imported extends IHaveRegistries, Origin extends IModule<never>
 >
-  extends IDynamicModuleBuilder<Supplier, Origins, Consumer>
+  extends IDynamicModuleBuilder<Supplier, Imported, Origin>
 {
    value: DynamicModule;
 
    build(): DynamicModule;
 }
 
-export function getBuilder<Supplier extends IModule<IModuleRegistry>,
-  Origins extends IHasRegistry[],
-  Consumer extends IModule<IModuleRegistry>>(
-  supplier: Type<Supplier>, consumer: Type<Consumer>, origins: IModuleTupleTypes<Origins>
-): IDynamicModuleBuilderImpl<Supplier, Origins, Consumer>
+export function getBuilder<
+    Supplier extends IModule<never>, Imported extends IHaveRegistries, Origin extends IModule<never>
+>(
+  supplier: Supplier, consumer: Origin, origins: Imported
+): IDynamicModuleBuilderImpl<Supplier, Imported, Origin>
 {
-    const new_origins: Type<IHasRegistry>[] = [consumer];
+    const new_origins: IHaveRegistries = [consumer];
     let index = 0;
     while (index < origins.length) {
         new_origins.push(origins[index]);
         index = index + 1;
     }
-   const BUILDER_CTOR: Ctor<DynamicModule, IDynamicModuleBuilderImpl<Supplier, Origins, Consumer>> =
-     new Builder<DynamicModule, IDynamicModuleBuilderImpl<Supplier, Origins, Consumer>>()
+   const BUILDER_CTOR: Ctor<DynamicModule, IDynamicModuleBuilderImpl<Supplier, Imported, Origin>> =
+     new Builder<DynamicModule, IDynamicModuleBuilderImpl<Supplier, Imported, Origin>>()
        .chain(
          'provideValue',
-         <Component>
-         (provide: ITokenProviding<Supplier, Component>, useValue: Component) =>
+         <Component, Provided extends ITokenConsuming<Origin, Component>>
+         (provide: Provided, useValue: Component) =>
            (ctx: DynamicModule): DynamicModule =>
            {
               return provideValue<Component, Supplier>(ctx, provide, useValue);
@@ -77,8 +83,8 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
          'provideExisting',
          <Component>
          (
-           _provide: ITokenRequiring<Supplier, Component>,
-           _existing: ITokenProviding<UnionizeTuple<Insert<Origins, 0, Consumer>>, Component>
+           _provide: ITokenProviding<Supplier, Component>,
+           _existing: ITokenProviding<UnionizeTuple<Insert<Imported, 0, Origin>>, Component>
          ) =>
            (ctx: DynamicModule): DynamicModule =>
            {
@@ -87,20 +93,20 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
                return ctx
            },
        // ).chain(
-       //     'selectFromConsumer',
+       //     'selectFromOrigin',
        //     <Component>
        //     (
        //       provide: ITokenProviding<Supplier, Component>,
-       //       useExisting: ITokenProviding<Consumer, Component>,
+       //       useExisting: ITokenProviding<Origin, Component>,
        //     ) =>
        //       (ctx: DynamicModule): DynamicModule =>
        //       {
-       //          return selectFromConsumer(ctx, provide, useExisting);
+       //          return selectFromOrigin(ctx, provide, useExisting);
        //       },
        //   )
        //   .chain(
        //   'selectFromOther',
-       //   <Component, Source extends IModule<IModuleRegistry>>
+       //   <Component, Source extends IHasRegistry>
        //   (
        //     provide: ITokenProviding<Supplier, Component>,
        //     useExisting: ITokenProviding<Source, Component>,
@@ -112,12 +118,12 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
        //     },
        )
        .chain(
-         'applyFactoryFromConsumer',
+         'applyFactoryFromOrigin',
            <Component, Factory extends IFactoryMethod<Component, any[]>>
            (provide: ITokenProviding<Supplier, Component>, useFactory: Factory,
-            inject: ArgsAsInjectableKeys<Factory, Insert<Origins, 0, Consumer>>) =>
+            inject: ArgsAsInjectableKeys<Factory, Insert<Imported, 0, Origin>>) =>
                (ctx: DynamicModule): DynamicModule => {
-                   return applyFactoryFromConsumer<Component, Supplier, Consumer, Origins, Factory>(
+                   return applyFactoryFromOrigin<Component, Supplier, Origin, Imported, Factory>(
                        ctx, provide, useFactory, inject);
                },
        )
@@ -135,22 +141,22 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
        //   'provideByFactoryCall',
        // )
        // .chain(
-       //   'callConsumerFactoryMethod',
-       //   <Component, Supplier extends IModule<IModuleRegistry>,
+       //   'callOriginFactoryMethod',
+       //   <Component, Supplier extends IHasRegistry,
        //     Factory extends IFactoryMethod<Component, any>>
        //   (
        //     provide: ITokenProviding<Supplier, Component>,
-       //     useFactory: Factory, inject: ArgsAsInjectableKeys<Factory, Consumer>,
+       //     useFactory: Factory, inject: ArgsAsInjectableKeys<Factory, Origin>,
        //   ) =>
        //     (ctx: DynamicModule): DynamicModule =>
        //     {
-       //        return callConsumerFactoryMethod(ctx, provide, useFactory, inject);
+       //        return callOriginFactoryMethod(ctx, provide, useFactory, inject);
        //     },
        // )
        // .chain(
        //   'callImportableFactoryMethod',
-       //   <Component, Supplier extends IModule<IModuleRegistry>,
-       //     Source extends IModule<IModuleRegistry>,
+       //   <Component, Supplier extends IHasRegistry,
+       //     Source extends IHasRegistry,
        //     Factory extends IFactoryMethod<Component, any>>
        //   (
        //     provide: ITokenProviding<Supplier, Component>, fromSource: Type<Source>,
@@ -164,7 +170,7 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
        ).chain(
          'exportFromSupplier',
          <Component> (
-           provide: ITokenRequiring<Consumer, Component>,
+           provide: ITokenProviding<Origin, Component>,
            existing: ITokenProviding<Supplier, Component>,
          ) =>
            (ctx: DynamicModule): DynamicModule =>
@@ -173,7 +179,7 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
            },
        )
        .chain('bindProvider', (
-         provider: Exclude<Provider, Type<any>>,
+         provider: IToken<never>,
          andExport: boolean,
          ) => (ctx: DynamicModule): DynamicModule => {
             return {
@@ -185,7 +191,7 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
             };
          },
        )
-       .chain(
+.chain(
          'import',
          (
            source: Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference,
@@ -238,7 +244,7 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
        // .chain(
        //   'addImportFromConfig',
        //   <Token extends IToken<Supplier>>
-       //   (importKey: Token, importItem: IBoundDynamicModuleImport<Supplier, Token, Origins>,
+       //   (importKey: Token, importItem: IBoundDynamicModuleImport<Supplier, Token, Imported>,
        //    andExport: boolean = false) =>
        //     (ctx: DynamicModule): DynamicModule => {
        //        let retVal: DynamicModule;
@@ -272,7 +278,7 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
            //       }
            //      // case DynamicProviderBindingStyle.CONSUMER_PROVIDED_FACTORY:
            //      // {
-           //      //    retVal = applyFactoryFromConsumer(ctx, param.provide, param.useExisting);
+           //      //    retVal = applyFactoryFromOrigin(ctx, param.provide, param.useExisting);
            //      //    break;
            //      // }
            //      // case DynamicProviderBindingStyle.SUPPLIER_PROVIDED:
@@ -339,7 +345,7 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
    return new BUILDER_CTOR(
       {
          module: supplier,
-         imports: [...new_origins],
+         imports: new_origins.map( (x) => IModule<never>),
          controllers: [],
          providers: [],
          exports: [],
@@ -348,8 +354,8 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
 }
 
 // function callImportableFactoryMethod<Component,
-//   Supplier extends IModule<IModuleRegistry>,
-//   Source extends IModule<IModuleRegistry>,
+//   Supplier extends IHasRegistry,
+//   Source extends IHasRegistry,
 //   Factory extends IFactoryMethod<Component, any>>(
 //   ctx: DynamicModule, provide: ITokenProviding<Supplier, Component>,
 //   fromSource: Type<Source>, useFactory: Factory,
@@ -366,14 +372,14 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
 //    );
 // }
 //
-// function callConsumerFactoryMethod<Component,
-//   Supplier extends IModule<IModuleRegistry>,
-//   Consumer extends IModule<IModuleRegistry>,
+// function callOriginFactoryMethod<Component,
+//   Supplier extends IHasRegistry,
+//   Origin extends IHasRegistry,
 //   Factory extends IFactoryMethod<Component, any>>(
 //   ctx: DynamicModule, provide: ITokenProviding<Supplier, Component>,
-//   useFactory: Factory, inject: ArgsAsInjectableKeys<Factory, Consumer>)
+//   useFactory: Factory, inject: ArgsAsInjectableKeys<Factory, Origin>)
 // {
-//    return BuilderUtilityFacade.appendConsumerImportProvider(
+//    return BuilderUtilityFacade.appendOriginImportProvider(
 //      ctx,
 //       {
 //          provide,
@@ -384,7 +390,7 @@ export function getBuilder<Supplier extends IModule<IModuleRegistry>,
 // }
 
 function provideByFactoryCall<Component,
-  Supplier extends IModule<IModuleRegistry>,
+  Supplier extends IModule<never>,
   Factory extends IFactoryMethod<Component, any[]>
 >(
   ctx: DynamicModule, provide: ITokenProviding<Supplier, Component>,
@@ -400,16 +406,16 @@ function provideByFactoryCall<Component,
    );
 }
 
-function applyFactoryFromConsumer<Component,
-  Supplier extends IModule<IModuleRegistry>,
-  Consumer extends IModule<IModuleRegistry>,
-  Origins extends [...IHasRegistry[]],
+function applyFactoryFromOrigin<Component,
+  Supplier extends IModule<never>,
+  Origin extends IModule<never>,
+  Imported extends IHaveRegistries,
   Factory extends IFactoryMethod<Component, any[]>
 >(
   ctx: DynamicModule,
   provide: ITokenProviding<Supplier, Component>,
   useFactory: Factory,
-  inject: ArgsAsInjectableKeys<Factory, Insert<Origins, 0, Consumer>>
+  inject: ArgsAsInjectableKeys<Factory, Insert<Imported, 0, Origin>>
 )
 {
    const newProvider: Provider = {
@@ -418,25 +424,25 @@ function applyFactoryFromConsumer<Component,
       inject
    };
 
-   return BuilderUtilityFacade.appendConsumerImportProvider(ctx, newProvider);
+   return BuilderUtilityFacade.appendOriginImportProvider(ctx, newProvider);
 }
 
-// function selectFromConsumer<Component, Supplier extends IModule<IModuleRegistry>,
-//   Consumer extends IModule<IModuleRegistry>>(
+// function selectFromOrigin<Component, Supplier extends IHasRegistry,
+//   Origin extends IHasRegistry>(
 //   ctx: DynamicModule,
 //   provide: ITokenProviding<Supplier, Component>,
-//   useExisting: ITokenProviding<Consumer, Component>)
+//   useExisting: ITokenProviding<Origin, Component>)
 // {
 //    const newProvider: Provider = {
 //       provide,
 //       useExisting,
 //    };
 //
-//    return BuilderUtilityFacade.appendConsumerImportProvider(ctx, newProvider);
+//    return BuilderUtilityFacade.appendOriginImportProvider(ctx, newProvider);
 // }
 //
-// function selectFromOther<Component, Supplier extends IModule<IModuleRegistry>,
-//   Source extends IModule<IModuleRegistry>>(
+// function selectFromOther<Component, Supplier extends IHasRegistry,
+//   Source extends IHasRegistry>(
 //   ctx: DynamicModule,
 //   provide: ITokenProviding<Supplier, Component>,
 //   fromModule: Type<Source>,
@@ -450,7 +456,7 @@ function applyFactoryFromConsumer<Component,
 //    return BuilderUtilityFacade.appendOtherImportProvider(ctx, fromModule, newProvider);
 // }
 
-// function applyFactoryFromSupplier<Component, Supplier extends IModule<IModuleRegistry>>(
+// function applyFactoryFromSupplier<Component, Supplier extends IHasRegistry>(
 //   ctx: DynamicModule,
 //   provide: ITokenProviding<Supplier, Component>,
 //   factoryToken: ITokenProviding<Supplier, IFactory<Component>>)
@@ -466,21 +472,21 @@ function applyFactoryFromConsumer<Component,
 
 // @ts-ignore
 function provideExisting<
-  Component, Supplier extends IModule<IModuleRegistry>, Origin extends IModule<IModuleRegistry>
+  Component, Supplier extends IModule<never>, Origin extends IModule<never>
 >(
   ctx: DynamicModule,
-  provide: ITokenRequiring<Supplier, Component>,
-  useExisting: ITokenProviding<Origin, Component>)
+  provide: ITokenConsuming<Origin, Component>,
+  useExisting: ITokenProviding<Supplier, Component>)
 {
    const newProvider: Provider = {
       provide,
       useExisting,
    };
 
-   return BuilderUtilityFacade.appendConsumerImportProvider(ctx, newProvider);
+   return BuilderUtilityFacade.appendOriginImportProvider(ctx, newProvider);
 }
 
-// function provideWithFactoryClass<Component, Supplier extends IModule<IModuleRegistry>>(
+// function provideWithFactoryClass<Component, Supplier extends IHasRegistry>(
 //   ctx: DynamicModule,
 //   provide: ITokenProviding<Supplier, Component>,
 //   provideFactory: ITokenProviding<Supplier, IFactoryObject<Component>>,
@@ -503,10 +509,8 @@ function provideExisting<
 //    return BuilderUtilityFacade.appendSupplierImportProvider(contextWithFactory, newProvider);
 // }
 
-function provideClass<Component, Supplier extends IModule<IModuleRegistry>>(
-  ctx: DynamicModule,
-  provide: ITokenProviding<Supplier, Component> | Type<Component>,
-  useClass: Type<Component>)
+function provideClass<Component, Supplier extends IHasRegistry>(
+  ctx: DynamicModule, provide: ITokenProviding<Supplier, Component> | Type<Component>, useClass: Type<Component>)
 {
    return BuilderUtilityFacade.appendSupplierImportProvider(
      ctx, {
@@ -515,10 +519,8 @@ function provideClass<Component, Supplier extends IModule<IModuleRegistry>>(
      });
 }
 
-function provideValue<Component, Supplier extends IModule<IModuleRegistry>>(
-  ctx: DynamicModule,
-  provide: ITokenProviding<Supplier, Component> | Type<Component>,
-  useValue: Component)
+function provideValue<Component, Supplier extends IHasRegistry>(
+  ctx: DynamicModule, provide: ITokenProviding<Supplier, Component> | Type<Component>, useValue: Component)
 {
    return BuilderUtilityFacade.appendSupplierImportProvider(
      ctx, {
@@ -535,12 +537,11 @@ function provideValue<Component, Supplier extends IModule<IModuleRegistry>>(
 //    readonly consumer: DynamicModule;
 // }
 
-function exportFromSupplier<Component,
-  Supplier extends IModule<IModuleRegistry>,
-  Consumer extends IModule<IModuleRegistry>>(
-  provide: ITokenRequiring<Consumer, Component>,
-  useExisting: ITokenProviding<Supplier, Component>,
-  ctx: DynamicModule)
+function exportFromSupplier<
+  Component, Supplier extends IModule<never>, Origin extends IModule<never>,
+    Existing extends ITokenProviding<Supplier, Component>,
+    Providing extends ITokenProviding<Origin, ITokenType<Existing>>
+>(provide: Providing, useExisting: Existing, ctx: DynamicModule)
 {
    const newProvider: Provider = {
       provide,
@@ -561,7 +562,7 @@ class BuilderUtilityFacade
       };
    }
 
-   static appendConsumerImportProvider(
+   static appendOriginImportProvider(
      ctx: DynamicModule, newProvider: Provider): DynamicModule
    {
       return {
@@ -571,7 +572,7 @@ class BuilderUtilityFacade
    }
 
    static appendOtherImportProvider(
-     ctx: DynamicModule, importSource: Type<IModule<IModuleRegistry>>, newProvider: Provider)
+     ctx: DynamicModule, importSource: Type<IModule<never>>, newProvider: Provider)
    {
       return {
          ...ctx,
@@ -580,8 +581,8 @@ class BuilderUtilityFacade
       };
    }
 
-   static appendSupplierExportProvider<Component, Consumer extends IModule<IModuleRegistry>>(
-     ctx: DynamicModule, newProvider: Provider, provide: ITokenRequiring<Consumer, Component>)
+   static appendSupplierExportProvider<Component, Origin extends IHasRegistry>(
+     ctx: DynamicModule, newProvider: Provider, provide: ITokenProviding<Origin, Component>)
    {
       return {
          ...ctx,

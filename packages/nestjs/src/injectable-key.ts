@@ -1,15 +1,14 @@
-import {Type} from '@nestjs/common';
-import {IHasRegistry, ITokenProviding} from './module';
+import {IHaveRegistries, ITokenProviding} from './module';
 import {UnionizeTuple} from "simplytyped";
 
-export type InjectableKey<Mod extends [...IHasRegistry[]], T> = UnionizeTuple<{
+export type InjectableKey<Mod extends IHaveRegistries, T> = UnionizeTuple<{
    [index in Exclude<keyof Mod, string | symbol>]: ITokenProviding<Mod[index], T> | T;
 } & {length: Mod['length']}>;
 
 
-export type InjectableArgs<Params extends any[], Mod extends [...IHasRegistry[]]> = {
+export type InjectableArgs<Params extends [...any[]], Mod extends IHaveRegistries> = {
    [index in keyof Params]: InjectableKey<Mod, Params[index]>
-} & {length: Mod['length']} & Array<symbol | Type<any>>;
+} & {length: Mod['length']}; // & [...ITokenProviding<Params[index]>)[]];
 
 /**
  * Unlike ProviderToken<T>, which is specific to this library's compile-time augmentation of
@@ -17,7 +16,7 @@ export type InjectableArgs<Params extends any[], Mod extends [...IHasRegistry[]]
  * one of this library's ProviderTokens, suitably bound to T, other NestJs-supported keys,
  * such as Class objects, for which this library provides no competing augmentation.
  */
-export type ArgsAsInjectableKeys<F extends (...args: any[]) => any, Mod extends [...IHasRegistry[]]> =
+export type ArgsAsInjectableKeys<F extends (...args: any[]) => any, Mod extends IHaveRegistries> =
     InjectableArgs<Parameters<F>, Mod>;
 
    // [index in Exclude<keyof Parameters<F>, string|symbol>]: (...args: [...InjectableArgs<Parameters<F>[index], Mod>[]]) => any
