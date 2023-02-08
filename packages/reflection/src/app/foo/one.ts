@@ -1,12 +1,17 @@
 /// <reference path="./root.d.ts">
+// import {Models} from './root';
+
 export module One {
     export const THING = Symbol("a");
+    export type THING = typeof THING;
 
     export const THING1 = Symbol("a");
+    export type THING1 = typeof THING1;
 }
 
-export namespace Models {
+declare namespace Models {
     export class Stuff {
-       public static [One.THING]: String;
+        public [One.THING]: String;
+        public [One.THING1]: number;
     }
 }

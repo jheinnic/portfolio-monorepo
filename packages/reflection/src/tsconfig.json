@@ -11,5 +11,8 @@
         }
     },
     "references": [ ],
-    "include": [ "./**/*.ts" ]
+    "include": [
+        "./**/*.ts",
+        "../typings/**/*.d.ts"
+    ]
 }

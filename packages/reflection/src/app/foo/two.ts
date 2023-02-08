@@ -1,5 +1,4 @@
-/// <reference path="./root.d.ts">
-namespace Two {
+export module Two {
     export const THING = Symbol("a");
     export type THING = typeof THING;
 
@@ -7,8 +6,8 @@ namespace Two {
     export type THING2 = typeof THING2;
 }
 
-namespace Models {
-    export interface Stuff {
+declare namespace Models {
+    export class Stuff {
         [Two.THING]: number;
         [Two.THING2]: String;
     }
