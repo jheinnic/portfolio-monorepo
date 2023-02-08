@@ -9,6 +9,7 @@
         "declarationMap": true,
         "paths": {
             "@jchptf/api": ["../../api/src"],
+            "@jchptf/isaac": ["../../isaac/src"],
             "@jchptf/nestjs": ["../../nestjs/src"],
             "@jchptf/ngrams": ["../src"]
         }
@@ -16,6 +17,7 @@
     "references": [
         { "path": "../src" },
         { "path": "../../api/src" },
+        { "path": "../../isaac/src" },
         { "path": "../../nestjs/src" }
     ],
     "include": [ "./**/*.ts" ]

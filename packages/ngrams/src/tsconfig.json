@@ -10,15 +10,16 @@
         "paths": {
             "@jchptf/api": ["../../api/src"],
             "@jchptf/nestjs": ["../../nestjs/src"],
-            "@jchptf/ngrams": ["."]
+            "@jchptf/ngrams": ["."],
+            "@jchptf/reflection": ["../../reflection/src"],
         }
     },
     "references": [
         { "path": "../../api/src" },
-        { "path": "../../nestjs/src" }
+        { "path": "../../nestjs/src" },
+        { "path": "../../reflection/src" },
     ],
     "include": [
-        "./*.ts",
         "./**/*.ts",
         "../typings/**/*.d.ts"
     ]

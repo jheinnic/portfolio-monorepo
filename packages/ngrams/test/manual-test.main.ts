@@ -1,11 +1,12 @@
-import {from} from "ix/asynciterable";
+import {AsyncIterableX, from} from "ix/asynciterable";
 import * as crypto from 'crypto';
 
-import {splitForFixedNgramCount} from "./split-for-fixed-ngram-count.function";
-import {NgramSeedMapFacade} from "./ngram-seed-map-facade.service";
+import {NgramSeedMapFacade} from "@jchptf/ngrams";
+import {splitForFixedNgramCount} from "@jchptf/ngrams";
 
 const byteSource: Buffer = crypto.randomBytes(2048);
-const splitSource = from(splitForFixedNgramCount(byteSource, 2));
+const splitIter: AsyncGenerator<AsyncIterableX<number>> = splitForFixedNgramCount(byteSource, 2);
+const splitSource: AsyncIterableX<AsyncIterableX<number>> = from<AsyncIterableX<number>>(splitIter);
 const facade = new NgramSeedMapFacade();
 const wordFeed = facade.quadgramHashRingMap(splitSource);
 

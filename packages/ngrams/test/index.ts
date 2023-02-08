@@ -1,13 +1,13 @@
 import * as chai from 'chai';
 import { randomBytes } from 'crypto';
-// import sinon, { SinonSandbox, SisunonSpy, SinonStub } from 'sinon';
+// import sinon, { SinonSandbox, SinonSpy, SinonStub } from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import { BitInputStream } from '@thi.ng/bitstream';
+// import { BitInputStream } from '@thi.ng/bitstream';
 
 import '@jchptf/reflection';
-import {ITx2} from '@jchptf/api';
-import {TrigramByteSeedStrategy} from '@jchptf/ngrams';
+import {splitForFixedNgramCount} from '@jchptf/ngrams';
+import {AsyncIterableX} from "ix/asynciterable";
 
 chai.use(sinonChai);
 // const expect: Chai.ChaiStatic = chai.expect;
@@ -18,10 +18,10 @@ chai.use(sinonChai);
 async function foo()
 {
     const source: Buffer = randomBytes(540);
-    const sut: ITx2<BitInputStream, Uint8Array, AsyncGenerator<Uint8Array>> = new TrigramByteSeedStrategy(3);
+    const sut: AsyncGenerator<AsyncIterableX<number>> = splitForFixedNgramCount(source, 3);
     let ii = 0;
-    let result: Uint8Array;
-    for await (result of sut.applyTx(source)) {
+    let result: AsyncIterableX<number>;
+    for await (result of sut) {
         console.log(result);
         ii = ii + 1;
     }

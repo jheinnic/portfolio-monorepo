@@ -1,4 +1,4 @@
-import {AsyncIterableX} from "ix/Ix.dom.asynciterable";
+import {AsyncIterableX} from "ix/asynciterable";
 
 export interface INgramSeedMapFacade {
     quadgramHashRingMap(source: AsyncIterableX<AsyncIterableX<number>>): AsyncIterableX<string>;

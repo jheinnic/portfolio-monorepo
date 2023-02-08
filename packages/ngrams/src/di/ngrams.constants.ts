@@ -1,26 +1,23 @@
-import { NgramAlphabetMapper, TrigramAlphabetMapper } from '../components';
-import { blessLocalProviderToken, LocalProviderToken, MODULE_ID } from '@jchptf/nestjs';
+import { NgramSeedMapFacade } from '../components';
+import { MODULE_ID } from '@jchptf/nestjs';
 
 export const NGRAM_MODULE = Symbol('@jchptf/ngrams');
 export type NGRAM_MODULE = typeof NGRAM_MODULE;
 
-export const TRIGRAM_ALPHABET_MAPPER = 'TrigramAlphabetMapper';
-export const NGRAM_ALPHABET_MAPPER = 'NGramAlphabetMapper';
+export const NGRAM_SEED_MAP_FACADE = Symbol('NGramSeedMapFacade');
 
 export class NGramModuleId {
    public static readonly [MODULE_ID] = NGRAM_MODULE;
 
-   [TRIGRAM_ALPHABET_MAPPER]: TrigramAlphabetMapper;
-   [NGRAM_ALPHABET_MAPPER]: NgramAlphabetMapper;
+   [NGRAM_SEED_MAP_FACADE]: NgramSeedMapFacade;
 }
 
 export type NGramModuleType = typeof NGramModuleId;
 
-function blessLocal<Token extends keyof NGramModuleId>(token: Token):
-   LocalProviderToken<NGramModuleId[Token], NGramModuleType, Token>
-{
-   return blessLocalProviderToken(token, NGramModuleId);
-}
-
-export const TRIGRAM_ALPHABET_MAPPER_PROVIDER_TOKEN = blessLocal(TRIGRAM_ALPHABET_MAPPER);
-export const NGRAM_ALPHABET_MAPPER_PROVIDER_TOKEN = blessLocal(NGRAM_ALPHABET_MAPPER);
+// function blessLocal<Token extends keyof NGramModuleId>(token: Token):
+//    LocalProviderToken<NGramModuleId[Token], NGramModuleType, Token>
+// {
+//    return blessLocalProviderToken(token, NGramModuleId);
+// }
+//
+// export const NGRAM_ALPHABET_MAPPER_PROVIDER_TOKEN = blessLocal(NGRAM_SEED_MAP_FACADE);

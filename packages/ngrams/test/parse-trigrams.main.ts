@@ -2,9 +2,9 @@ import * as fs from 'fs';
 const bs = require('binary-search');
 // @ts-ignore
 import { LineReader } from 'co-stream';
-import { co } from 'co';
+import { co } from 'co';  // ../../semaphore/typings/co';
 
-import { IsaacCSPRNG } from '../infrastructure/randomize';
+import { IsaacCSPRNG } from '@jchptf/isaac';
 
 const trigrams: string[] = [];
 const freqSum: number[] = [];
