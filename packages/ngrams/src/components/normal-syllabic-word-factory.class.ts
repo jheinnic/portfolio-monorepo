@@ -2,7 +2,7 @@ import { ISyncFactoryObject } from "@jchptf/api";
 import { Nullable } from 'simplytyped';
 import { Chance } from 'chance';
 
-export class NormalSyllabicWordFactoryClass implements ISyncFactoryObject<string> {
+export class NormalSyllabicWordFactory implements ISyncFactoryObject<string> {
     private ch: Chance.Chance;
 
     constructor(ch: Nullable<Chance.Chance>, private mean: number = 5.5, private dev: number = 1.5) {

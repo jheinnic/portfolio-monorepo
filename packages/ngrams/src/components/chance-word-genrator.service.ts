@@ -29,4 +29,9 @@ export class ChanceWordGenerator implements IWordGenerator
 
       return this.getWordOfLength(wordLen);
    }
+
+   public * getNWords(count: number): Generator<string>
+   {
+       throw new Error(count.toString())
+   }
 }

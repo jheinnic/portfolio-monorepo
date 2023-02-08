@@ -69,6 +69,7 @@
         "chance": "^1.1.7",
         "hashring": "^3.2.0",
         "ix": "^4.3.1",
+        "line-reader": "^0.4.0",
         "medium": "^1.1.1",
         "ndarray": "^1.0.19",
         "reflect-metadata": "^0.1.12",

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import {parseNgramDomainFile} from "./parse-ngram-domain.function";
+import {parseNgramDomainFile} from "./parse-ngram-domain-file.function";
 import {seedWordsByHashRing} from "./seed-words-by-hashring.function";
 import {AsyncIterableX} from "ix/Ix.dom.asynciterable";
 import {seedWordsByPdf} from "./seed-words-by-pdf.function";
@@ -14,7 +14,9 @@ export class NgramSeedMapFacade implements INgramSeedMapFacade {
     quadgramHashRingMap(source: AsyncIterableX<AsyncIterableX<number>>): AsyncIterableX<string> {
         return source.pipe(
             seedWordsByHashRing(
-                parseNgramDomainFile('../../english_quadgrams.txt'), 250000
+                parseNgramDomainFile(
+                    require.resolve('../../english_quadgrams.txt')
+                ), 250000
             )
         );
     }
@@ -22,7 +24,9 @@ export class NgramSeedMapFacade implements INgramSeedMapFacade {
     quadgramPdfMap(source: AsyncIterableX<AsyncIterableX<number>>): AsyncIterableX<string> {
         return source.pipe(
             seedWordsByPdf(
-                parseNgramDomainFile('../../english_quadgrams.txt')
+                parseNgramDomainFile(
+                    require.resolve('../../english_quadgrams.txt')
+                )
             )
         );
     }
@@ -30,7 +34,9 @@ export class NgramSeedMapFacade implements INgramSeedMapFacade {
     trigramHashRingMap(source: AsyncIterableX<AsyncIterableX<number>>): AsyncIterableX<string> {
         return source.pipe(
             seedWordsByHashRing(
-                parseNgramDomainFile('../../english_trigrams.txt'), 250000
+                parseNgramDomainFile(
+                    require.resolve('../../english_trigrams.txt')
+                ), 250000
             )
         );
     }
@@ -38,7 +44,9 @@ export class NgramSeedMapFacade implements INgramSeedMapFacade {
     trigramPdfMap(source: AsyncIterableX<AsyncIterableX<number>>): AsyncIterableX<string> {
         return source.pipe(
             seedWordsByPdf(
-                parseNgramDomainFile('../../english_trigrams.txt')
+                parseNgramDomainFile(
+                    require.resolve('../../english_trigrams.txt')
+                )
             )
         );
     }
@@ -46,7 +54,9 @@ export class NgramSeedMapFacade implements INgramSeedMapFacade {
     bigramHashRingMap(source: AsyncIterableX<AsyncIterableX<number>>): AsyncIterableX<string> {
         return source.pipe(
             seedWordsByHashRing(
-                parseNgramDomainFile('../../english_bigrams.txt'), 250000
+                parseNgramDomainFile(
+                    require.resolve('../../english_bigrams.txt')
+                ), 250000
             )
         );
     }
@@ -54,7 +64,9 @@ export class NgramSeedMapFacade implements INgramSeedMapFacade {
     bigramPdfMap(source: AsyncIterableX<AsyncIterableX<number>>): AsyncIterableX<string> {
         return source.pipe(
             seedWordsByPdf(
-                parseNgramDomainFile('../../english_bigrams.txt')
+                parseNgramDomainFile(
+                    require.resolve('../../english_bigrams.txt')
+                )
             )
         );
     }
@@ -62,7 +74,9 @@ export class NgramSeedMapFacade implements INgramSeedMapFacade {
     shortHashRingMap(source: AsyncIterableX<AsyncIterableX<number>>): AsyncIterableX<string> {
         return source.pipe(
             seedWordsByHashRing(
-                parseNgramDomainFile('../../english_ngrams_short.txt'), 250000
+                parseNgramDomainFile(
+                    require.resolve('../../english_ngrams_short.txt')
+                ), 250000
             )
         );
     }
@@ -70,7 +84,9 @@ export class NgramSeedMapFacade implements INgramSeedMapFacade {
     shortPdfMap(source: AsyncIterableX<AsyncIterableX<number>>): AsyncIterableX<string> {
         return source.pipe(
             seedWordsByPdf(
-                parseNgramDomainFile('../../english_ngrams_short.txt')
+                parseNgramDomainFile(
+                    require.resolve('../../english_ngrams_short.txt')
+                )
             )
         );
     }

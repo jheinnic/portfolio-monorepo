@@ -1,14 +1,15 @@
 const binarySearch = import('binary-search');
 import {OperatorAsyncFunction} from "ix/interfaces";
 import {AsyncIterableX, reduce, from} from "ix/Ix.dom.asynciterable";
-import {AsyncSink} from "ix/asynciterable";
-import {map, tap, zipWith} from "ix/asynciterable/operators";
+import {map} from "ix/asynciterable/operators";
 
 // import { ZScoreUtil } from 'z-score-util.function';
 import {NgramListItem} from "../interfaces/ngram-list-item.type";
 
 
-function naturalOrder(element: number, needle: number) { return element - needle; }
+function naturalOrder(element: number, needle: number) {
+    return element - needle;
+}
 
 // @ts-ignore
 const MAX_UINT32: number = 4294967295;
@@ -20,11 +21,8 @@ type NgramPdfData = {
     prefixSum: number;
 }
 
-export function seedWordsByPdf(source: AsyncIterableX<NgramListItem>): OperatorAsyncFunction<AsyncIterableX<number>, string> {
-    const fromModel: AsyncSink<string> = new AsyncSink<string>();
-    const toModel: AsyncSink<AsyncIterableX<number>> = new AsyncSink<AsyncIterableX<number>>();
-
-    reduce(source, {
+export function seedWordsByPdf(source: AsyncIterable<NgramListItem>): OperatorAsyncFunction<AsyncIterableX<number>, string> {
+    const pdfData: Promise<NgramPdfData> = reduce(source, {
         seed: {ngrams: [], freqSum: [], prefixSum: 0},
         callback: async (accum: NgramPdfData, item: NgramListItem, _idx: number): Promise<NgramPdfData> => {
             accum.ngrams.push(item.ngram);
@@ -32,65 +30,29 @@ export function seedWordsByPdf(source: AsyncIterableX<NgramListItem>): OperatorA
             accum.freqSum.push(accum.prefixSum);
             return accum;
         }
-    }).then((ngramData: NgramPdfData): void => {
-        from(toModel).pipe(
-            map((sourceNums: AsyncIterableX<number>) => {
-                return reduce(
-                    sourceNums.pipe(
-                        map(async (sourceBits: number): Promise<string> => {
-                            const nextP = Math.floor((sourceBits / MAX_UINT32) * ngramData.prefixSum);
-                            const bs = (await binarySearch)['default'];
-                            let pIdx: number = (await bs(ngramData.freqSum, nextP, naturalOrder));
-                            if (pIdx < 0) {
-                                pIdx = -1 * (pIdx + 1);
-                            }
-                            return ngramData.ngrams[pIdx];
-                        })
-                    ),
-                    {
-                        seed: "",
-                        callback: (acc: string, nextItem: string, _idx: number): string => acc + nextItem
-                    }
-                );
-            }),
-            tap({
-                next: (resultWord: string) => {
-                    fromModel.write(resultWord);
-                },
-                error: (err: string) => {
-                    console.error(err);
-                    fromModel.error(err);
-                    fromModel.end();
-                },
-                complete: () => {
-                    fromModel.end();
-                }
-            }),
-        ).forEach( (_item) => { return; } );
-    }).catch((err: any) => {
-        throw err;
     });
 
-    function do_operator(source: AsyncIterable<AsyncIterableX<number>>): AsyncIterableX<string> {
-        return from(source).pipe(
-            tap({
-                next: (nums: AsyncIterableX<number>): void => {
-                    toModel.write(nums);
-                },
-                error: (err: any): void => {
-                    console.error(err);
-                    toModel.error(err);
-                    toModel.end();
-                },
-                complete: (): void => {
-                    toModel.end();
-                }
-            }),
-            zipWith(fromModel),
-            map((pair: [AsyncIterableX<number>, string]) => pair[1])
-        )
+    function do_operator(toModel: AsyncIterable<AsyncIterableX<number>>): AsyncIterableX<string> {
+        return from(toModel).pipe(
+            map(async (numSequence: AsyncIterableX<number>) => {
+                let ngramData = await pdfData;
+                return reduce(numSequence, {
+                    seed: "",
+                    callback: async (agg: string, sourceBits: number): Promise<string> => {
+                        const nextP = Math.floor((sourceBits / MAX_UINT32) * ngramData.prefixSum);
+                        const bs = (await binarySearch)['default'];
+                        let pIdx: number = (await bs(ngramData.freqSum, nextP, naturalOrder));
+                        if (pIdx < 0) {
+                            pIdx = -1 * (pIdx + 1);
+                        }
+                        return agg + ngramData.ngrams[pIdx];
+                    }
+                })
+            })
+        );
     }
 
+    console.log("Do");
     return do_operator;
 }
 

@@ -1,12 +1,9 @@
-import { eachLine } from 'line-reader';
-
-import {NgramListItem} from "../interfaces/ngram-list-item.type";
-
-// import { Chan, chan, put, close, take, CLOSED } from "medium";
 import * as fs from "fs";
+import {eachLine} from 'line-reader';
 import {AsyncIterableX} from "ix/Ix.dom.asynciterable";
 import {memoize} from "ix/asynciterable/operators";
 import {AsyncSink} from "ix/asynciterable";
+import {NgramListItem} from "../interfaces/ngram-list-item.type";
 
 
 // export class NgramDomainParser implements INgramDomainParser {
@@ -42,7 +39,7 @@ export function parseNgramDomainFile (ngramCountFile: string): AsyncIterableX<Ng
     const sinkOut: AsyncSink<NgramListItem> = new AsyncSink<NgramListItem>();
     eachLine(input, (txt: string, last: boolean, cb: Function | undefined) => {
         try {
-            console.log('line', txt);
+            // console.log('line', txt);
             const tokens = txt.split(/ /);
             sinkOut.write({ngram: tokens[0].toLowerCase(), count: parseInt(tokens[1])});
             if (last) {
