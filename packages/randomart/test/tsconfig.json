@@ -8,13 +8,17 @@
         "declaration": true,
         "declarationMap": true,
         "paths": {
+            "@jchptf/api": ["../../api/src"],
+            "@jchptf/isaac": ["../../isaac/src"],
             "@jchptf/coroutines": ["../../coroutines/src"],
             "@jchptf/randomart": ["../src"]
         }
     },
     "references": [
-        { "path": "../src" },
-        { "path": "../../coroutines/src" }
+        { "path": "../../api/src" },
+        { "path": "../../isaac/src" },
+        { "path": "../../coroutines/src" },
+        { "path": "../src" }
     ],
     "include": [ "./**/*.ts" ]
 }

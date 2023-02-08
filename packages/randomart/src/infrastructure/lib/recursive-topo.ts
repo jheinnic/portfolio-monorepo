@@ -148,6 +148,6 @@ export class RecursiveTopoFactory
 
 }
 
-let test = new RecursiveTopoFactory(13, 4, 500000);
+let test = new RecursiveTopoFactory(15, 3, 16300);
 test.run();
 
