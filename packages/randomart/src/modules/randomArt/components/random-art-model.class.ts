@@ -10,7 +10,7 @@ import {
     MODEL_X_COORD,
     MODEL_Y_COORD
 } from '../interface';
-import {ModelSeed} from '../messages';
+import {ModelSeed} from '../../../../attic/modules/randomArt/messages2';
 
 export class RandomArtModel implements IncrementalPlotObserver {
     private readonly genModel: any;
@@ -68,22 +68,19 @@ export class RandomArtModel implements IncrementalPlotObserver {
         console.error(error);
     }
 
-    public next(value: MappedPoint): void {
+    public next(values: Array<MappedPoint>): void {
         // console.log(value);
+        const genModel = this.genModel;
+        const context = this.context;
         try {
-            // @ts-ignore
-            this.context.fillStyle = compute_pixel(this.genModel, value[MODEL_X_COORD], value[MODEL_Y_COORD]);
-            // console.log(`<${canvasX}, ${canvasY}> @ ${this.context.fillStyle}`)
-            this.context.fillRect(value[CANVAS_X_COORD], value[CANVAS_Y_COORD], 1, 1);
+            values.forEach( (value: MappedPoint) => {
+                // @ts-ignore
+                context.fillStyle = compute_pixel(genModel, value[MODEL_X_COORD], value[MODEL_Y_COORD]);
+                // console.log(`<${canvasX}, ${canvasY}> @ ${context.fillStyle}`)
+                context.fillRect(value[CANVAS_X_COORD], value[CANVAS_Y_COORD], 1, 1);
+            });
         } catch (err) {
             this.error(err);
         }
     }
-
-    // public plot(canvasX: number, canvasY: number, modelX: number, modelY: number): void {
-    //     // @ts-ignore
-    //     this.context.fillStyle = compute_pixel(this.genModel, modelX, modelY);
-    //     // console.log(`<${canvasX}, ${canvasY}> @ ${this.context.fillStyle}`)
-    //     this.context.fillRect(canvasX, canvasY, 1, 1);
-    // }
 }

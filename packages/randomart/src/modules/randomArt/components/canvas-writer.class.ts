@@ -6,7 +6,9 @@
 // import { StoreArtworkRequest } from '../messages';
 // import {map} from "rxjs/operators";
 //
-export class CanvasWriter
+import {IncrementalPlotter} from "../interface";
+
+export class CanvasWriter implements IncrementalPlotter
 {
 //    private static ensureDirectory(dirPath: string)
 //    {

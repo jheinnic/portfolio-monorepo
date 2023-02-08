@@ -1,9 +1,6 @@
-// import {injectable} from 'inversify';
-import { Iterable } from 'ix';
 import { generate, IterableX } from 'ix/iterable';
-import { flatMap, map, memoize } from 'ix/iterable/pipe/index';
+import { buffer, flatMap, map, memoize } from 'ix/iterable/operators';
 import { create, all, BigNumber, MathJsStatic } from 'mathjs'
-// import ndarray from 'ndarray';
 
 const config = { }
 const mathjs: Partial<MathJsStatic> = create(all, config)
@@ -12,6 +9,7 @@ const mathjs: Partial<MathJsStatic> = create(all, config)
 import { MappedPoint, ICanvasCalculator, IncrementalPlotterFactory } from '../interface';
 import { PointMapping } from './point-mapping.class';
 import { CanvasDimensions, RenderScale } from "../if3";
+import {TupleOfLength} from "../../../../../tupletypes/src";
 
 // @injectable()
 export class CanvasCalculator implements ICanvasCalculator
@@ -84,7 +82,7 @@ export class CanvasCalculator implements ICanvasCalculator
 
    private static computeAffinePixelPoints(
        pointCount: number, pixelMulti: number, minValue: number, maxValue: number
-   ): Iterable<[number, number]> {
+   ): IterableX<[number, number]> {
       const halfStep: BigNumber = mathjs.bignumber!((pixelMulti - 1) / 2);
       const step: BigNumber = mathjs.bignumber!(pixelMulti);
       const translate: BigNumber = mathjs.bignumber!(minValue);
@@ -152,17 +150,19 @@ export class CanvasCalculator implements ICanvasCalculator
       const heightPoints: IterableX<[number, number]> =
          CanvasCalculator.computeAffinePixelPoints(yCount, pixelMulti, 0.0 - yScale, yScale);
       const pointCount = xCount * yCount / pixelMulti / pixelMulti;
-      const mappedPoints =
+      const runSize = CanvasCalculator.findOptimalDivisor(pointCount, maxPointsPerSlice);
+
+      const mappedPoints: IterableX<Array<TupleOfLength<number, 4>>> =
           heightPoints.pipe(
               flatMap((yPair: [number,number]) =>
                   widthPoints.pipe(
                      map((xPair: [number,number]) => [xPair[1], yPair[1], xPair[0], yPair[0]] as MappedPoint),
                   )
               ),
-              // memoize(pointCount)
+              buffer(runSize),
+              memoize()
          );
 
-      const runSize = CanvasCalculator.findOptimalDivisor(pointCount, maxPointsPerSlice);
 
       /*
       const dataArray = new Float64Array(2 * pointCount);

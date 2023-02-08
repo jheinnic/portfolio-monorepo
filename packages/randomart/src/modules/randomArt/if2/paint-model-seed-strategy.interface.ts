@@ -1,5 +1,5 @@
 import {ModelSeed} from "../if3";
-import {BitStrategyKind} from "../../../proto/config";
+import {BitStrategyKind} from "../../../../attic/old_proto/config";
 import {Name} from "../../../infrastructure/validation";
 
 export interface IPaintModelSeedStrategy {

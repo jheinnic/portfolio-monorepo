@@ -13,5 +13,6 @@ import { Observer } from 'rxjs';
  * Aside from the "workhorse" plot method, there are two methods used to signal the end of a call
  * sequence--one for completion with error, the other for normal end-of-data completion.
  */
-export interface IncrementalPlotObserver extends Observer<MappedPoint> {
-}
+// export interface IncrementalPlotObserver extends Observer<MappedPoint[]> {
+// }
+export type IncrementalPlotObserver = Observer<MappedPoint[]>;

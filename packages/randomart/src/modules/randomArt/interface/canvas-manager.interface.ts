@@ -1,5 +1,5 @@
 import { PNGStream } from 'canvas';
-import { CanvasDimensions } from '../messages';
+import { CanvasDimensions } from '../../../../attic/modules/randomArt/messages2';
 import { UUID } from 'infrastructure/validation';
 
 export interface ICanvasManager {

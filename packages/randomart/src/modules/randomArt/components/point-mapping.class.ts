@@ -1,67 +1,55 @@
-import { IterableX } from 'ix/iterable';
-import { tap, map } from 'ix/iterable/pipe/index';
-import { Canvas } from 'canvas';
+import {IterableX} from 'ix/iterable';
+import {tap, map} from 'ix/iterable/operators';
+import {Canvas} from 'canvas';
 
 import {
-   IncrementalPlotObserver, IncrementalPlotter, IncrementalPlotterFactory, IncrementalPlotProgress, MappedPoint,
+    IncrementalPlotObserver, IncrementalPlotter, IncrementalPlotterFactory, IncrementalPlotProgress, MappedPoint,
 } from '../interface';
-import {countChunks} from "../../../infrastructure/lib/count-chunks.class";
-// import {stepRange} from "../../../infrastructure/lib";
 
-export class PointMapping implements IncrementalPlotterFactory
-{
-   private _sliceCount: number;
+export class PointMapping implements IncrementalPlotterFactory {
+    private _sliceCount: number;
 
-   public constructor(
-      private mappedPoints: IterableX<MappedPoint>, readonly pointCount: number, private readonly sliceSize: number)
-   {
-       this._sliceCount = pointCount / sliceSize;
-      // const { xCount, yCount, pixelMulti, dataArray } = plotGridData;
-      // const ndDataArray = ndarray(dataArray, [xCount / pixelMulti, yCount / pixelMulti, 2]);
-      // const xPointCount = xCount / pixelMulti;
-      // const yPointCount = yCount / pixelMulti;
+    public constructor(
+        private readonly _mappedPoints: IterableX<MappedPoint[]>, pointCount: number, sliceSize: number
+    ) {
+        this._sliceCount = pointCount / sliceSize;
+    }
 
-      // this.mappedPoints = stepRange(0, xPointCount, pixelMulti)
-      //    .pipe(
-      //       flatMap((xCanvas: [number, number]): Iterable<MappedPoint> =>
-      //          stepRange(0, yPointCount, pixelMulti)
-      //             .pipe(
-      //                map((yCanvas: [number, number]) =>
-      //                      [
-      //                         xCanvas[0], yCanvas[0],
-      //                         ndDataArray.get(xCanvas[1], yCanvas[1], 0),
-      //                         ndDataArray.get(xCanvas[1], yCanvas[1], 1),
-      //                      ] as MappedPoint),
-      //             ),
-      //       ),
-      //       memoize(xPointCount * yPointCount),
-      //    );
-       console.log(this._sliceCount, pointCount, sliceSize);
-   }
+    public create(callback: IncrementalPlotObserver): IncrementalPlotter {
+        console.log('Calling create IncrementalPlotter');
 
-   public create(callback: IncrementalPlotObserver): IncrementalPlotter
-   {
-      console.log('Calling create IncrementalPlotter');
-      let retVal: IncrementalPlotter =
-         this.mappedPoints.pipe(
+        return this._mappedPoints.pipe(
             tap(callback),
-            countChunks(this.sliceSize),
-            map<number, IncrementalPlotProgress>(
-               (_value: number) => (
-               {
-                  plotter: retVal,
-                  done: _value,
-                  remaining: this._sliceCount - _value,
-                  total: this._sliceCount,
-               }
-               ),
-            ));
+            map<Array<MappedPoint>, IncrementalPlotProgress>(
+                (_value: Array<MappedPoint>, _index: number) => {
+                    return {
+                        done: _index,
+                        remaining: this._sliceCount - _index,
+                        total: this._sliceCount
+                    };
+                }),
+        );
+    }
 
-      return retVal;
-   }
+    public createChained(callbacks: Array<IncrementalPlotObserver>): IncrementalPlotter {
+        console.log('Calling create IncrementalPlotter');
 
-   public isCompatible(_canvas: Canvas): boolean
-   {
-      return true;
-   }
+        return this._mappedPoints.pipe(
+            ...callbacks.map((callback) => tap(callback))
+        ).pipe(
+            map<Array<MappedPoint>, IncrementalPlotProgress>(
+                (_value: Array<MappedPoint>, _index: number) => {
+                    return {
+                        done: _index,
+                        remaining: this._sliceCount - _index,
+                        total: this._sliceCount
+                    };
+                }
+            ),
+        );
+    }
+
+    public isCompatible(_canvas: Canvas): boolean {
+        return true;
+    }
 }

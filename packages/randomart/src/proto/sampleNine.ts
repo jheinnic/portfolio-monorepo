@@ -1,9 +1,8 @@
-/// <reference file="..
-import { Canvas } from 'canvas';
 import * as fs from 'fs';
-import { IterableX as Iterable } from 'ix/iterable';
-import 'ix/add/iterable-operators/map';
 import * as crypto from 'crypto';
+import { from } from 'rxjs';
+import { Canvas } from 'canvas';
+import 'ix/add/iterable-operators/map';
 
 import '@jchptf/reflection';
 import {
@@ -15,8 +14,6 @@ import {
    RandomArtModel,
    RenderScale,
 } from '../modules/randomArt';
-import {ConcurrentWorkFactory, IConcurrentWorkFactory} from "@jchptf/coroutines";
-// import { dense_wind_g_for_p_to_e } from '../modules/randombytes/sequence.function';
 
 const bytes: Buffer[] = []
 const terms: Uint8ClampedArray[] = []
@@ -39,7 +36,7 @@ function main()
 
    const sequence = dense_wind_g_for_p_to_e(7, 11, 2);
    const canvasCalculator: ICanvasCalculator = new CanvasCalculator();
-   const workFactory: IConcurrentWorkFactory = new ConcurrentWorkFactory();
+   // const workFactory: IConcurrentWorkFactory = new ConcurrentWorkFactory();
 
    const myDimensions: CanvasDimensions = { pixelHeight: 640, pixelWidth: 640 };
    const myRenderScale: RenderScale = { unitScale: 1, pixelSize: 1, fitOrFill: 'square' };
@@ -72,7 +69,7 @@ function plotASeed(
    // const range100 = range(0, 120, asapScheduler); // animationFrameScheduler);
    // zip(range100, from(points))
    // from(points, asapScheduler)
-   Iterable.from(points)
+   from(points)
       .subscribe((zipped: IncrementalPlotProgress) => {
          console.log(zipped);
          if (zipped.done === zipped.total) {

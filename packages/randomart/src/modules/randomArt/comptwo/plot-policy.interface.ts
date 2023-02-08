@@ -3,7 +3,7 @@ import {ICanvasDimensions} from "./canvas-dimensions.interface";
 import {IDimensionPoint} from "./dimension-point";
 
 export interface IPlotPolicy {
-    ulid: string;
+    // url: URL;
     dimensions: ICanvasDimensions;
     xPoints: IterableX<IDimensionPoint>;
     yPoints: IterableX<IDimensionPoint>;

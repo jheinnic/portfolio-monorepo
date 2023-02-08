@@ -1,8 +1,8 @@
-import {IPaintingTask} from "./painting-task.interface";
-import { AsyncIterableX, zip } from "ix/asynciterable";
-import { map } from "ix/asynciterable/operators";
+import {zip} from "ix/asynciterable";
+import {map} from "ix/asynciterable/operators";
 import {AsyncSink} from "ix";
 import {Canvas} from "canvas";
+import {IPaintingTask} from "./painting-task.interface";
 import {IRandomArtPainter} from "./random-art-painter.interface";
 
 
