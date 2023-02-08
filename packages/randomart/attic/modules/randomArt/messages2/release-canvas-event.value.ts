@@ -1,4 +1,4 @@
-import { ICanvasManager } from '../interface';
+import { ICanvasManager } from '../../../../src/modules/randomArt/interface';
 import { MessageType } from './message-type.enum';
 
 export class CanvasReleasedEvent

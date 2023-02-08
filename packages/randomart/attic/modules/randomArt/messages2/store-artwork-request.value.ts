@@ -1,5 +1,5 @@
-import { ICanvasManager } from '../interface';
-import { ArtworkLocator, ArtworkStoredReply, CompletionSignal, MessageType } from '.';
+import { ICanvasManager } from '../../../../src/modules/randomArt/interface';
+import { ArtworkLocator, ArtworkStoredReply, CompletionSignal, MessageType } from './index';
 import {Chan, put, sleep} from 'medium';
 
 export class StoreArtworkRequest

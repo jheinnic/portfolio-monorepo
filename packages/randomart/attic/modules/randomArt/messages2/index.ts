@@ -1,8 +1,8 @@
-export * from '../if3/model-seed.interface';
+export * from '../../../../src/modules/randomArt/if3/model-seed.interface';
 export * from './completion-signal.interface';
-export * from '../if3/artwork-locator.interface';
-export * from '../if3/canvas-dimensions.interface';
-export * from '../if3/render-scale.interface';
+export * from '../../../../src/modules/randomArt/if3/artwork-locator.interface';
+export * from '../../../../src/modules/randomArt/if3/canvas-dimensions.interface';
+export * from '../../../../src/modules/randomArt/if3/render-scale.interface';
 
 export * from './lifecycle-stop-message.value';
 export * from './paint-to-canvas-request.value';
@@ -15,7 +15,7 @@ export * from './canvas-assigned-reply.value';
 export * from './render-and-store-reply.value';
 export * from './artwork-stored-reply.value';
 
-export * from '../if3/fit-or-fill.type';
+export * from '../../../../src/modules/randomArt/if3/fit-or-fill.type';
 export * from './message-type.enum';
 export * from './status-code.enum';
 export * from './reply-message.value';

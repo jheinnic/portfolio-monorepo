@@ -228,11 +228,10 @@ function computeProofStrategy(targetDepth, totalLeafCount, availableProofDepths)
         const depthPerTask = sortedDepths[item.currentProofIndex];
 
         const treesGroupedPerTask = Math.pow(2, depthPerTask);
-        const leavesGroupedPerTask
-        *= treesGroupedPerTask;
+        leavesGroupedPerTask = leavesGroupedPerTask * treesGroupedPerTask;
 
-        const partialTaskSize = nextTaskCount % leavesPerTask;
-        const fullTaskCount = Math.floor(nextTaskCount / leavesPerTask);
+        const partialTaskSize = nextTaskCount % leavesGroupedPerTask;
+        const fullTaskCount = Math.floor(nextTaskCount / leavesGroupedPerTask);
 
         nextTaskCount = (
           partialTaskSize > 0
@@ -244,7 +243,7 @@ function computeProofStrategy(targetDepth, totalLeafCount, availableProofDepths)
         return {
            rootLayerDepth,
            depthPerTask,
-           treeGroupedPerTask,
+           treesGroupedPerTask,
            leavesGroupedPerTask,
            fullTaskCount,
            partialTaskSize

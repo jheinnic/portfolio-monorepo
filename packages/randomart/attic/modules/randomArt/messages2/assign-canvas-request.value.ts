@@ -1,7 +1,7 @@
 import { MessageType } from './message-type.enum';
 import { CompletionSignal } from './completion-signal.interface';
 import { CanvasAssignedReply } from './canvas-assigned-reply.value';
-import {ArtworkLocator, ModelSeed} from "../if3";
+import {ArtworkLocator, ModelSeed} from "../../../../src/modules/randomArt/if3";
 
 export class AssignCanvasRequest
 {

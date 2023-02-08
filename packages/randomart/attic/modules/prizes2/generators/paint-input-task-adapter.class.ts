@@ -5,13 +5,13 @@ import * as util from 'util';
 
 import { DI_COMMON_TAGS } from '@jchptf/di-app-registry';
 import { Name } from '../../../../../../src/infrastructure/validation';
-import { IArtworkStagingLayout } from '../../../attic/modules/tickets2/interface/internal';
+import { IArtworkStagingLayout } from '../../tickets2/interface/internal/index';
 import {
    IKeyPairStagingAccess,
    IPolicyMetadataAccess, RenderStyleMetadata, RenderStyleName,
-} from '../../../attic/modules/tickets2/interface';
-import { TICKET_POOL_NAMES, TICKET_POOL_TYPES } from '../../../attic/modules/tickets2/di';
-import { LoadInputTaskMessage } from '../../../attic/modules/tickets2/values/load-input-task-message.value';
+} from '../../tickets2/interface/index';
+import { TICKET_POOL_NAMES, TICKET_POOL_TYPES } from '../../tickets2/di/index';
+import { LoadInputTaskMessage } from '../../tickets2/values/load-input-task-message.value';
 
 @injectable()
 export class PaintInputTaskAdapter

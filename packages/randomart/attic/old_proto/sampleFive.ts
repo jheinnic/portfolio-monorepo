@@ -14,13 +14,13 @@ import { IsaacPseudoRandomSourceFactory } from '../../../src/infrastructure/rand
 // import {Deployment} from '../apps/config/index';
 import {
    CanvasCalculator, ICanvasCalculator, IncrementalPlotProgress, IncrementalPlotterFactory, RandomArtModel,
-} from '../modules/randomArt/index';
+} from '../../src/modules/randomArt';
 import * as fs from 'fs';
 import { BitStrategyKind, ModelSeedPolicy, PrefixSelectStyle } from '../modules/tickets/config';
 import lruCache = require('lru-cache');
 import { EightFromSevenModelSeedStrategy } from '../modules/tickets/components/modelSeed';
 import { Mutable } from '@jchptf/tupletypes';
-import { Name } from '../../../src/infrastructure/validation';
+import { Name } from '../../src/infrastructure/validation';
 
 // const container: Container = new Container();
 // container.load(

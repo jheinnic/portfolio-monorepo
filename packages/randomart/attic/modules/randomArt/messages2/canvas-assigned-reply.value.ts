@@ -1,5 +1,5 @@
 import { MessageType } from './message-type.enum';
-import { ICanvasManager } from '../interface';
+import { ICanvasManager } from '../../../../src/modules/randomArt/interface';
 
 export class CanvasAssignedReply
 {

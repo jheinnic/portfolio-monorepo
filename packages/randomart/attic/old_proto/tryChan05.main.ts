@@ -1,24 +1,24 @@
-import chan from 'chan';
-import { co } from 'co';
+import chan from '../../coroutines/typings/chan';
+import { co } from '../../semaphore/typings/co';
 import * as fs from 'fs';
 import { ConcurrentWorkFactory } from '@jchptf/coroutines';
-import { ModelSeed } from '../modules/randomArt/messages';
-import coPriorityQueue from 'co-priority-queue';
+import { ModelSeed } from '../../src/modules/randomArt/messages';
+import coPriorityQueue from '../../semaphore/typings/co-priority-queue';
 import { Canvas } from 'canvas';
-import { IncrementalPlotProgress, IncrementalPlotter } from '../modules/randomArt/interface';
-import { AutoIterate } from '../../../src/infrastructure/lib';
+import { IncrementalPlotProgress, IncrementalPlotter } from '../../src/modules/randomArt/interface';
+import { AutoIterate } from '../../src/infrastructure/lib';
 import { asyncScheduler } from 'rxjs';
 import * as util from 'util';
 import * as path from 'path';
 import { Mutable } from '@jchptf/tupletypes';
 import { BitStrategyKind, ModelSeedPolicy, PrefixSelectStyle } from '../modules/tickets/config';
-import { Name } from '../../../src/infrastructure/validation';
+import { Name } from '../../src/infrastructure/validation';
 import {
    EightFromElevenModelSeedStrategy, RawMappedModelSeedStrategy, TrigramModelSeedStrategy,
 } from '../modules/tickets/components/modelSeed';
 import {
    CanvasCalculator, ICanvasCalculator, IncrementalPlotterFactory, RandomArtModel,
-} from '../modules/randomArt';
+} from '../../src/modules/randomArt';
 import { IPaintModelSeedStrategy } from '../modules/tickets/interface/policies';
 const modelStrategies: IPaintModelSeedStrategy[] = [];
 

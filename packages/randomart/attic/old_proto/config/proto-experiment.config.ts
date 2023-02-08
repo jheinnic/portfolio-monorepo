@@ -1,7 +1,7 @@
 import { configClass, configProp } from '@jchptf/di-app-registry';
 import { Matches, ValidateNested } from 'class-validator';
 import { RandomArtPlayAssets } from '../../modules/tickets/config';
-import { PROTO_APP_TYPES } from '../../../attic/modules/tickets2/di3';
+import { PROTO_APP_TYPES } from '../../modules/tickets2/di3/index';
 import { Type } from 'class-transformer';
 
 @configClass('info.jchein.randomArt.experiment', PROTO_APP_TYPES.ProtoExperimentConfig)

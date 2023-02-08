@@ -14,7 +14,7 @@ import {
 import {
    CanvasCalculator, ICanvasCalculator, IncrementalPlotProgress, IncrementalPlotterFactory, ModelSeed,
    RandomArtModel,
-} from '../modules/randomArt/index';
+} from '../../src/modules/randomArt';
 import { BitStrategyKind, ModelSeedPolicy, PrefixSelectStyle } from '../modules/tickets/config';
 import lruCache = require('lru-cache');
 import { EightFromSevenModelSeedStrategy } from '../modules/tickets/components/modelSeed';
@@ -22,7 +22,7 @@ import { RawModelSeedStrategy } from '../modules/tickets/components/modelSeed';
 import { Base64ToAsciiModelSeedStrategy } from '../modules/tickets/components/modelSeed';
 import { Mod128ModelSeedStrategy } from '../modules/tickets/components/modelSeed';
 import { Mod160ModelSeedStrategy } from '../modules/tickets/components/modelSeed';
-import { Name } from '../../../src/infrastructure/validation';
+import { Name } from '../../src/infrastructure/validation';
 
 /*
 const container: Container = new Container();

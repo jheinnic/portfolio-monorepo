@@ -1,8 +1,8 @@
-import { AutoIterate } from '../../../src/infrastructure/lib';
+import { AutoIterate } from '../../src/infrastructure/lib';
 import { asyncScheduler, Subject } from 'rxjs';
-import chan = require('chan');
-import { co } from 'co';
-import coPriorityQueue from 'co-priority-queue';
+import chan = require('../../coroutines/typings/chan');
+import { co } from '../../semaphore/typings/co';
+import coPriorityQueue from '../../semaphore/typings/co-priority-queue';
 import { ConcurrentWorkFactory } from '@jchptf/coroutines';
 
 const workFactory = new ConcurrentWorkFactory();

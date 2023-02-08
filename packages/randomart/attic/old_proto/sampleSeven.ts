@@ -7,7 +7,7 @@ import '@jchptf/reflection';
 import {
    CanvasCalculator, ICanvasCalculator, IncrementalPlotProgress, IncrementalPlotterFactory, ModelSeed,
    RandomArtModel, CanvasDimensions, RenderScale,
-} from '../modules/randomArt/index';
+} from '../../src/modules/randomArt';
 
 const modelSeedOne: ModelSeed = {
    prefixBits: Uint8ClampedArray.of(33, 37, 96, 61, 94, 125),

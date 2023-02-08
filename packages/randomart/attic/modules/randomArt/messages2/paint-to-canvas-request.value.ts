@@ -1,6 +1,6 @@
-import { MessageType, ArtworkLocator } from '.';
+import { MessageType, ArtworkLocator } from './index';
 import { CompletionSignal } from './completion-signal.interface';
-import { ICanvasManager, IncrementalPlotter } from '../interface';
+import { ICanvasManager, IncrementalPlotter } from '../../../../src/modules/randomArt/interface';
 
 export class PaintToCanvasRequest
 {

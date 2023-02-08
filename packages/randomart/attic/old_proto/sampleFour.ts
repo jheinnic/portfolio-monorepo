@@ -18,7 +18,7 @@ import { configContainerModule } from '../../apps/di/index';
 import { Deployment } from '../../apps/config/index';
 import {
    CanvasCalculator, ICanvasCalculator, IncrementalPlotProgress, IncrementalPlotterFactory, RandomArtModel,
-} from '../../modules/randomArt/index';
+} from '../../src/modules/randomArt';
 import lruCache = require('lru-cache');
 
 const container: Container = new Container();
