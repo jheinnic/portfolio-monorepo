@@ -1,5 +1,4 @@
 export * from './di';
 export * from './interface';
-export * from './sources/isaac-csprng.class';
-
-import '@jchptf/reflection';
+export * from './sources';
+export * from './tours';

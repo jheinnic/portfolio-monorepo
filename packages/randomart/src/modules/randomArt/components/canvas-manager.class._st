@@ -3,7 +3,7 @@ import { AsyncSink } from 'ix/asyncsink';
 
 import { UUID } from 'infrastructure/validation';
 import { ICanvasManager } from '../interface';
-import { CanvasDimensions } from '../messages';
+import { CanvasDimensions } from '../../../../attic/modules/randomArt/messages2';
 
 export class CanvasManager implements ICanvasManager
 {

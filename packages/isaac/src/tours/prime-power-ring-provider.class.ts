@@ -1,5 +1,5 @@
 import {IPrimePowerRingProvider} from "./prime-power-ring-provider.interface";
-import {TupleOfLength} from "../../../../tupletypes/src";
+import {TupleOfLength} from "../../../tupletypes/src";
 import {IllegalArgumentError, UnsupportedOperationError} from "@thi.ng/errors";
 import {capped_dense_wind_g_for_p_to_e, range} from "./sequence.function";
 
@@ -45,7 +45,10 @@ export class PrimePowerRingProvider implements IPrimePowerRingProvider {
             let idx: number;
             for (idx of range(0, seatCount)) {
                 const nextIndex = permuteIndex % items.length;
-                permuteIndex = permuteIndex / items.length;
+                let nextDiv = permuteIndex / items.length;
+                nextDiv = Math.floor(nextDiv);
+                permuteIndex = nextDiv;
+                console.log("DEBUG!  " + nextDiv + ", " + permuteIndex + ", " + nextIndex)
                 retval.push(items[nextIndex]);
             }
 

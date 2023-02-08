@@ -1,9 +1,8 @@
-import { UniqueValueSource } from '../src/infrastructure/randomize/sources/unique-value-source';
-import { generateSeedTree } from './modules/prizes/generate-seed-tree';
+import { UniqueValueSource } from '@jchptf/isaac';
+import { generateSeedTree } from './generate-seed-tree';
 
 const seedValues = Uint32Array.of(
   -425980141, 1103513639, 1942282457, -1527452113, 1959864891, 1523640013, 1336512345, 136845265,
-  // tslint:disable-next-line:max-line-length
   -994403274, -149684310, 233234833, -2097885300, -1658929744, 1394574865, 1697034403, 729307857, 827282160,
   766521433, -598681173, -661256816, -1460697820, -1243738789, 1476933610, -1355662760, -1062198566,
   // tslint:disable-next-line:max-line-length

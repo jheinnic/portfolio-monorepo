@@ -26,12 +26,12 @@ export class RandomArtPainter implements IRandomArtPainter {
 
        let genModel: any;
        if (modelSeed.novel) {
-            // @ts-ignore
+           // @ts-ignore
            genModel = new_new_picture(prefix, suffix);
-        } else {
-            // @ts-ignore
+       } else {
+           // @ts-ignore
            genModel = new_picture(prefix, suffix);
-        }
+       }
 
        const context: CanvasRenderingContext2D = canvas.getContext('2d')!;
        if (context === null) {
@@ -53,13 +53,13 @@ export class RandomArtPainter implements IRandomArtPainter {
                )
            )
        )
+   }
+
    public plot(canvasX: number, canvasY: number, modelX: number, modelY: number): void {
            // @ts-ignore
            this.context.fillStyle = compute_pixel(this.genModel, modelX, modelY);
            // console.log(`<${canvasX}, ${canvasY}> @ ${this.context.fillStyle}`)
            this.context.fillRect(canvasX, canvasY, 1, 1);
-       }
-
    }
 
    public onComplete(): void {

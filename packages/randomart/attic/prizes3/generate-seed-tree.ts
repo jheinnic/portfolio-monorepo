@@ -110,7 +110,7 @@ export function generateSeedTree(
                     // );
                     const file = sprintf(
                         './mypool/seedBlocks/%d/block_%08d-%02d.dat', directoryIndex, writeOffset, ii);
-                    fs.writeFile(file, buffers[ii], {flag: 'w+'}, (err: NodeJS.ErrnoException) => {
+                    fs.writeFile(file, buffers[ii], {flag: 'w+'}, (err: null|NodeJS.ErrnoException) => {
                         if (!!err) {
                             console.error(err);
                         }
